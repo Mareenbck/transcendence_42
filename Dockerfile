@@ -14,9 +14,10 @@ RUN npm install
 # Copy the app source into the image
 COPY --chown=node:node . .
 
-# compile le main
-RUN npm run build
+# # compile le main
+# RUN npm run build
 
-EXPOSE 8080
+# Generate prisma client code
+RUN npx prisma generate
 
-CMD [ "node", "dist/main" ]
+CMD ["npm", "run", "start:dev"]
