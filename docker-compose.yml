@@ -1,0 +1,27 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  api:
+    # image: docker-nest
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/db
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - "8080:3000"
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "35000:5432"
+    # pour le moment , pas de fichier .env les variable sont rentree a la main de dependent de DATABASE_URL renseignee plus haut
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+
+
