@@ -4,7 +4,7 @@ services:
   api:
     build:
       dockerfile: Dockerfile
-      context: ./Back_End/
+      context: ./Back-End/
     depends_on:
       - postgres
     container_name: "app-back"
