@@ -15,7 +15,7 @@ RUN npm install
 COPY --chown=node:node . .
 
 # # compile le main
-# RUN npm run build
+RUN npm run build
 
 # Generate prisma client code
 RUN npx prisma generate
