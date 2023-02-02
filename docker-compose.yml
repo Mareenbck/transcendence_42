@@ -1,42 +1,33 @@
 version: "3.9"  # optional since v1.27.0
-services:
-api:
-  # image: docker-nest
-  build:
-    dockerfile: Dockerfile
-    context: ./
-  depends_on:
-    - postgres
-  container_name: "app-back"
-  env_file:
-      - .env
-  # environment:
-  #   DATABASE_URL: postgres://user:password@postgres:5432/db
-  #   NODE_ENV: development
-  #   PORT: 3000
-  ports:
-    - 3000:3000
-    - 5555:5555
-  networks:
-    - transcendence
 
-postgres:
-  image: postgres:latest
-  container_name: "postgres"
-  restart: always
-  ports:
-    - 5432:5432
-  env_file:
-    - .env
-  # pour le moment , pas de fichier .env les variable sont rentree a la main de dependent de DATABASE_URL renseignee plus haut
-  # environment:
-  #   POSTGRES_USER: user
-  #   POSTGRES_PASSWORD: password
-  #   POSTGRES_DB: db
-  networks:
-    - transcendence
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    depends_on:
+      - postgres
+    container_name: "app-back"
+    env_file:
+        - .env
+    ports:
+      - 3000:3000
+      - 5555:5555
+    networks:
+      - transcendence
+
+  postgres:
+    image: postgres:latest
+    container_name: "postgres"
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    networks:
+      - transcendence
 
 networks:
-transcendence:
+  transcendence:
 
 
