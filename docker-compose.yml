@@ -8,6 +8,7 @@ services:
     depends_on:
       - postgres
     container_name: "app-back"
+    command: npm run start:dev
     env_file:
         - .env
     ports:
