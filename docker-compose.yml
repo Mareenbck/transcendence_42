@@ -28,6 +28,23 @@ services:
     networks:
       - transcendence
 
+  frontend:
+    container_name: "frontend"
+    build:
+      context: ./frontend/
+    image: frontend:latest
+    restart: always 
+    #depends_on:
+    #    - ./Back-End/
+    #volumes:
+    #    - ./frontend:/usr/src/app
+    ports:
+        - 8080:8080
+    env_file:
+      - .env    
+    networks:
+      - transcendence       
+
 networks:
   transcendence:
 
