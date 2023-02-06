@@ -14,10 +14,39 @@ model User {
 	id			Int			@id @default(autoincrement())
 	createdAt	DateTime	@default(now())
 
-	email		String
+	email		String		@unique
 	hash		String
-	username	String
+	username	String		@unique
 	status		UserStatus	@default(ONLINE)
+
+	games		UserOnGame[]
+
+	@@map("users")
+}
+
+model UserOnGame{
+	id			Int			@id @default(autoincrement())
+	user		User		@relation(fields: [userId], references: [id])
+	userId		Int
+
+	score		Int			@default(0)
+	winner		Boolean?
+	asPlayerOne Game? @relation("GamePlayerOne")
+	asPlayerTwo Game? @relation("GamePlayerTwo")
+}
+
+model Game {
+	id			Int			@id @default(autoincrement())
+	createdAt	DateTime	@default(now())
+	finishedAt	DateTime?
+
+	playerOne				UserOnGame	@relation("GamePlayerOne", fields: [playerOneOnGameId], references: [id])
+	playerOneOnGameId		Int			@unique
+	playerTwo				UserOnGame	@relation("GamePlayerTwo", fields: [playerTwosOnGameId], references: [id])
+	playerTwosOnGameId		Int			@unique
+
+	@@map("games")
+
 }
 
 enum UserStatus {
