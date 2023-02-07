@@ -42,7 +42,7 @@ services:
     container_name: "frontend"
     build:
       context: ./frontend/
-    image: frontend:latest
+    image: frontend
     restart: always 
     #depends_on:
     #    - ./Back-End/
@@ -50,8 +50,8 @@ services:
     #    - ./frontend:/usr/src/app
     ports:
         - 8080:8080
-    env_file:
-      - .env    
+    #env_file:
+    #  - .env    
     networks:
       - transcendence       
 
