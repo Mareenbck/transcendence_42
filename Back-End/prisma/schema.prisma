@@ -46,7 +46,6 @@ model Game {
 	playerTwosOnGameId		Int			@unique
 
 	@@map("games")
-
 }
 
 enum UserStatus {

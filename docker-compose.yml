@@ -10,10 +10,10 @@ services:
       - postgres
     volumes:
       - ./Back-End:/usr/src/app
-      # - /usr/src/app/node_modules
+      - /usr/src/app/node_modules
     # command: npm run start:dev
     env_file:
-        - Back-End/.env
+        - ./Back-End/.env
     ports:
       - 5555:5555
       - 3000:3000
@@ -29,14 +29,23 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - Back-End/.env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_PORT: ${POSTGRES_PORT}
+      - ./Back-End/.env
     networks:
       - transcendence
+
+  # frontend:
+  #   container_name: "frontend"
+  #   build:
+  #     context: ./frontend/
+  #   restart: always
+  #   #depends_on:
+  #   #    - ./Back-End/
+  #   #volumes:
+  #   #    - ./frontend:/usr/src/app
+  #   ports:
+  #       - 8080:8080
+  #   networks:
+  #     - transcendence
 
 networks:
   transcendence:
