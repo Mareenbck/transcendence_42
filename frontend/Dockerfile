@@ -1,7 +1,7 @@
-FROM node:16.17.0-alpine As build
+FROM node:latest
 
-RUN apk update
-RUN apk upgrade
+# RUN apk update
+# RUN apk upgrade
 
 # Create app directory and set it as our working directory. This will be the working directory for your application:
 WORKDIR /usr/src/app
