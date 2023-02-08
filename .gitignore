@@ -1,6 +1,7 @@
 # compiled output
 Back-End/dist
 Back-End/node_modules
+Front-End2/node_modules
 
 # Logs
 logs
