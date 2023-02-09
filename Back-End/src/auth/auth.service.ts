@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { BadRequestException, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { AuthDto } from "./dto";
 import * as argon from 'argon2';
@@ -60,10 +60,26 @@ export class AuthService {
 		};
 		const secret = this.config.get('JWT_SECRET');
 		const token = await this.jwt.signAsync(data, {
-			expiresIn: '15m',
+			expiresIn: '30m',
 			secret: secret,
 		});
 		return {access_token: token};
+	}
+
+	async verifyAccessToken(token: string): Promise<User> {
+		try {
+			const decoded = this.jwt.verify(token);
+			if (!decoded.type || !decoded.user || decoded.type !== 'access') {
+				throw new BadRequestException('Invalid access token');
+			}
+			return await this.prisma.user.findUnique({
+				where: {
+					id: decoded.user.id,
+				},
+			});
+		} catch (e) {
+			throw new BadRequestException('Invalid access token');
+		}
 	}
 
 }
