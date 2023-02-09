@@ -20,8 +20,8 @@ export class AuthService {
 			const user = await this.prisma.user.create({
 				data: {
 					email: dto.email,
-					username: dto.username,
 					hash,
+					username: dto.username,
 				},
 			});
 			return this.signToken(user.id, user.email);

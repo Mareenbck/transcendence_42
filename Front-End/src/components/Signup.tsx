@@ -6,10 +6,29 @@ function Signup() {
 	const [password, setPassword] = useState('');
 	const [passwordConfirm, setPasswordConfirm] = useState('');
 
-	function submit(e: SyntheticEvent) {
+	async function submit(e: SyntheticEvent) {
 		//pour ne pas que la page s'actualise
 		e.preventDefault();
-		console.log('1234');
+		const userData = {
+			username: username,
+			email: email,
+			password: password,
+		};
+		try {
+			const options = {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(userData),
+			};
+			const response = await fetch(`http://localhost:3000/auth/signup`, options);
+			const result = await response.json();
+			return result;
+		} catch (error) {
+			console.error(error);
+		}
+
 	}
 
 	return (
@@ -30,11 +49,6 @@ function Signup() {
 					<input type="password" className="form-control" id="floatingPassword" placeholder="Password"
 						onChange={e => setPassword(e.target.value)} />
 					<label htmlFor="floatingPassword">Password</label>
-				</div>
-				<div className="form-floating">
-					<input type="password" className="form-control" id="floatingPassword" placeholder="Password confirm"
-						onChange={e => setPasswordConfirm(e.target.value)} />
-					<label htmlFor="floatingPassword">Password Confirm</label>
 				</div>
 				<button className="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
 			</form>

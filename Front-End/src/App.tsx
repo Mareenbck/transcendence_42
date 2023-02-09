@@ -44,8 +44,8 @@ function App() {
 			<Nav/>
 			<Routes>
 				<Route path='/' element={<Home />} />
-				<Route path='/signin' element={<Login />} />
-				<Route path='/signup' element={<Signup />}/>
+				<Route path='/auth/signin' element={<Login />} />
+				<Route path='/auth/signup' element={<Signup />}/>
 			</Routes>
 		</BrowserRouter>
 	);

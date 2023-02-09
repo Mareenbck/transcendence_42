@@ -10,8 +10,8 @@ function Nav() {
 						<li><Link to="/" className="nav-link px-2 text-white">Home</Link></li>
 					</ul>
 					<div className="text-end">
-						<Link to="/signin" className="btn btn-outline-light me-2">Login</Link>
-						<Link to="/signup" className="btn btn-outline-light me-2">Sign-up</Link>
+						<Link to="/auth/signin" className="btn btn-outline-light me-2">Login</Link>
+						<Link to="/auth/signup" className="btn btn-outline-light me-2">Sign-up</Link>
 					</div>
 				</div>
 			</div>
