@@ -6,6 +6,7 @@ import { User } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from '@nestjs/config';
+import { SigninDto } from "./dto/signin.dto";
 
 
 @Injectable()
@@ -35,7 +36,7 @@ export class AuthService {
 		}
 	}
 
-	async signin(dto: AuthDto) {
+	async signin(dto: SigninDto) {
 		//find the user by email
 		const user = await this.prisma.user.findUnique({
 			where: {

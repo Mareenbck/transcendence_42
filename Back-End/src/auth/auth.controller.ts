@@ -2,7 +2,8 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@n
 import { User } from '@prisma/client';
 import { AuthService } from "./auth.service";
 import { GetUser } from './decorator';
-import { AuthDto } from './dto';
+import { AuthDto } from './dto/auth.dto';
+import { SigninDto } from './dto/signin.dto';
 import { AuthGuard } from './guard/auth.guard';
 
 @Controller('auth')
@@ -16,7 +17,7 @@ export class AuthController {
 
 	@HttpCode(HttpStatus.OK)
 	@Post('signin')
-	signin(@Body() dto: AuthDto) {
+	signin(@Body() dto: SigninDto) {
 		return this.authService.signin(dto);
 	}
 

@@ -1,9 +1,11 @@
 import React, { SyntheticEvent, useState } from "react";
+import { Navigate } from "react-router-dom";
 
 function Signup() {
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [redirect, setRedirect] = useState(false);
 	const [passwordConfirm, setPasswordConfirm] = useState('');
 
 	async function submit(e: SyntheticEvent) {
@@ -24,11 +26,14 @@ function Signup() {
 			};
 			const response = await fetch(`http://localhost:3000/auth/signup`, options);
 			const result = await response.json();
+			setRedirect(true);
 			return result;
 		} catch (error) {
 			console.error(error);
 		}
-
+	}
+	if (redirect) {
+		return <Navigate to="/auth/signin"/>
 	}
 
 	return (
