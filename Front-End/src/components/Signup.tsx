@@ -1,3 +1,4 @@
+import { BadRequestException } from "@nestjs/common";
 import React, { SyntheticEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -6,11 +7,14 @@ function Signup() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [redirect, setRedirect] = useState(false);
-	const [passwordConfirm, setPasswordConfirm] = useState('');
+	// const [passwordConfirm, setPasswordConfirm] = useState('');
 
 	async function submit(e: SyntheticEvent) {
 		//pour ne pas que la page s'actualise
 		e.preventDefault();
+		// if (passwordConfirm !== password) {
+		// 	throw new BadRequestException("Passwords do not match!");
+		// }
 		const userData = {
 			username: username,
 			email: email,
@@ -26,7 +30,8 @@ function Signup() {
 			};
 			const response = await fetch(`http://localhost:3000/auth/signup`, options);
 			const result = await response.json();
-			setRedirect(true);
+			if (result.access_token)
+				setRedirect(true);
 			return result;
 		} catch (error) {
 			console.error(error);
@@ -55,6 +60,11 @@ function Signup() {
 						onChange={e => setPassword(e.target.value)} />
 					<label htmlFor="floatingPassword">Password</label>
 				</div>
+				{/* <div className="form-floating">
+					<input type="password" className="form-control" id="floatingPassword" placeholder="Password confirm"
+						onChange={e => setPasswordConfirm(e.target.value)} />
+					<label htmlFor="floatingPassword">Password Confirm</label>
+				</div> */}
 				<button className="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
 			</form>
 		</main>

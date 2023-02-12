@@ -7,6 +7,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from '@nestjs/config';
 import { SigninDto } from "./dto/signin.dto";
+import { Response } from 'express';
 
 
 @Injectable()
@@ -51,6 +52,7 @@ export class AuthService {
 		//if password incorect -> throw exception
 		if (!pwMatches)
 			throw new ForbiddenException('Credentials incorrect');
+
 		return this.signToken(user.id, user.email);
 	}
 

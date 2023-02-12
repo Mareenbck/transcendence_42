@@ -1,10 +1,11 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { AuthService } from "./auth.service";
 import { GetUser } from './decorator';
 import { AuthDto } from './dto/auth.dto';
 import { SigninDto } from './dto/signin.dto';
 import { AuthGuard } from './guard/auth.guard';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -17,8 +18,11 @@ export class AuthController {
 
 	@HttpCode(HttpStatus.OK)
 	@Post('signin')
-	signin(@Body() dto: SigninDto) {
-		return this.authService.signin(dto);
+	async signin(@Body() dto: SigninDto, @Res({ passthrough: true }) response: Response) {
+		const token = await this.authService.signin(dto);
+		response.cookie('access_token', token, { httpOnly: true });
+		console.log(response);
+		return { message: 'Logged in successfully' };
 	}
 
 	@Get('test')
