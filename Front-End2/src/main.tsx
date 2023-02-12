@@ -9,3 +9,15 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <App />
   </React.StrictMode>,
 )
+
+/*
+const elem = ReactDOM.createRoot(
+  'div',
+  {id: 'app' , className: 'container'},
+  'Hello'
+)
+
+const root = document.getElementById('root')
+
+ReactDOM.render(elem, root)
+*/
