@@ -4,17 +4,18 @@ import React, { useState } from 'react'
 
 /**function Enter(propes) { */
 const Enter = ({titel}) =>  {  
+    titel: String;
     /**const [showEvents, setShowEvents] = useState(true)*/
 
-    const handelClick = () => {
+    /**const handelClick = () => {
         console.log(titel)
         setShowEvents(false)
-    }
+    }*/
 
     return(
         <div className="enter">
         <div> 
-            <button className = 'btn' onClick = {handelClick}>{titel}</button>
+            <button className = 'btn'>{titel}</button>
         </div>    
         </div>
     )
