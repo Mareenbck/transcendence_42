@@ -1,6 +1,7 @@
 import './Enter.css'
 import '../App.tsx'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+
 
 /**function Enter(propes) { */
 const Enter = ({titel}) =>  {
@@ -11,11 +12,22 @@ const Enter = ({titel}) =>  {
         console.log(titel)
         setShowEvents(false)
     }*/
+	const [username, setUsername] = useState('');
+
+	useEffect(() => {
+		const cookies = document.cookie.split(';');
+		console.log(cookies);
+		const cookie = cookies.find(c => c.trim().startsWith('username='));
+		if (cookie) {
+			setUsername(cookie.split('=')[1]);
+		}
+	}, []);
+    console.log(username);
 
     return(
         <div className="enter">
         <div>
-            <h1>Hello</h1>
+            <h1>Hello {username}</h1>
             <button className = 'btn'>{titel}</button>
         </div>
         </div>
