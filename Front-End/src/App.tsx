@@ -1,3 +1,4 @@
+import './App.css'
 import React from "react";
 import MessagesInput from "./components/chat/MessagesInput"
 import Messages from "./components/chat/Messages"

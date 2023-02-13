@@ -33,19 +33,20 @@ services:
     networks:
       - transcendence
 
-  # frontend:
-  #   container_name: "frontend"
-  #   build:
-  #     context: ./frontend/
-  #   restart: always
-  #   #depends_on:
-  #   #    - ./Back-End/
-  #   #volumes:
-  #   #    - ./frontend:/usr/src/app
-  #   ports:
-  #       - 8080:8080
-  #   networks:
-  #     - transcendence
+
+  frontend:
+    container_name: react
+    build:
+      context: ./Front-End/
+      dockerfile: Dockerfile
+    volumes:
+      - ./Front-End:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev
+    ports:
+      - 8080:8080
+    networks:
+      - transcendence
 
 networks:
   transcendence:
