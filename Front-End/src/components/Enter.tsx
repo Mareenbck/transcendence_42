@@ -1,9 +1,9 @@
 import './Enter.css'
-import '../../../App.tsx'
+import '../App.tsx'
 import React, { useState } from 'react'
 
 /**function Enter(propes) { */
-const Enter = ({titel}) =>  {  
+const Enter = ({titel}) =>  {
     titel: String;
     /**const [showEvents, setShowEvents] = useState(true)*/
 
@@ -14,9 +14,10 @@ const Enter = ({titel}) =>  {
 
     return(
         <div className="enter">
-        <div> 
+        <div>
+            <h1>Hello</h1>
             <button className = 'btn'>{titel}</button>
-        </div>    
+        </div>
         </div>
     )
 }
