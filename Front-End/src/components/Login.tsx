@@ -31,7 +31,7 @@ function Login() {
 		}
 	}
 	if (redirect) {
-		return <Navigate to="/" />
+		return <Navigate to="/enter" />
 	}
 	return (
 		<main className="form-signin w-100 m-auto text-center">

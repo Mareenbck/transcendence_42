@@ -1,0 +1,21 @@
+.enter{
+    margin: 1.5rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn{
+    width: 200px;
+    height: 100px;
+    padding: 0.3rem O.1rem;
+    background-color: rgb(146, 179, 241);
+    border: none;
+    border-radius: 0.3rem;
+    font-size: 0.9rem;
+    font-size: 1.6rem;
+    border-radius: 1rem;
+    background-color: aqua;
+    color: black;
+    flex-direction: raw;
+}

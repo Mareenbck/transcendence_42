@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import './Home.css'
+import { Link } from "react-router-dom";
 
 function Home() {
 	const [username, setUsername] = useState('');
@@ -14,9 +16,12 @@ function Home() {
 
 
 	return (
-		<div>
-			<h1>HELLO {username} </h1>
-			{username && <p>Welcome, {username}!</p>}
+		<div className="App">
+			<h1>Transcendence</h1>
+			<Link to="/auth/signin" className='btn'>Login</Link>
+			<Link to="/auth/signup" className='btn'>Sign-up</Link>
+			<Link to="/chat/message" className="btn">Chat</Link>
+			<div className='btn'>User42</div>
 		</div>
 	)
 }
