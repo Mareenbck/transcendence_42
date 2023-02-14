@@ -8,7 +8,7 @@ import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import Nav from './components/Nav'
 import Chat from './components/chat/Chat'
 import Home from './components/Home'
-import Enter from './components/Enter';
+import Profile from './components/Profile';
 
 function App() {
 	return (
@@ -18,7 +18,7 @@ function App() {
 				<Route path='/chat/message' element={<Chat />} />
 				<Route path='/auth/signin' element={<Login />} />
 				<Route path='/auth/signup' element={<Signup />}/>
-				<Route path='/Enter' element={<Enter />}/>
+				<Route path='/users/profile' element={<Profile />}/>
 			</Routes>
 		</BrowserRouter>
 	);

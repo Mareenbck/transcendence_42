@@ -4,13 +4,17 @@ import { User } from '@prisma/client';
 import { Request } from 'express';
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
+import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {
+	constructor(private userService: UserService) { }
 
-	@Get()
+	@Get('/profile')
 	@UseGuards(JwtGuard)
-	getMe(@GetUser() user: User) {
-		return user;
+	async getMe(@GetUser() user: User) {
+		// return `Welcome ${req.user.username}!`;
+
+		return await this.userService.fetchProfileData(user.username);
 	}
 }

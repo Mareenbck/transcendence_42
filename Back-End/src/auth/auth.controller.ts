@@ -19,10 +19,12 @@ export class AuthController {
 	@HttpCode(HttpStatus.OK)
 	@Post('signin')
 	async signin(@Body() dto: SigninDto, @Res({ passthrough: true }) response: Response) {
-		const token = await this.authService.signin(dto);
-		response.cookie('access_token', token, { httpOnly: true });
-		console.log(response);
-		return { message: 'Logged in successfully' };
+		const user = await this.authService.signin(dto);
+		const token = this.authService.signToken(user.id, user.email);
+
+		// response.cookie('access_token', token, { httpOnly: true });
+		// console.log(response);
+		return { token };
 	}
 
 	@Get('test')

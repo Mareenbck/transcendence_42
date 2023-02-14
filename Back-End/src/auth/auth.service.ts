@@ -53,7 +53,8 @@ export class AuthService {
 		if (!pwMatches)
 			throw new ForbiddenException('Credentials incorrect');
 
-		return this.signToken(user.id, user.email);
+		// return this.signToken(user.id, user.email);
+		return user;
 	}
 
 	async signToken(userId: number, email: string): Promise<{access_token: string}> {
@@ -66,6 +67,7 @@ export class AuthService {
 			expiresIn: '30m',
 			secret: secret,
 		});
+		console.log(token);
 		return {access_token: token};
 	}
 
@@ -84,5 +86,7 @@ export class AuthService {
 			throw new BadRequestException('Invalid access token');
 		}
 	}
+
+
 
 }
