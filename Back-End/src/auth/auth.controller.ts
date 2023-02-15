@@ -11,20 +11,28 @@ import { Response } from 'express';
 export class AuthController {
 	constructor(private authService: AuthService) {}
 
-	@Post('signup')
+	@Post('/signup')
 	signup(@Body() dto: AuthDto) {
 		return this.authService.signup(dto);
 	}
 
 	@HttpCode(HttpStatus.OK)
-	@Post('signin')
+	@Post('/signin')
 	async signin(@Body() dto: SigninDto, @Res({ passthrough: true }) response: Response) {
-		const user = await this.authService.signin(dto);
-		const token = this.authService.signToken(user.id, user.email);
-
-		// response.cookie('access_token', token, { httpOnly: true });
+		// const user = await this.authService.signin(dto);
+		// const token = this.authService.generateTokens(user.id, user.email);
+		const tokens = await this.authService.signin(dto);
+		console.log("AUTH CONTROLLER : " + tokens.access_token);
+		// response.cookie('access_token', tokens.access_token, { httpOnly: true });
 		// console.log(response);
-		return { token };
+		// return { token };
+		return tokens;
+	}
+
+	@Post('logout')
+	@HttpCode(200)
+	logout(@GetUser() user: User) {
+		return this.authService.signout(user.id);
 	}
 
 	@Get('test')

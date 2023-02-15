@@ -1,10 +1,8 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { User } from '@prisma/client';
-import { Request } from 'express';
-import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { UserService } from './user.service';
+import { GetCurrentUserId } from '../decorators/get-userId.decorator';
 
 @Controller('users')
 export class UserController {
@@ -12,9 +10,9 @@ export class UserController {
 
 	@Get('/profile')
 	@UseGuards(JwtGuard)
-	async getMe(@GetUser() user: User) {
-		// return `Welcome ${req.user.username}!`;
-
-		return await this.userService.fetchProfileData(user.username);
+	async getMe(@GetCurrentUserId() id: number) {
+		const userDto = this.userService.getUser(id);
+		return userDto;
 	}
 }
+

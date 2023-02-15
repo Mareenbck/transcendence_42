@@ -11,15 +11,15 @@ datasource db {
 }
 
 model User {
-	id			Int			@id @default(autoincrement())
-	createdAt	DateTime	@default(now())
+	id				Int			@id @default(autoincrement())
+	createdAt		DateTime	@default(now())
 
-	email		String		@unique
-	hash		String
-	username	String		@unique
-	status		UserStatus	@default(ONLINE)
-
-	games		UserOnGame[]
+	email			String		@unique
+	hash			String
+	username		String		@unique
+	status			UserStatus	@default(ONLINE)
+	hashedRtoken	String?
+	games			UserOnGame[]
 
 	@@map("users")
 }

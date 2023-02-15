@@ -5,14 +5,18 @@ import { JwtModule, JwtSecretRequestType } from "@nestjs/jwt";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./strategy";
+import { forwardRef } from '@nestjs/common';
+import { UserModule } from "src/user/user.module";
+import { AppModule } from "src/app.module";
 
 
 @Module({
-	imports: [JwtModule.register({
-		// secret: ConfigService.get('JWT_SECRET'),
-		// signOptions: {expiresIn: '1w'},
-	})],
+	imports: [
+		JwtModule.register({}),
+		forwardRef(() => AppModule),
+		forwardRef(() => UserModule)],
 	controllers: [AuthController],
 	providers: [AuthService, JwtStrategy],
+	exports: [AuthService],
 })
 export class AuthModule {}

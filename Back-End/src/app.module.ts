@@ -13,6 +13,7 @@ import { ChatGateway } from './chat/chat.gateway';
 		AuthModule,
 		UserModule,
 		PrismaModule,
+		// JwtModule.register({ secret: process.env.JWT_SECRET }),
 	],
   providers: [ChatGateway],
 })

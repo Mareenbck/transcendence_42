@@ -6,29 +6,32 @@ function Login() {
 	const [password, setPassword] = useState('');
 	const [redirect, setRedirect] = useState(false);
 
+	const url = 'http://localhost:3000/auth/signin';
 
 	async function handleLogin(event: FormEvent) {
 		event.preventDefault();
+		const fetchHandler = async() => {
+			try {
+				const response = await fetch(url, {
+					method: "POST",
+					body: JSON.stringify({
+						email: email,
+						password: password
+					}),
+					headers: {
+						"Content-Type" : "application/json"
+					},
+				});
+				const dataResponse = await response.json();
 
-		const loginData = {
-			email: email,
-			password: password,
+				const token = dataResponse.access_token;
+				localStorage.setItem('token', token);
+				setRedirect(true);
+			} catch(error) {
+				console.log(error);
+			}
 		};
-		try {
-			const options = {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(loginData),
-			};
-			const response = await fetch(`http://localhost:3000/auth/signin`, options);
-			const result = await response.json();
-			setRedirect(true);
-			return result;
-		} catch (error) {
-			console.error(error);
-		}
+		fetchHandler();
 	}
 	if (redirect) {
 		return <Navigate to="/users/profile" />

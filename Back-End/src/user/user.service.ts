@@ -1,27 +1,39 @@
 import { PrismaService } from '../prisma/prisma.service';
+import { User } from '@prisma/client';
 import { BadRequestException, Injectable } from '@nestjs/common';
-
-interface ICreatingUser {
-	email: string;
-	username: string;
-}
+import { UserDto } from './dto/user.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UserService {
-	// private creatingUsers: ICreatingUser[] = [];
+	constructor(private readonly prisma: PrismaService) { }
 
-	constructor(private readonly prismaService: PrismaService) { }
-
-	async fetchProfileData(username: string) {
-		const user = await this.prismaService.user.findUnique({
-			where: {
-				username: username,
+	async createUser(email: string, username: string, hash: string): Promise<User> {
+		const user = await this.prisma.user.create({
+			data: {
+				email,
+				username,
+				hash,
 			},
 		});
-		if (!user) return null;
-		return {
-			username: user.username,
-			email: user.email,
-		};
+		return user;
+	}
+
+	async getUser(id: number) {
+		if (id === undefined) {
+			throw new BadRequestException('Undefined user ID');
+		}
+		try {
+			const user = await this.prisma.user.findUnique({
+				where: {
+					id: id,
+				},
+				rejectOnNotFound: true,
+			});
+			const userDTO = plainToClass(UserDto, user);
+			return userDTO;
+		} catch (error) {
+			throw new BadRequestException('getUser error : ' + error);
+		}
 	}
 }
