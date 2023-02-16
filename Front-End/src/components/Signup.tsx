@@ -1,5 +1,6 @@
 import React, { SyntheticEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
+import './Form.css'
 
 function Signup() {
 	const [username, setUsername] = useState('');
@@ -41,32 +42,36 @@ function Signup() {
 	}
 
 	return (
-		<main className="form-signin w-100 m-auto text-center">
+	<div className="container-form">
+		<h1 className='title-form'>SIGN UP</h1>
+		<div className="border-form-up">
 			<form onSubmit={submit}>
-				<h1 className="h3 mb-3 fw-normal">Please sign up</h1>
-				<div className="form-floating">
-					<input className="form-control" id="floatingInput" placeholder="username"
-							onChange={e => setUsername(e.target.value)} />
+				<div className="form-input">
 					<label htmlFor="floatingInput">Username</label>
+					<input className="form-fields" placeholder="username"
+							onChange={e => setUsername(e.target.value)} />
 				</div>
-				<div className="form-floating">
-					<input type="email" className="form-control" id="floatingInput" placeholder="name@example.com"
-						onChange={e => setEmail(e.target.value)} />
+				<div className="form-input">
 					<label htmlFor="floatingInput">Email address</label>
+					<input type="email" className="form-fields" placeholder="name@example.com"
+						onChange={e => setEmail(e.target.value)} />
 				</div>
-				<div className="form-floating">
-					<input type="password" className="form-control" id="floatingPassword" placeholder="Password"
-						onChange={e => setPassword(e.target.value)} />
+				<div className="form-input">
 					<label htmlFor="floatingPassword">Password</label>
+					<input type="password" className="form-fields" placeholder="Password"
+						onChange={e => setPassword(e.target.value)} />
 				</div>
 				{/* <div className="form-floating">
 					<input type="password" className="form-control" id="floatingPassword" placeholder="Password confirm"
 						onChange={e => setPasswordConfirm(e.target.value)} />
 					<label htmlFor="floatingPassword">Password Confirm</label>
 				</div> */}
-				<button className="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+				<div className="position">
+					<button className="submit-form" type="submit"> <i class="fa-solid fa-arrow-right"></i> Sign up</button>
+				</div>
 			</form>
-		</main>
+		</div>
+	</div>
 	);
 }
 
