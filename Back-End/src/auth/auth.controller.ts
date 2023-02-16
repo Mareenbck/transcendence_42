@@ -19,26 +19,20 @@ export class AuthController {
 	@HttpCode(HttpStatus.OK)
 	@Post('/signin')
 	async signin(@Body() dto: SigninDto, @Res({ passthrough: true }) response: Response) {
-		// const user = await this.authService.signin(dto);
-		// const token = this.authService.generateTokens(user.id, user.email);
 		const tokens = await this.authService.signin(dto);
-		console.log("AUTH CONTROLLER : " + tokens.access_token);
-		// response.cookie('access_token', tokens.access_token, { httpOnly: true });
-		// console.log(response);
-		// return { token };
 		return tokens;
 	}
 
-	@Post('logout')
-	@HttpCode(200)
-	logout(@GetUser() user: User) {
-		return this.authService.signout(user.id);
-	}
+	// @Post('logout')
+	// @HttpCode(200)
+	// logout(@GetUser() user: User) {
+	// 	return this.authService.signout(user.id);
+	// }
 
-	@Get('test')
-	@UseGuards(AuthGuard)
-	test(@GetUser() user: User) {
-		return 'Hey ' + user.username;
-	}
+	// @Get('test')
+	// @UseGuards(AuthGuard)
+	// test(@GetUser() user: User) {
+	// 	return 'Hey ' + user.username;
+	// }
 
 }

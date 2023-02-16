@@ -66,30 +66,24 @@ export class AuthService {
 		console.log("SERVICE " + tokens);
 		console.log("AUTH SERVICE  " + user.email);
 		return tokens;
-		// return user;
 	}
 
 	/* SIGNOUT */
-	async signout(userId: number): Promise<void> {
-		// delete refresh token (log out)
-		await this.prisma.user.updateMany({
-			where: {
-				id: userId,
-				hashedRtoken: {
-					// eslint-disable-next-line unicorn/no-null
-					not: null,
-				},
-			},
-			data: {
-				// eslint-disable-next-line unicorn/no-null
-				hashedRtoken: null,
-			},
-		});
-		//sending status update to the front
-		// this.appGateway.offlineFromService(userId);
-	}
+	// async signout(userId: number): Promise<void> {
+	// 	// delete refresh token (log out)
+	// 	await this.prisma.user.updateMany({
+	// 		where: {
+	// 			id: userId,
+	// 			hashedRtoken: { not: null },
+	// 		},
+	// 		data: {
+	// 			hashedRtoken: null,
+	// 		},
+	// 	});
+	// 	//sending status update to the front
+	// 	// this.appGateway.offlineFromService(userId);
+	// }
 
-	/* GENERATE JSON WEB TOKENS */
 	async generateTokens(userId: number, email: string): Promise<AuthTokenDto> {
 		const data = {
 			sub: userId,
@@ -99,7 +93,6 @@ export class AuthService {
 		// Set expiration times
 		const access_token_expiration = process.env.ACCESS_TOKEN_EXPIRATION;
 		const refresh_token_expiration = process.env.REFRESH_TOKEN_EXPIRATION;
-		// const secret = this.config.get('JWT_SECRET');
 		const Atoken = await this.jwt.signAsync(data, {
 			expiresIn: access_token_expiration,
 			secret: secret,
@@ -116,7 +109,6 @@ export class AuthService {
 		};
 	}
 
-	/* REFRESH TOKEN */
 	async refresh_token(userId: number, refreshToken: string): Promise<AuthTokenDto> {
 		// Find user by id
 		const user = await this.prisma.user.findUnique({
@@ -142,11 +134,7 @@ export class AuthService {
 		return tokens;
 	}
 
-	/* UPDATE REFRESH TOKEN */
-	async updateRefreshToken(
-		userId: number,
-		refreshToken: string,
-	): Promise<void> {
+	async updateRefreshToken(userId: number, refreshToken: string): Promise<void> {
 		// hash refresh token
 		const hash = await argon.hash(refreshToken);
 		// update user refresh token (log in)
