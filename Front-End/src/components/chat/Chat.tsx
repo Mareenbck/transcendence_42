@@ -11,7 +11,7 @@ function Chat() {
 		socket?.emit("message", value)
 	}
 	useEffect(() => {
-		const newSocket = io("http://localhost:8080")
+		const newSocket = io("http://localhost:8001")
 		setSocket(newSocket)
 	}, [setSocket])
 
