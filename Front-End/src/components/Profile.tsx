@@ -1,6 +1,7 @@
 import './Profile.css'
 import '../App.tsx'
 import React, { useState, useEffect } from 'react'
+import { Link } from "react-router-dom";
 
 
 const Profile = () =>  {
@@ -33,7 +34,7 @@ const Profile = () =>  {
 			<h2>Profile</h2>
 			<h4>{message}</h4>
 			<p>Welcome, {username}!</p>
-			{/* <Link to="/chat/message" className='btn-sign'>Chat</Link> */}
+			<Link to="/chat/message">Chat</Link>
 
 		</div>
 	);
