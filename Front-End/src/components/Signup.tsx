@@ -1,4 +1,3 @@
-import { BadRequestException } from "@nestjs/common";
 import React, { SyntheticEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
 

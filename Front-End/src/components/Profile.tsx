@@ -33,6 +33,8 @@ const Profile = () =>  {
 			<h2>Profile</h2>
 			<h4>{message}</h4>
 			<p>Welcome, {username}!</p>
+			{/* <Link to="/chat/message" className='btn-sign'>Chat</Link> */}
+
 		</div>
 	);
 }
