@@ -16,13 +16,19 @@ function Home() {
 
 
 	return (
-		<div className="App">
-			<h1>Transcendence</h1>
-			<Link to="/auth/signin" className='btn'>Login</Link>
-			<Link to="/auth/signup" className='btn'>Sign-up</Link>
-			<Link to="/chat/message" className="btn">Chat</Link>
-			<div className='btn'>User42</div>
+	<main className='App'>
+		<div className="container">
+			<div className="content">
+				<h1>Transcendence</h1>
+			</div>
+			<div className="buttons">
+				<Link to="/auth/signup" className='btn-sign'>Sign <span>UP</span></Link>
+				<Link to="/auth/signin" className='btn-sign'>Sign <span>IN</span></Link>
+				{/* <Link to="/chat/message" className='btn-sign'>Chat</Link> */}
+				<Link to="/" className='btn-sign'>Log <span>42</span></Link>
+			</div>
 		</div>
+	</main>
 	)
 }
 

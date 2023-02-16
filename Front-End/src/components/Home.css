@@ -6,7 +6,7 @@
 	color: #888;
   }
 
-  .btn{
+  /* .btn{
 	margin: 1.5rem;
 	display: inline-flex;
 	justify-content: center;
@@ -24,39 +24,78 @@
 	background-color: aqua;
 	color: black;
 	flex-direction: raw;
+  } */
+
+  .App {
+	background-color: #699BF7;
+	height: 100vh;
+	width: 100%;
   }
 
+  h1 {
+	font-family: 'Noto Sans', sans-serif;
+	font-weight: 600;
+  }
+
+  .container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr;
+	height: 100vh;
+  }
+
+  .content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+  }
+
+  .buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-content: center;
+  }
+
+  .btn-sign {
+	display: flex;
+	flex-direction: column;
+	color: black;
+	font-family: 'Noto Sans', sans-serif;
+	font-weight: 200;
+	background-color: #C7B9FF;
+	justify-content: center;
+	align-items: center;
+	width: 133px;
+	height: 133px;
+	border-radius: 20px;
+	border: black;
+	border-style: solid;
+	margin: 20px;
+	font-size: 38px;
+  }
+
+  .btn-sign span {
+	font-family: 'Noto Sans', sans-serif;
+	font-weight: 600;
+	margin-top: -15px;
+  }
+
+  @media (max-width: 768px) {
+	.container {
+	  display: flex;
+	  flex-direction: column;
+	}
+
+
   #root {
-	max-width: 1280px;
+	/* max-width: 1280px;
 	margin: 0 auto;
-	padding: 2rem;
+	padding: 2rem; */
 	text-align: center;
   }
 
-  .logo {
-	height: 6em;
-	padding: 1.5em;
-	will-change: filter;
-	transition: filter 300ms;
-  }
-  .logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.react:hover {
-	filter: drop-shadow(0 0 2em #61dafbaa);
-  }
 
-  @keyframes logo-spin {
-	from {
-	  transform: rotate(0deg);
-	}
-	to {
-	  transform: rotate(360deg);
-	}
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-	a:nth-of-type(2) .logo {
-	  animation: logo-spin infinite 20s linear;
-	}
-  }

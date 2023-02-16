@@ -1,5 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
+import './Form.css'
 
 function Login() {
 	const [email, setEmail] = useState('');
@@ -37,23 +38,29 @@ function Login() {
 		return <Navigate to="/users/profile" />
 	}
 	return (
-		<main className="form-signin w-100 m-auto text-center">
-			<form onSubmit={handleLogin}>
-				<h1 className="h3 mb-3 fw-normal">Please sign in</h1>
+	<div className="container-form">
+		<h1 className='title-form'>SIGN IN</h1>
+		<div className="border-form">
 
-				<div className="form-floating">
-					<input type="email" className="form-control" id="floatingInput" placeholder="name@example.com"
+		{/* <main className="form-signin w-100 m-auto text-center"> */}
+			<form onSubmit={handleLogin}>
+				<div className="form-input">
+				<label htmlFor="floatingInput">Email address</label>
+					<input type="email" className="form-fields" placeholder="name@example.com"
 						onChange={e => setEmail(e.target.value)} />
-					<label htmlFor="floatingInput">Email address</label>
 				</div>
-				<div className="form-floating">
-					<input type="password" className="form-control" id="floatingPassword" placeholder="Password"
-						onChange={e => setPassword(e.target.value)}/>
+				<div className="form-input">
 					<label htmlFor="floatingPassword">Password</label>
+					<input type="password" className="form-fields" placeholder="Password"
+						onChange={e => setPassword(e.target.value)}/>
 				</div>
-				<button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+				<div className="position">
+					<button className="submit-form" type="submit"> <i class="fa-solid fa-arrow-right"></i> Sign in</button>
+				</div>
 			</form>
-		</main>
+		{/* </main> */}
+	</div>
+</div>
 	);
 }
 
