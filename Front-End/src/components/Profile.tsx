@@ -29,13 +29,17 @@ const Profile = () =>  {
 		}
 	}, [username]);
 
+
 	return (
-		<div>
+		<div className="mne">
 			<h2>Profile</h2>
 			<h4>{message}</h4>
 			<p>Welcome, {username}!</p>
 			<Link to="/chat/message">Chat</Link>
-
+			<br /><br />
+			<div className="buttons">
+				<Link to="/auth/signin" className='btn-sign' onClock={window.localStorage.clear()}>Log<span>Out</span></Link>	
+			</div>
 		</div>
 	);
 }
