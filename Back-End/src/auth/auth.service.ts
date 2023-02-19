@@ -63,8 +63,6 @@ export class AuthService {
 		const tokens = await this.generateTokens(user.id, user.email);
 		// update refresh token
 		await this.updateRefreshToken(user.id, tokens.refresh_token);
-		console.log("SERVICE " + tokens);
-		console.log("AUTH SERVICE  " + user.email);
 		return tokens;
 	}
 
@@ -101,8 +99,6 @@ export class AuthService {
 			expiresIn: refresh_token_expiration,
 			secret: secret,
 		});
-		console.log('Atoken : ' + Atoken);
-		console.log('Rtoken : ' + Rtoken);
 		return {
 			access_token: Atoken,
 			refresh_token: Rtoken,

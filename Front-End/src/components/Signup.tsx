@@ -67,7 +67,7 @@ function Signup() {
 					<label htmlFor="floatingPassword">Password Confirm</label>
 				</div> */}
 				<div className="position">
-					<button className="submit-form" type="submit"> <i class="fa-solid fa-arrow-right"></i> Sign up</button>
+					<button className="submit-form" type="submit"> <i className="fa-solid fa-arrow-right"></i> Sign up</button>
 				</div>
 			</form>
 		</div>
