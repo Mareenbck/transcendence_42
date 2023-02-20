@@ -23,4 +23,16 @@ export class TwoFactorDto {
 	@IsNotEmpty()
 	@IsString()
 	twoFAcode: string;
+
+	@IsNotEmpty()
+	@IsEmail()
+	email: string;
+
+	@IsNotEmpty()
+	@IsNumber()
+	id: number;
+
+	@IsNotEmpty()
+	@IsString()
+	twoFAsecret: string;
 }

@@ -24,11 +24,10 @@ export class UserService {
 			throw new BadRequestException('Undefined user ID');
 		}
 		try {
-			const user = await this.prisma.user.findUnique({
+			const user = await this.prisma.user.findUniqueOrThrow({
 				where: {
 					id: id,
 				},
-				rejectOnNotFound: true,
 			});
 			const userDTO = plainToClass(UserDto, user);
 			return userDTO;

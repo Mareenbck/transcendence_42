@@ -1,33 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { authenticator } from 'otplib';
 import { toFileStream, toDataURL } from 'qrcode';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from '../auth.service';
 import { ConfigService } from "@nestjs/config";
 import { UserService } from 'src/user/user.service';
-import { TwoFaUserDto } from 'src/auth/dto/2fa.dto';
+import { TwoFactorDto, TwoFaUserDto } from 'src/auth/dto/2fa.dto';
 
 
 @Injectable()
 export class TwoFactorAuthService {
 	constructor(
-		private prisma: PrismaService,
-		// private authservice: AuthService,
+		private authservice: AuthService,
 		private readonly configService: ConfigService,
 		private readonly userService: UserService,
+		private prisma: PrismaService
 	) { }
 
-	async generate2FAsecret(user: TwoFaUserDto) {
+	async generate2FAsecret(email: string) {
 		// Generate a 2FA secret
 		const secret = authenticator.generateSecret();
 		// Create a URL for the QR code
 		const otpauthUrl = authenticator.keyuri(
-			user.email,
+			email,
 			this.configService.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'),
 			secret,
 		);
 		// Add the secret to the user
-		await this.userService.set2FASecretToUser(secret, user.email);
+		await this.userService.set2FASecretToUser(secret, email);
 		return {
 			secret,
 			otpauthUrl,
@@ -40,10 +40,38 @@ export class TwoFactorAuthService {
 		return toDataURL(otpauthUrl);
 	}
 
-	public isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user: TwoFaUserDto) {
+	// Check is 2FA code is valid
+	public isTwoFactorAuthenticationCodeValid(twoFAcode: string, user: TwoFactorDto) {
 		return authenticator.verify({
-			token: twoFactorAuthenticationCode,
+			token: twoFAcode,
 			secret: user.twoFAsecret
 		})
+	}
+
+	/* Turn on 2FA for existing user */
+	async turn_on(user: TwoFaUserDto) {
+		// Enable 2FA for user
+		await this.userService.turnOn2FA(user.email);
+
+		const tokens = await this.authservice.generateTokens(user.id, user.email, true);
+		return tokens;
+	}
+
+	/* Authenticate signin using 2FA */
+	async loginWith2fa(dto: TwoFactorDto) {
+		// find user by email
+		//A DEPLACER DANS USER
+		const user = await this.prisma.user.findUnique({
+			where: {
+				email: dto.email,
+			},
+		});
+		if (!user) {
+			throw new UnauthorizedException('Invalid User');
+		}
+		// generate tokens
+		const tokens = await this.authservice.generateTokens(dto.id, dto.email, true);
+		await this.authservice.updateRefreshToken(dto.id, tokens.refresh_token);
+		return tokens;
 	}
 }
