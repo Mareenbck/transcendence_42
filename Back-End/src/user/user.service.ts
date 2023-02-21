@@ -24,16 +24,29 @@ export class UserService {
 			throw new BadRequestException('Undefined user ID');
 		}
 		try {
-			const user = await this.prisma.user.findUnique({
+			const user = await this.prisma.user.findUniqueOrThrow({
 				where: {
 					id: id,
 				},
-				rejectOnNotFound: true,
 			});
 			const userDTO = plainToClass(UserDto, user);
 			return userDTO;
 		} catch (error) {
 			throw new BadRequestException('getUser error : ' + error);
 		}
+	}
+
+	async set2FASecretToUser(secret: string, email: string) {
+		return this.prisma.user.update({
+			where: { email: email },
+			data: { twoFAsecret: secret },
+		});
+	}
+
+	async turnOn2FA(email: string) {
+		return this.prisma.user.update({
+			where: { email: email },
+			data: { twoFA: true },
+		});
 	}
 }

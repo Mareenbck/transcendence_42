@@ -47,24 +47,25 @@ export class AuthService {
 
 	async signin(dto: SigninDto) {
 		//find the user by email
+		//A DEPLACER DANS USER
 		const user = await this.prisma.user.findUnique({
 			where: {
 				email: dto.email,
 			},
 		});
-		//if user doesnt exist -> throw exception
 		if (!user)
 			throw new ForbiddenException('Credentials incorrect');
 		//compare password
 		const pwMatches = await argon.verify(user.hash, dto.password);
-		//if password incorect -> throw exception
 		if (!pwMatches)
 			throw new ForbiddenException('Credentials incorrect');
-		const tokens = await this.generateTokens(user.id, user.email);
+		// si 2fa est true -> sort de cette method
+		if (user.twoFA) {
+			return { username: user.username, twoFA: user.twoFA };
+		}
+		const tokens = await this.generateTokens(user.id, user.email, user.twoFA);
 		// update refresh token
 		await this.updateRefreshToken(user.id, tokens.refresh_token);
-		console.log("SERVICE " + tokens);
-		console.log("AUTH SERVICE  " + user.email);
 		return tokens;
 	}
 
@@ -84,15 +85,15 @@ export class AuthService {
 	// 	// this.appGateway.offlineFromService(userId);
 	// }
 
-	async generateTokens(userId: number, email: string): Promise<AuthTokenDto> {
+	async generateTokens(userId: number, email: string, is2FA = false): Promise<AuthTokenDto> {
 		const data = {
 			sub: userId,
 			email,
+			is2FA,
 		};
-		const secret = process.env.JWT_SECRET;
-		// Set expiration times
-		const access_token_expiration = process.env.ACCESS_TOKEN_EXPIRATION;
-		const refresh_token_expiration = process.env.REFRESH_TOKEN_EXPIRATION;
+		const secret = this.config.get('JWT_SECRET');
+		const access_token_expiration = this.config.get('ACCESS_TOKEN_EXPIRATION');
+		const refresh_token_expiration = this.config.get('REFRESH_TOKEN_EXPIRATION');
 		const Atoken = await this.jwt.signAsync(data, {
 			expiresIn: access_token_expiration,
 			secret: secret,
@@ -101,8 +102,6 @@ export class AuthService {
 			expiresIn: refresh_token_expiration,
 			secret: secret,
 		});
-		console.log('Atoken : ' + Atoken);
-		console.log('Rtoken : ' + Rtoken);
 		return {
 			access_token: Atoken,
 			refresh_token: Rtoken,
@@ -118,26 +117,22 @@ export class AuthService {
 		});
 		// Check if user exists and is logged in
 		if (!user || !user.hashedRtoken)
-			// throw 403 error
 			throw new ForbiddenException('Invalid Credentials');
 		// Verify hashed Refresh Token
 		const pwMatches = await argon.verify(user.hashedRtoken, refreshToken);
-		// Invalid refresh token
 		if (!pwMatches)
-			// throw 403 error
 			throw new ForbiddenException('Invalid Credentials');
 		// Generate new tokens
 		const tokens = await this.generateTokens(user.id, user.email);
 		// Update Refresh Token - if user is logged in and valid
 		await this.updateRefreshToken(user.id, tokens.refresh_token);
-		// return tokens
 		return tokens;
 	}
 
 	async updateRefreshToken(userId: number, refreshToken: string): Promise<void> {
-		// hash refresh token
+		// hash le refresh token
 		const hash = await argon.hash(refreshToken);
-		// update user refresh token (log in)
+		// update le user refresh token (log in)
 		await this.prisma.user.update({
 			where: {
 				id: userId,

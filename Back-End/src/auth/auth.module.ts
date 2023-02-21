@@ -8,6 +8,9 @@ import { JwtStrategy } from "./strategy";
 import { forwardRef } from '@nestjs/common';
 import { UserModule } from "src/user/user.module";
 import { AppModule } from "src/app.module";
+import { TwoFactorAuthenticationController } from "./2FA/2FactorAuth.controller";
+import { TwoFactorAuthService } from "./2FA/2FactorAuth.service";
+import { Jwt2faStrategy } from "./strategy/jwt-2fa.strategy";
 
 
 @Module({
@@ -15,8 +18,12 @@ import { AppModule } from "src/app.module";
 		JwtModule.register({}),
 		forwardRef(() => AppModule),
 		forwardRef(() => UserModule)],
-	controllers: [AuthController],
-	providers: [AuthService, JwtStrategy],
+	controllers: [AuthController, TwoFactorAuthenticationController],
+	providers: [
+		AuthService,
+		JwtStrategy,
+		TwoFactorAuthService,
+		Jwt2faStrategy, ],
 	exports: [AuthService],
 })
 export class AuthModule {}

@@ -4,6 +4,7 @@ import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { PrismaService } from "src/prisma/prisma.service";
 
+//Le constructeur contient les champs d'authentification qui seront envoyés par le front-end via la route POST de connexion (email, mot de passe).
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 	constructor(config: ConfigService, private prisma: PrismaService) {
@@ -21,4 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 		return user;
 	}
 }
-
+// A MODIFIER ?
+// La méthode validate va utiliser la méthode validateUser que nous avons créée plus tôt.
+// Si elle ne retourne pas d'utilisateur, alors elle lancera une erreur 401 Unauthorized, sinon elle retournera l'utilisateur sans le mot de passe.
