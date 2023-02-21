@@ -1,6 +1,6 @@
 import React, { SyntheticEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
-import './Form.css'
+import '../style/Form.css'
 
 function Signup() {
 	const [username, setUsername] = useState('');
