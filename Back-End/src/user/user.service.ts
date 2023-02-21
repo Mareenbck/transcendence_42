@@ -49,4 +49,11 @@ export class UserService {
 			data: { twoFA: true },
 		});
 	}
+
+	async turnOff2FA(email: string) {
+		return this.prisma.user.update({
+			where: { email: email },
+			data: { twoFA: false },
+		});
+	}
 }

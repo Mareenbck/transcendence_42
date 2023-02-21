@@ -1,11 +1,13 @@
 import React, { FormEvent, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import './Form.css'
 
 function Login() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [redirect, setRedirect] = useState(false);
+
+	let navigate = useNavigate();
 
 	const url = 'http://localhost:3000/auth/signin';
 
@@ -35,7 +37,7 @@ function Login() {
 		fetchHandler();
 	}
 	if (redirect) {
-		return <Navigate to="/users/profile" />
+		navigate("/users/profile")
 	}
 	return (
 	<div className="container-form">
@@ -59,8 +61,8 @@ function Login() {
 				</div>
 			</form>
 		{/* </main> */}
+		</div>
 	</div>
-</div>
 	);
 }
 
