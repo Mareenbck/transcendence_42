@@ -1,26 +1,27 @@
 import './App.css'
-import React from "react";
-import MessagesInput from "./components/chat/MessagesInput"
-import Messages from "./components/chat/Messages"
-import Login from "./components/Login";
-import Signup from './components/Signup'
-import { BrowserRouter, Route, Routes} from 'react-router-dom';
-import Nav from './components/Nav'
+import React, { useContext } from "react";
+import Signup from './components/auth/Signup'
+import { Route, Routes} from 'react-router-dom';
 import Chat from './components/chat/Chat'
-import Home from './components/Home'
-import Profile from './components/Profile';
+import Home from './pages/Home'
+import Profile from './pages/Profile';
+import AuthContext from './store/AuthContext';
+import Login from './components/auth/Login';
+import Menu from './pages/Menu';
 
 function App() {
+	const authCtx = useContext(AuthContext);
+
+	const isLoggedIn = authCtx.isLoggedIn;
 	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path='/' element={<Home />} />
-				<Route path='/chat/message' element={<Chat />} />
-				<Route path='/auth/signin' element={<Login />} />
-				<Route path='/auth/signup' element={<Signup />}/>
-				<Route path='/users/profile' element={<Profile />}/>
-			</Routes>
-		</BrowserRouter>
+		<Routes>
+			<Route path='/' element={<Home />} />
+			<Route path='/chat/message' element={<Chat />} />
+			<Route path='/auth/signin' element={<Login />} />
+			<Route path='/auth/signup' element={<Signup />} />
+			<Route path='/menu' element={<Menu />}/>
+			<Route path='/users/profile/:id' element={<Profile />} />
+		</Routes>
 	);
 }
 

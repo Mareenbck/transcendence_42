@@ -49,6 +49,12 @@ export class TwoFactorAuthenticationController {
 		// return tokens;
 	}
 
+	@Post('/turn-off')
+	@HttpCode(200)
+	async turn_off(@GetUser() user: TwoFactorDto) {
+		return await this.userService.turnOff2FA(user.email);;
+	}
+
 	@Post('/authenticate')
 	@HttpCode(200)
 	@UseGuards(JwtGuard)

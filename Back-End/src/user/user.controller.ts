@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
 import { UserService } from './user.service';
 import { GetCurrentUserId } from '../decorators/get-userId.decorator';
@@ -7,9 +7,9 @@ import { GetCurrentUserId } from '../decorators/get-userId.decorator';
 export class UserController {
 	constructor(private userService: UserService) { }
 
-	@Get('/profile')
+	@Get('/profile/:iD')
 	@UseGuards(JwtGuard)
-	async getMe(@GetCurrentUserId() id: number) {
+	async getMe(@GetCurrentUserId() id: number, @Param('iD') iD: string ) {
 		const userDto = this.userService.getUser(id);
 		return userDto;
 	}
