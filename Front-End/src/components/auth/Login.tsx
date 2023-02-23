@@ -1,6 +1,9 @@
-import React, { FormEvent, useRef, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import ErrorModal from './ErrorModal';
 import '../../style/Form.css'
+import AuthContext from '../../store/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 interface ErrorMsg {
 	title: string;
@@ -11,8 +14,19 @@ function AuthForm() {
 	const emailInputRef = useRef<HTMLInputElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 
+	let navigate = useNavigate();
+
+	const authCtx = useContext(AuthContext);
+
 	const [error, setError] = useState<ErrorMsg | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			navigate('/menu');
+		}
+	}, [isAuthenticated, navigate]);
 
 	function handleLogin(event: FormEvent) {
 		event.preventDefault();
@@ -36,8 +50,8 @@ function AuthForm() {
 			return;
 		}
 		const url = 'http://localhost:3000/auth/signin';
-		const fetchHandler = async () => {
-			try {
+			const fetchHandler = async () => {
+				try {
 				const response = await fetch(url, {
 					method: "POST",
 					body: JSON.stringify({
@@ -49,13 +63,15 @@ function AuthForm() {
 					},
 				});
 				const dataResponse = await response.json();
-				console.log("data ---->")
-				console.log(dataResponse);
 				setIsLoading(false);
 				if (response.ok) {
 					const token = dataResponse.access_token;
+					const decodedToken: any = jwtDecode(token);
+					const userId = decodedToken.sub;
 					localStorage.setItem('token', token);
-					// setRedsirect(true);
+					localStorage.setItem('userId', userId);
+					authCtx.login(token, userId);
+					setIsAuthenticated(true);
 				} else {
 					//CHANGER LES MSG DANS BACK -> A DATE FORBIDDEN
 					setError({
@@ -67,12 +83,12 @@ function AuthForm() {
 				console.log(error);
 			}
 		};
-		setIsLoading(true);
 		fetchHandler();
+		setIsLoading(true);
 
 		//pour vider les champs du formulaire
-		// emailInputRef.current!.value = ""
-		// passwordInputRef.current!.value = ""
+		emailInputRef.current!.value = ""
+		passwordInputRef.current!.value = ""
 	};
 
 	function handleError() {
