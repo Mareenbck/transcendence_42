@@ -24,7 +24,7 @@ function AuthForm() {
 
 	useEffect(() => {
 		if (isAuthenticated) {
-			navigate('/menu');
+			navigate('/auth/2fa');
 		}
 	}, [isAuthenticated, navigate]);
 
