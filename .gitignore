@@ -2,6 +2,7 @@
 Back-End/dist
 Back-End/node_modules
 Front-End/node_modules
+/node_modules
 
 # Logs
 logs
