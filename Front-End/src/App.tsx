@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import AuthContext from './store/AuthContext';
 import Login from './components/auth/Login';
 import Menu from './pages/Menu';
+import TwoFaForm from './components/auth/TwoFA';
 
 function App() {
 	const authCtx = useContext(AuthContext);
@@ -18,8 +19,9 @@ function App() {
 			<Route path='/' element={<Home />} />
 			<Route path='/chat/message' element={<Chat />} />
 			<Route path='/auth/signin' element={<Login />} />
+			<Route path='/auth/2fa' element={<TwoFaForm />} />
 			<Route path='/auth/signup' element={<Signup />} />
-			<Route path='/menu' element={<Menu />}/>
+			<Route path='/menu' element={<Menu />} />
 			<Route path='/users/profile/:id' element={<Profile />} />
 		</Routes>
 	);
