@@ -1,0 +1,16 @@
+h2{
+    text-align: center;
+}
+
+.field{
+    background-color: black;
+    display: block;
+    margin: 0 auto;
+}
+
+.racket{
+    background-color: rgb(3, 164, 19);
+    position: absolute;
+    left: x;
+    top: y;
+}
