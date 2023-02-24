@@ -62,7 +62,7 @@ export class TwoFactorAuthenticationController {
 		const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthenticationCodeValid(
 			twoFAcode,
 			user
-			);
+		);
 		if (!isCodeValid) {
 			throw new UnauthorizedException('Wrong authentication code');
 		}
