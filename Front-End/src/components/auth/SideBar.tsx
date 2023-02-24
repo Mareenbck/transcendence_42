@@ -12,7 +12,7 @@ function SideBar(props: any)
                                   /*onClick={() => localStorage.removeItem('token')}*/>
                           LogOut<span> </span></Link>}
                    <br/>
-                    <Link to="/auth/signup" className={style.btn}>Play Game </Link>
+                    <Link to="/game/play" className={style.btn}>Play Game </Link>
 				    <Link to="/chat/message" className={style.btn}>Chat</Link>
 				    
                     <Link to={`/users/profile/${props.id}`} className={style.btn}>Profile page</Link>

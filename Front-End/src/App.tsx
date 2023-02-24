@@ -2,6 +2,7 @@ import './App.css'
 import React, { useContext } from "react";
 import Signup from './components/auth/Signup'
 import { Route, Routes} from 'react-router-dom';
+import Game from './components/game/Game'
 import Chat from './components/chat/Chat'
 import Home from './pages/Home'
 import Profile from './pages/Profile';
@@ -17,6 +18,7 @@ function App() {
 	return (
 		<Routes>
 			<Route path='/' element={<Home />} />
+			<Route path='/game/play' element={<Game />} />
 			<Route path='/chat/message' element={<Chat />} />
 			<Route path='/auth/signin' element={<Login />} />
 			<Route path='/auth/2fa' element={<TwoFaForm />} />
