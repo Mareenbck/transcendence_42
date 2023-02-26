@@ -10,7 +10,7 @@ export class ChatroomDto
   @IsNotEmpty()
   name:  string;
 
-  //avatar: string;
+  avatar: string;
  // users: user[];
 
 //  @Type(() => chatroomMessage)
