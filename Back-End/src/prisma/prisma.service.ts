@@ -5,13 +5,15 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
 	constructor(config: ConfigService) {
-		super({
+		super
+    ({
 			datasources: {
 				db: {
 					url: config.get('DATABASE_URL')
 				},
 			},
-		});
+      log: ['info']
+    });
 	}
 	async onModuleInit() {
 		await this.$connect();
