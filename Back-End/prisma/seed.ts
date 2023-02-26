@@ -61,7 +61,7 @@ async function main() {
       createdAt:     d1,
       content: 'sdzdsd',
       chatroom: {connect: { id: croom1.id}},
-      user: {connect: { id: user2.id }}
+      author: {connect: { id: user2.id }}
     }
   })
   console.log(chatM1)

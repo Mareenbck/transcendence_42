@@ -2,7 +2,7 @@
 CREATE TABLE "Chatroom" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-
+    "avatar" TEXT NOT NULL,
     CONSTRAINT "Chatroom_pkey" PRIMARY KEY ("id")
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE "ChatroomMessage" (
     "id" SERIAL NOT NULL,
     "content" TEXT NOT NULL,
     "chatroomId" INTEGER NOT NULL,
-    "author" INTEGER NOT NULL,
+    "authorId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "ChatroomMessage_pkey" PRIMARY KEY ("id")
@@ -48,7 +48,7 @@ ALTER TABLE "ChatroomUsers" ADD CONSTRAINT "ChatroomUsers_chatroomId_fkey" FOREI
 ALTER TABLE "ChatroomMessage" ADD CONSTRAINT "ChatroomMessage_chatroomId_fkey" FOREIGN KEY ("chatroomId") REFERENCES "Chatroom"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ChatroomMessage" ADD CONSTRAINT "ChatroomMessage_author_fkey" FOREIGN KEY ("author") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ChatroomMessage" ADD CONSTRAINT "ChatroomMessage_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "DirectMessage" ADD CONSTRAINT "DirectMessage_author_fkey" FOREIGN KEY ("author") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -67,6 +67,7 @@ enum UserStatus {
 model Chatroom {
   id      Int     @id @default(autoincrement())
   name    String
+  avatar  String
   users   ChatroomUsers[]
   cr_messages ChatroomMessage[]
 }
@@ -78,7 +79,7 @@ model ChatroomUsers {
   user        User    @relation(fields: [userId], references: [id])
   chatroomId  Int
   chatroom    Chatroom @relation(fields: [chatroomId], references: [id])
-
+  @@unique([userId, chatroomId])
 }
 
 model ChatroomMessage {
@@ -86,8 +87,8 @@ model ChatroomMessage {
   content  String
   chatroomId Int
   chatroom Chatroom @relation(fields: [chatroomId], references: [id])
-  author  Int
-  user    User    @relation(fields: [author], references: [id])
+  authorId  Int
+  author    User    @relation(fields: [authorId], references: [id])
   createdAt DateTime  @default(now())
 }
 
