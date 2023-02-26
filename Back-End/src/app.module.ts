@@ -5,7 +5,6 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ChatGateway } from './chat/chat.gateway';
 import { JwtModule } from '@nestjs/jwt';
-import { ChatroomModule } from './chat/chatroom/chatroom.module';
 import { ChatMessModule } from './chat/chat-mess/chat-mess.module';
 import { DirMessModule } from './chat/dir-mess/dir-mess.module';
 import { Chatroom2Module } from './chat/chatroom2/chatroom2.module';
@@ -19,7 +18,7 @@ import { Chatroom2Module } from './chat/chatroom2/chatroom2.module';
 		UserModule,
 		PrismaModule,
 		JwtModule.register({ secret: process.env.JWT_SECRET }),
-		ChatroomModule,
+		Chatroom2Module,
 		ChatMessModule,
 		DirMessModule,
 		Chatroom2Module,

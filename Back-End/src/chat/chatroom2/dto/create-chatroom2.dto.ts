@@ -9,4 +9,6 @@ export class CreateChatroom2Dto
   @MinLength(3)
   @MaxLength(45)
   name:  string;
+
+  avatar: string;
 }

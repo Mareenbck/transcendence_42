@@ -52,6 +52,7 @@ async function main() {
   const croom1 = await prisma.chatroom.create({
     data: {
       name: 'dddddd',
+      avatar: 'ggg'
     }
   })
   console.log(croom1)

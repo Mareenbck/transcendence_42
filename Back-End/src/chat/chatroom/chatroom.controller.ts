@@ -12,8 +12,8 @@ export class ChatroomController {
   }
 
   @Post()
-    async create( @Body() {name}: ChatroomDto): Promise<ChatroomDto> {
-    return this.prismaService.chatroom.create({data: {name}});
+    async create( @Body() {name, avatar}: ChatroomDto): Promise<ChatroomDto> {
+    return this.prismaService.chatroom.create({data: {name, avatar}});
   }
 
 
