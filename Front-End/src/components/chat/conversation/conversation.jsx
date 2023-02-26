@@ -1,22 +1,14 @@
 import "./conversation.css"
 
-export default function Conversation() {
+export default function Conversation({conversation}) {
   return (
-
-
    <div className="conversation">
       <img
         className="conversationImg"
-        src="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg"
-
-//        src={
-//          user?.profilePicture
-//            ? PF + user.profilePicture
- //           : PF + "https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg"
-   //     }
+        src={"http://localhost:8080/public/images/no-avatar.png"}
         alt=""
       />
-      <span className="conversationName">John</span>
+      <span className="conversationName"  > {conversation.name} </span>
     </div>
   );
 

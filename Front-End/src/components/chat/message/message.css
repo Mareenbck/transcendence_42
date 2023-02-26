@@ -1,8 +1,8 @@
-
 .message {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+      align-items: flex-start;
 }
 
 .messageTop{
