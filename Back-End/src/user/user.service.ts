@@ -1,19 +1,21 @@
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { plainToClass } from 'class-transformer';
+
 
 @Injectable()
 export class UserService {
 	constructor(private readonly prisma: PrismaService) { }
 
-	async createUser(email: string, username: string, hash: string): Promise<User> {
+	async createUser(email: string, username: string, hash: string, id = 0): Promise<User> {
 		const user = await this.prisma.user.create({
 			data: {
 				email,
 				username,
 				hash,
+				id42: id.toString(),
 			},
 		});
 		return user;
@@ -34,6 +36,22 @@ export class UserService {
 		} catch (error) {
 			throw new BadRequestException('getUser error : ' + error);
 		}
+	}
+
+	async getUser42(id42: string): Promise<User | null> {
+		return this.prisma.user.findUnique({
+				where: {
+					id42: id42,
+				}
+			});
+	}
+
+	async getByEmail(email: string): Promise<User | null> {
+		return this.prisma.user.findUnique({
+			where: {
+				email: email,
+			}
+		});
 	}
 
 	async set2FASecretToUser(secret: string, email: string) {

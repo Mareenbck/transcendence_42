@@ -1,11 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { authenticator } from 'otplib';
-import { toFileStream, toDataURL } from 'qrcode';
+import { toDataURL } from 'qrcode';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from '../auth.service';
 import { ConfigService } from "@nestjs/config";
 import { UserService } from 'src/user/user.service';
 import { TwoFactorDto, TwoFaUserDto } from 'src/auth/dto/2fa.dto';
+import { Response } from 'express';
 
 
 @Injectable()
@@ -73,5 +74,13 @@ export class TwoFactorAuthService {
 		const tokens = await this.authservice.generateTokens(dto.id, dto.email, true);
 		await this.authservice.updateRefreshToken(dto.id, tokens.refresh_token);
 		return tokens;
+	}
+
+	signin_2FA(response: Response, username: string) {
+		const url = new URL(process.env.SITE_URL);
+		url.port = process.env.FRONT_PORT;
+		url.pathname = '2FA';
+		url.searchParams.append('username', username);
+		response.status(302).redirect(url.href);
 	}
 }

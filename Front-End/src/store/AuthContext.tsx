@@ -15,11 +15,13 @@ const AuthContext = createContext(defaultValue);
 //controle de la presence du token dans local storage
 const tokenLocalStorage = localStorage.getItem("token");
 const userIdLocalStorage = localStorage.getItem("userId");
+const userId42LocalStorage = localStorage.getItem("userId42");
 const usernameLocalStorage= localStorage.getItem("username");
 
 export const AuthContextProvider = (props: any) => {
 	const [token, setToken] = useState<string | null>(tokenLocalStorage);
 	const [userId, setUserId] = useState<string | null>(userIdLocalStorage);
+	const [userId42, setUserId42] = useState<string | null>(userId42LocalStorage);
 	const [username, setUsername] = useState<string | null>(usernameLocalStorage);
 
 	const fetchHandler = async (token: string, userId: string) => {
@@ -40,7 +42,8 @@ export const AuthContextProvider = (props: any) => {
 
 	const loginHandler = (token: string, userId: string) => {
 		setToken(token);
-		fetchHandler(token, userId);
+		if (!userId42)
+			fetchHandler(token, userId);
 	};
 
 	const logoutHandler = () => {

@@ -11,6 +11,7 @@ import { AppModule } from "src/app.module";
 import { TwoFactorAuthenticationController } from "./2FA/2FactorAuth.controller";
 import { TwoFactorAuthService } from "./2FA/2FactorAuth.service";
 import { Jwt2faStrategy } from "./strategy/jwt-2fa.strategy";
+import { FortyTwoStrategy } from "./strategy/FortyTwoStrategy";
 
 
 @Module({
@@ -23,7 +24,9 @@ import { Jwt2faStrategy } from "./strategy/jwt-2fa.strategy";
 		AuthService,
 		JwtStrategy,
 		TwoFactorAuthService,
-		Jwt2faStrategy, ],
+		Jwt2faStrategy,
+		FortyTwoStrategy,
+	 	],
 	exports: [AuthService],
 })
 export class AuthModule {}

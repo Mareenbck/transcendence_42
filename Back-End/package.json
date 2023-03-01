@@ -6,8 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "prisma": {
-      "seed": "ts-node prisma/seed.ts"
-    },
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -29,7 +29,7 @@
     "@nestjs/config": "^2.3.0",
     "@nestjs/core": "^9.3.7",
     "@nestjs/jwt": "^10.0.1",
-    "@nestjs/passport": "^9.0.1",
+    "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-socket.io": "^9.3.7",
     "@nestjs/websockets": "^9.3.7",
@@ -43,6 +43,7 @@
     "js-cookie": "^3.0.1",
     "otplib": "^12.0.1",
     "passport": "^0.6.0",
+    "passport-42": "^1.2.6",
     "passport-jwt": "^4.0.1",
     "qrcode": "^1.5.1",
     "reflect-metadata": "^0.1.13",
