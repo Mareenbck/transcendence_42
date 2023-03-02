@@ -26,12 +26,13 @@ export const AuthContextProvider = (props: any) => {
 
 	const fetchHandler = async (token: string, userId: string) => {
 		try {
-			const response = await fetch(`http://localhost:3000/users/profile/${userId}`, {
+			const response = await fetch(`http://localhost:3000/users/profile/`, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
 			});
 			const data = await response.json();
+			console.log(data.username)
 			setUserId(data.id);
 			setUsername(data.username);
 			localStorage.setItem('username', data.username);

@@ -15,7 +15,7 @@ export class UserService {
 				email,
 				username,
 				hash,
-				id42: id,
+				id,
 			},
 		});
 		return user;

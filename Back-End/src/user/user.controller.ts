@@ -7,7 +7,7 @@ import { GetCurrentUserId } from '../decorators/get-userId.decorator';
 export class UserController {
 	constructor(private userService: UserService) { }
 
-	@Get('/profile/:iD')
+	@Get('/profile')
 	@UseGuards(JwtGuard)
 	async getMe(@GetCurrentUserId() id: number, @Param('iD') iD: string ) {
 		const userDto = this.userService.getUser(id);

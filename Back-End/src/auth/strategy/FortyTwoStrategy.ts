@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 // import { Strategy as FortyTwoStrategy } from 'passport-42';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { Strategy } from 'passport-42';
+import { Strategy } from 'passport';
 
 export interface Profile_42 {
 	id: number;
@@ -23,7 +23,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42-strategy') 
 				id: 'id',
 				username: 'login',
 				email: 'email',
-				avatar: 'avatar',
+				avatar: 'image_url',
 			}
 		});
 	}
