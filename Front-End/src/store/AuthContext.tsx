@@ -26,13 +26,16 @@ export const AuthContextProvider = (props: any) => {
 
 	const fetchHandler = async (token: string, userId: string) => {
 		try {
-			const response = await fetch(`http://localhost:3000/users/profile/`, {
+			const response = await fetch(`http://localhost:3000/users/profile/${userId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
 			});
+			console.log("response ---->")
+			console.log(response)
 			const data = await response.json();
-			console.log(data.username)
+			console.log("data.username --->")
+			console.log(data)
 			setUserId(data.id);
 			setUsername(data.username);
 			localStorage.setItem('username', data.username);
@@ -51,6 +54,7 @@ export const AuthContextProvider = (props: any) => {
 		setToken("");
 		setUserId("");
 		setUsername("");
+		setUserId42("");
 		localStorage.clear();
 	};
 	//si presence du token -> logged

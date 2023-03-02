@@ -2,6 +2,7 @@ import '../style/Profile.css'
 import React, { useContext } from 'react'
 import { Navigate } from "react-router-dom";
 import AuthContext from '../store/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
@@ -15,6 +16,8 @@ const Profile = () =>  {
 		{isLoggedIn && <p>Votre userid : {authCtx.userId} </p>}
 		{isLoggedIn && <p>Votre username : {authCtx.username} </p>}
 		{isLoggedIn && <button onClick={authCtx.logout}>LOGOUT </button>}
+		{/* {isLoggedIn && <Link to="/" onClick={authCtx.logout}>LOGOUT</Link>} */}
+
 		</>
 	)
 }
