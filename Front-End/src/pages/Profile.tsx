@@ -7,9 +7,11 @@ import { Link } from 'react-router-dom';
 const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
 	const isLoggedIn = authCtx.isLoggedIn;
+	const avatar = authCtx.avatar;
 
 	return (
 		<>
+		<img src={avatar} alt="" />
 		{!isLoggedIn && <Navigate to="/" replace={true} />}
 		{isLoggedIn && <h2>PROFILE</h2>}
 		{isLoggedIn && <p>Votre Token: {authCtx.token} </p>}

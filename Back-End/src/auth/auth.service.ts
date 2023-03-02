@@ -72,13 +72,11 @@ export class AuthService {
 	}
 
 	async signin_42(profile: Profile_42): Promise<User> {
-		// DTO
-		const { email, username, id } = profile;
 		// check if user exists
-		let user = await this.userService.getByEmail(email);
+		let user = await this.userService.getByEmail(profile.email);
 
 		if (!user) {
-			this.create_42_user(profile);
+			return this.create_42_user(profile);
 		}
 		return user;
 	}
@@ -92,7 +90,7 @@ export class AuthService {
 	}
 
 	async create_42_user(profile: Profile_42): Promise<User> {
-		const { email, username, id } = profile;
+		const { email, username, id, avatar } = profile;
 		// generate random password
 		const rdm_string = this.generate_random_password();
 		// hash password using argon2
@@ -103,6 +101,7 @@ export class AuthService {
 			username,
 			hash,
 			id,
+			avatar,
 		);
 		return user;
 	}
@@ -237,17 +236,15 @@ export class AuthService {
 			}
 
 			const data = await response.json();
-
 			const profile: Profile_42 = {
 				id: data.id,
 				username: data.login,
 				email: data.email,
-				avatar: data.image_url,
+				avatar: data.image.link,
 			};
 			return profile;
 		} catch (error) {
 			console.log(error);
-			throw new Error('Failed to get user profile');
 		}
 	}
 

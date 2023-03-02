@@ -50,6 +50,7 @@ export class AuthController {
 			const tokens = await this.authService.exchangeCodeForTokens(code);
 			// Get user profile using the access token
 			const userProfile = await this.authService.getFortyTwoUserProfile(tokens.access_token);
+
 			// Generate token using user profile
 			const user = await this.authService.signin_42(userProfile);
 
