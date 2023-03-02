@@ -17,7 +17,9 @@ function Callback42() {
 					},
 					body: JSON.stringify({ code })
 				});
+
 				const data = await response.json();
+
 				if (response.ok) {
 					const token = data.tokens.access_token;
 					const userId = data.user.id;
@@ -28,7 +30,6 @@ function Callback42() {
 					localStorage.setItem('userId42', userId42);
 					localStorage.setItem('username', username);
 					authCtx.login(token, userId);
-					console.log(token);
 					window.close();
 				} else {
 					console.log("Le code saisi est incorrect.");

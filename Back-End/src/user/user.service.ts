@@ -15,7 +15,7 @@ export class UserService {
 				email,
 				username,
 				hash,
-				id42: id.toString(),
+				id42: id,
 			},
 		});
 		return user;
@@ -36,14 +36,6 @@ export class UserService {
 		} catch (error) {
 			throw new BadRequestException('getUser error : ' + error);
 		}
-	}
-
-	async getUser42(id42: string): Promise<User | null> {
-		return this.prisma.user.findUnique({
-				where: {
-					id42: id42,
-				}
-			});
 	}
 
 	async getByEmail(email: string): Promise<User | null> {

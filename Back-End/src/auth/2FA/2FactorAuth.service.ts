@@ -75,12 +75,4 @@ export class TwoFactorAuthService {
 		await this.authservice.updateRefreshToken(dto.id, tokens.refresh_token);
 		return tokens;
 	}
-
-	signin_2FA(response: Response, username: string) {
-		const url = new URL(process.env.SITE_URL);
-		url.port = process.env.FRONT_PORT;
-		url.pathname = '2FA';
-		url.searchParams.append('username', username);
-		response.status(302).redirect(url.href);
-	}
 }
