@@ -52,6 +52,7 @@ async function main() {
   const croom1 = await prisma.chatroom.create({
     data: {
       name: 'dddddd',
+      avatar: 'ggg'
     }
   })
   console.log(croom1)
@@ -61,7 +62,7 @@ async function main() {
       createdAt:     d1,
       content: 'sdzdsd',
       chatroom: {connect: { id: croom1.id}},
-      user: {connect: { id: user2.id }}
+      author: {connect: { id: user2.id }}
     }
   })
   console.log(chatM1)
