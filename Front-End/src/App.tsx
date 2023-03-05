@@ -11,6 +11,7 @@ import AuthContext from './store/AuthContext';
 import Login from './components/auth/Login';
 import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';
+import Setting from './pages/Setting';
 
 function App() {
 	const authCtx = useContext(AuthContext);
@@ -27,6 +28,7 @@ function App() {
 			<Route path='/auth/signup' element={<Signup />} />
 			<Route path="/auth/42/callback" element={<Callback42 />} />
 			<Route path='/menu' element={<Menu />} />
+			<Route path='/settings' element={<Setting />} />
 			{/* <Route path={`/users/profile/${authCtx.userId}`} element={<Profile />} /> */}
 			<Route path={`/users/profile/:id`} element={<Profile />} />
 		</Routes>

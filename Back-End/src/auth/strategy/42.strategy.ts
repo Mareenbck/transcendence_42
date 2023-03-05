@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 // import { Strategy as FortyTwoStrategy } from 'passport-42';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { Strategy } from 'passport';
+import { Strategy } from 'passport-42';
 
 export interface Profile_42 {
 	id: number;
@@ -12,7 +12,7 @@ export interface Profile_42 {
 }
 
 @Injectable()
-export class FortyTwoStrategy extends PassportStrategy(Strategy, '42-strategy') {
+export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
 	constructor(private readonly authService: AuthService) {
 		super({
 			clientID: process.env.FORTYTWO_CLIENT_ID,
@@ -20,7 +20,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42-strategy') 
 			callbackURL: process.env.FORTYTWO_CALLBACK_URL,
 			profileFields:
 			{
-				id: 'id',
+				id42: 'id',
 				username: 'login',
 				email: 'email',
 				avatar: 'image_url',

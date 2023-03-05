@@ -7,7 +7,7 @@ import { Response } from 'express';
 import { TwoFaUserDto } from './dto/2fa.dto';
 import { FortyTwoAuthGuard } from './guard/42auth.guard';
 import { TwoFactorAuthService } from './2FA/2FactorAuth.service';
-import { FortyTwoStrategy, Profile_42 } from './strategy/FortyTwoStrategy';
+import { FortyTwoStrategy, Profile_42 } from './strategy/42.strategy';
 
 @Controller('auth')
 export class AuthController {
@@ -33,7 +33,7 @@ export class AuthController {
 		return this.authService.signout(user.id);
 	}
 
-	@Get('/42')
+	@Get('42')
 	// @UseGuards(FortyTwoAuthGuard)
 	async login42() {
 		const url = await this.fortyTwoStrategy.getIntraUrl();
@@ -41,8 +41,8 @@ export class AuthController {
 		// return { url: (await this.fortyTwoStrategy.getIntraUrl()) };
 	}
 
+	@Post('42/callback')
 	// @UseGuards(FortyTwoAuthGuard)
-	@Post('/42/callback')
 	async callback_42(@Req() request: any, @Res() response: Response) {
 		const code = request.body.code;
 		try {

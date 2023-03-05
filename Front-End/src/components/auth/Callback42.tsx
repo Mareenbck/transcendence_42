@@ -19,17 +19,15 @@ function Callback42() {
 				});
 
 				const data = await response.json();
-				console.log("data.user.avatar --------->")
-				console.log(data.user.avatar)
 				if (response.ok) {
 					const token = data.tokens.access_token;
 					const userId = data.user.id;
-					const userId42 = data.user.id42;
+					// const userId42 = data.user.id42;
 					const username = data.user.username;
 					const avatar = data.user.avatar;
 					localStorage.setItem('token', token);
 					localStorage.setItem('userId', userId);
-					localStorage.setItem('userId42', userId42);
+					// localStorage.setItem('userId42', userId42);
 					localStorage.setItem('username', username);
 					localStorage.setItem('avatar', avatar);
 					authCtx.login(token, userId);

@@ -7,11 +7,8 @@ function SideBar(props: any)
 {
 	const authCtx = useContext(AuthContext);
 	const id = authCtx.userId;
-	console.log("id -------------->")
-	console.log(id)
 
     return (
-        <div>
             <div className={style.position}>
                    <p className={style.tit}>{props.title}, {props.username}!</p>
                    {props.isLoggedIn && <Link to="/auth/signin" className={style.lgu} onClick={props.logout}
@@ -22,10 +19,9 @@ function SideBar(props: any)
 				    <Link to="/chat/message" className={style.btn}>Chat</Link>
 
 					<Link to={`/users/profile/${id}`} className={style.btn}>Profile page</Link>
-				    <Link to="../../pages/setting" className={style.btn}>setting</Link>
+				    <Link to="/settings" className={style.btn}>setting</Link>
 				    <Link to="/auth/signin" className={style.btn}>Score</Link>
 			</div>
-		</div>
     )
 
 }

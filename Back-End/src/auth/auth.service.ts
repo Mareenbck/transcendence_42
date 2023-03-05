@@ -74,7 +74,7 @@ export class AuthService {
 	async signin_42(profile: Profile_42): Promise<User> {
 		// check if user exists
 		let user = await this.userService.getByEmail(profile.email);
-
+		console.log(user);
 		if (!user) {
 			return this.create_42_user(profile);
 		}
@@ -100,7 +100,6 @@ export class AuthService {
 			email,
 			username,
 			hash,
-			id,
 			avatar,
 		);
 		return user;

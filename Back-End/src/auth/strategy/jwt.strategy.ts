@@ -3,23 +3,26 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { PrismaService } from "src/prisma/prisma.service";
+import { UserService } from "src/user/user.service";
 
 //Le constructeur contient les champs d'authentification qui seront envoyés par le front-end via la route POST de connexion (email, mot de passe).
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-	constructor(config: ConfigService, private prisma: PrismaService) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'full') {
+	constructor(config: ConfigService, private userService: UserService) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			secretOrKey: config.get('JWT_SECRET'),
 		})
 	}
+
 	async validate(data: { sub: number; email: string }) {
-		const user = await this.prisma.user.findUnique({
-			where: {
-				id: data.sub,
-			},
-		});
-		return user;
+		return this.userService.getByEmail(data.email)
+		// const user = await this.prisma.user.findUnique({
+		// 	where: {
+		// 		id: data.sub,
+		// 	},
+		// });
+		// return user;
 	}
 }
 // A MODIFIER ?
