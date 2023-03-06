@@ -11,10 +11,10 @@ function SideBar(props: any)
 
     return (
             <div className={style.position}>
-                   <p className={style.tit}>{props.title}, {/*props.username*/} {authCtx.username}!</p>
-                   {props.isLoggedIn  && <Link to="/auth/signin" className={style.lgu} /*onClick={props.logout}*/
-                                  onClick={() => localStorage.removeItem(authCtx.token)}>
-                          LogOut<span> </span></Link>}
+                   <p className={style.tit}>{props.title},  {authCtx.username}!</p>
+                   {props.isLoggedIn  && <Link to="/auth/signin" className={style.lgu} 
+                                           onClick=  {authCtx.logout}>
+                                          LogOut<span> </span></Link>}
                    <br/>
             <Link to="/game/play" className={style.btn}>Play Game </Link>
 				    <Link to="/chat/message" className={style.btn}>Chat</Link>
