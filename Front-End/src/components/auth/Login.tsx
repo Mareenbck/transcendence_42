@@ -22,12 +22,16 @@ function AuthForm() {
 	const [error, setError] = useState<ErrorMsg | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [is2FA, setIs2FA] = useState(authCtx.is2FA);
 
 	useEffect(() => {
-		if (isAuthenticated) {
+		if (isAuthenticated && is2FA) {
 			navigate('/auth/2fa');
 		}
-	}, [isAuthenticated, navigate]);
+		if (isAuthenticated && !is2FA) {
+			navigate('/menu');
+		}
+	}, [isAuthenticated, is2FA, navigate]);
 
 	function handleLogin(event: FormEvent) {
 		event.preventDefault();
@@ -65,14 +69,21 @@ function AuthForm() {
 					},
 				});
 				const dataResponse = await response.json();
+				console.log("dataResponse------->")
+				console.log(dataResponse)
 				setIsLoading(false);
 				if (response.ok) {
 					const token = dataResponse.access_token;
 					const decodedToken: any = jwtDecode(token);
+					console.log("decodedToken------->")
+					console.log(decodedToken)
 					const userId = decodedToken.sub;
 					localStorage.setItem('token', token);
 					localStorage.setItem('userId', userId);
 					authCtx.login(token, userId);
+					console.log("authCtx.is2FA-------------->")
+					console.log(authCtx.is2FA)
+					setIs2FA(authCtx.is2FA)
 					// authCtx.login(token, userId, usernameLocalStorage);
 					setIsAuthenticated(true);
 				} else {

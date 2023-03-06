@@ -12,16 +12,23 @@ import { Jwt2faStrategy } from "./strategy/jwt-2fa.strategy";
 import { FortyTwoStrategy } from "./strategy/42.strategy";
 import { JwtStrategy } from "./strategy";
 import { PassportModule } from "@nestjs/passport";
+import { LocalStrategy } from "./strategy/local.strategy";
 
+// forwardRef(() => UserModule)
 @Module({
 	imports: [
-		PassportModule,
-		JwtModule.register({}),
+		JwtModule.register({
+			secret: process.env.JWT_SECRET,
+			signOptions: { expiresIn: '600000s' },
+		}),
 		forwardRef(() => AppModule),
-		forwardRef(() => UserModule)],
+		UserModule,
+		PassportModule,
+		],
 	controllers: [AuthController, TwoFactorAuthenticationController],
 	providers: [
 		AuthService,
+		LocalStrategy,
 		JwtStrategy,
 		TwoFactorAuthService,
 		Jwt2faStrategy,

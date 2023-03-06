@@ -27,6 +27,8 @@ export class TwoFactorAuthService {
 			this.configService.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'),
 			secret,
 		);
+		console.log("otpauthUrl------>")
+		console.log(otpauthUrl)
 		// Add the secret to the user
 		await this.userService.set2FASecretToUser(secret, email);
 		return {
@@ -43,6 +45,8 @@ export class TwoFactorAuthService {
 
 	// Check is 2FA code is valid
 	public isTwoFactorAuthenticationCodeValid(twoFAcode: string, user: TwoFactorDto) {
+		console.log("user +++++++++")
+		console.log(user)
 		return authenticator.verify({
 			token: twoFAcode,
 			secret: user.twoFAsecret
@@ -61,12 +65,7 @@ export class TwoFactorAuthService {
 	/* Authenticate signin using 2FA */
 	async loginWith2fa(dto: TwoFactorDto) {
 		// find user by email
-		//A DEPLACER DANS USER
-		const user = await this.prisma.user.findUnique({
-			where: {
-				email: dto.email,
-			},
-		});
+		const user =  await this.userService.getByEmail(dto.email);
 		if (!user) {
 			throw new UnauthorizedException('Invalid User');
 		}

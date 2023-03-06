@@ -11,7 +11,7 @@ import { Response } from 'express';
 import { UserService } from "src/user/user.service";
 
 export interface Profile_42 {
-	id: number;
+	// id: number;
 	username: string;
 	email: string;
 	avatar: string;
@@ -19,7 +19,7 @@ export interface Profile_42 {
 
 @Injectable()
 export class AuthService {
-	constructor(private readonly userService: UserService, private prisma: PrismaService, private jwt: JwtService, private config: ConfigService) {}
+	constructor(private userService: UserService, private prisma: PrismaService, private jwt: JwtService, private config: ConfigService) {}
 
 	async signup(dto: AuthDto): Promise<AuthTokenDto> {
 		// destructure dto
@@ -51,20 +51,19 @@ export class AuthService {
 		}
 	}
 
+	async validateUser(email: string, pass: string): Promise<any> {
+		const user = await this.userService.getByEmail(email);
+		const pwMatches = await argon.verify(user.hash, pass);
+		if (pwMatches) {
+			return user;
+		}
+		return null;
+	  }
+
 	async signin(dto: SigninDto) {
-		//find the user by email
-		//A DEPLACER DANS USER
-		const user = await this.userService.getByEmail(dto.email)
+		const user = await this.validateUser(dto.email, dto.password)
 		if (!user)
 			throw new ForbiddenException('Credentials incorrect');
-		//compare password
-		const pwMatches = await argon.verify(user.hash, dto.password);
-		if (!pwMatches)
-			throw new ForbiddenException('Credentials incorrect');
-		// si 2fa est true -> sort de cette method
-		if (user.twoFA) {
-			return { username: user.username, twoFA: user.twoFA };
-		}
 		const tokens = await this.generateTokens(user.id, user.email, user.twoFA);
 		// update refresh token
 		await this.updateRefreshToken(user.id, tokens.refresh_token);
@@ -81,16 +80,8 @@ export class AuthService {
 		return user;
 	}
 
-	generate_random_password(): string {
-		// generate random password for 42 User
-		const password =
-			Math.random().toString(36).slice(2, 15) +
-			Math.random().toString(36).slice(2, 15);
-		return password;
-	}
-
 	async create_42_user(profile: Profile_42): Promise<User> {
-		const { email, username, id, avatar } = profile;
+		const { email, username, avatar } = profile;
 		// generate random password
 		const rdm_string = this.generate_random_password();
 		// hash password using argon2
@@ -101,7 +92,7 @@ export class AuthService {
 			username,
 			hash,
 			avatar,
-		);
+			);
 		return user;
 	}
 
@@ -121,19 +112,19 @@ export class AuthService {
 	}
 
 	async generateTokens(userId: number, email: string, is2FA = false): Promise<AuthTokenDto> {
-		const data = {
+		const payload = {
 			sub: userId,
-			email,
-			is2FA,
+			email: email,
 		};
+		// const payload = { username: user.username, sub: user.userId };
 		const secret = this.config.get('JWT_SECRET');
 		const access_token_expiration = this.config.get('ACCESS_TOKEN_EXPIRATION');
 		const refresh_token_expiration = this.config.get('REFRESH_TOKEN_EXPIRATION');
-		const Atoken = await this.jwt.signAsync(data, {
+		const Atoken = await this.jwt.sign(payload, {
 			expiresIn: access_token_expiration,
 			secret: secret,
 		});
-		const Rtoken = await this.jwt.signAsync(data, {
+		const Rtoken = await this.jwt.sign(payload, {
 			expiresIn: refresh_token_expiration,
 			secret: secret,
 		});
@@ -181,24 +172,20 @@ export class AuthService {
 	async verifyAccessToken(token: string): Promise<User> {
 		try {
 			const decoded = this.jwt.verify(token);
-			if (!decoded.type || !decoded.user || decoded.type !== 'access') {
+			if (!decoded) {
 				throw new BadRequestException('Invalid access token');
 			}
-			return await this.prisma.user.findUnique({
-				where: {
-					id: decoded.user.id,
-				},
-			});
+			return await this.userService.getByEmail(decoded.email);
 		} catch (e) {
 			throw new BadRequestException('Invalid access token');
 		}
 	}
 
 	async exchangeCodeForTokens(code: string): Promise<{ access_token: string, refresh_token: string}> {
-			const clientID = process.env.FORTYTWO_CLIENT_ID;
-			const clientSecret = process.env.FORTYTWO_CLIENT_SECRET;
-			const redirectURI = process.env.FORTYTWO_CALLBACK_URL;
-			const tokenEndpoint = 'https://api.intra.42.fr/oauth/token';
+		const clientID = process.env.FORTYTWO_CLIENT_ID;
+		const clientSecret = process.env.FORTYTWO_CLIENT_SECRET;
+		const redirectURI = process.env.FORTYTWO_CALLBACK_URL;
+		const tokenEndpoint = 'https://api.intra.42.fr/oauth/token';
 
 			const formData = new FormData();
 			formData.append('grant_type', 'authorization_code');
@@ -213,7 +200,7 @@ export class AuthService {
 			});
 
 			// if (!response.ok) {
-			// 	throw new Error('Failed to exchange code for tokens');
+				// 	throw new Error('Failed to exchange code for tokens');
 			// }
 
 			const tokens = await response.json();
@@ -224,9 +211,9 @@ export class AuthService {
 			};
 		}
 
-	async getFortyTwoUserProfile(accessToken: string): Promise<Profile_42> {
-		try {
-			const headers = { Authorization: `Bearer ${accessToken}` };
+		async getFortyTwoUserProfile(accessToken: string): Promise<Profile_42> {
+			try {
+				const headers = { Authorization: `Bearer ${accessToken}` };
 			const url = 'https://api.intra.42.fr/v2/me';
 
 			const response = await fetch(url, { headers });
@@ -236,7 +223,7 @@ export class AuthService {
 
 			const data = await response.json();
 			const profile: Profile_42 = {
-				id: data.id,
+				// id: data.id,
 				username: data.login,
 				email: data.email,
 				avatar: data.image.link,
@@ -246,6 +233,14 @@ export class AuthService {
 			console.log(error);
 		}
 	}
+
+		generate_random_password(): string {
+			// generate random password for 42 User
+			const password =
+				Math.random().toString(36).slice(2, 15) +
+				Math.random().toString(36).slice(2, 15);
+			return password;
+		}
 
 }
 

@@ -8,6 +8,7 @@ const defaultValue = {
 	username: '',
 	isLoggedIn: false,
 	avatar: '',
+	is2FA: false,
 	login: (token: string, userId: string) => {},
 	logout: () => { }
 };
@@ -26,6 +27,7 @@ export const AuthContextProvider = (props: any) => {
 	// const [userId42, setUserId42] = useState<string | null>(userId42LocalStorage);
 	const [username, setUsername] = useState<string | null>(usernameLocalStorage);
 	const [avatar, setAvatar] = useState<string | null>(avatarLocalStorage);
+	const [is2FA, setIs2FA] = useState(false);
 
 	const fetchHandler = async (token: string, userId: string) => {
 		try {
@@ -35,9 +37,12 @@ export const AuthContextProvider = (props: any) => {
 				}
 			});
 			const data = await response.json();
+			console.log("data dans AUTHCONTEXT")
+			console.log(data)
 			setUserId(data.id);
 			setUsername(data.username);
 			setAvatar(data.avatar);
+			setIs2FA(data.twoFA);
 			localStorage.setItem('username', data.username);
 		} catch (error) {
 			console.log(error);
@@ -69,6 +74,7 @@ export const AuthContextProvider = (props: any) => {
 		username: username,
 		avatar: avatar,
 		isLoggedIn: userIsLoggedIn,
+		is2FA: is2FA,
 		login: loginHandler,
 		logout: logoutHandler,
 		fetchHandler: fetchHandler,

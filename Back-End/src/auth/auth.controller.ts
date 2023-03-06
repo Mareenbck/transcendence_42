@@ -8,6 +8,7 @@ import { TwoFaUserDto } from './dto/2fa.dto';
 import { FortyTwoAuthGuard } from './guard/42auth.guard';
 import { TwoFactorAuthService } from './2FA/2FactorAuth.service';
 import { FortyTwoStrategy, Profile_42 } from './strategy/42.strategy';
+import { LocalAuthGuard } from './guard/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +21,7 @@ export class AuthController {
 		return this.authService.signup(dto);
 	}
 
-	@HttpCode(HttpStatus.OK)
+	@UseGuards(LocalAuthGuard)
 	@Post('/signin')
 	async signin(@Body() dto: SigninDto, @Res({ passthrough: true }) response: Response) {
 		const tokens = await this.authService.signin(dto);
@@ -45,6 +46,8 @@ export class AuthController {
 	// @UseGuards(FortyTwoAuthGuard)
 	async callback_42(@Req() request: any, @Res() response: Response) {
 		const code = request.body.code;
+		console.log("code---->")
+		console.log(code)
 		try {
 			// Echange le code d'autorisation contre un token
 			const tokens = await this.authService.exchangeCodeForTokens(code);
