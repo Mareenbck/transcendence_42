@@ -1,4 +1,3 @@
-
 import {
 	Body,
 	Controller,
@@ -15,7 +14,6 @@ import { TwoFactorDto, TwoFaUserDto } from 'src/auth/dto/2fa.dto';
 import { JwtGuard } from '../guard';
 import { UserService } from 'src/user/user.service';
 
-// @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth/2fa')
 export class TwoFactorAuthenticationController {
 	constructor(

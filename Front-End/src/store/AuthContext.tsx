@@ -7,6 +7,7 @@ const defaultValue = {
 	userId: '',
 	username: '',
 	isLoggedIn: false,
+	avatar: '',
 	login: (token: string, userId: string) => {},
 	logout: () => { }
 };
@@ -15,12 +16,16 @@ const AuthContext = createContext(defaultValue);
 //controle de la presence du token dans local storage
 const tokenLocalStorage = localStorage.getItem("token");
 const userIdLocalStorage = localStorage.getItem("userId");
-const usernameLocalStorage= localStorage.getItem("username");
+// const userId42LocalStorage = localStorage.getItem("userId42");
+const usernameLocalStorage = localStorage.getItem("username");
+const avatarLocalStorage = localStorage.getItem("avatar");
 
 export const AuthContextProvider = (props: any) => {
 	const [token, setToken] = useState<string | null>(tokenLocalStorage);
 	const [userId, setUserId] = useState<string | null>(userIdLocalStorage);
+	// const [userId42, setUserId42] = useState<string | null>(userId42LocalStorage);
 	const [username, setUsername] = useState<string | null>(usernameLocalStorage);
+	const [avatar, setAvatar] = useState<string | null>(avatarLocalStorage);
 
 	const fetchHandler = async (token: string, userId: string) => {
 		try {
@@ -32,6 +37,7 @@ export const AuthContextProvider = (props: any) => {
 			const data = await response.json();
 			setUserId(data.id);
 			setUsername(data.username);
+			setAvatar(data.avatar);
 			localStorage.setItem('username', data.username);
 		} catch (error) {
 			console.log(error);
@@ -40,6 +46,8 @@ export const AuthContextProvider = (props: any) => {
 
 	const loginHandler = (token: string, userId: string) => {
 		setToken(token);
+		// if (!userId42)
+		// if (username) setUsername(username);
 		fetchHandler(token, userId);
 	};
 
@@ -47,6 +55,8 @@ export const AuthContextProvider = (props: any) => {
 		setToken("");
 		setUserId("");
 		setUsername("");
+		// setUserId42("");
+		setAvatar("");
 		localStorage.clear();
 	};
 	//si presence du token -> logged
@@ -57,6 +67,7 @@ export const AuthContextProvider = (props: any) => {
 		token: token,
 		userId: userId,
 		username: username,
+		avatar: avatar,
 		isLoggedIn: userIsLoggedIn,
 		login: loginHandler,
 		logout: logoutHandler,

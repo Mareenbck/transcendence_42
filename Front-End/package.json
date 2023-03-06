@@ -3,12 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "http://localhost:3000",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^9.0.0",
     "jwt-decode": "^3.1.2",

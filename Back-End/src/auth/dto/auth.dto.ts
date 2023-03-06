@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class AuthDto {
 	@IsEmail()
@@ -11,6 +11,24 @@ export class AuthDto {
 
 	@IsString()
 	username: string;
+}
+
+export class Auth42Dto {
+	@IsNumber()
+	@IsNotEmpty()
+	id: number;
+
+	@IsEmail()
+	@IsNotEmpty()
+	email: string;
+
+	@IsString()
+	@IsNotEmpty()
+	username: string;
+
+	@IsString()
+	@IsNotEmpty()
+	avatar: string;
 }
 
 // Auth Tokens DTO
