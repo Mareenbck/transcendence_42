@@ -1,11 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { authenticator } from 'otplib';
-import { toFileStream, toDataURL } from 'qrcode';
+import { toDataURL } from 'qrcode';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from '../auth.service';
 import { ConfigService } from "@nestjs/config";
 import { UserService } from 'src/user/user.service';
 import { TwoFactorDto, TwoFaUserDto } from 'src/auth/dto/2fa.dto';
+import { Response } from 'express';
 
 
 @Injectable()

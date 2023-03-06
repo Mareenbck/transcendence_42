@@ -23,6 +23,7 @@ import { Chatroom2Module } from './chat/chatroom2/chatroom2.module';
 		DirMessModule,
 		Chatroom2Module,
 	],
-  providers: [ChatGateway],
+	providers: [ChatGateway],
+	exports: [JwtModule],
 })
 export class AppModule {}

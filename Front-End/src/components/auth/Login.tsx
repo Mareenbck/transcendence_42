@@ -13,6 +13,7 @@ interface ErrorMsg {
 function AuthForm() {
 	const emailInputRef = useRef<HTMLInputElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
+	const usernameLocalStorage = localStorage.getItem("username");
 
 	let navigate = useNavigate();
 
@@ -32,6 +33,7 @@ function AuthForm() {
 		event.preventDefault();
 		const email = emailInputRef.current!.value;
 		const password = passwordInputRef.current!.value;
+		const usernameLocalStorage = localStorage.getItem("username");
 		if (email.trim().length === 0 || password.trim().length === 0) {
 			setError({
 					title: "Info are missging",
@@ -71,6 +73,7 @@ function AuthForm() {
 					localStorage.setItem('token', token);
 					localStorage.setItem('userId', userId);
 					authCtx.login(token, userId);
+					// authCtx.login(token, userId, usernameLocalStorage);
 					setIsAuthenticated(true);
 				} else {
 					//CHANGER LES MSG DANS BACK -> A DATE FORBIDDEN

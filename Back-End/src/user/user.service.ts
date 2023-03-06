@@ -1,19 +1,21 @@
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { plainToClass } from 'class-transformer';
+
 
 @Injectable()
 export class UserService {
 	constructor(private readonly prisma: PrismaService) { }
 
-	async createUser(email: string, username: string, hash: string): Promise<User> {
+	async createUser(email: string, username: string, hash: string, avatar =''): Promise<User> {
 		const user = await this.prisma.user.create({
 			data: {
 				email,
 				username,
 				hash,
+				avatar,
 			},
 		});
 		return user;
@@ -36,6 +38,15 @@ export class UserService {
 		}
 	}
 
+	async getByEmail(email: string): Promise<User | null> {
+		const user = await this.prisma.user.findUnique({
+			where: {
+				email: email,
+			},
+		});
+		return user;
+	}
+
 	async set2FASecretToUser(secret: string, email: string) {
 		return this.prisma.user.update({
 			where: { email: email },
@@ -55,5 +66,17 @@ export class UserService {
 			where: { email: email },
 			data: { twoFA: false },
 		});
+	}
+
+	async updateUsername(id: string, newUsername: string) {
+		const updateUser = await this.prisma.user.update({
+			where: {
+				id: parseInt(id),
+			},
+			data: {
+				username: newUsername,
+			},
+		});
+		return updateUser;
 	}
 }

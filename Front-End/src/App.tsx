@@ -6,15 +6,18 @@ import Game from './components/game/Game'
 import Chat from './components/chat/Chat'
 import Home from './pages/Home'
 import Profile from './pages/Profile';
+import Callback42 from './components/auth/Callback42';
 import AuthContext from './store/AuthContext';
 import Login from './components/auth/Login';
 import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';
+import Setting from './pages/Setting';
 
 function App() {
 	const authCtx = useContext(AuthContext);
 
 	const isLoggedIn = authCtx.isLoggedIn;
+	authCtx.userId
 	return (
 		<Routes>
 			<Route path='/' element={<Home />} />
@@ -23,8 +26,11 @@ function App() {
 			<Route path='/auth/signin' element={<Login />} />
 			<Route path='/auth/2fa' element={<TwoFaForm />} />
 			<Route path='/auth/signup' element={<Signup />} />
+			<Route path="/auth/42/callback" element={<Callback42 />} />
 			<Route path='/menu' element={<Menu />} />
-			<Route path='/users/profile/:id' element={<Profile />} />
+			<Route path='/settings' element={<Setting />} />
+			{/* <Route path={`/users/profile/${authCtx.userId}`} element={<Profile />} /> */}
+			<Route path={`/users/profile/:id`} element={<Profile />} />
 		</Routes>
 	);
 }
