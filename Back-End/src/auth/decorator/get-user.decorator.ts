@@ -1,11 +1,16 @@
+/* GLOBAL MODULES */
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
+// @GetCurrentUser decorator - used to get current user
 export const GetUser = createParamDecorator(
-	(data: string | undefined, ctx: ExecutionContext) => {
-		const request: Express.Request = ctx.switchToHttp().getRequest();
-		if (data) {
-			return request.user[data];
+	(data: string | undefined, context: ExecutionContext) => {
+		// Get request from context
+		const request = context.switchToHttp().getRequest();
+		// Extract user from request
+		if (!data) {
+			return request.user;
 		}
-		return request.user;
+		// Extract user data from request
+		return request.user[data];
 	},
 );

@@ -5,6 +5,7 @@ import AuthContext from '../../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 
+
 interface ErrorMsg {
 	title: string;
 	message: string
@@ -18,19 +19,26 @@ function AuthForm() {
 	let navigate = useNavigate();
 
 	const authCtx = useContext(AuthContext);
-
 	const [error, setError] = useState<ErrorMsg | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [is2FA, setIs2FA] = useState(false);
 
 	useEffect(() => {
-		if (isAuthenticated) {
+		if (isAuthenticated && is2FA) {
 			navigate('/auth/2fa');
 		}
-	}, [isAuthenticated, navigate]);
+		if (isAuthenticated && !is2FA) {
+			navigate('/menu');
+		}
+	}, [isAuthenticated, is2FA, navigate]);
 
-	function handleLogin(event: FormEvent) {
+	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
+		handleLogin();
+	};
+	function handleLogin() {
+		// event.preventDefault();
 		const email = emailInputRef.current!.value;
 		const password = passwordInputRef.current!.value;
 		const usernameLocalStorage = localStorage.getItem("username");
@@ -52,7 +60,7 @@ function AuthForm() {
 			return;
 		}
 		const url = 'http://localhost:3000/auth/signin';
-			const fetchHandler = async () => {
+			const fetchHandleLogin = async () => {
 				try {
 				const response = await fetch(url, {
 					method: "POST",
@@ -72,8 +80,12 @@ function AuthForm() {
 					const userId = decodedToken.sub;
 					localStorage.setItem('token', token);
 					localStorage.setItem('userId', userId);
-					authCtx.login(token, userId);
-					// authCtx.login(token, userId, usernameLocalStorage);
+					const twoFA: any = await authCtx.login(token, userId);
+					if (twoFA) {
+						setIs2FA(true);
+					} else {
+						setIs2FA(false);
+					}
 					setIsAuthenticated(true);
 				} else {
 					//CHANGER LES MSG DANS BACK -> A DATE FORBIDDEN
@@ -86,7 +98,7 @@ function AuthForm() {
 				console.log(error);
 			}
 		};
-		fetchHandler();
+		fetchHandleLogin();
 		setIsLoading(true);
 
 		//pour vider les champs du formulaire
@@ -107,7 +119,7 @@ function AuthForm() {
 		<div className="container-form">
 			<h1 className='title-form'>SIGN IN</h1>
 			<div className="border-form">
-				<form onSubmit={handleLogin}>
+				<form onSubmit={handleSubmit}>
 					<div className="form-input">
 						<label htmlFor="floatingInput">Email address</label>
 						<input type="email" ref={emailInputRef} className="form-fields" placeholder="name@example.com"/>

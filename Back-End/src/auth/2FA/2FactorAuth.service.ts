@@ -53,7 +53,6 @@ export class TwoFactorAuthService {
 	async turn_on(user: TwoFaUserDto) {
 		// Enable 2FA for user
 		await this.userService.turnOn2FA(user.email);
-
 		const tokens = await this.authservice.generateTokens(user.id, user.email, true);
 		return tokens;
 	}
@@ -61,12 +60,7 @@ export class TwoFactorAuthService {
 	/* Authenticate signin using 2FA */
 	async loginWith2fa(dto: TwoFactorDto) {
 		// find user by email
-		//A DEPLACER DANS USER
-		const user = await this.prisma.user.findUnique({
-			where: {
-				email: dto.email,
-			},
-		});
+		const user =  await this.userService.getByEmail(dto.email);
 		if (!user) {
 			throw new UnauthorizedException('Invalid User');
 		}

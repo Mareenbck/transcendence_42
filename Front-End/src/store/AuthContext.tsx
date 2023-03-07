@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 //creation du context pour auth
 //pour stocker les  data user
@@ -8,7 +8,8 @@ const defaultValue = {
 	username: '',
 	isLoggedIn: false,
 	avatar: '',
-	login: (token: string, userId: string) => {},
+	is2FA: false,
+	login: async (token: string, userId: string) => {},
 	logout: () => { }
 };
 
@@ -26,6 +27,7 @@ export const AuthContextProvider = (props: any) => {
 	// const [userId42, setUserId42] = useState<string | null>(userId42LocalStorage);
 	const [username, setUsername] = useState<string | null>(usernameLocalStorage);
 	const [avatar, setAvatar] = useState<string | null>(avatarLocalStorage);
+	const [is2FA, setIs2FA] = useState<boolean>(false);
 
 	const fetchHandler = async (token: string, userId: string) => {
 		try {
@@ -39,16 +41,16 @@ export const AuthContextProvider = (props: any) => {
 			setUsername(data.username);
 			setAvatar(data.avatar);
 			localStorage.setItem('username', data.username);
+			return data
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const loginHandler = (token: string, userId: string) => {
+	const loginHandler = async (token: string, userId: string) => {
 		setToken(token);
-		// if (!userId42)
-		// if (username) setUsername(username);
-		fetchHandler(token, userId);
+		const data = await fetchHandler(token, userId);
+		return data.twoFA;
 	};
 
 	const logoutHandler = () => {
@@ -69,6 +71,7 @@ export const AuthContextProvider = (props: any) => {
 		username: username,
 		avatar: avatar,
 		isLoggedIn: userIsLoggedIn,
+		is2FA: is2FA,
 		login: loginHandler,
 		logout: logoutHandler,
 		fetchHandler: fetchHandler,

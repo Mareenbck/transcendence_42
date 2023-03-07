@@ -10,7 +10,7 @@ function Home() {
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (authCtx.isLoggedIn) {
+		if (authCtx.isLoggedIn && !authCtx.is2FA) {
 			navigate('/menu');
 		}
 		else if (!authenticating) {

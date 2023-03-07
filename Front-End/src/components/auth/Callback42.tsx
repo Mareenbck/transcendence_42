@@ -20,18 +20,21 @@ function Callback42() {
 
 				const data = await response.json();
 				if (response.ok) {
-					const token = data.tokens.access_token;
+					const token = data.newtokens.access_token;
 					const userId = data.user.id;
-					// const userId42 = data.user.id42;
 					const username = data.user.username;
 					const avatar = data.user.avatar;
 					localStorage.setItem('token', token);
 					localStorage.setItem('userId', userId);
-					// localStorage.setItem('userId42', userId42);
 					localStorage.setItem('username', username);
 					localStorage.setItem('avatar', avatar);
-					authCtx.login(token, userId);
-					window.close();
+					const twofa: any = await authCtx.login(token, userId);
+					if (twofa) {
+						window.close();
+						window.opener.location.href = "/auth/2fa";
+					} else {
+						window.close();
+					}
 				} else {
 					console.log("Le code saisi est incorrect.");
 				}

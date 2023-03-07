@@ -7,23 +7,18 @@ import { UserService } from "src/user/user.service";
 
 //Le constructeur contient les champs d'authentification qui seront envoyés par le front-end via la route POST de connexion (email, mot de passe).
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'full') {
+export class JwtStrategy extends PassportStrategy(Strategy) {
 	constructor(config: ConfigService, private userService: UserService) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-			secretOrKey: config.get('JWT_SECRET'),
+			ignoreExpiration: false,
+			secretOrKey: process.env.JWT_SECRET
 		})
 	}
 
-	async validate(data: { sub: number; email: string }) {
-		return this.userService.getByEmail(data.email)
-		// const user = await this.prisma.user.findUnique({
-		// 	where: {
-		// 		id: data.sub,
-		// 	},
-		// });
-		// return user;
-	}
+	async validate(payload: any) {
+		return { userId: payload.sub, email: payload.email };
+	  }
 }
 // A MODIFIER ?
 // La méthode validate va utiliser la méthode validateUser que nous avons créée plus tôt.
