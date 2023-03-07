@@ -26,6 +26,8 @@ export class AuthService {
 		const { email, username, password } = dto;
 		//generate the password
 		const hash = await argon.hash(password);
+		console.log("hash ====>")
+		console.log(hash)
 		//save new user in the db
 		try {
 			const user = await this.userService.createUser(
@@ -53,7 +55,12 @@ export class AuthService {
 
 	async validateUser(email: string, pass: string): Promise<any> {
 		const user = await this.userService.getByEmail(email);
+		console.log("user ====>")
+		console.log(user)
+		console.log(user.hash)
 		const pwMatches = await argon.verify(user.hash, pass);
+		console.log("pwMatches ====>")
+		console.log(pwMatches)
 		if (pwMatches) {
 			return user;
 		}
