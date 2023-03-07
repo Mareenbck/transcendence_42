@@ -27,8 +27,6 @@ export class TwoFactorAuthService {
 			this.configService.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'),
 			secret,
 		);
-		console.log("otpauthUrl------>")
-		console.log(otpauthUrl)
 		// Add the secret to the user
 		await this.userService.set2FASecretToUser(secret, email);
 		return {
@@ -45,8 +43,6 @@ export class TwoFactorAuthService {
 
 	// Check is 2FA code is valid
 	public isTwoFactorAuthenticationCodeValid(twoFAcode: string, user: TwoFactorDto) {
-		console.log("user +++++++++")
-		console.log(user)
 		return authenticator.verify({
 			token: twoFAcode,
 			secret: user.twoFAsecret
@@ -57,7 +53,6 @@ export class TwoFactorAuthService {
 	async turn_on(user: TwoFaUserDto) {
 		// Enable 2FA for user
 		await this.userService.turnOn2FA(user.email);
-
 		const tokens = await this.authservice.generateTokens(user.id, user.email, true);
 		return tokens;
 	}

@@ -34,34 +34,16 @@ export class TwoFactorAuthenticationController {
 	@HttpCode(200)
 	@UseGuards(AuthGuard)
 	async turnOn(@GetUser() user: TwoFactorDto) {
-		// const user: TwoFactorDto = request.user as TwoFactorDto;
-		// Check is 2FA code is valid
-		const u = await this.userService.turnOn2FA(user.email)
-		console.log("user dans onnnnnnnnnnnnnn")
-		console.log(u)
-		// const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthenticationCodeValid(
-		// 	twoFAcode,
-		// 	user
-		// );
-		// // If invalid, throw error 401
-		// if (!isCodeValid) {
-		// 	throw new UnauthorizedException('Wrong authentication code');
-		// }
-		// const u = await this.userService.turnOn2FA(user.email);
-		// console.log("user dans onnnnnnn")
-		// console.log(u)
-		// const tokens = await this.twoFactorAuthService.turn_on(user);
-		return u;
+		const userFound = await this.userService.turnOn2FA(user.email)
+		return userFound;
 	}
 
 	@Post('/turn-off')
 	@HttpCode(200)
 	@UseGuards(AuthGuard)
 	async turn_off(@GetUser() user: TwoFactorDto) {
-		const u = await this.userService.turnOff2FA(user.email)
-		console.log("user dans offffffffff")
-		console.log(u)
-		return u;
+		const userFound = await this.userService.turnOff2FA(user.email)
+		return userFound;
 	}
 
 	@Post('/authenticate')

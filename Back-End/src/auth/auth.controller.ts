@@ -40,25 +40,22 @@ export class AuthController {
 	async login42() {
 		const url = await this.fortyTwoStrategy.getIntraUrl();
 		return { url };
-		// return { url: (await this.fortyTwoStrategy.getIntraUrl()) };
 	}
 
 	@Post('42/callback')
 	// @UseGuards(FortyTwoAuthGuard)
 	async callback_42(@Req() request: any, @Res() response: Response) {
 		const code = request.body.code;
-		console.log("code---->")
-		console.log(code)
 		try {
 			// Echange le code d'autorisation contre un token
 			const tokens = await this.authService.exchangeCodeForTokens(code);
 			// Get user profile using the access token
 			const userProfile = await this.authService.getFortyTwoUserProfile(tokens.access_token);
-
 			// Generate token using user profile
 			const user = await this.authService.signin_42(userProfile);
-
-			return response.status(HttpStatus.OK).send({ tokens, user });
+			const newtokens = await this.authService.generateTokens(user.id, user.email, user.twoFA);
+			await this.authService.updateRefreshToken(user.id, tokens.refresh_token);
+			return response.status(HttpStatus.OK).send({ newtokens, user });
 		} catch(error) {
 			console.log(error);
 		}

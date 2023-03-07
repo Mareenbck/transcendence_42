@@ -62,7 +62,6 @@ function Signup() {
 				const response = await fetch(url, options);
 				const result = await response.json();
 				setIsLoading(false);
-				console.log(result);
 				if (response.ok) {
 					setRedirect(true);
 					return result;

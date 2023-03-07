@@ -30,8 +30,6 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
 
 	async getIntraUrl(): Promise<string> {
 		const apiUrl = process.env.FORTYTWO_API_URL;
-		console.log("apiUrl---->")
-		console.log(apiUrl)
 		if (!apiUrl) {
 			throw new Error('FortyTwo API URL is not set');
 		}

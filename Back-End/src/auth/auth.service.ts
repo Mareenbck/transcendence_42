@@ -7,7 +7,6 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from '@nestjs/config';
 import { SigninDto } from "./dto/signin.dto";
-import { Response } from 'express';
 import { UserService } from "src/user/user.service";
 
 export interface Profile_42 {
@@ -26,8 +25,6 @@ export class AuthService {
 		const { email, username, password } = dto;
 		//generate the password
 		const hash = await argon.hash(password);
-		console.log("hash ====>")
-		console.log(hash)
 		//save new user in the db
 		try {
 			const user = await this.userService.createUser(
@@ -75,7 +72,6 @@ export class AuthService {
 	async signin_42(profile: Profile_42): Promise<User> {
 		// check if user exists
 		let user = await this.userService.getByEmail(profile.email);
-		console.log(user);
 		if (!user) {
 			return this.create_42_user(profile);
 		}
@@ -200,10 +196,6 @@ export class AuthService {
 				method: 'POST',
 				body: formData
 			});
-
-			// if (!response.ok) {
-				// 	throw new Error('Failed to exchange code for tokens');
-			// }
 
 			const tokens = await response.json();
 

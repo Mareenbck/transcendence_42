@@ -37,8 +37,6 @@ export const AuthContextProvider = (props: any) => {
 				}
 			});
 			const data = await response.json();
-			console.log("data dans AUTHCONTEXT")
-			console.log(data)
 			setUserId(data.id);
 			setUsername(data.username);
 			setAvatar(data.avatar);
