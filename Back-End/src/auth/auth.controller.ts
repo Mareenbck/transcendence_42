@@ -21,7 +21,8 @@ export class AuthController {
 		return this.authService.signup(dto);
 	}
 
-	// @UseGuards(LocalAuthGuard)
+	@UseGuards(LocalAuthGuard)
+	@HttpCode(HttpStatus.OK)
 	@Post('/signin')
 	async signin(@Body() dto: SigninDto, @Res({ passthrough: true }) response: Response) {
 		const tokens = await this.authService.signin(dto);

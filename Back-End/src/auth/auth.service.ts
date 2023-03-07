@@ -55,12 +55,7 @@ export class AuthService {
 
 	async validateUser(email: string, pass: string): Promise<any> {
 		const user = await this.userService.getByEmail(email);
-		console.log("user ====>")
-		console.log(user)
-		console.log(user.hash)
 		const pwMatches = await argon.verify(user.hash, pass);
-		console.log("pwMatches ====>")
-		console.log(pwMatches)
 		if (pwMatches) {
 			return user;
 		}
