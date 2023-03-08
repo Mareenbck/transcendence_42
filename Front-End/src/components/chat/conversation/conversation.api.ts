@@ -1,4 +1,4 @@
-import ConversationDto from "./conversation/conversation.dto"
+import ConversationDto from "./conversation.dto"
 
 export class ConversationApi {
   static async getAll() : Promise<ConversationDto[]> {
