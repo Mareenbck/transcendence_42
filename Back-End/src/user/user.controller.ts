@@ -65,8 +65,6 @@ export class UserController {
 	async getAvatar(@GetCurrentUserId() id: number, @Res() res: Response) {
 		try {
 			const user = await this.userService.getUser(id);
-			console.log("user---->")
-			console.log(user)
 			if (user.avatar) {
 				const fileName = path.basename(user.avatar)
 				const result = res.sendFile(fileName, { root: process.env.UPLOAD_DIR });
