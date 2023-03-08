@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 
 //creation du context pour auth
 //pour stocker les  data user
@@ -8,28 +8,24 @@ const defaultValue = {
 	username: '',
 	isLoggedIn: false,
 	avatar: '',
-	defaultAvatar: '',
+	ftAvatar: '',
 	is2FA: false,
+	fetchAvatar: async (userId: string) => {},
 	login: async (token: string, userId: string) => {},
 	logout: () => { }
 };
 
 const AuthContext = createContext(defaultValue);
 //controle de la presence du token dans local storage
-const tokenLocalStorage = localStorage.getItem("token");
-const userIdLocalStorage = localStorage.getItem("userId");
-// const userId42LocalStorage = localStorage.getItem("userId42");
 const usernameLocalStorage = localStorage.getItem("username");
-const avatarLocalStorage = localStorage.getItem("avatar");
-const defaultAvatarLocalStorage = localStorage.getItem("defaultAvatar");
+const ftAvatarLocalStorage = localStorage.getItem("ftAvatar");
 
 export const AuthContextProvider = (props: any) => {
-	const [token, setToken] = useState<string | null>(tokenLocalStorage);
-	const [userId, setUserId] = useState<string | null>(userIdLocalStorage);
-	// const [userId42, setUserId42] = useState<string | null>(userId42LocalStorage);
+	const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
+	const [userId, setUserId] = useState<string | null>(localStorage.getItem("userId"));
 	const [username, setUsername] = useState<string | null>(usernameLocalStorage);
-	const [avatar, setAvatar] = useState<string | null>(avatarLocalStorage);
-	const [defaultAvatar, setdefaultAvatar] = useState<string | null>(defaultAvatarLocalStorage);
+	const [avatar, setAvatar] = useState<string | null>('');
+	const [ftAvatar, setftAvatar] = useState<string | null>(ftAvatarLocalStorage);
 	const [is2FA, setIs2FA] = useState<boolean>(false);
 
 	const fetchHandler = async (token: string, userId: string) => {
@@ -40,16 +36,35 @@ export const AuthContextProvider = (props: any) => {
 				}
 			});
 			const data = await response.json();
+			console.log(data);
 			setUserId(data.id);
 			setUsername(data.username);
 			setAvatar(data.avatar);
-			setdefaultAvatar(data.defaultAvatar)
+			setftAvatar(data.ftAvatar)
 			localStorage.setItem('username', data.username);
 			return data
 		} catch (error) {
 			console.log(error);
 		}
 	};
+
+	const fetchAvatar = async (userId: string) => {
+		try {
+			const response = await fetch(`http://localhost:3000/users/${userId}/avatar`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			if (response.ok) {
+				const blob = await response.blob();
+				setAvatar(URL.createObjectURL(blob));
+			}
+			return "success";
+		} catch (error) {
+			return console.log("error", error);
+		}
+	}
 
 	const loginHandler = async (token: string, userId: string) => {
 		setToken(token);
@@ -61,7 +76,6 @@ export const AuthContextProvider = (props: any) => {
 		setToken("");
 		setUserId("");
 		setUsername("");
-		// setUserId42("");
 		setAvatar("");
 		localStorage.clear();
 	};
@@ -74,12 +88,14 @@ export const AuthContextProvider = (props: any) => {
 		userId: userId,
 		username: username,
 		avatar: avatar,
-		defaultAvatar: defaultAvatar,
+		ftAvatar: ftAvatar,
 		isLoggedIn: userIsLoggedIn,
+		setAvatar: setAvatar,
 		is2FA: is2FA,
 		login: loginHandler,
 		logout: logoutHandler,
 		fetchHandler: fetchHandler,
+		fetchAvatar: fetchAvatar,
 	};
 
 	return (

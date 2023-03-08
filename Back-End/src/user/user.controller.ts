@@ -55,19 +55,28 @@ export class UserController {
 	@Post('upload')
 	@UseGuards(JwtGuard)
 	@UseInterceptors(FileInterceptor('file', storage))
-	async uploadFile(@UploadedFile() file, @GetCurrentUserId() id: number) {
+	async uploadFile(@UploadedFile() file: any, @GetCurrentUserId() id: number) {
 		const updatedUser = await this.userService.updateAvatar(id, file.path);
 		return (updatedUser);
 	}
 
-	@Post('/:id/avatar')
+	@Get('/:id/avatar')
 	@UseGuards(JwtGuard)
 	async getAvatar(@GetCurrentUserId() id: number, @Res() res: Response) {
 		try {
 			const user = await this.userService.getUser(id);
-			const fileName = path.basename(user.avatar)
-			const result = res.sendFile(fileName, { root: process.env.UPLOAD_DIR });
-			return result
+			console.log("user---->")
+			console.log(user)
+			if (user.avatar) {
+				const fileName = path.basename(user.avatar)
+				const result = res.sendFile(fileName, { root: process.env.UPLOAD_DIR });
+				return result
+			}
+			else if (!user.ftAvatar && !user.avatar) {
+				const fileName = process.env.DEFAULT_AVATAR;
+				const result = res.sendFile(fileName, { root: process.env.PATH_DEFAULT_AVATAR });
+				return result
+			}
 		} catch {
 			throw new ForbiddenException('Not Found');
 		}

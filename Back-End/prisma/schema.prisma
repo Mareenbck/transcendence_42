@@ -21,7 +21,7 @@ model User {
 	username		String		@unique
 	status			UserStatus	@default(ONLINE)
 	avatar			String?
-	defaultAvatar	String?
+	ftAvatar		String?
 
 	hashedRtoken	String?
 

@@ -31,11 +31,14 @@ const Setting = () => {
 				body: formData,
 			})
 			const data = await response.json();
+			console.log("data---->")
+			console.log(data)
 			if (!response.ok) {
 				console.log("POST error on ${userId}/username ");
 				return "error";
 			}
-			// localStorage.setItem("avatar", file);
+			authCtx.fetchAvatar(data.id);
+			localStorage.setItem("avatar", data.avatar);
 			return "success";
 		} catch (error) {
 			return console.log("error", error);

@@ -9,14 +9,14 @@ import { plainToClass } from 'class-transformer';
 export class UserService {
 	constructor(private readonly prisma: PrismaService) { }
 
-	async createUser(email: string, username: string, hash: string, avatar ='', defaultAvatar = ''): Promise<User> {
+	async createUser(email: string, username: string, hash: string, avatar = '', ftAvatar = ''): Promise<User> {
 		const user = await this.prisma.user.create({
 			data: {
 				email,
 				username,
 				hash,
 				avatar,
-				defaultAvatar,
+				ftAvatar,
 			},
 		});
 		return user;

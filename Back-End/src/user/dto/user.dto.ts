@@ -22,4 +22,5 @@ export class UserDto {
 	hashedRtoken: string;
 
 	avatar: string;
+	ftAvatar: string;
 }
