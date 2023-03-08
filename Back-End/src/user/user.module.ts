@@ -13,3 +13,4 @@ import { FortyTwoAuthGuard, JwtGuard } from 'src/auth/guard';
 	exports: [UserService],
 })
 export class UserModule {}
+

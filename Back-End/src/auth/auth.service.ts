@@ -14,6 +14,7 @@ export interface Profile_42 {
 	username: string;
 	email: string;
 	avatar: string;
+	defaultAvatar: string;
 }
 
 @Injectable()
@@ -79,7 +80,7 @@ export class AuthService {
 	}
 
 	async create_42_user(profile: Profile_42): Promise<User> {
-		const { email, username, avatar } = profile;
+		const { email, username, avatar, defaultAvatar } = profile;
 		// generate random password
 		const rdm_string = this.generate_random_password();
 		// hash password using argon2
@@ -90,6 +91,7 @@ export class AuthService {
 			username,
 			hash,
 			avatar,
+			defaultAvatar,
 			);
 		return user;
 	}
@@ -221,6 +223,7 @@ export class AuthService {
 				username: data.login,
 				email: data.email,
 				avatar: data.image.link,
+				defaultAvatar: data.image.link,
 			};
 			return profile;
 		} catch (error) {

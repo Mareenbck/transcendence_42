@@ -1,5 +1,5 @@
 import '../style/Profile.css'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Navigate } from "react-router-dom";
 import AuthContext from '../store/AuthContext';
 import { Link } from 'react-router-dom';
@@ -8,12 +8,34 @@ const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
 
 	const isLoggedIn = authCtx.isLoggedIn;
-	const avatar = authCtx.avatar;
-	const username = localStorage.getItem('username');
+	const userId = authCtx.userId;
 
-	// useEffect(() => {
-	// 	const authCtx = useContext(AuthContext);
-	// }, []);
+	// const avatar = authCtx.avatar;
+	const defaultAvatar = authCtx.defaultAvatar;
+	const username = localStorage.getItem('username');
+	const [avatar, setAvatar] = useState<string | null>(authCtx.avatar);
+
+	useEffect(() => {
+
+	const fetchAvatar = async () => {
+		try {
+			const response = await fetch(`http://localhost:3000/users/${userId}/avatar`, {
+				method: 'POST',
+				headers: {
+					// 'Content-Type': 'application/json',
+					Authorization: `Bearer ${authCtx.token}`,
+				},
+			});
+			const blob = await response.blob();
+			setAvatar(URL.createObjectURL(blob));
+			return "success";
+		} catch (error) {
+			return console.log("error", error);
+		}
+	}
+	fetchAvatar();
+	}, [])
+
 	return (
 		<>
 		<img src={avatar} alt="" />

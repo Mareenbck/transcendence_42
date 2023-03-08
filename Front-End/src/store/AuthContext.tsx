@@ -8,6 +8,7 @@ const defaultValue = {
 	username: '',
 	isLoggedIn: false,
 	avatar: '',
+	defaultAvatar: '',
 	is2FA: false,
 	login: async (token: string, userId: string) => {},
 	logout: () => { }
@@ -20,6 +21,7 @@ const userIdLocalStorage = localStorage.getItem("userId");
 // const userId42LocalStorage = localStorage.getItem("userId42");
 const usernameLocalStorage = localStorage.getItem("username");
 const avatarLocalStorage = localStorage.getItem("avatar");
+const defaultAvatarLocalStorage = localStorage.getItem("defaultAvatar");
 
 export const AuthContextProvider = (props: any) => {
 	const [token, setToken] = useState<string | null>(tokenLocalStorage);
@@ -27,6 +29,7 @@ export const AuthContextProvider = (props: any) => {
 	// const [userId42, setUserId42] = useState<string | null>(userId42LocalStorage);
 	const [username, setUsername] = useState<string | null>(usernameLocalStorage);
 	const [avatar, setAvatar] = useState<string | null>(avatarLocalStorage);
+	const [defaultAvatar, setdefaultAvatar] = useState<string | null>(defaultAvatarLocalStorage);
 	const [is2FA, setIs2FA] = useState<boolean>(false);
 
 	const fetchHandler = async (token: string, userId: string) => {
@@ -40,6 +43,7 @@ export const AuthContextProvider = (props: any) => {
 			setUserId(data.id);
 			setUsername(data.username);
 			setAvatar(data.avatar);
+			setdefaultAvatar(data.defaultAvatar)
 			localStorage.setItem('username', data.username);
 			return data
 		} catch (error) {
@@ -70,6 +74,7 @@ export const AuthContextProvider = (props: any) => {
 		userId: userId,
 		username: username,
 		avatar: avatar,
+		defaultAvatar: defaultAvatar,
 		isLoggedIn: userIsLoggedIn,
 		is2FA: is2FA,
 		login: loginHandler,

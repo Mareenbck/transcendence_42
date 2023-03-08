@@ -13,31 +13,31 @@ const Menu = () => {
 
 	return (
 		<>
-		 <div className= {style.mainPos}>  
+		 <div className= {style.mainPos}>
 			{isLoggedIn && <SideBar className={style.position}  title="Welcome" /*username = {authCtx.username}*/ isLoggedIn = {isLoggedIn} />}
 			<div className={style.position}>
 				{!isLoggedIn && <Navigate to="/" replace={true} />}
 				{isLoggedIn && <h2 >WELCOME</h2>}
-				
+
 				{/*isLoggedIn && <p>Votre username : {authCtx.username} </p>*/}
 				{/*isLoggedIn && <button onClick={authCtx.logout}>LOGOUT </button>*/}
 				{/*<Link to={`/users/profile/${id}`} className='btn'>Profile page</Link>*/}
 				{/*<Link to="/chat/message">Chat</Link>*/}
-				
+
 				<div className={style.card}>
 					{isLoggedIn && <p >Challeng your frinds</p>}
-					{isLoggedIn && <p className={style.cardTit}> chose one of your online firends and play againts them in png match</p>}	
+					{isLoggedIn && <p className={style.cardTit}> chose one of your online firends and play againts them in png match</p>}
 				</div>
 
 				<div className={style.card}>
 					{isLoggedIn && <p >Watch a match</p>}
-					{isLoggedIn && <p className={style.cardTit}> Join a room and attend a pong match between yours frinds</p>}	
+					{isLoggedIn && <p className={style.cardTit}> Join a room and attend a pong match between yours frinds</p>}
 				</div>
 				<div className={style.card}>
 					{isLoggedIn && <p >Chat with your frinds</p>}
-					{isLoggedIn && <p className={style.cardTit}> Join a chatroom or discuss privetly with your frinds</p>}	
+					{isLoggedIn && <p className={style.cardTit}> Join a chatroom or discuss privetly with your frinds</p>}
 				</div>
-				
+
 			</div>
 		 </div>
 		</>

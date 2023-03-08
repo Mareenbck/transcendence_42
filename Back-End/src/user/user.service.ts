@@ -9,13 +9,14 @@ import { plainToClass } from 'class-transformer';
 export class UserService {
 	constructor(private readonly prisma: PrismaService) { }
 
-	async createUser(email: string, username: string, hash: string, avatar =''): Promise<User> {
+	async createUser(email: string, username: string, hash: string, avatar ='', defaultAvatar = ''): Promise<User> {
 		const user = await this.prisma.user.create({
 			data: {
 				email,
 				username,
 				hash,
 				avatar,
+				defaultAvatar,
 			},
 		});
 		return user;
@@ -75,6 +76,18 @@ export class UserService {
 			},
 			data: {
 				username: newUsername,
+			},
+		});
+		return updateUser;
+	}
+
+	async updateAvatar(id: number, newAvatar: string) {
+		const updateUser = await this.prisma.user.update({
+			where: {
+				id: id,
+			},
+			data: {
+				avatar: newAvatar,
 			},
 		});
 		return updateUser;
