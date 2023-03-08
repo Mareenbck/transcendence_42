@@ -73,6 +73,13 @@
   cursor: default;
 }
 
+.noConversationText2 {
+  top: 10%;
+  font-size: 50px;
+  color: rgb(224, 220, 220);
+  cursor: default;
+}
+
 @media screen and (max-width: 768px) {
   .chatMenu {
     flex: 1;

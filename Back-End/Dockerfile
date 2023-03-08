@@ -23,3 +23,6 @@ CMD ["npm", "run", "start:migrate:dev"]
 # Install with 'npm ci' (see: https://stackoverflow.com/questions/52499617/what-is-the-difference-between-npm-install-and-npm-ci)
 # If you are building your code for production
 # RUN npm ci --only=production
+
+# CMD ["npx", "prisma", "db", "seed"]
+

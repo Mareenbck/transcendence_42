@@ -5,7 +5,7 @@ export default function Conversation({conversation}) {
    <div className="conversation">
       <img
         className="conversationImg"
-        src={"http://localhost:8080/public/images/no-avatar.png"}
+        src={conversation.avatar ? conversation.avatar : "http://localhost:8080/public/images/no-avatar.png"}
         alt=""
       />
       <span className="conversationName"  > {conversation.name} </span>
