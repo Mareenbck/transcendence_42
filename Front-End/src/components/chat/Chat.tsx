@@ -107,6 +107,8 @@ function Chat() {
               { messages2.length ?
                   messages2.map((m) => (
                     <div ref={scrollRef}>
+                    {console.log("ttttt")}
+                    {console.log(id)}
                       <Message2 message2={m} own={m.authorId === +id} />
                     </div>
                   )) : <span className="noConversationText2" > No message in this room yet. </span>
