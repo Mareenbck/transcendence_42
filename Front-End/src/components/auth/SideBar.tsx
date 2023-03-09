@@ -12,7 +12,7 @@ function SideBar(props: any)
     return (
             <div className={style.position}>
                    <p className={style.tit}>{props.title},  {authCtx.username}!</p>
-                   {props.isLoggedIn  && <Link to="/auth/signin" className={style.lgu} 
+                   {props.isLoggedIn  && <Link to="/auth/signin" className={style.lgu}
                                            onClick=  {authCtx.logout}>
                                           LogOut<span> </span></Link>}
                    <br/>
@@ -22,6 +22,7 @@ function SideBar(props: any)
             <Link to={`/users/profile/${authCtx.userId}`} className={style.btn}>Profile page</Link>
 				    <Link to="/settings" className={style.btn}>setting</Link>
 				    <Link to="/auth/signin" className={style.btn}>Score</Link>
+                    <Link to="/friends" className={style.btn}>Show Friends</Link>
 			</div>
     )
 
