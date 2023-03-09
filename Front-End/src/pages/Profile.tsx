@@ -1,22 +1,35 @@
 import '../style/Profile.css'
-import React, { useContext, useEffect } from 'react'
-import { Navigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from 'react'
+import { Navigate, useParams } from "react-router-dom";
 import AuthContext from '../store/AuthContext';
-import { Link } from 'react-router-dom';
 
 const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
 
 	const isLoggedIn = authCtx.isLoggedIn;
-	const avatar = authCtx.avatar;
+	const { id } = useParams();
+	const ftAvatar = authCtx.ftAvatar;
 	const username = localStorage.getItem('username');
+	const [avatar, setAvatar] = useState<string | null>(null);
 
-	// useEffect(() => {
-	// 	const authCtx = useContext(AuthContext);
-	// }, []);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+
+	useEffect(() => {
+		setAvatar(authCtx.avatar);
+	}, [authCtx.avatar]);
+
+	useEffect(() => {
+		if (!avatar) {
+			authCtx.fetchAvatar(id);
+		} else {
+			authCtx.updateAvatar(avatar);
+		}
+	}, [id]);
+
 	return (
 		<>
-		<img src={avatar} alt="" />
+		{/* <img src={avatarUrl} alt={avatar ? "avatar" : "ftAvatar"} /> */}
+		{avatar ? <img src={avatar} alt={"avatar"} /> : <img src={ftAvatar} alt={"ftAvatar"} />}
 		{!isLoggedIn && <Navigate to="/" replace={true} />}
 		{isLoggedIn && <h2>PROFILE</h2>}
 		{isLoggedIn && <p>Votre Token: {authCtx.token} </p>}
@@ -29,4 +42,4 @@ const Profile = () =>  {
 	)
 }
 
-export default Profile
+export default Profile;

@@ -20,4 +20,7 @@ export class UserDto {
 
 	// @Exclude()
 	hashedRtoken: string;
+
+	avatar: string;
+	ftAvatar: string;
 }

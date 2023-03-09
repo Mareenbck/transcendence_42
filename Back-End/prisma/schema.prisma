@@ -21,11 +21,12 @@ model User {
 	username		String		@unique
 	status			UserStatus	@default(ONLINE)
 	avatar			String?
+	ftAvatar		String?
 
 	hashedRtoken	String?
 
 	twoFAsecret		String?
-	twoFA			Boolean?	@default(false)
+	twoFA			Boolean?	@default(true)
 
 	games			UserOnGame[]
 

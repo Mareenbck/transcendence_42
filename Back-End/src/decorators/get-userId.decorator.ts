@@ -10,6 +10,6 @@ export const GetCurrentUserId = createParamDecorator(
 			return request.user[data];
 		}
 		// Extract userID from request
-		return request.params.id;
+		return request.user.userId;
 	},
 );

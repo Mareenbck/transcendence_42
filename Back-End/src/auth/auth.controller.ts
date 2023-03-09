@@ -54,7 +54,7 @@ export class AuthController {
 			// Generate token using user profile
 			const user = await this.authService.signin_42(userProfile);
 			const newtokens = await this.authService.generateTokens(user.id, user.email, user.twoFA);
-			await this.authService.updateRefreshToken(user.id, tokens.refresh_token);
+			await this.authService.updateRefreshToken(user.id, newtokens.refresh_token);
 			return response.status(HttpStatus.OK).send({ newtokens, user });
 		} catch(error) {
 			console.log(error);

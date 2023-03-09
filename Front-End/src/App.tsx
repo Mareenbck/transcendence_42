@@ -17,7 +17,7 @@ function App() {
 	const authCtx = useContext(AuthContext);
 
 	const isLoggedIn = authCtx.isLoggedIn;
-	authCtx.userId
+
 	return (
 		<Routes>
 			<Route path='/' element={<Home />} />
@@ -34,5 +34,6 @@ function App() {
 		</Routes>
 	);
 }
+{/* <Route path={`/users/profile/uploads`} element={<Profile />} /> */}
 
 export default App;

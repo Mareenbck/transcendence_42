@@ -24,10 +24,12 @@ function Callback42() {
 					const userId = data.user.id;
 					const username = data.user.username;
 					const avatar = data.user.avatar;
+					const ftAvatar = data.user.ftAvatar;
 					localStorage.setItem('token', token);
 					localStorage.setItem('userId', userId);
 					localStorage.setItem('username', username);
 					localStorage.setItem('avatar', avatar);
+					localStorage.setItem('ftAvatar', ftAvatar);
 					const twofa: any = await authCtx.login(token, userId);
 					if (twofa) {
 						window.close();

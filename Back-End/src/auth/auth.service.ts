@@ -14,6 +14,7 @@ export interface Profile_42 {
 	username: string;
 	email: string;
 	avatar: string;
+	ftAvatar: string;
 }
 
 @Injectable()
@@ -23,6 +24,7 @@ export class AuthService {
 	async signup(dto: AuthDto): Promise<AuthTokenDto> {
 		// destructure dto
 		const { email, username, password } = dto;
+		// const defaultAvatar = process.env.DEFAULT_AVATAR
 		//generate the password
 		const hash = await argon.hash(password);
 		//save new user in the db
@@ -79,7 +81,7 @@ export class AuthService {
 	}
 
 	async create_42_user(profile: Profile_42): Promise<User> {
-		const { email, username, avatar } = profile;
+		const { email, username, avatar, ftAvatar } = profile;
 		// generate random password
 		const rdm_string = this.generate_random_password();
 		// hash password using argon2
@@ -90,6 +92,7 @@ export class AuthService {
 			username,
 			hash,
 			avatar,
+			ftAvatar,
 			);
 		return user;
 	}
@@ -220,7 +223,8 @@ export class AuthService {
 				// id: data.id,
 				username: data.login,
 				email: data.email,
-				avatar: data.image.link,
+				avatar: '',
+				ftAvatar: data.image.link,
 			};
 			return profile;
 		} catch (error) {
