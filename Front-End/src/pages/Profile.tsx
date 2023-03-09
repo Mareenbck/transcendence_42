@@ -2,6 +2,8 @@ import '../style/Profile.css'
 import React, { useContext, useEffect, useState } from 'react'
 import { Navigate, useParams } from "react-router-dom";
 import AuthContext from '../store/AuthContext';
+import SideBar from '../components/auth/SideBar';
+import style from '../style/Menu.module.css'
 
 const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
@@ -28,16 +30,36 @@ const Profile = () =>  {
 
 	return (
 		<>
+			<div className={style.mainPos}>
+				<SideBar title="Settings" />
+			<div className="contain-set">
+
 		{/* <img src={avatarUrl} alt={avatar ? "avatar" : "ftAvatar"} /> */}
-		{avatar ? <img src={avatar} alt={"avatar"} /> : <img src={ftAvatar} alt={"ftAvatar"} />}
+		<div className='head'>
+			<div className='profile-card'>
+				{avatar ? <img src={avatar} alt={"avatar"} /> : <img src={ftAvatar} alt={"ftAvatar"} />}
+				{isLoggedIn && <h5>{username} </h5>}
+			</div>
+			<div className='friends-card'>
+				<h5>My Friends</h5>
+			</div>
+			<div className='friends-card'>
+				<h5>My Rank</h5>
+				<div className='rank'>
+					<i className="fa-solid fa-fire"></i>
+					<h2>#12</h2>
+				</div>
+			</div>
+		</div>
+
 		{!isLoggedIn && <Navigate to="/" replace={true} />}
-		{isLoggedIn && <h2>PROFILE</h2>}
+		{/* {isLoggedIn && <h2>PROFILE</h2>} */}
 		{isLoggedIn && <p>Votre Token: {authCtx.token} </p>}
 		{isLoggedIn && <p>Votre userid : {authCtx.userId} </p>}
-		{isLoggedIn && <p>Votre username : {username} </p>}
 		{isLoggedIn && <button onClick={authCtx.logout}>LOGOUT </button>}
 		{/* {isLoggedIn && <Link to="/" onClick={authCtx.logout}>LOGOUT</Link>} */}
-
+			</div>
+		</div>
 		</>
 	)
 }
