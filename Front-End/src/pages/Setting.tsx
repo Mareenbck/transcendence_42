@@ -31,8 +31,6 @@ const Setting = () => {
 				body: formData,
 			})
 			const data = await response.json();
-			console.log("data---->")
-			console.log(data)
 			if (!response.ok) {
 				console.log("POST error on ${userId}/username ");
 				return "error";
@@ -45,9 +43,33 @@ const Setting = () => {
 		}
 	};
 
-	const handleFileChange = (event: FormEvent) => {
+	const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
 		setSelectedFile(event.target.files[0]);
 	};
+
+	const handleRestore = async (event: FormEvent) => {
+		event.preventDefault();
+		try {
+			const response = await fetch(`http://localhost:3000/users/restore`, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${authCtx.token}`,
+				},
+			})
+			const data = await response.json();
+			if (!response.ok) {
+				console.log("POST error on /restore ");
+				return "error";
+			}
+			authCtx.updateAvatar('');
+			localStorage.setItem("avatar", "");
+			return "success";
+		} catch (error) {
+			return console.log("error", error);
+		}
+
+
+	}
 
 	const handleUsername = async (event: FormEvent) => {
 		event.preventDefault();
@@ -143,7 +165,7 @@ const Setting = () => {
 							<input type="file" onChange={handleFileChange} />
 							<button type="submit">Upload</button>
 						</form>
-						<form >
+						<form onSubmit={handleRestore}>
 							<button type="submit">Restore</button>
 						</form>
 					</div>

@@ -7,31 +7,29 @@ const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
 
 	const isLoggedIn = authCtx.isLoggedIn;
-	const userId = authCtx.userId;
 	const { id } = useParams();
 	const ftAvatar = authCtx.ftAvatar;
-	// const avatar = authCtx.avatar;
 	const username = localStorage.getItem('username');
-	const [avatar, setAvatar] = useState(authCtx.avatar);
+	const [avatar, setAvatar] = useState<string | null>(null);
+
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		// Mettre à jour l'état local lorsque le contexte AuthContext change
 		setAvatar(authCtx.avatar);
 	}, [authCtx.avatar]);
 
 	useEffect(() => {
 		if (!avatar) {
 			authCtx.fetchAvatar(id);
+		} else {
+			authCtx.updateAvatar(avatar);
 		}
-	}, [id, avatar]);
+	}, [id]);
 
-	// const avatarUrl = avatar ? `${avatar}?${Date.now()}` : ftAvatar;
-	// const avatarUrl = avatar+`?${Math.random()}`;
-	console.log(avatar)
 	return (
 		<>
-			{/* <img src={avatarUrl} alt={avatar ? "avatar" : "ftAvatar"} /> */}
-			{avatar ? <img src={avatar} alt={"avatar"} /> : <img src={ftAvatar} alt={"ftAvatar"} />}
+		{/* <img src={avatarUrl} alt={avatar ? "avatar" : "ftAvatar"} /> */}
+		{avatar ? <img src={avatar} alt={"avatar"} /> : <img src={ftAvatar} alt={"ftAvatar"} />}
 		{!isLoggedIn && <Navigate to="/" replace={true} />}
 		{isLoggedIn && <h2>PROFILE</h2>}
 		{isLoggedIn && <p>Votre Token: {authCtx.token} </p>}

@@ -60,11 +60,19 @@ export class UserController {
 		return (updatedUser);
 	}
 
+	@Post('restore')
+	@UseGuards(JwtGuard)
+	async restore(@GetCurrentUserId() id: number) {
+		const updatedUser = await this.userService.restoreAvatar(id);
+		return (updatedUser);
+	}
+
 	@Get('/:id/avatar')
 	@UseGuards(JwtGuard)
 	async getAvatar(@GetCurrentUserId() id: number, @Res() res: Response) {
 		try {
 			const user = await this.userService.getUser(id);
+			// >>>> const avatar a mettre dans service
 			if (user.avatar) {
 				const fileName = path.basename(user.avatar)
 				const result = res.sendFile(fileName, { root: process.env.UPLOAD_DIR });
