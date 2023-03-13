@@ -1,12 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serifs;
+}
+
 .mainPos
 {
+    position: absolute;
     display: flex;
     flex-direction: row;
     top: 0;
     left: 0;
     width: 80%;
-    height: 100%;
+    height: 100vh;
+    transition: all 0.5s ease.;
 }
+
 
 .position
 {
@@ -18,7 +28,10 @@
     margin: 50px;
     width: 800px;
     align-items: center;
+    margin: auto;
 }
+
+
 
 .card
 {
@@ -30,12 +43,21 @@
     margin: 20px auto;
     border-radius: 4px;
     text-align: left;
-
+    margin: 30px;
 }
 .cardTit
 {
     color: gray;
     font-size: small;
     margin-top: 0;
+}
+
+.title
+{
+    
+    text-align: center;
+    margin: auto;
+    margin-top: 0;
+    font-weight: bold;
 }
 

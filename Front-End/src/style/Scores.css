@@ -1,0 +1,17 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+	font-family: 'Noto Sans', sans-serif;
+}
+.mainPos
+{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 100vh;
+    transition: all 0.5s ease.;
+}
