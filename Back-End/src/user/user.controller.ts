@@ -9,6 +9,13 @@ import { UserDto } from './dto/user.dto';
 export class UserController {
 	constructor(private userService: UserService) { }
 
+	@Get('test')
+	@UseGuards(JwtGuard)
+	async getAllUsers() {
+		const allUsers = await this.userService.getUsers();
+		return allUsers;
+	}
+
 	@Get('/profile/:id')
 	@UseGuards(JwtGuard)
 	async getMe(@GetCurrentUserId() id: string) {

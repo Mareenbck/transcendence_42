@@ -21,6 +21,12 @@ export class UserService {
 		return user;
 	}
 
+	async getUsers() {
+		const allUsers = await this.prisma.user.findMany();
+		return allUsers;
+	}
+
+
 	async getUser(id: number) {
 		if (id === undefined) {
 			throw new BadRequestException('Undefined user ID');
