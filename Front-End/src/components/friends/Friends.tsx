@@ -5,11 +5,33 @@ import AuthContext from '../../store/AuthContext';
 
 const Friends = () => {
 
-	const username = localStorage.getItem('username');
+	const [friends, setFriends] = useState([])
+	const authCtx = useContext(AuthContext);
+	const friendsList = localStorage.getItem('userlist')
 
 
+	
+	const isLoggedIn = authCtx.isLoggedIn;
+
+	//recuperation de la liste de users
+	useEffect(() => {
+	}
+	)
 	return (
-		<div>Friends page - Voici la liste d'amis : </div>
+		<div className="User"> 
+			User list : 
+			<table>
+				<td>Here are all users of the db  </td>
+
+				{isLoggedIn && <p>  Votre username : {friendsList} </p>}
+				<tbody>
+					{
+						// username.map()
+					}
+				</tbody>
+
+			</table>	
+		</div>
 	)
 }
 
