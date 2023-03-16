@@ -1,3 +1,5 @@
+/*
+
 import { IsNotEmpty, IsString, IsNumber, MaxLength } from 'class-validator';
 import { Type } from "class-transformer";
 
@@ -16,3 +18,4 @@ export class ChatroomDto
 //  @Type(() => chatroomMessage)
 //  cr_messages:  chatroomMessage[];
 }
+*/

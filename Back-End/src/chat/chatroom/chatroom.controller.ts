@@ -1,3 +1,5 @@
+/*
+
 import { Controller, Delete, Get, Post, Body, Param } from '@nestjs/common';
 import { ChatroomDto } from './chatroom.dto';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -19,3 +21,4 @@ export class ChatroomController {
 
 }
 
+*/

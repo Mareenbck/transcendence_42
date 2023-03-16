@@ -111,6 +111,27 @@ async function main() {
       userR: {connect: { id: user.id }}
     }})
 
+ const g1 = await prisma.game.create({
+    data: {
+      createdAt:   d3,
+      playerOne:   {connect: { id: user2.id }},
+      playerTwo:   {connect: { id: user3.id }},
+    }})
+
+const g2 = await prisma.game.create({
+    data: {
+      createdAt:   d2,
+      playerOne:   {connect: { id: user2.id }},
+      playerTwo:   {connect: { id: user4.id }},
+    }})
+
+const g3 = await prisma.game.create({
+    data: {
+      createdAt:   d4,
+      playerOne:   {connect: { id: user3.id }},
+      playerTwo:   {connect: { id: user4.id }},
+    }})
+
 
 }
 

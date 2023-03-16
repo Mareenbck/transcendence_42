@@ -1,3 +1,5 @@
+/*
+
 import { PrismaService } from '../../prisma/prisma.service';
 import { BadRequestException, Injectable, HttpException } from '@nestjs/common';
 import { DirectMessage } from '@prisma/client';
@@ -28,3 +30,4 @@ export class DirMessService {
   });
   }
 }
+*/

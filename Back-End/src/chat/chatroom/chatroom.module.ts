@@ -1,3 +1,5 @@
+
+/*
 import { Global, Module } from '@nestjs/common';
 import { ChatroomController } from './chatroom.controller';
 import { ChatroomService } from './chatroom.service';
@@ -12,3 +14,4 @@ import { PrismaService } from '../../prisma/prisma.service';
   exports: [PrismaService]
 })
 export class ChatroomModule {}
+*/

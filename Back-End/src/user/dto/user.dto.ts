@@ -23,4 +23,6 @@ export class UserDto {
 
 	avatar: string;
 	ftAvatar: string;
+  friendsTo: UserDto[];
+
 }

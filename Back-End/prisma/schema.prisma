@@ -30,6 +30,9 @@ model User {
 
 	games			UserOnGame[]
 
+  friendsTo User[] @relation("UserFriends")
+  friendsFrom User[] @relation("UserFriends")
+
   chatrooms  ChatroomUsers[]
   dirMessEmited   DirectMessage[] @relation(name: "emited")
   dirMessReceived DirectMessage[] @relation(name: "received")
@@ -58,7 +61,6 @@ model Game {
 	playerOneOnGameId		Int			@unique
 	playerTwo				UserOnGame	@relation("GamePlayerTwo", fields: [playerTwosOnGameId], references: [id])
 	playerTwosOnGameId		Int			@unique
-
 	@@map("games")
 }
 
@@ -105,3 +107,5 @@ model DirectMessage {
   userR        User    @relation(name: "received", fields: [receiver], references: [id])
   createdAt DateTime  @default(now())
 }
+
+
