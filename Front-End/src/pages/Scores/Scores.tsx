@@ -10,6 +10,24 @@ import JeuDto from "./scores.dto"
 
 
 
+const [jeux, setJeux] = useState<JeuDto[]> ([]);
+
+
+useEffect(() => {
+    if (jeux)
+    {
+    async function getJeux() {
+      try {
+        const response = await JeuApi.getJeux();
+        setjeux(response);
+      } catch(err) {
+        console.log(err);
+      }
+     };
+    getJeux();
+  }
+  }, [jeux]);
+
 
 
 const Scores = () => {
