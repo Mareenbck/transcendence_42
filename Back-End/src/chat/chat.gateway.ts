@@ -6,6 +6,7 @@ import {
   WebSocketGateway,
 } from '@nestjs/websockets';
 
+<<<<<<< HEAD
 let users = [];
 
 const addUser = (userId, socketId) => {
@@ -75,5 +76,6 @@ export class ChatGateway {
   //});
   }
   //  this.server.emit('message', content);
+
 
 }

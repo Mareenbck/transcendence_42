@@ -4,7 +4,6 @@ all: up
 
 up:
 	@printf "Building configuration ${NAME}...\n"
-	sudo service docker restart 
 	docker-compose up --build
 
 down:
