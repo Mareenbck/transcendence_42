@@ -1,10 +1,14 @@
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
-import '../style/Scores.css';
+import '../../style/Scores.css';
 import { Link } from "react-router-dom";
-import AuthContext from '../store/AuthContext';
+import AuthContext from '../../store/AuthContext';
 import { useContext } from "react";
-import SideBar from '../components/auth/SideBar';
-import style from '../style/Menu.module.css'
+import SideBar from '../../components/auth/SideBar';
+import style from '../../style/Menu.module.css'
+import JeuApi from "./scores.api"
+import JeuDto from "./scores.dto"
+
+
 
 
 

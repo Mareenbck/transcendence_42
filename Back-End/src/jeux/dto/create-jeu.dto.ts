@@ -1,11 +1,11 @@
 
 import { IsNotEmpty, IsString, IsNumber, MinLength, MaxLength } from 'class-validator';
 
-export class CreateGameDto {
+export class CreateJeuDto {
  id: number;
- finishedAt: Date;
- playerOneOnGameId:  number
- playerTwosOnGameId:  number
+ winnerId: number;
+ playerOneId:  number;
+ playerTwoId:  number;
  createdAt: Date;
 }
 
