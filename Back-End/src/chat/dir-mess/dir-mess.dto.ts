@@ -1,9 +1,16 @@
+import { IsNotEmpty, IsString, IsNumber, MinLength, MaxLength } from 'class-validator';
+
 export class DirMessDto
 {
-  readonly id       : number;
-  readonly content  : string;
-  readonly author    : number;
-  readonly receiver  : number;
-  readonly createdAt : number;
+  id       : number;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(3)
+  content  : string;
+
+  author    : number;
+  receiver  : number;
+  createdAt: Date;
 }
 

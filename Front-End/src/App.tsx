@@ -12,7 +12,7 @@ import Login from './components/auth/Login';
 import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';
 import Setting from './pages/Setting';
-import Scores from './pages/Scores';
+import Scores from './pages/Scores/Scores';
 
 function App() {
 	const authCtx = useContext(AuthContext);

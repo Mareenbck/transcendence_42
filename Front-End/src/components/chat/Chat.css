@@ -1,3 +1,35 @@
+.chatOnlineFriend {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.chatOnlineImgContainer {
+  position: relative;
+  margin-right: 10px;
+}
+
+.chatOnlineImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid white;
+}
+
+.chatOnlineBadge {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: limegreen;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+
 .messenger {
   height: calc(100vh - 70px);
   display: flex;
@@ -56,6 +88,7 @@
 
 .chatOnline {
   flex: 3;
+  overflow-y: scroll;
 }
 
 .chatMenuW,
@@ -64,6 +97,8 @@
   padding: 10px;
   height: 100%;
 }
+
+
 
 .noConversationText {
   position: absolute;
@@ -80,20 +115,5 @@
   cursor: default;
 }
 
-@media screen and (max-width: 768px) {
-  .chatMenu {
-    flex: 1;
-  }
 
-  .chatMenuInput {
-    display: none;
-  }
 
-  .chatBox{
-    flex: 10;
-  }
-
-  .chatOnline{
-    flex: 1px;
-  }
-}
