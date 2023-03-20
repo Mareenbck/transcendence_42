@@ -20,7 +20,13 @@ const removeUser = (socketId) => {
 }
 
 const getUser = (userId) => {
-  return users.find(user => user.userId === userId)
+
+//  console.log("TTTTTTTTTTTTTTTTT");
+//  console.log(users);
+//    console.log("TTTTTTTTTTTTTTTTT");
+//  console.log(userId);
+//    console.log("TTTTTTTTTTTTTTTTT");
+  return users.find(user => +user.userId.userId === +userId)
 }
 
 @WebSocketGateway(8001, { cors: {origin: "http://localhost:8080",}, })
@@ -39,8 +45,11 @@ export class ChatGateway {
         this.server.emit("getUsers", users);
       });
 
-      socket.on("getMDNN", ({author, receiver, content }) => {
+      socket.on("sendMD", ({author, receiver, content }) => {
+        console.log("XXXXXXXXXXXXXXXXXXXX");
+        console.log(receiver);
         const user = getUser(receiver);
+        console.log("sending to : ");
         console.log(user);
         this.server.to(user.socketId).emit("getMD", {
           author,

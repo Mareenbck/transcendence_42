@@ -8,7 +8,7 @@ import {format} from 'timeago.js'
       <div className="messageTop">
         <img
           className="messageImg"
-          src="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg"
+          src={ messageD?.author.avatar ? messageD?.author.avatar : "http://localhost:8080/public/images/no-avatar.png"}
           alt="" />
         <p className="messageText">
           {messageD.content}

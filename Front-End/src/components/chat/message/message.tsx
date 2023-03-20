@@ -3,12 +3,14 @@ import {format} from 'timeago.js'
 
 export default function Message2({ message2, own }) {
 
+ // console.log(message2);
+
   return (
     <div className= {own ? "message own" : "message"}>
       <div className="messageTop">
         <img
           className="messageImg"
-          src="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg"
+          src={ message2?.author.avatar ? message2?.author.avatar : "http://localhost:8080/public/images/no-avatar.png"}
           alt="" />
         <p className="messageText">
          {message2.content}
