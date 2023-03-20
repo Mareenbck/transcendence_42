@@ -9,13 +9,11 @@ import JeuApi from "./scores.api"
 import JeuDto from "./scores.dto"
 
 
+function Score() {
 
 const [jeux, setJeux] = useState<JeuDto[]> ([]);
 
-
-useEffect(() => {
-    if (jeux)
-    {
+  useEffect(() => {
     async function getJeux() {
       try {
         const response = await JeuApi.getJeux();
@@ -23,11 +21,9 @@ useEffect(() => {
       } catch(err) {
         console.log(err);
       }
-     };
+    };
     getJeux();
-  }
-  }, [jeux]);
-
+  }, []);
 
 
 const Scores = () => {
@@ -37,5 +33,7 @@ const Scores = () => {
           <h1 className={style.title}>PONDIUM</h1>        
         </div>        
      )           
+  }
 }
-export default Scores
+
+export default Score;

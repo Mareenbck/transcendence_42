@@ -11,3 +11,6 @@ export class JeuApi {
       console.log(err);
     }
   };
+}
+
+export default JeuApi;
