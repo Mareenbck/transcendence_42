@@ -1,4 +1,4 @@
-import JeuDto from "./score.dto"
+import JeuDto from "./scores.dto"
 
 export class JeuApi {
   static async getJeux(roomId: number) : Promise<JeuDto[]> {

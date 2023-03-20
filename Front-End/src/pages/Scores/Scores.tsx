@@ -17,7 +17,7 @@ const [jeux, setJeux] = useState<JeuDto[]> ([]);
     async function getJeux() {
       try {
         const response = await JeuApi.getJeux();
-        setjeux(response);
+        setJeux(response);
       } catch(err) {
         console.log(err);
       }
