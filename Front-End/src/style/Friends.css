@@ -1,0 +1,107 @@
+.User {
+    display : grid;
+    padding-left: 10px;
+}
+
+.global {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.title {
+    /* position: absolute; */
+    /* position: absolute; */
+    width: 704px;
+    height: 56px;
+    left: 450px;
+    top: 103px;
+    
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 24px;
+	font-family: 'Noto Sans', sans-serif;
+    
+    color: #000000;
+}
+
+.h1 {
+    /* position: absolute; */
+    width: 208px;
+    height: 42px;
+    left: 774px;
+    top: 14px;
+
+    margin-left: 500px;
+    margin-top: 30px;
+    /* font-family: 'Noto Sans SC'; */
+    font-style: normal;
+    font-weight: 700;
+    font-size: 29px;
+    line-height: 42px;
+    
+    /* identical to box height */
+    letter-spacing: 0.17em;
+    
+    color: #000000;
+}
+
+.line {
+    position: absolute;
+    width: 1200px;
+    height: 0px;
+    left: 416px;
+    top: 81px;
+
+    border: 2px solid #C7B9FF;
+}
+
+img {
+
+    box-sizing: border-box;
+
+    left: 34.53%;
+    right: 62.11%;
+    top: 50.56%;
+    bottom: 43.47%;
+    border-radius: 50px;
+    width: 60px;
+    margin-right: 70px;
+    
+    /* background: url(image.png); */
+    border: 2.97px solid #FFFFFF;
+    filter: drop-shadow(3.97px 2.97px 0px #000000);
+}
+
+li {
+    list-style-type: none;
+    margin-right: 300px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.friend-username {
+
+    width: 209.97px;
+    height: 33.03px;
+    left: 501.34px;
+    top: 291.55px;
+
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 35px;
+    display: flex;
+    align-items: center;
+
+    color: #000000;
+
+}
+
+.button {
+    background: #C7B9FF;
+    border: 3px solid #000000;
+    border-radius: 4px;
+}
