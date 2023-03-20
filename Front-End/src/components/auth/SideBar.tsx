@@ -1,6 +1,6 @@
 import React, { FormEvent, useContext, useRef, useState } from "react";
 import style from '../../style/SideBar.module.css'
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 
 
@@ -9,22 +9,56 @@ function SideBar(props: any)
     const authCtx = useContext(AuthContext);
 	  const id = authCtx.userId;
 
-    return (
-            <div className={style.position}>
-                   <p className={style.tit}>{props.title},  {authCtx.username}!</p>
-                   {props.isLoggedIn  && <Link to="/auth/signin" className={style.lgu}
-                                           onClick=  {authCtx.logout}>
-                                          LogOut<span> </span></Link>}
-                   <br/>
-            <Link to="/game/play" className={style.btn}>Play Game </Link>
-				    <Link to="/chat/message" className={style.btn}>Chat</Link>
+return (
+            <div className={style.sideBar}>
+                   <div className={style.top}>
+                        <div className={style.logo}>
+                            <i className="bx bx-menu"></i>
+                            <span> {props.title},{authCtx.username}!</span>
+                        </div>
+                   </div>
+                   <div>
+                        <Link to="/auth/signin" className={style.lgu} onClick={authCtx.logout}>LogOut</Link>
+                        <br/>
+                        <div className={style.links}>
+                            <NavLink 
+                                style={({isActive}) => {
+                                    return{color : isActive ? "grey" : "black"};
+                                }}to="/game/play" className= {style.btn}>Play Games
+                            </NavLink>
+                            <NavLink 
+                                style={({isActive}) => {
+                                    return{color : isActive ? "grey" : "black"};
+                                } }to="/chat/message" className= {style.btn} >Chat
+                            </NavLink>
+                            <NavLink 
+                                style={({isActive}) => {
+                                    return{color : isActive ? "grey" : "black"};
+                                }} to={`/users/profile/${authCtx.userId}`} className= {style.btn}>Profile page
+                            </NavLink>
+   
+                             <NavLink
+                                style={({isActive}) => {
+                                    return{color : isActive ? "grey" : "black"};
+                                }}to="/settings" className= {style.btn}>Setting
+                            </NavLink>
 
-            <Link to={`/users/profile/${authCtx.userId}`} className={style.btn}>Profile page</Link>
-				    <Link to="/settings" className={style.btn}>setting</Link>
-				    <Link to="/auth/signin" className={style.btn}>Score</Link>
-                    <Link to="/friends" className={style.btn}>Show Friends</Link>
-			</div>
+                            <NavLink
+                                style={({isActive}) => {
+                                    return{ color : isActive ? "grey" : "black"};
+                                    }} to="/scores" className= {style.btn}>Scores
+                            </NavLink>    
+                            <NavLink
+                                style={({isActive}) => {
+                                    return{ color : isActive ? "grey" : "black"};
+                                    }} to="/friends" className= {style.btn}>Show users
+                            </NavLink>
+                        </div>
+                    </div>
+            </div>
+
     )
+    
 
 }
 
