@@ -5,11 +5,11 @@ import AuthContext from '../../store/AuthContext';
 const Friends = () => {
 	const [friends, setFriends] = useState<any[]>([]);
 	const authCtx = useContext(AuthContext);
-	const friendsList = localStorage.getItem('userlist');
-	const isLoggedIn = authCtx.isLoggedIn;
+	// const friendsList = localStorage.getItem('userlist');
+	// const isLoggedIn = authCtx.isLoggedIn;
 
 	useEffect(() => {
-		const url = "http://localhost:3000/users/test";
+		const url = "http://localhost:3000/users/";
 		const fetchUsers = async () => {
 			const response = await fetch(
 				url, 
@@ -21,7 +21,11 @@ const Friends = () => {
 					}
 				}
 			)
+			console.log("RESPONSE")
+			console.log(response)
 			const data = await response.json();
+			console.log("DATA")
+			console.log(data)
 			setFriends(data);		
 		}
 		fetchUsers();
@@ -32,7 +36,7 @@ const Friends = () => {
 			User list : 
 			<ul>
 				{friends.map((friend) => (
-					<li key={friend.id}>friends ={friend.name}</li>
+					<li key={friend.username}> {friend.username}</li>
 				))}
 			</ul>
 

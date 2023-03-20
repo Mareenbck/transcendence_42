@@ -9,10 +9,12 @@ import { UserDto } from './dto/user.dto';
 export class UserController {
 	constructor(private userService: UserService) { }
 
-	@Get('test')
+	@Get('')
 	@UseGuards(JwtGuard)
 	async getAllUsers() {
 		const allUsers = await this.userService.getUsers();
+		console.log("ALL USERS")
+		console.log(allUsers)
 		return allUsers;
 	}
 
