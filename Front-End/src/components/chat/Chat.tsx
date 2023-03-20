@@ -35,7 +35,7 @@ function Chat() {
 
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
- /*   socket.current.on("getMD", data=> {
+    socket.current.on("getMD", (data)=> {
       setAMessageD({
         sender: data.sender,
         receiver: data.receiver,
@@ -43,13 +43,13 @@ function Chat() {
         createdAt: Date.now(),
       });
     });
- */ }, []);
+  }, []);
 
- /* useEffect(() => {
+  useEffect(() => {
     AMessageD && currentDirect?.id === AMessageD.sender &&
     setMessagesD(prev=>[...prev, AMessageD]);
     },[AMessageD, currentDirect])
-*/
+
   useEffect(() => {
     socket.current.emit("addUser", user);
     socket.current.on("getUsers", users =>{
@@ -152,12 +152,12 @@ function Chat() {
       receiver: +currentDirect?.userId,
     };
 
- /*     socket?.current.emit("getMD", {
+    socket?.current.emit("sendMD", {
         author: +id,
-        content: newMessageD,
         receiver: +currentDirect?.userId,
+        content: newMessageD,
       })
-*/
+
     try {
       const res2 = await MessageApi.postDirMess(messageD);
 //      console.log(res2);

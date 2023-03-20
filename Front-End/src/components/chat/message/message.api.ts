@@ -48,7 +48,7 @@ export class MessageApi {
   };
 
   static async postDirMess(messageD) : Promise<MessageDDto[]> {
-    console.log(messageD)
+//    console.log(messageD)
     try {
       const resp = await fetch(`http://localhost:3000/dir-mess`,
       {
