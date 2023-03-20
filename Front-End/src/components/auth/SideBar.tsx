@@ -51,7 +51,7 @@ return (
                             <NavLink
                                 style={({isActive}) => {
                                     return{ color : isActive ? "grey" : "black"};
-                                    }} to="/friends" className= {style.btn}>Showwwwww users
+                                    }} to="/friends" className= {style.btn}>Showww users
                             </NavLink>
                         </div>
                     </div>
