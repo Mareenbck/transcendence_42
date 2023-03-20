@@ -93,6 +93,16 @@ function SideBar(props: any)
                             to="/scores" 
                             className= {style.btn}
                             >Scores</NavLink>
+                            <NavLink 
+                            style={({isActive}) => {
+                                return{
+                                    color : isActive ? "grey" : "black"
+                                };
+                            }
+                            }
+                        to="/friends" 
+                        className= {style.btn}
+                        >Show friends</NavLink>
                               
                             
                             

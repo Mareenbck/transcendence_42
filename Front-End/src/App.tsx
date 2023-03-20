@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import Profile from './pages/Profile';
 import Callback42 from './components/auth/Callback42';
 import AuthContext from './store/AuthContext';
+import Friends from './components/friends/Friends';
 import Login from './components/auth/Login';
 import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';
@@ -24,6 +25,7 @@ function App() {
 			<Route path='/' element={<Home />} />
 			<Route path='/game/play' element={<Game />} />
 			<Route path='/chat/message' element={<Chat />} />
+			<Route path='/friends' element={<Friends />} />
 			<Route path='/auth/signin' element={<Login />} />
 			<Route path='/auth/2fa' element={<TwoFaForm />} />
 			<Route path='/auth/signup' element={<Signup />} />

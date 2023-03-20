@@ -28,6 +28,15 @@ export const storage = {
 export class UserController {
 	constructor(private userService: UserService) { }
 
+	@Get('')
+	// @UseGuards(JwtGuard)
+	async getAllUsers() {
+		const allUsers = await this.userService.getUsers();
+		// console.log("ALL USERS")
+		// console.log(allUsers)
+		return allUsers;
+	}
+
 	@Get('/profile/:id')
 	@UseGuards(JwtGuard)
 	async getMe(@GetCurrentUserId() id: string) {
