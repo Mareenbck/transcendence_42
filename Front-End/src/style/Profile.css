@@ -70,6 +70,11 @@
     justify-content: space-around;
 }
 
+/* .head > div {
+    flex-basis: calc(33.33% - 10px);
+    margin-bottom: 20px;
+  } */
+
 .rank {
 	display: flex;
 	align-items: center;
@@ -137,4 +142,46 @@
 
 .title {
     display: flex;
+}
+
+.body {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+/* .body > div {
+    flex-basis: calc(33.33% - 10px);
+    margin-bottom: 20px;
+  } */
+
+.body h5{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 24px;
+    align-self: center;
+	font-family: 'Noto Sans', sans-serif;
+    margin-left: 20px;
+}
+
+.history {
+    width: 345px;
+    text-align: left;
+    padding: 15px;
+
+}
+
+.victory {
+    width: 345px;
+    text-align: left;
+    padding: 15px;
+}
+
+.level {
+    width: 230px;
+    text-align: left;
+    padding: 15px;
 }

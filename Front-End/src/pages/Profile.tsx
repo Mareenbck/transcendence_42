@@ -61,11 +61,22 @@ const Profile = () =>  {
 				</div>
 			</div>
 		</div>
+		<div className='body'>
+			<div className='level'>
+				<h5>Level</h5>
+			</div>
+			<div className='history'>
+				<h5>Match History</h5>
+			</div>
+			<div className='victory'>
+				<h5>Victory</h5>
+			</div>
+		</div>
 
-		{!isLoggedIn && <Navigate to="/" replace={true} />}
+		{/* {!isLoggedIn && <Navigate to="/" replace={true} />} */}
 		{/* {isLoggedIn && <h2>PROFILE</h2>} */}
-		{isLoggedIn && <p>Votre Token: {authCtx.token} </p>}
-		{isLoggedIn && <p>Votre userid : {authCtx.userId} </p>}
+		{/* {isLoggedIn && <p>Votre Token: {authCtx.token} </p>} */}
+		{/* {isLoggedIn && <p>Votre userid : {authCtx.userId} </p>} */}
 		{isLoggedIn && <button onClick={authCtx.logout}>LOGOUT </button>}
 		{/* {isLoggedIn && <Link to="/" onClick={authCtx.logout}>LOGOUT</Link>} */}
 			</div>
