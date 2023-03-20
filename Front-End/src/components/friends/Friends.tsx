@@ -33,15 +33,27 @@ const Friends = () => {
 
 	return (
 		<div className="User"> 
-			User list : 
-			<ul>
-				{friends.map((friend) => (
-					<li key={friend.username}> {friend.username}</li>
-				))}
-			</ul>
-
+		  <h2>Online Users :</h2>
+		  <ul>
+			{friends.filter(friend => !friend.isOffline).map(friend => (
+			  <li key={friend.username}>{friend.username}</li>
+			))}
+		  </ul>
+		  <h2>Offline Users :</h2>
+		  <ul>
+			{friends.filter(friend => friend.isOffline).map(friend => (
+			  <li key={friend.username}>{friend.username}</li>
+			))}
+		  </ul>
+		  <h2>Playing Users :</h2>
+		  <ul>
+			{friends.filter(friend => friend.Playing).map(friend => (
+			  <li key={friend.username}>{friend.username}</li>
+			))}
+		  </ul>
 		</div>
-	);
+	  );
+	  
 }
 
 export default Friends;
