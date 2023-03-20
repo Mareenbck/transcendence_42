@@ -6,7 +6,6 @@ import {
   WebSocketGateway,
 } from '@nestjs/websockets';
 
-<<<<<<< HEAD
 let users = [];
 
 const addUser = (userId, socketId) => {
