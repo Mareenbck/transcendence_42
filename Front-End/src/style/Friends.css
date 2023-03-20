@@ -56,7 +56,7 @@
     border: 2px solid #C7B9FF;
 }
 
-img {
+.img-user {
 
     box-sizing: border-box;
 
@@ -100,7 +100,7 @@ li {
 
 }
 
-.button {
+.button-user {
     background: #C7B9FF;
     border: 3px solid #000000;
     border-radius: 4px;

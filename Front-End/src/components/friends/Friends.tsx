@@ -54,9 +54,9 @@ const Friends = () => {
 					<ul>
 						{onlineFriends.map(friend => (
 							<li key={friend.id} className='friend'>
-								<img src={friend.avatar} alt="avatar"></img>
+								<img className='img-user' src={friend.avatar} alt="avatar"></img>
 								<span className='friend-username'>{friend.username}</span>
-								<button className='button'>Send friend request</button>
+								<button className='button-user'>Send friend request</button>
 							</li>
 						))}
 					</ul>
