@@ -4,7 +4,6 @@ import { Navigate, useParams } from "react-router-dom";
 import AuthContext from '../store/AuthContext';
 import SideBar from '../components/auth/SideBar';
 import style from '../style/Menu.module.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
@@ -42,12 +41,16 @@ const Profile = () =>  {
 				{isLoggedIn && <h5>{username} </h5>}
 			</div>
 			<div className='friends-card'>
-			<div className="status-friends"></div>
-				<h5>My Friends</h5>
+				<div className="title">
+					<div className="status-friends"></div>
+					<h5>My Friends</h5>
+				</div>
 			</div>
 			<div className='friends-card'>
-			<div className="status-rank"></div>
-				<h5>My Rank</h5>
+				<div className="title">
+					<div className="status-rank"></div>
+					<h5>My Rank</h5>
+				</div>
 				<div className='flex'>
 					<div className='rank'>
 						<div className='font'>

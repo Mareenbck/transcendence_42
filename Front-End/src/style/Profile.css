@@ -46,18 +46,20 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 24px 24px 0px 21px;
-    width: 300px;
+    width: 345px;
     border: 4px solid #000000;
     box-shadow: 3.95px 4.95px 0px #000000;
     border-radius: 7.46612px;
 	justify-content: space-between;
+    position: relative;
 }
 
 .friends-card h5{
     font-style: normal;
     font-weight: 700;
-    font-size: 25px;
+    font-size: 32px;
     line-height: 24px;
+    align-self: center;
 	font-family: 'Noto Sans', sans-serif;
 }
 
@@ -76,6 +78,7 @@
 	height: 60px;
 	width: 60px;
 	border-radius: 15px;
+    margin-left: 10px;
 }
 
 .flex h2 {
@@ -113,21 +116,25 @@
 }
 
 .status-rank {
-	position: absolute;
+	position: relative;
 	width: 8px;
 	height: 65px;
-	top: 75px;
-	right: -62px;
+    top: 0px;
+    right: 27px;
 	background: #FF5166;
 	border-radius: 27.3758px;
 }
 
 .status-friends {
-	position: absolute;
+	position: relative;
 	width: 8px;
 	height: 65px;
-	top: 75px;
-	right: 387px;
+    top: 0;
+    right: 27px;
 	background: #5551FF;
 	border-radius: 27.3758px;
+}
+
+.title {
+    display: flex;
 }
