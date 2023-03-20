@@ -39,7 +39,7 @@ export class UserController {
 	@UseGuards(JwtGuard)
 	async updateUsername(@GetCurrentUserId() id: string, @Body('username') username: string) {
 		try {
-		const result = await this.userService.updateUsername(id, username);
+			const result = await this.userService.updateUsername(id, username);
 			return result;
 		} catch {
 			throw new ForbiddenException('Username already exists');

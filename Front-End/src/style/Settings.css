@@ -13,9 +13,9 @@
 	margin-bottom: 15px;
 }
 
-* {
+/* * {
 	font-family: 'Noto Sans', sans-serif;
-}
+} */
 
 p {
 	font-family: 'Noto Sans', sans-serif;
@@ -33,6 +33,7 @@ p {
 	justify-content: space-around;
 	margin-left: 60px;
 	height: 100vh;
+	width: 100%;
 }
 
 
