@@ -46,6 +46,13 @@ export class UserController {
 		}
 	}
 
+  @Get('/friends/:userId')
+  //@UseGuards(JwtGuard)
+  async getFriends(@GetCurrentUserId() userId: string) {
+    const userDto = this.userService.getFriends(parseInt(userId));
+    return userDto;
+  }
+
 	@Post('/update_avatar')
 	async updateAvatar(@GetCurrentUserId() id: number, @Body('avatar') newAvatar: string) {
 		const result = await this.userService.updateAvatar(id, newAvatar);

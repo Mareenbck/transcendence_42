@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ChatMessModule } from './chat/chat-mess/chat-mess.module';
 import { DirMessModule } from './chat/dir-mess/dir-mess.module';
 import { Chatroom2Module } from './chat/chatroom2/chatroom2.module';
+import { JeuxModule } from './jeux/jeux.module';
 
 @Module({
 	imports: [
@@ -22,6 +23,7 @@ import { Chatroom2Module } from './chat/chatroom2/chatroom2.module';
 		ChatMessModule,
 		DirMessModule,
 		Chatroom2Module,
+		JeuxModule,
 		// PassportModule.register({ defaultStrategy: '42' }),
 	],
 	providers: [ChatGateway],

@@ -104,4 +104,29 @@ export class UserService {
 		});
 		return updateUser;
 	}
+
+  async getFriends(userId: number) {
+    if (userId === undefined || isNaN(userId) ) {
+      throw new BadRequestException('Undefined user for Friends');
+    }
+    try {
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where: {id: userId, },
+      });
+      console.log(user)
+
+
+ //     const friends = user.friendsTo.map((friendId) => {
+ //       return this.getUser(friendId);
+ //     })
+  //    let friendList = [];
+  //    friends.map((friend) => {const {id, username, avatar} = friend;
+  //      friendList.push({id, username, avatar});
+  //    });
+  //    return friendList;
+    } catch (error) {
+      throw new BadRequestException('getUser error : ' + error);
+    }
+  }
+
 }

@@ -1,8 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { add } from 'date-fns';
-
 const prisma = new PrismaClient()
-
 
 async function main() {
   await prisma.user.deleteMany({}) // never in production
@@ -109,17 +107,7 @@ async function main() {
       content: "Salut U2, bien et toi ?",
       userA: {connect: { id: user2.id }},
       userR: {connect: { id: user.id }}
-    }})
-
+    }
+  })
 
 }
-
-main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
