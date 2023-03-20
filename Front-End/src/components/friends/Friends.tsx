@@ -5,8 +5,10 @@ import AuthContext from '../../store/AuthContext';
 const Friends = () => {
 	const [friends, setFriends] = useState<any[]>([]);
 	const authCtx = useContext(AuthContext);
-	// const friendsList = localStorage.getItem('userlist');
-	// const isLoggedIn = authCtx.isLoggedIn;
+
+	const onlineFriends = friends.filter(friend => friend.status === 'ONLINE');
+	const offlineFriends = friends.filter(friend => friend.status === 'OFFLINE');
+	const playingFriends = friends.filter(friend => friend.status === 'PLAYING');
 
 	useEffect(() => {
 		const url = "http://localhost:3000/users/";
@@ -32,23 +34,23 @@ const Friends = () => {
 	}, [])
 
 	return (
-		<div className="User"> 
+		<div className="User">
 		  <h2>Online Users :</h2>
 		  <ul>
-			{friends.filter(friend => !friend.isOffline).map(friend => (
-			  <li key={friend.username}>{friend.username}</li>
+			{onlineFriends.map(friend => (
+			  <li key={friend.id}>{friend.username}</li>
 			))}
 		  </ul>
 		  <h2>Offline Users :</h2>
 		  <ul>
-			{friends.filter(friend => friend.isOffline).map(friend => (
-			  <li key={friend.username}>{friend.username}</li>
+			{offlineFriends.map(friend => (
+			  <li key={friend.id}>{friend.username}</li>
 			))}
 		  </ul>
 		  <h2>Playing Users :</h2>
 		  <ul>
-			{friends.filter(friend => friend.Playing).map(friend => (
-			  <li key={friend.username}>{friend.username}</li>
+			{playingFriends.map(friend => (
+			  <li key={friend.id}>{friend.username}</li>
 			))}
 		  </ul>
 		</div>
