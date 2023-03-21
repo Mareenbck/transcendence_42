@@ -7,14 +7,17 @@ import style from '../style/Menu.module.css'
 
 const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
+	const [demands, setDemands] = useState<any[]>([]);
+	const prendingDemands = demands.filter(demand => demand.status === 'PENDING');
 
+	const currentUserId = authCtx.userId;
 	const isLoggedIn = authCtx.isLoggedIn;
 	const { id } = useParams();
 	const ftAvatar = authCtx.ftAvatar;
 	const username = localStorage.getItem('username');
 	const [avatar, setAvatar] = useState<string | null>(null);
 
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+	// const demandFriend =
 
 	useEffect(() => {
 		setAvatar(authCtx.avatar);
@@ -28,10 +31,30 @@ const Profile = () =>  {
 		}
 	}, [id]);
 
+	useEffect(() => {
+		const url = "http://localhost:3000/friendship/received";
+		const fetchDemands = async () => {
+			const response = await fetch(
+				url,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${authCtx.token}`
+					},
+					body: JSON.stringify({id: currentUserId}),
+				}
+			)
+			const data = await response.json();
+			setDemands(data);
+		}
+		fetchDemands();
+	}, [])
+
 	return (
 		<>
-			<div className={style.mainPos}>
-				<SideBar title="Settings" />
+		<div className={style.mainPos}>
+			<SideBar title="Settings" />
 			<div className="contain-set">
 
 		{/* <img src={avatarUrl} alt={avatar ? "avatar" : "ftAvatar"} /> */}
@@ -72,13 +95,28 @@ const Profile = () =>  {
 				<h5>Victory</h5>
 			</div>
 		</div>
+		<div>
+			<h2 className="title">Demands :</h2>
+			<ul>
+				{prendingDemands.map(demand => (
+					<li key={demand.id} className='friend'>
+						{demand.requester.avatar ? <img className='avatar-img' src={demand.requester.avatar} alt={"avatar"} /> : <img className='avatar-img' src={demand.requester.ftAvatar} alt={"ftAvatar"} />}
+						<span className='friend-username'>{demand.requester.username}</span>
+						<div className='accept'>
+							<i className="fa-regular fa-circle-check"></i>
+						</div>
+						<div className='deny'>
+							<i className="fa-solid fa-xmark"></i>
+						</div>
+					</li>
+				))}
+			</ul>
+		</div>
 
-		{/* {!isLoggedIn && <Navigate to="/" replace={true} />} */}
-		{/* {isLoggedIn && <h2>PROFILE</h2>} */}
+		{!isLoggedIn && <Navigate to="/" replace={true} />}
 		{/* {isLoggedIn && <p>Votre Token: {authCtx.token} </p>} */}
 		{/* {isLoggedIn && <p>Votre userid : {authCtx.userId} </p>} */}
-		{isLoggedIn && <button onClick={authCtx.logout}>LOGOUT </button>}
-		{/* {isLoggedIn && <Link to="/" onClick={authCtx.logout}>LOGOUT</Link>} */}
+		{/* {isLoggedIn && <button onClick={authCtx.logout}>LOGOUT </button>} */}
 			</div>
 		</div>
 		</>
