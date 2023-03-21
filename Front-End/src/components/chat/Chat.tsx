@@ -12,7 +12,6 @@ import MessageD from "./message/messageD"
 import ConversationDto from "./conversation/conversation.dto"
 import MessageDto from "./message/message.dto"
 import './Chat.css'
-import React from 'react';
 
 function Chat() {
   const socket = useRef();
@@ -182,115 +181,111 @@ function Chat() {
 //      <Messages messages={messages} />
 
 
-//   return (
-//     <>
-//       {" "}
+  return (
+    <>
+      {" "}
 
 
-//       <div className="messenger">
-//         <div className="chatMenu">
-//           <div className="chatMenuW">
-//             <input placeholder="Search for Chatrooms" className="chatMenuInput" />
-//               { conversations.map((c) => (
-//                 <div onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
-//                   <Conversation conversation={c}/>
-//                 </div>
-//               ))}
-//           </div>
-//         </div>
-//         <div className="chatBox">
-//           <div className="chatBoxW">
-//           {
-//             currentChat ?
-//             <>
-//               <div className="chatBoxTop">
-//                 { messages2.length ?
-//                   messages2.map((m) => (
-//                     <div ref={scrollRef}>
-//                       <Message2 message2={m} own={m.authorId === +id} />
-//                     </div>
-//                   )) : <span className="noConversationText2" > No message in this room yet. </span>
-//                 }
-//               </div>
-//               <div className="chatBoxBottom">
-//                 <textarea
-//                     className="chatMessageInput"
-//                     placeholder="write something..."
-//                     onChange={(e) => setNewMessage2(e.target.value)}
-//                     value={newMessage2}
-//                 ></textarea>
-//                   <button className="chatSubmitButton" onClick={handleSubmit}>
-//                     Send
-//                   </button>
-//               </div>
-//             </>
-//             :
-//             currentDirect ?
-//                  <>
-//               <div className="chatBoxTop">
-//                 { messagesD.length ?
-//                   messagesD?.map((m) => (
-//                     <div ref={scrollRef}>
-//                       <MessageD messageD={m} own={m?.author === +id} />
-//                     </div>
-//                   )) : <span className="noConversationText2" > No message with this friend yet. </span>
-//                 }
-//               </div>
-//               <div className="chatBoxBottom">
-//                 <textarea
-//                     className="chatMessageInput"
-//                     placeholder="write something..."
-//                     onChange={(e) => setNewMessageD(e.target.value)}
-//                     value={newMessageD}
-//                 ></textarea>
-//                 {currentChat ?
-//                   <>
-//                     <button className="chatSubmitButton" onClick={handleSubmit}>
-//                       SendROOM
-//                     </button>
-//                   </>
-//                   :
-//                   <>
-//                     <button className="chatSubmitButton" onClick={handleSubmitD}>
-//                       SendFriend
-//                     </button>
-//                   </>
-//                 }
-//               </div>
-//             </>
-//               : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
-//             }
-//           </div>
-//         </div>
-//         <div className="chatOnline">
-//           <div className="chatOnlineW">
-//     <div className="chatOnline">
-//       { onlineUsers ? onlineUsers?.map((o) => (
-//         +o?.userId.userId !== +id ?
-//         <>
-//         <div className="chatOnlineFriend" onClick={()=> {setCurrentDirect(o?.userId); setCurrentChat(null)}} >
-//           <div className="chatOnlineImgContainer">
-//             <img  className="chatOnlineImg"
-//               src={ o?.userId.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
-//               alt=""
-//             />
-//             <div className="chatOnlineBadge"></div>
-//           </div>
-//           <span className="chatOnlineName"> {o?.userId.username} </span>
-//         </div>
-//         </>
-//         : null
-//       )) : <span className="noConversationText2" > Nobody online. </span>}
-//     </div>
-//           </div>
-//         </div>
-//       </div>
-// </>
-//   )
-
-return (
-  <button className='button-create'>Create new channel</button>
-)
+      <div className="messenger">
+        <div className="chatMenu">
+          <div className="chatMenuW">
+            <input placeholder="Search for Chatrooms" className="chatMenuInput" />
+              { conversations.map((c) => (
+                <div onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
+                  <Conversation conversation={c}/>
+                </div>
+              ))}
+          </div>
+        </div>
+        <div className="chatBox">
+          <div className="chatBoxW">
+          {
+            currentChat ?
+            <>
+              <div className="chatBoxTop">
+                { messages2.length ?
+                  messages2.map((m) => (
+                    <div ref={scrollRef}>
+                      <Message2 message2={m} own={m.authorId === +id} />
+                    </div>
+                  )) : <span className="noConversationText2" > No message in this room yet. </span>
+                }
+              </div>
+              <div className="chatBoxBottom">
+                <textarea
+                    className="chatMessageInput"
+                    placeholder="write something..."
+                    onChange={(e) => setNewMessage2(e.target.value)}
+                    value={newMessage2}
+                ></textarea>
+                  <button className="chatSubmitButton" onClick={handleSubmit}>
+                    Send
+                  </button>
+              </div>
+            </>
+            :
+            currentDirect ?
+                 <>
+              <div className="chatBoxTop">
+                { messagesD.length ?
+                  messagesD?.map((m) => (
+                    <div ref={scrollRef}>
+                      <MessageD messageD={m} own={m?.author === +id} />
+                    </div>
+                  )) : <span className="noConversationText2" > No message with this friend yet. </span>
+                }
+              </div>
+              <div className="chatBoxBottom">
+                <textarea
+                    className="chatMessageInput"
+                    placeholder="write something..."
+                    onChange={(e) => setNewMessageD(e.target.value)}
+                    value={newMessageD}
+                ></textarea>
+                {currentChat ?
+                  <>
+                    <button className="chatSubmitButton" onClick={handleSubmit}>
+                      SendROOM
+                    </button>
+                  </>
+                  :
+                  <>
+                    <button className="chatSubmitButton" onClick={handleSubmitD}>
+                      SendFriend
+                    </button>
+                  </>
+                }
+              </div>
+            </>
+              : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
+            }
+          </div>
+        </div>
+        <div className="chatOnline">
+          <div className="chatOnlineW">
+    <div className="chatOnline">
+      { onlineUsers ? onlineUsers?.map((o) => (
+        +o?.userId.userId !== +id ?
+        <>
+        <div className="chatOnlineFriend" onClick={()=> {setCurrentDirect(o?.userId); setCurrentChat(null)}} >
+          <div className="chatOnlineImgContainer">
+            <img  className="chatOnlineImg"
+              src={ o?.userId.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
+              alt=""
+            />
+            <div className="chatOnlineBadge"></div>
+          </div>
+          <span className="chatOnlineName"> {o?.userId.username} </span>
+        </div>
+        </>
+        : null
+      )) : <span className="noConversationText2" > Nobody online. </span>}
+    </div>
+          </div>
+        </div>
+      </div>
+</>
+  )
 
 }
 export default Chat;
