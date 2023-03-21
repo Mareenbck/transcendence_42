@@ -32,11 +32,7 @@ const Friends = () => {
 					}
 				}
 			)
-			console.log("RESPONSE")
-			console.log(response)
 			const data = await response.json();
-			console.log("DATA")
-			console.log(data)
 			setFriends(data);		
 		}
 		fetchUsers();

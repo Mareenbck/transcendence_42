@@ -157,30 +157,142 @@ function Chat() {
 	setSelectedFile(event.target.files[0]);
 };
 
-	const createNewChannel = async (event: FormEvent) => {
-		event.preventDefault();
-		const response = await fetch(`http://localhost:3000/chatroom2/create_channel`,
-		  {
-			method: "POST",
-			headers: {
-			  "Content-type": "application/json",
-			  Authorization: `Bearer ${authCtx.token}`
-			},
-			body: JSON.stringify({name: "new"}),
-		  }
-		)
-		console.log("DATA------>")
-		const data = await response.json();
-		console.log(data);
-	  };
 
- return (
-   <div>
-	<form onSubmit={createNewChannel}>
-		<button type="submit">Create new channel</button>
-	</form>
-   </div>
-  );
- }
+const handleChannelNameChange = (event: FormEvent) => {
+  setChannelName(event.target.value);
+};
+
+const [channels, setChannelName] = useState([]);
+
+const createNewChannel = async (event: FormEvent) => {
+  event.preventDefault();
+  const response = await fetch(`http://localhost:3000/chatroom2/create_channel`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${authCtx.token}`
+    },
+    body: JSON.stringify({name: channels}),
+  });
+  const data = await response.json();
+  console.log(data);
+};
+
+
+return (
+<>
+{" "}
+
+<div className="messenger">
+  <div className="chatMenu">
+	<div className="chatMenuW">
+	<div>
+		  <form onSubmit={createNewChannel}>
+			<label>
+			  New channel name:
+			  <input type="text" value={channels} onChange={handleChannelNameChange} />
+			</label>
+			<button type="submit">Create new channel</button>
+		  </form>
+		</div>
+	  <input placeholder="Search for Chatrooms" className="chatMenuInput" />
+		{ conversations.map((c) => (
+		  <div onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
+			<Conversation conversation={c}/>
+		  </div>
+		))}
+	</div>
+  </div>
+
+  <div className="chatBox">
+	<div className="chatBoxW">
+	{
+	  currentChat ?
+	  <>
+		<div className="chatBoxTop">
+		  { messages2.length ?
+			messages2.map((m) => (
+			  <div ref={scrollRef}>
+				<Message2 message2={m} own={m.authorId === +id} />
+			  </div>
+			)) : <span className="noConversationText2" > No message in this room yet. </span>
+		  }
+		</div>
+		<div className="chatBoxBottom">
+		  <textarea
+			  className="chatMessageInput"
+			  placeholder="write something..."
+			  onChange={(e) => setNewMessage2(e.target.value)}
+			  value={newMessage2}
+		  ></textarea>
+			<button className="chatSubmitButton" onClick={handleSubmit}>
+			  Send
+			</button>
+		</div>
+	  </>
+	  :
+	  currentDirect ?
+		   <>
+		<div className="chatBoxTop">
+		  { messagesD.length ?
+			messagesD?.map((m) => (
+			  <div ref={scrollRef}>
+				<MessageD messageD={m} own={m?.author === +id} />
+			  </div>
+			)) : <span className="noConversationText2" > No message with this friend yet. </span>
+		  }
+		</div>
+		<div className="chatBoxBottom">
+		  <textarea
+			  className="chatMessageInput"
+			  placeholder="write something..."
+			  onChange={(e) => setNewMessageD(e.target.value)}
+			  value={newMessageD}
+		  ></textarea>
+		  {currentChat ?
+			<>
+			  <button className="chatSubmitButton" onClick={handleSubmit}>
+				SendROOM
+			  </button>
+			</>
+			:
+			<>
+			  <button className="chatSubmitButton" onClick={handleSubmitD}>
+				SendFriend
+			  </button>
+			</>
+		  }
+		</div>
+	  </>
+		: <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
+	  }
+	</div>
+  </div>
+  <div className="chatOnline">
+	<div className="chatOnlineW">
+<div className="chatOnline">
+{ onlineUsers ? onlineUsers?.map((o) => (
+  +o?.userId.userId !== +id ?
+  <>
+  <div className="chatOnlineFriend" onClick={()=> {setCurrentDirect(o?.userId); setCurrentChat(null)}} >
+	<div className="chatOnlineImgContainer">
+	  <img  className="chatOnlineImg"
+		src={ o?.userId.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
+		alt=""
+	  />
+	  <div className="chatOnlineBadge"></div>
+	</div>
+	<span className="chatOnlineName"> {o?.userId.username} </span>
+  </div>
+  </>
+  : null
+)) : <span className="noConversationText2" > Nobody online. </span>}
+</div>
+	</div>
+  </div>
+</div>
+</>
+)
+}
 
 export default Chat;
