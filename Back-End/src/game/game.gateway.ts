@@ -32,9 +32,9 @@ const width = 800;
 const height = 400;
 const racket_width = 10;
 const racket_height = 100;
-const ballSpeed = 7;
+var ballSpeed = 7;
 const ballR = 15;
-const racketSpeedY = 5;
+const racketSpeedY = 10;
 const period = 100;
 
 
@@ -126,14 +126,18 @@ private updatePositions(): void
 console.log('left loss', this.left, this.right);
     this.ball.x = width / 2 - this.ballSpeedX;
     this.ball.y = height / 2 - this.ballSpeedX;
+    ballSpeed = ballSpeed + 1;
     this.ballSpeedX = ballSpeed;
+console.log('ballSpeed = ', ballSpeed);
   } else if (this.ball.x > width - ballR) {
     this.ballSpeedX = -this.ballSpeedX;
     ++this.left;
 console.log('right loss', this.left, this.right);
     this.ball.x = width / 2 - this.ballSpeedX;
     this.ball.y = height / 2 - this.ballSpeedX;
-    this.ballSpeedX = -ballSpeed;
+    ballSpeed = ballSpeed + 1;
+    this.ballSpeedX = - ballSpeed;
+console.log('ballSpeed = ', ballSpeed);
   } else if (this.ball.y < ballR || this.ball.y > height - ballR) {
     this.ballSpeedY = -this.ballSpeedY;
   }
@@ -149,7 +153,7 @@ console.log("run");
       this.updatePositions();
       // Emit the updated positions of the ball and the rocket to all connected clients
       this.emit2all();
-      if (this.left >= 10 || this.right >= 10){
+      if (this.left >= 11 || this.right >= 11){
 console.log('stop game')
         clearInterval(this.interval); 
         this.isrunning = false;

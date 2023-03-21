@@ -30,3 +30,14 @@ export interface gameWinner {
     winner: string;
     leave: string;
 }
+
+export interface star {
+    centerX: number;
+    centerY: number; // the center point of the star
+    points: number; //the number of points on the exterior of the star
+    inner: number;//the radius of the inner points of the star
+    outer: number;//the radius of the outer points of the star
+    fill: string;
+    stroke: string;//the fill and stroke colors to apply
+    line: number; //the linewidth of the stroke
+}
