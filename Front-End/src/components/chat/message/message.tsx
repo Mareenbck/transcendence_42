@@ -10,7 +10,7 @@ export default function Message2({ message2, own }) {
       <div className="messageTop">
         <img
           className="messageImg"
-          src={ message2?.author.avatar ? message2?.author.avatar : "http://localhost:8080/public/images/no-avatar.png"}
+    //      src={ message2?.author.avatar ? message2?.author.avatar : "http://localhost:8080/public/images/no-avatar.png"}
           alt="" />
         <p className="messageText">
          {message2.content}
