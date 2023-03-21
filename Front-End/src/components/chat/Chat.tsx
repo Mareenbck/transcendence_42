@@ -90,10 +90,10 @@ function Chat() {
         try {
           const response = await MessageApi.getMess(currentChat?.id);
           setMessages2(response);
-          socket?.current.emit("userRoom", {
-            user: user,
-            room: currentChat,
-          })
+       //   socket?.current.emit("userRoom", {
+       //     user: user,
+       //     room: currentChat,
+       //   })
         } catch(err) {
           console.log(err);
         }
