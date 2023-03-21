@@ -3,7 +3,7 @@ import './Game.css'
 import type {gameInit, gameState, gameWinner} from './type'
 
 
-const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ): JSX => {
+const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ):  JSX.Element => {
     const gamewinner = props.gamewinner;
 	const gameinit = props.gameinit;
 
@@ -15,7 +15,8 @@ const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ): JSX => {
             const context = canvasRef.current.getContext('2d');
 
 			// Draw the table
-			context.fillStyle = "#FDD9";
+			context.fillStyle = "#8c66ff";
+			context.strokeStyle = "#230047";
 			context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
 				
 			if (context) {
@@ -56,6 +57,106 @@ const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ): JSX => {
 export default Winner
 
 //https://imapo.ru/%d1%84%d0%b5%d0%b9%d0%b5%d1%80%d0%b2%d0%b5%d1%80%d0%ba%d0%b8-%d0%bd%d0%b0-html5-canvas-%d0%b8-jquery/
+
+// import { useRef, useEffect } from 'react';
+
+// function Fireworks() {
+//   const canvasRef = useRef(null);
+
+//   useEffect(() => {
+//     const canvas = canvasRef.current;
+//     const ctx = canvas.getContext('2d');
+
+//     // resize canvas
+//     const resizeCanvas = () => {
+//       canvas.width = window.innerWidth;
+//       canvas.height = window.innerHeight;
+//       ctx.fillStyle = '#000';
+//       ctx.fillRect(0, 0, canvas.width, canvas.height);
+//     };
+
+//     window.addEventListener('resize', resizeCanvas);
+//     resizeCanvas();
+
+//     // initialize fireworks
+//     const center = { x: canvas.width / 2, y: canvas.height / 2 };
+//     const range = 100;
+//     const fireNumber = 10;
+//     const listFire = Array.from({ length: fireNumber }, () => {
+//       const fire = {
+//         x: Math.random() * range / 2 - range / 4 + center.x,
+//         y: Math.random() * range * 2 + canvas.height,
+//         size: Math.random() + 0.5,
+//         fill: '#fd1',
+//         vx: Math.random() - 0.5,
+//         vy: -(Math.random() + 4),
+//         ax: Math.random() * 0.02 - 0.01,
+//         far: Math.random() * range + (center.y - range),
+//         base: null
+//       };
+//       fire.base = {
+//         x: fire.x,
+//         y: fire.y,
+//         vx: fire.vx
+//       };
+//       return fire;
+//     });
+
+//     const randColor = () => {
+//       const r = Math.floor(Math.random() * 256);
+//       const g = Math.floor(Math.random() * 256);
+//       const b = Math.floor(Math.random() * 256);
+//       return `rgb(${r}, ${g}, ${b})`;
+//     };
+
+//     const listFirework = [];
+
+//     const update = () => {
+//       for (let i = 0; i < listFire.length; i++) {
+//         const fire = listFire[i];
+
+//         if (fire.y <= fire.far) {
+//           // create firework
+//           const color = randColor();
+//           for (let j = 0; j < fireNumber * 5; j++) {
+//             const firework = {
+//               x: fire.x,
+//               y: fire.y,
+//               size: Math.random() + 1.5,
+//               fill: color,
+//               vx: Math.random() * 5 - 2.5,
+//               vy: Math.random() * -5 + 1.5,
+//               ay: 0.05,
+//               alpha: 1,
+//               life: Math.round(Math.random() * range / 2) + range / 2,
+//               base: null
+//             };
+//             firework.base = {
+//               life: firework.life,
+//               size: firework.size
+//             };
+//             listFirework.push(firework);
+//           }
+
+//           // reset fire
+//           fire.y = fire.base.y;
+//           fire.x = fire.base.x;
+//           fire.vx = fire.base.vx;
+//           fire.ax = Math.random() * 0.02 - 0.01;
+//         }
+
+//         fire.x += fire.vx;
+//         fire.y += fire.vy;
+//         fire.vx += fire.ax;
+//       }
+
+//       for (let i = listFirework.length - 1; i >= 0; i--) {
+//         const firework = listFirework[i];
+//         if (firework) {
+//           firework.x += firework.vx;
+//           firework.y += firework.vy;
+//           firework.vy += firework.ay;
+//           firework.alpha = firework
 
 			// // init
 			// canvas.fillStyle = '#000';
