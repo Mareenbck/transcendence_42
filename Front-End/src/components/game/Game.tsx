@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 // import io, { Socket } from "socket.io-client"
 import Canvas from './Canvas'
+import Winner from './Winner'
 import './Game.css'
 import type { gameInit, gameState, gameWinner } from './type'
 import { Socket } from 'socket.io-client';
@@ -11,7 +12,7 @@ function Game() {
 
     const [gameinit, setGameInit] = useState<gameInit>(
         {
-            table_width: 800,
+            table_width: 800, //window.innerWidth,
             table_height: 400,
             ballR: 15,
             racket_width: 10,
@@ -26,7 +27,7 @@ function Game() {
         {
             ball: {x: 400, y: 200},
             racket1: {x: 10, y: 150},
-            racket2: {x: 790, y: 150},
+            racket2: {x: 790 - gameinit.racket_width , y: 150},
             right: 0,
             left: 0
         }
@@ -80,14 +81,26 @@ function Game() {
 		}
 	};
 
-    return (
-        <div tabIndex={0} onKeyDown={keyDownHandler}>
-            <h2> Game </h2>
-            <div>
-                <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} />
+    if (!gamewinner.winner){
+        return (
+            <div tabIndex={0} onKeyDown={keyDownHandler}>
+                <h2> Game </h2>
+                <div>
+                    <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} />
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
+    else {
+        return (
+            <div tabIndex={0} onKeyDown={keyDownHandler}>
+                <h2> WINNER </h2>
+                <div>
+                    <Winner gameinit={gameinit} gamewinner={gamewinner} />
+                </div>
+            </div>
+        );
+    }
 }
 
 export default Game;

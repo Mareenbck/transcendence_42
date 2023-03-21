@@ -23,6 +23,7 @@ re:	clean up
 stop:
 	docker stop `docker ps -aq`
 
+
 list:
 	docker ps
 
