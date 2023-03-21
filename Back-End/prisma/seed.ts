@@ -3,9 +3,12 @@ import { add } from 'date-fns';
 const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.user.deleteMany({}) // never in production
-  await prisma.chatroom.deleteMany({}) // never in production
+  await prisma.jeu.deleteMany({}) // never in production
+  await prisma.directMessage.deleteMany({}) // never in production
   await prisma.chatroomMessage.deleteMany({}) // never in production
+  await prisma.chatroom.deleteMany({}) // never in production
+  await prisma.user.deleteMany({}) // never in production
+
 
 
   const user = await prisma.user.create({
@@ -110,4 +113,31 @@ async function main() {
     }
   })
 
+ const j1 = await prisma.jeu.create({
+    data: {
+      createdAt:     d5,
+      playerOne: {connect: { id: user.id }},
+      playerTwo:{connect: { id: user2.id }},
+      winner:{connect: { id: user2.id }},
+    }
+  })
+ const j2 = await prisma.jeu.create({
+    data: {
+      createdAt:     d4,
+      playerOne: {connect: { id: user3.id }},
+      playerTwo:{connect: { id: user4.id }},
+      winner:{connect: { id: user4.id }},
+    }
+  })
+
 }
+
+main()
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
