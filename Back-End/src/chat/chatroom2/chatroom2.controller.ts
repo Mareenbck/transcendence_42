@@ -1,15 +1,26 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete} from '@nestjs/common';
 import { Chatroom2Service } from './chatroom2.service';
-import { CreateChatroom2Dto } from './dto/create-chatroom2.dto';
+import { CreateChatroom2Dto, CreateRoomDto } from './dto/create-chatroom2.dto';
 import { UpdateChatroom2Dto } from './dto/update-chatroom2.dto';
+import {
+	HttpCode,
+	Res,
+	UnauthorizedException,
+	UseGuards,
+} from '@nestjs/common';
 
 @Controller('chatroom2')
 export class Chatroom2Controller {
   constructor(private readonly chatroom2Service: Chatroom2Service) {}
 
-  @Post()
-  create(@Body() createChatroom2Dto: CreateChatroom2Dto) {
-    return this.chatroom2Service.create(createChatroom2Dto);
+  @Post('/create_channel')
+  async create(@Body()createRoomDto2Dto: CreateRoomDto) {
+    console.log("CREATE CHATROOM");
+    console.log(createRoomDto2Dto);
+    const newChannel = await this.chatroom2Service.create(createRoomDto2Dto);
+    console.log("NEW CHANNEL ------->")
+    console.log(newChannel)
+    return newChannel;
   }
 
   @Get()

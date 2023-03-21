@@ -1,14 +1,18 @@
 import { PrismaService } from '../../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreateChatroom2Dto } from './dto/create-chatroom2.dto';
+import { CreateChatroom2Dto, CreateRoomDto } from './dto/create-chatroom2.dto';
 import { UpdateChatroom2Dto } from './dto/update-chatroom2.dto';
 
 @Injectable()
 export class Chatroom2Service {
   constructor(private prisma: PrismaService){}
 
-  create(createChatroom2Dto: CreateChatroom2Dto) {
-       return this.prisma.chatroom.create({data: createChatroom2Dto});
+  async create(createChatroom2Dto: CreateRoomDto) {
+      const {name}=createChatroom2Dto;
+       return await this.prisma.chatroom.create({data: {
+        name: name,
+        avatar: "http://localhost:8080/public/images/news.jpeg"
+      }});
   }
 
   findAll() {
