@@ -29,6 +29,7 @@ function Chat() {
   const [newMessage2, setNewMessage2] = useState ("");
   const [newMessageD, setNewMessageD] = useState ("");
   const scrollRef = useRef();
+
  // const send = (value) => {
  //   socket?.emit("message", value)
  // }
@@ -52,7 +53,7 @@ function Chat() {
 
   useEffect(() => {
     socket.current.emit("addUser", user);
-    socket.current.on("getUsers", users =>{
+    socket.current.on("getUsers", users => {
       setOnlineUsers(users);
     });
   },[user])
@@ -85,13 +86,17 @@ function Chat() {
   useEffect(() => {
     if (currentChat)
     {
-    async function getMess() {
-      try {
-        const response = await MessageApi.getMess(currentChat?.id);
-        setMessages2(response);
-      } catch(err) {
-        console.log(err);
-      }
+      async function getMess() {
+        try {
+          const response = await MessageApi.getMess(currentChat?.id);
+          setMessages2(response);
+          socket?.current.emit("userRoom", {
+            user: user,
+            room: currentChat,
+          })
+        } catch(err) {
+          console.log(err);
+        }
      };
     getMess();
   }
@@ -160,10 +165,8 @@ function Chat() {
 
     try {
       const res2 = await MessageApi.postDirMess(messageD);
-//      console.log(res2);
       setMessagesD([...messagesD, res2]);
       setNewMessageD("");
-//console.log(res);
     } catch(err) {console.log(err)}
   }
 
