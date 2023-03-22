@@ -79,7 +79,7 @@ export class ChatGateway {
           this.server.to(user.socketId).emit("getConv", {
             content,
           });
-        }s
+        }
       });
 
       socket.on('disconnect', () => {
