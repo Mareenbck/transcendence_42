@@ -2,13 +2,11 @@ import { useEffect, useContext, useState, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import io, { Socket } from "socket.io-client";
 import MessagesInput from "./MessagesInput"
-// import Messages from "./Messages"
 import Conversation from "./conversation/conversation"
 import ConversationApi from "./conversation/conversation.api"
 import MessageApi from "./message/message.api"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
-//import ChatOnline from "./chatOnline/chatOnline"
 import ConversationDto from "./conversation/conversation.dto"
 import MessageDto from "./message/message.dto"
 import './Chat.css'
@@ -137,7 +135,6 @@ function Chat() {
 
   const handleSubmitD = async (e)=> {
     e.preventDefault();
-      //  console.log("check error Dir");
     const messageD = {
       author: +id,
       content: newMessageD,
@@ -165,6 +162,29 @@ function Chat() {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
   }, [messagesD]);
 
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({behaviour: "smooth"})
+  }, [conversations]);
+
+  const handleChannelNameChange = (e: FormEvent) => {
+    setNewConversation(e.target.value);
+  };
+
+  const [newConversation, setNewConversation] = useState([]);
+
+  const createNewConv = async (e: FormEvent) => {
+    e.preventDefault();
+    const newConv = {
+      name: newConversation,
+      avatar: ""
+    };
+    try {
+      const res = await ConversationApi.postRoom(user, newConv);
+      setConversations([...conversations, res]);
+      setNewConversation("");
+    } catch(err) {console.log(err)}
+  };
+
 
   return (
     <>
@@ -174,12 +194,18 @@ function Chat() {
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
-            <input placeholder="Search for Chatrooms" className="chatMenuInput" />
-              { conversations.map((c) => (
-                <div onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
-                  <Conversation conversation={c}/>
-                </div>
-              ))}
+            <form onSubmit={createNewConv}>
+              <label>
+                New channel name:
+                <input type="text" value={newConversation} onChange={handleChannelNameChange} />
+              </label>
+              <button type="submit">Create new channel</button>
+            </form>
+            { conversations.map((c) => (
+              <div onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
+                <Conversation conversation={c}/>
+              </div>
+            ))}
           </div>
         </div>
         <div className="chatBox">
