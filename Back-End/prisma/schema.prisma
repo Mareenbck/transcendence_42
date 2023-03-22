@@ -12,22 +12,22 @@ datasource db {
 }
 
 model User {
-	id				  Int			    @id @default(autoincrement())
-	id42			  Int			    @default(autoincrement())
-	createdAt		DateTime    @default(now())
+	id				          Int			    @id @default(autoincrement())
+	id42			          Int			    @default(autoincrement())
+	createdAt		        DateTime    @default(now())
 
-	email			  String		  @unique
-	hash			  String
-	username		String		  @unique
-	status			UserStatus	@default(ONLINE)
-	avatar			String?
-	ftAvatar		String?
+	email			          String		  @unique
+	hash			          String
+	username		        String		  @unique
+	status			        UserStatus	@default(ONLINE)
+	avatar			        String?
+	ftAvatar		        String?
 
-	hashedRtoken	String?
-	twoFAsecret		String?
-	twoFA			    Boolean?	@default(true)
+	hashedRtoken	      String?
+	twoFAsecret		      String?
+	twoFA			          Boolean?	@default(true)
 
-	games         UserOnGame[]
+	games               UserOnGame[]
 
   friends             User[]        @relation("Friends")
   friendOf            User[]        @relation("Friends")

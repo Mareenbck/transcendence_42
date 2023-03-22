@@ -90,17 +90,57 @@ export class FriendshipService {
 // 		});
 // 	}
 
-// 	async updateUsername(id: string, newUsername: string) {
-// 		const updateUser = await this.prisma.user.update({
-// 			where: {
-// 				id: parseInt(id),
-// 			},
-// 			data: {
-// 				username: newUsername,
-// 			},
-// 		});
-// 		return updateUser;
-// 	}
+	async updateFriendship(id: any) {
+		const { demandId, response } = id
+		const friendhip = await this.prisma.friendship.update({
+			where: {
+				id: parseInt(demandId),
+			},
+			data: {
+				status: response,
+			},
+		});
+		return friendhip;
+	}
+
+
+
+	async addFriend(request: any) {
+		const { requesterId, receiverId } = request;
+		const requester = await this.userService.getUser(parseInt(requesterId));
+		const receiver = await this.userService.getUser(parseInt(receiverId));
+		await this.userService.addFriendOnTable(requester.id, receiver.id)
+		await this.userService.addFriendOnTable(receiver.id, requester.id)
+	}
+
+	async showFriends(userId: any){
+		const { id } = userId;
+		try {
+			const user = await this.prisma.user.findUnique({
+			where: { id: parseInt(id) },
+			include: { friends: true, friendOf: true }
+			});
+			return user;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+
+
+	// async refuseFriendship(id: any) {
+	// 	const { demandId } = id
+	// 	const friendhip = await this.prisma.friendship.update({
+	// 		where: {
+	// 			id: parseInt(demandId),
+	// 		},
+	// 		data: {
+	// 			status: 'REFUSED',
+	// 		},
+	// 	});
+	// 	return friendhip;
+	// }
+
 
 // 	async updateAvatar(id: number, newAvatar: string) {
 // 		const updateUser = await this.prisma.user.update({

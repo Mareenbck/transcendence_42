@@ -51,12 +51,12 @@ export class UserController {
 		}
 	}
 
-  @Get('/friends/:userId')
-  //@UseGuards(JwtGuard)
-  async getFriends(@GetCurrentUserId() userId: string) {
-    const userDto = this.userService.getFriends(parseInt(userId));
-    return userDto;
-  }
+	@Get('/friends/:userId')
+	//@UseGuards(JwtGuard)
+	async getFriends(@GetCurrentUserId() userId: string) {
+	const userDto = this.userService.getFriends(parseInt(userId));
+	return userDto;
+	}
 
 	@Post('/update_avatar')
 	async updateAvatar(@GetCurrentUserId() id: number, @Body('avatar') newAvatar: string) {
@@ -82,6 +82,8 @@ export class UserController {
 	@Get('/:id/avatar')
 	@UseGuards(JwtGuard)
 	async getAvatar(@GetCurrentUserId() id: number, @Res() res: Response) {
+		console.log("user--->")
+		console.log(id)
 		try {
 			const user = await this.userService.getUser(id);
 			// >>>> const avatar a mettre dans service

@@ -23,17 +23,33 @@ export class FriendshipController {
 		return demands;
 	}
 
-	@Get('friends')
-	async validateFriendship(){
+	@Post('friends')
+	async showFriends(@Body() userId: number){
+		const friends = await this.friendshipService.showFriends(userId);
+		return friends.friendOf
 		//si status est validee => enregistre les amis de chacun dans la DB
 		//return la liste des amis accepte du user
 	}
 
 	@Post('update')
-	async signDemand() {
-		//actualise le status de la demande et enregistre dans la DB
-		//return la firendship
+	async updateDemand(@Body() demand: any) {
+		const result = await this.friendshipService.updateFriendship(demand);
+		if (result.status === 'ACCEPTED') {
+			await this.friendshipService.addFriend(result);
+		}
+		if (result.status === 'REFUSED') {
+			//supprimer la demande
+		}
+		return result;
 	}
+
+	// @Post('refuse')
+	// async refuseDemand(@Body() demandId: any) {
+	// 	const result = await this.friendshipService.refuseFriendship(demandId);
+	// 	return result;
+	// 	//actualise le status de la demande et enregistre dans la DB
+	// 	//return la firendship
+	// }
 
 	@Post('delete')
 	async deleteFriendship() {

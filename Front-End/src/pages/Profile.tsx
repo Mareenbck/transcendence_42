@@ -8,6 +8,7 @@ import style from '../style/Menu.module.css'
 const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
 	const [demands, setDemands] = useState<any[]>([]);
+	const [friends, setFriends] = useState<any[]>([]);
 	const prendingDemands = demands.filter(demand => demand.status === 'PENDING');
 
 	const currentUserId = authCtx.userId;
@@ -49,6 +50,48 @@ const Profile = () =>  {
 		fetchDemands();
 	}, [])
 
+	useEffect(() => {
+		const url = "http://localhost:3000/friendship/friends";
+		const fetchFriends = async () => {
+			const response = await fetch(
+				url,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${authCtx.token}`
+					},
+					body: JSON.stringify({id: currentUserId}),
+				}
+			)
+			const data = await response.json();
+			console.log("DATA///////")
+			console.log(data)
+			setFriends(data);
+		}
+		fetchFriends();
+	}, [])
+
+	const handleAccept = async (event: FormEvent, demandId: number, res: string) => {
+		event.preventDefault();
+		try {
+			const response = await fetch(`http://localhost:3000/friendship/update`,{
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				  Authorization: `Bearer ${authCtx.token}`,
+				},
+				body: JSON.stringify({demandId: demandId, response: res}),
+			});
+			await response.json();
+			if (!response.ok) {
+				console.log("POST error on /friendship/validate");
+				return "error";
+			  }
+		} catch (error) {
+			console.log("error", error);
+		  }
+		}
 	return (
 		<>
 		<div className={style.mainPos}>
@@ -65,6 +108,14 @@ const Profile = () =>  {
 				<div className="title">
 					<div className="status-friends"></div>
 					<h5>My Friends</h5>
+					<ul>
+						{friends.map(friend => (
+						<li key={friend.id} className='friend'>
+							{/* {friend.avatar ? <img className='avatar-img' src={friend.avatar} alt={"avatar"} /> : <img className='avatar-img' src={friend.ftAvatar} alt={"ftAvatar"} />} */}
+							<span className='friend-username'>{friend.username}</span>
+						</li>
+						))}
+				</ul>
 				</div>
 			</div>
 			<div className='friends-card'>
@@ -100,12 +151,12 @@ const Profile = () =>  {
 					<li key={demand.id} className='friend'>
 						{demand.requester.avatar ? <img className='avatar-img' src={demand.requester.avatar} alt={"avatar"} /> : <img className='avatar-img' src={demand.requester.ftAvatar} alt={"ftAvatar"} />}
 						<span className='friend-username'>{demand.requester.username}</span>
-						<div className='accept'>
-							<i className="fa-regular fa-circle-check"></i>
-						</div>
-						<div className='deny'>
-							<i className="fa-solid fa-xmark"></i>
-						</div>
+						<form onSubmit={(event) => {handleAccept(event, demand.id, 'ACCEPTED')}} className='accept'>
+							<button type="submit" className='add-friend'><i className="fa-regular fa-circle-check"></i></button>
+						</form>
+						<form onSubmit={(event) => {handleAccept(event, demand.id, 'REFUSED')}} className='deny'>
+							<button type="submit" className='add-friend'><i className="fa-solid fa-xmark"></i></button>
+						</form>
 					</li>
 				))}
 			</ul>
