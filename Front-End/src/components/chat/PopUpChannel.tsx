@@ -12,10 +12,11 @@ function PopUp(props: any) {
                 <header className='header-popup'>
                     <h2>{props.title}</h2>
                 </header>
-                <div className='content'>
+                <div className='content-button'>
                     <p>{props.message}</p>
-                    <label>
+                    <label className='wrap-circle'>
                         <input
+                            className='circle'
                             type='radio'
                             value='public'
                             checked={isPublic}
@@ -23,8 +24,9 @@ function PopUp(props: any) {
                         />
                         Public
                     </label>
-                    <label>
+                    <label className='wrap-circle'>
                         <input
+                            className='circle'
                             type='radio'
                             value='private'
                             checked={!isPublic}
