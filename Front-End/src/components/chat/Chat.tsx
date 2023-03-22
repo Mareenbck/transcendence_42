@@ -21,6 +21,7 @@ function Chat() {
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
   const [AMessageD, setAMessageD] = useState (null);
+  const [AMessageChat, setAMessageChat] = useState (null);
   const [conversations, setConversations] = useState<ConversationDto[]> ([]);
   const [currentChat, setCurrentChat] = useState (null);
   const [currentDirect, setCurrentDirect] = useState (null);
@@ -30,21 +31,33 @@ function Chat() {
   const [newMessageD, setNewMessageD] = useState ("");
   const scrollRef = useRef();
 
- // const send = (value) => {
- //   socket?.emit("message", value)
- // }
-
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
-    socket.current.on("getMD", (data)=> {
-      setAMessageD({
-        sender: data.sender,
-        receiver: data.receiver,
+
+    socket.current.on("getMChat", (data)=> {
+      setAMessageChat({
+        authorId: data.authorId,
+        chatroomId: data.chatroomId,
         content: data.content,
+        createdAt: Date.now(),
+      });
+    })
+
+    socket.current.on("getMD", (data)=> {
+    console.log(data);
+      setAMessageD({
+        content: data.content,
+        author: data.author,
+        receiver: data.receiver,
         createdAt: Date.now(),
       });
     });
   }, []);
+
+  useEffect(() => {
+    AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
+    setMessages2(prev=>[...prev, AMessageChat]);
+    },[AMessageChat, currentChat])
 
   useEffect(() => {
     AMessageD && currentDirect?.id === AMessageD.sender &&
@@ -57,23 +70,6 @@ function Chat() {
       setOnlineUsers(users);
     });
   },[user])
-
-
-
-//  const messageListener = (message: string) => {
-//    setMessages([...messages, message])
-//  }
-
- // useEffect(() => {
- //   socket?.on("message", messageListener)
- //   return () => {
- //     socket?.off("message", messageListener)
- //   }
- // }, [messageListener])
-
-
-
-
 
   useEffect(() => {
     async function getAllConv() {
@@ -90,10 +86,10 @@ function Chat() {
         try {
           const response = await MessageApi.getMess(currentChat?.id);
           setMessages2(response);
-       //   socket?.current.emit("userRoom", {
-       //     user: user,
-       //     room: currentChat,
-       //   })
+          socket?.current.emit("userRoom", {
+            userId: user.userId,
+            roomId: currentChat.id,
+          })
         } catch(err) {
           console.log(err);
         }
@@ -117,20 +113,6 @@ function Chat() {
   }
   }, [currentDirect]);
 
-
-/*
-  const [friends, setFriends] = useState([]);
-  const [onlineFriends, setOnlineFriends] = useState([]);
-  useEffect(()=>{
-    const getFriends = async () => {
- //     const res = await UsersApi.getFriends();
-//      setFriends(res.data);
-    };
-    getFriends();
-  },[currentId]);
-*/
-
-
   const handleSubmit = async (e)=> {
     e.preventDefault();
     console.log("check error M2");
@@ -139,16 +121,21 @@ function Chat() {
         content: newMessage2,
         chatroomId: currentChat.id,
       };
+
+      socket?.current.emit("sendMChat", {
+        authorId: +id,
+        chatroomId: +currentChat?.id,
+        content: newMessage2,
+      })
+
     try {
       const res = await MessageApi.postMess(message2);
       setMessages2([...messages2, res]);
       setNewMessage2("");
- //     socket?.emit("message2", message2)
     } catch(err) {console.log(err)}
   }
 
   const handleSubmitD = async (e)=> {
-    console.log(+currentDirect?.userId);
     e.preventDefault();
       //  console.log("check error Dir");
     const messageD = {
@@ -161,7 +148,7 @@ function Chat() {
         author: +id,
         receiver: +currentDirect?.userId,
         content: newMessageD,
-      })
+    })
 
     try {
       const res2 = await MessageApi.postDirMess(messageD);
@@ -177,11 +164,6 @@ function Chat() {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
   }, [messagesD]);
-
-
-
-//    <MessagesInput send={send} />
-//      <Messages messages={messages} />
 
 
   return (
