@@ -1,103 +1,56 @@
-import React, { FormEvent, useContext, useRef, useState, useEffect } from "react";
-import style from '../../style/SideBar.module.css'
-import { Link, useParams, NavLink } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import '../../style/Sidebar.css'
+import { Link, useLocation } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
-import Menu from "../../pages/Menu";
 
 
+const Sidebar = (props: any) => {
 
-
-function SideBar(props: any)
-{
     const authCtx = useContext(AuthContext);
-    const id = authCtx.userId;
-    // const { id } = useParams();
+    const [activeLink, setActiveLink] = useState('');
+    const location = useLocation();
 
-   const [isActive, setIsActive]= useState(true);
+    const links = [
+        { name: "Play Games", path: "/game/play" },
+        { name: "Chat", path: "/chat/message" },
+        { name: "Profile", path: `/users/profile/${authCtx.userId}` },
+        { name: "Settings", path: "/settings" },
+        { name: "Scores", path: "/scores" },
+        { name: "Show users", path: `/friends` },
+      ];
 
-/*
-    const Click = () =>{
+      useEffect(() => {
+        setActiveLink(location.pathname);
+      }, [location.pathname]);
 
-    };*/
-
-
+      const handleLinkClick = (path: string) => {
+        setActiveLink(path);
+      };
 
     return (
-        <div className={style.sideBar}>
-            <div className={style.top}>
-                {/* <div className={style.logo}> */}
-                    {/* <i className="bx bx-menu"></i> */}
-                    <span> {props.title},{authCtx.username}!</span>
-                {/* </div> */}
-            </div>
-            {/* <Link to="/auth/signin" className={style.lgu} onClick={authCtx.logout}>LogOut</Link> */}
+        <div className="sidebar">
+            <h4>{props.title}</h4>
             <button onClick={authCtx.logout}>LogOut</button>
-            <div className={style.links}>
-            <NavLink style={({isActive}) => {return{ color : isActive ? "grey" : "black"};}}
-                to="/game/play" className= {style.btn} >Play Games
-            </NavLink>
-                            <NavLink
-                                style={({isActive}) => {
-                                    return{
-                                        color : isActive ? "grey" : "black"
-                                    };
-                                }
-                                }
-                            to="/chat/message"
-                            className= {style.btn}
-                            >Chat
-                            </NavLink>
-                            <NavLink
-                                style={({isActive}) => {
-                                    return{
-                                        color : isActive ? "grey" : "black"
-                                    };
-                                }
-                                }
-                            to={`/users/profile/${authCtx.userId}`}
-                            className= {style.btn}
-                            >Profile page
-                            </NavLink>
-                            <NavLink
-                                style={({isActive}) => {
-                                    return{
-                                        color : isActive ? "grey" : "black"
-                                    };
-                                }
-                                }
-                            to="/settings"
-                            className= {style.btn}
-                            >Setting
-                            </NavLink>
-
-                            <NavLink
-                                style={({isActive}) => {
-                                    return{
-                                        color : isActive ? "grey" : "black"
-                                    };
-                                }
-                                }
-                            to="/scores"
-                            className= {style.btn}
-                            >Scores</NavLink>
-                            <NavLink
-                            style={({isActive}) => {
-                                return{
-                                    color : isActive ? "grey" : "black"
-                                };
-                            }
-                            }
-                        to="/friends"
-                        className= {style.btn}
-                        >Show friends</NavLink>
-
-
-
-                        </div>
-                    </div>
-		    // </div>
-
+            <div className="links">
+                <ul>
+                    {links.map((link) => (
+                        <li key={link.path}>
+                            <div className="li">
+                                <div className="hexa">
+                                    <span className="bi bi-hexagon-fill"></span>
+                                    <span className="bi bi-hexagon" id="bord"></span>
+                                </div>
+                                <Link to={link.path} onClick={() => handleLinkClick(link.path)}
+                                    className={activeLink === link.path ? "active" : ""}> {link.name}
+                                </Link>
+                            </div>
+                            <br />
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
     )
 }
 
-export default SideBar;
+export default Sidebar;

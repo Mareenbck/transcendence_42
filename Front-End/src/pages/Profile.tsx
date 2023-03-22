@@ -17,8 +17,6 @@ const Profile = () =>  {
 	const username = localStorage.getItem('username');
 	const [avatar, setAvatar] = useState<string | null>(null);
 
-	// const demandFriend =
-
 	useEffect(() => {
 		setAvatar(authCtx.avatar);
 	}, [authCtx.avatar]);
@@ -54,7 +52,7 @@ const Profile = () =>  {
 	return (
 		<>
 		<div className={style.mainPos}>
-			<SideBar title="Settings" />
+			<SideBar title="Profile" />
 			<div className="contain-set">
 
 		{/* <img src={avatarUrl} alt={avatar ? "avatar" : "ftAvatar"} /> */}
@@ -95,7 +93,7 @@ const Profile = () =>  {
 				<h5>Victory</h5>
 			</div>
 		</div>
-		<div>
+		<div className='User'>
 			<h2 className="title">Demands :</h2>
 			<ul>
 				{prendingDemands.map(demand => (
