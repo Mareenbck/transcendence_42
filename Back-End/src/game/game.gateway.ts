@@ -38,7 +38,7 @@ const racketSpeedY = 10;
 const period = 100;
 
 
-@WebSocketGateway(8001, { cors: 'http://localhost/game/*' })
+@WebSocketGateway(8001, { cors: {origin: "http://localhost:8080",} })  //'http://localhost/game/*'
 export class GameGateway {
  
   private isrunning: boolean = false; // define the interval property

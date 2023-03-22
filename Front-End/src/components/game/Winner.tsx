@@ -13,13 +13,11 @@ const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ):  JSX.Elem
     useEffect(() => {
         if (canvasRef.current){
             const context = canvasRef.current.getContext('2d');
-
-			// Draw the table
-			context.fillStyle = "#8c66ff";
-			context.strokeStyle = "#230047";
-			context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
-				
 			if (context) {
+				// Draw the table
+				context.fillStyle = "#8c66ff";
+				context.strokeStyle = "#230047";
+				context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
 						
 				drawStar(gameinit.table_width/2, gameinit.table_height/2, 20, 200, 100, 'gold','coral', 0);		
 				
