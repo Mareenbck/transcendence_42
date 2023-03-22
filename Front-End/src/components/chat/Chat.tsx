@@ -13,6 +13,7 @@ import ConversationDto from "./conversation/conversation.dto"
 import MessageDto from "./message/message.dto"
 import './Chat.css'
 import React from 'react';
+import PopUp from './PopUpChannel';
 
 function Chat() {
   const socket = useRef();
@@ -178,6 +179,7 @@ const createNewChannel = async (event: FormEvent) => {
   console.log(data);
 };
 
+const [showPopUp, setShowPopUp] = useState(false);
 
 return (
 <>
@@ -186,13 +188,20 @@ return (
 <div className="messenger">
   <div className="chatMenu">
 	<div className="chatMenuW">
-	<div>
+	  <div>
 		  <form onSubmit={createNewChannel}>
-			<label>
-			  New channel name:
-			  <input type="text" value={channels} onChange={handleChannelNameChange} />
-			</label>
-			<button type="submit">Create new channel</button>
+        <label>
+        New channel name:
+        <input type="text" value={channels} onChange={handleChannelNameChange} />
+        </label>
+        <button type="submit" onClick={() => setShowPopUp(true)}>Create new channel</button>
+        {showPopUp ? (
+            <PopUp
+            title="Creation d'un nouveau Channel"
+            message="Choisissez les options de votre channel"
+            onConfirm={() => setShowPopUp(false)}
+        />
+        ) : null}
 		  </form>
 		</div>
 	  <input placeholder="Search for Chatrooms" className="chatMenuInput" />
@@ -264,7 +273,7 @@ return (
 		  }
 		</div>
 	  </>
-		: <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
+		: <span className="noConversationText" > Open  </span>
 	  }
 	</div>
   </div>
