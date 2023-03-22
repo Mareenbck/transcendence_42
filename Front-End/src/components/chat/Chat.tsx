@@ -292,6 +292,7 @@ return (
 	  <div className="chatOnlineBadge"></div>
 	</div>
 	<span className="chatOnlineName"> {o?.userId.username} </span>
+    {/* <img className='avatar-img' src={user.avatar} alt="avatar"></img> */}
   </div>
   </>
   : null

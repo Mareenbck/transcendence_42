@@ -2,8 +2,47 @@ import React, { useRef } from 'react';
 import { Popup } from 'reactjs-popup';
 import { useEffect, useContext, useState, FormEvent } from 'react'
 import "../../style/PopUpChannel.css"
+import "../../pages/Setting.tsx"
+import AuthContext from '../../store/AuthContext';
+
 
 function PopUp(props: any) {
+
+    const authCtx = useContext(AuthContext);
+    const [selectedFile, setSelectedFile] = useState('');
+
+
+	const handleSubmit = async (event: FormEvent) => {
+		event.preventDefault();
+		// Vous pouvez envoyer le fichier sélectionné au serveur ici
+		const formData = new FormData();
+		formData.append("file", selectedFile);
+		try {
+			const response = await fetch(`http://localhost:3000/users/upload`, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${authCtx.token}`,
+				},
+				body: formData,
+			})
+			const data = await response.json();
+			if (!response.ok) {
+				console.log("POST error on ${userId}/username ");
+				return "error";
+			}
+			authCtx.fetchAvatar(data.id);
+			localStorage.setItem("avatar", data.avatar);
+			return "success";
+		} catch (error) {
+			return console.log("error", error);
+		}
+	};
+
+	const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
+		setSelectedFile(event.target.files[0]);
+	};
+
+
     const [isPublic, setIsPublic] = useState(true);
     const [isPrivate, setIsPrivate] = useState(true);
     return (
@@ -47,6 +86,13 @@ function PopUp(props: any) {
                     />
                     Protected
                 </label>
+                </div>
+                <div className='choose-avatar'>
+                    <p>Chose an avatar for your new channel</p>
+                    <form onSubmit={handleSubmit}>
+                        <input type="file" onChange={handleFileChange} />
+                        <button type='submit'>Upload</button>
+                    </form>
                 </div>
                 <footer className='actions'>
                     <button onClick={props.onConfirm}>OK</button>
