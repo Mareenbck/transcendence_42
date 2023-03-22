@@ -1,34 +1,23 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete} from '@nestjs/common';
-import { Chatroom2Service } from './chatroom2.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { CreateChatroom2Dto } from './dto/create-chatroom2.dto';
 import { UpdateChatroom2Dto } from './dto/update-chatroom2.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 @Controller('chatroom2')
 export class Chatroom2Controller {
-  constructor(private readonly chatroom2Service: Chatroom2Service) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   @Post()
-  create(@Body() createChatroom2Dto: CreateChatroom2Dto) {
-    return this.chatroom2Service.create(createChatroom2Dto);
+    async create( @Body() {name, avatar }): Promise<CreateChatroom2Dto> {
+    const msg = await this.prismaService.chatroom.create({data: {name, avatar}});
+    return msg;
   }
 
   @Get()
-  findAll() {
-    return this.chatroom2Service.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chatroom2Service.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChatroom2Dto: UpdateChatroom2Dto) {
-    return this.chatroom2Service.update(+id, updateChatroom2Dto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatroom2Service.remove(+id);
+    async findAll(): Promise<CreateChatroom2Dto[]> {
+    return this.prismaService.chatroom.findMany();
   }
 }
+
+

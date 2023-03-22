@@ -1,3 +1,5 @@
+/*
+
 import { PrismaService } from '../../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { CreateChatroom2Dto } from './dto/create-chatroom2.dto';
@@ -29,3 +31,4 @@ export class Chatroom2Service {
     return this.prisma.chatroom.delete({where: {id: id}});;
   }
 }
+*/

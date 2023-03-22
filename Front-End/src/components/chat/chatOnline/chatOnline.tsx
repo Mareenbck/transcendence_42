@@ -1,4 +1,4 @@
-
+/*
 import { useEffect, useState } from "react"
 import UserApi from "./user.api"
 import MessageApi from "./message/message.api"
@@ -52,3 +52,4 @@ return (
   );
 }
 
+*/
