@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
 import type {gameInit, gameState, gameWinner} from './type'
 
-const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner} ): JSX => {
+const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner} ) => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
     const gamewinner = props.gamewinner;
