@@ -5,7 +5,7 @@ import "../../style/PopUpChannel.css"
 
 function PopUp(props: any) {
     const [isPublic, setIsPublic] = useState(true);
-    // const [gotPassword, setPassword] = useState(true);
+    const [isPrivate, setIsPrivate] = useState(true);
     return (
         <div className='popup-overlay'>
             <div className='global-popup'>
@@ -34,6 +34,19 @@ function PopUp(props: any) {
                         />
                         Private
                     </label>
+                    <label className='wrap-circle'>
+                    <input
+                    className='circle'
+                    type='radio'
+                    value='protected'
+                    checked={!isPublic && !isPrivate}
+                    onChange={() => {
+                        setIsPublic(false);
+                        setIsPrivate(false);
+                    }}
+                    />
+                    Protected
+                </label>
                 </div>
                 <footer className='actions'>
                     <button onClick={props.onConfirm}>OK</button>

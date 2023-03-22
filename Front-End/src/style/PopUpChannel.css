@@ -25,13 +25,16 @@
 
 .wrap-circle {
     justify-content: left;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
 }
 
 .content-button {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 }
   
 

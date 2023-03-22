@@ -15,11 +15,7 @@ export class Chatroom2Controller {
 
   @Post('/create_channel')
   async create(@Body()createRoomDto2Dto: CreateRoomDto) {
-    console.log("CREATE CHATROOM");
-    console.log(createRoomDto2Dto);
     const newChannel = await this.chatroom2Service.create(createRoomDto2Dto);
-    console.log("NEW CHANNEL ------->")
-    console.log(newChannel)
     return newChannel;
   }
 
