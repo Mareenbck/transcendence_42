@@ -90,9 +90,21 @@ model Chatroom {
   name    String
   avatar  String
   users   ChatroomUsers[]
+  status  ChannelStatus
+  role    Role
   cr_messages ChatroomMessage[]
 }
 
+enum Role {
+  ADMIN 
+  USER
+}
+
+enum ChannelStatus {
+  PRIVATE 
+  PUBLIC 
+  PROTECTED
+}
 
 
 model ChatroomUsers {
