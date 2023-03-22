@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import AuthContext from '../../store/AuthContext';
 // import io, { Socket } from "socket.io-client"
 import Canvas from './Canvas'
 import Winner from './Winner'
@@ -9,10 +10,13 @@ import { socket } from '../../service/socket';
 
 
 function Game() {
+    const user = useContext(AuthContext);
+    const id = user.userId;
+    const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
 
     const [gameinit, setGameInit] = useState<gameInit>(
         {
-            table_width: 800, //window.innerWidth,
+            table_width: 800,
             table_height: 400,
             ballR: 15,
             racket_width: 10,
@@ -21,6 +25,18 @@ function Game() {
             left: 0
         }
     );
+    // const [gameinit, setGameInit] = useState<gameInit>(
+    //     {
+    //         table_width: window.innerWidth,
+    //         table_height: window.innerHeight,
+    //         ballR: 15,
+    //         racket_width: 10,
+    //         racket_height: 100,
+    //         right: 0,
+    //         left: 0
+    //     }
+    // );
+
 
     //initialization of the initial parameters of the game (coordinates)
     const [gamestate, setGameState] = useState<gameState>(
