@@ -135,4 +135,23 @@ export class UserService {
     }
   }
 
+
+  async addFriendOnTable(id1: number, id2: number) {
+	console.log("id1---------->")
+	console.log(id1)
+	console.log("id2---------->")
+	console.log(id2)
+	const updateUser = await this.prisma.user.update({
+		where: {
+			id: id1 ,
+		},
+		include: { friends: true, friendOf: true },
+		data: {
+			friends: { connect: { id: id2 } },
+		},
+	});
+	return updateUser;
+}
+
+
 }
