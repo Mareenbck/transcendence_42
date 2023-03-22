@@ -7,7 +7,6 @@
 
 .mainPos
 {
-    position: absolute;
     display: flex;
     flex-direction: row;
     top: 0;
@@ -25,7 +24,6 @@
     font-weight: bold;
     text-align: center;
     margin: 50px;
-    width: 800px;
     align-items: center;
     margin: auto;
 }
@@ -53,7 +51,7 @@
 
 .title
 {
-    
+
     text-align: center;
     margin: auto;
     margin-top: 0;

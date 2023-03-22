@@ -17,8 +17,6 @@ export const storage = {
 		filename: async (request, file, callback) => {
 			const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
 			const extension: string = path.parse(file.originalname).ext;
-			// const fileExtension = '.' + file.mimetype.split('/')[1];
-			// const fileName = uuidv4() + fileExtension;
 			callback(undefined, `${filename}${extension}`);
 		},
 	})
@@ -32,8 +30,6 @@ export class UserController {
 	// @UseGuards(JwtGuard)
 	async getAllUsers() {
 		const allUsers = await this.userService.getUsers();
-		// console.log("ALL USERS")
-		// console.log(allUsers)
 		return allUsers;
 	}
 

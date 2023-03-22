@@ -37,6 +37,7 @@ export class UserService {
 					id: id,
 				},
 			});
+			// return user;
 			const userDTO = plainToClass(UserDto, user);
 			return userDTO;
 		} catch (error) {

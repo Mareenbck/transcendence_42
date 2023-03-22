@@ -12,26 +12,27 @@ datasource db {
 }
 
 model User {
-	id				Int			@id @default(autoincrement())
-	id42			Int			@default(autoincrement())
-	createdAt		DateTime	@default(now())
+	id				  Int			    @id @default(autoincrement())
+	id42			  Int			    @default(autoincrement())
+	createdAt		DateTime    @default(now())
 
-	email			String		@unique
-	hash			String
-	username		String		@unique
+	email			  String		  @unique
+	hash			  String
+	username		String		  @unique
 	status			UserStatus	@default(ONLINE)
 	avatar			String?
 	ftAvatar		String?
 
 	hashedRtoken	String?
-
 	twoFAsecret		String?
-	twoFA			Boolean?	@default(true)
+	twoFA			    Boolean?	@default(true)
 
-	games			UserOnGame[]
+	games         UserOnGame[]
 
-  friendsTo User[] @relation("UserFriends")
-  friendsFrom User[] @relation("UserFriends")
+  friends             User[]        @relation("Friends")
+  friendOf            User[]        @relation("Friends")
+  sentFriendships     Friendship[]  @relation("SentFriendships")
+  receivedFriendships Friendship[]  @relation("ReceivedFriendships")
 
   playerOne     Jeu[]  @relation("playerOne")
   playerTwo     Jeu[]  @relation("playerTwo")
@@ -43,6 +44,17 @@ model User {
   crMessSent      ChatroomMessage[]
 
 	@@map("users")
+}
+
+model Friendship {
+  id            Int               @id @default(autoincrement())
+  status        FriendshipStatus  @default(PENDING)
+  requester     User              @relation("SentFriendships", fields: [requesterId], references: [id])
+  requesterId   Int
+  receiver      User              @relation("ReceivedFriendships", fields: [receiverId], references: [id])
+  receiverId    Int
+
+  @@unique([requesterId, receiverId])
 }
 
 model UserOnGame{
@@ -123,4 +135,8 @@ model DirectMessage {
   createdAt DateTime  @default(now())
 }
 
-
+enum FriendshipStatus {
+	ACCEPTED
+	PENDING
+	REFUSED
+}
