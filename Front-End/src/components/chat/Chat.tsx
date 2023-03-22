@@ -24,7 +24,7 @@ function Chat() {
   const [currentChat, setCurrentChat] = useState (null);
   const [currentDirect, setCurrentDirect] = useState (null);
   const [messages2, setMessages2] = useState<MessageDto[]> ([]);
-  const [messagesD, setMessagesD] = useState<MessageDDto[]> ([]);
+  const [messagesD, setMessagesD] = useState<MessageDto[]> ([]);
   const [newMessage2, setNewMessage2] = useState ("");
   const [newMessageD, setNewMessageD] = useState ("");
   const scrollRef = useRef();
