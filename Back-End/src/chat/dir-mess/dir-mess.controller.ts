@@ -17,6 +17,7 @@ export class DirMessController {
 
   @Post()
     async create( @Body() {content, receiver, author}): Promise<DirMessDto> {
+    console.log(content);
     const msg = await this.prismaService.directMessage.create({data: {content, receiver, author}});
     return msg;
   }
