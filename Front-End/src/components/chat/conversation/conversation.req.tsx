@@ -13,7 +13,7 @@ export class ConversationReq {
 
   };
 
- static async postRoom(user, newConv) : Promise<ConversationDf[]> {
+ static async postRoom(user, newConv) {
     try {
       const resp = await fetch(`http://localhost:3000/chatroom2`,
       {

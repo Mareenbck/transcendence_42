@@ -36,9 +36,9 @@ function Chat() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState('');
 
-  const [newConversation, setNewConversation] = useState([]);
+  const [channelName, setchannelName] = useState('');
 
-  
+
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
     
@@ -197,35 +197,41 @@ function Chat() {
 };
 
 const createNewConv = async (e: FormEvent) => {
-  e.preventDefault();
-  if (newConversation === "") {
-    return; 
-  }
-  const newConv = {
-    name: newConversation,
-    avatar: ""
-  };
-  
-  socket?.current.emit("sendConv", {
-    author: +id,
-    content: newConv,
-  })
-  
-  try {
-    const res = await ConversationReq.postRoom(user, newConv);
-    setConversations([res, ...conversations]);
-    setNewConversation("");
-    setShowPopUp(true); 
-  } catch(err) {
-    console.log(err);
-  }
+        e.preventDefault();
+        if (channelName === "") {
+          return; 
+        }
+        const newConv = {
+          name: channelName,
+          avatar: "",
+          status: "" // ici set une varialbe comme name Channelname
+        };
+        
+        socket?.current.emit("sendConv", {
+          author: +id,
+          content: newConv,
+        })
+        console.log("CHANNEL STATUS ------")
+        try {
+          const res = await ConversationReq.postRoom(user, newConv);
+          setConversations([res, ...conversations]);
+          setchannelName("");
+          setChannelStatus("");
+          setShowPopUp(true); 
+        } catch(err) {
+          console.log(err);
+        }
 };
 
 const handleChannelNameChange = (e: FormEvent) => {
   const value = e.target.value;
-  setNewConversation(value);
+  setchannelName(value);
   setIsDisabled(value === "");
 };
+
+const handleSendData = (data) => {
+  setFormData(data);
+}
 
 const [showPopUp, setShowPopUp] = useState(false);
 const [isDisabled, setIsDisabled] = useState(true);
@@ -239,13 +245,14 @@ return (
           <form onSubmit={createNewConv}>
               <label>
                 New channel name:
-                <input type="text" value={newConversation} onChange={handleChannelNameChange} />
+                <input type="text" value={channelName} onChange={handleChannelNameChange} />
               </label>
               <button type="submit" disabled={isDisabled}>Create new channel</button>
               {showPopUp ? (
                 <PopUp
                   title="Creation d'un nouveau Channel"
                   message="Choisissez les options de votre channel"
+                  onSubmit={(item: any) => setChannelStatus(item)} 
                   onConfirm={() => setShowPopUp(false)}
                 />
               ) : null}

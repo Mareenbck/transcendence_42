@@ -12,8 +12,8 @@ function PopUp(props: any) {
     const authCtx = useContext(AuthContext);    
     const [isPublic, setIsPublic] = useState(true);
     const [isPrivate, setIsPrivate] = useState(true);
+    const [isProtected, setIsProtected] = useState(true);
     const [selectedFile, setSelectedFile] = useState('');
-
 
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault();
@@ -40,10 +40,17 @@ function PopUp(props: any) {
 		}
 	};
 
+    const [channelStatus, setChannelStatus] = useState('');
+
 	const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
 		setSelectedFile(event.target.files[0]);
 	};
 
+    const handleConfirm = () => {
+        props.onSubmit(channelStatus);
+        props.onConfirm();
+      };
+      
 
     return (
         <div className='popup-overlay'>
@@ -57,7 +64,7 @@ function PopUp(props: any) {
                         <input
                             className='circle'
                             type='radio'
-                            value='public'
+                            value={channelStatus}
                             checked={isPublic}
                             onChange={() => setIsPublic(true)}
                         />
@@ -67,7 +74,7 @@ function PopUp(props: any) {
                         <input
                             className='circle'
                             type='radio'
-                            value='private'
+                            value={channelStatus}
                             checked={!isPublic && isPrivate}
                             onChange={() => {
                                 setIsPublic(false);
@@ -80,11 +87,12 @@ function PopUp(props: any) {
                         <input
                             className='circle'
                             type='radio'
-                            value='protected'
+                            value={channelStatus}
                             checked={!isPublic && !isPrivate}
                             onChange={() => {
                                 setIsPublic(false);
                                 setIsPrivate(false);
+                                setIsProtected(true);
                             }}
                         />
                         Protected
@@ -99,7 +107,8 @@ function PopUp(props: any) {
                     </form>
                 </div>
                     <footer className='actions'>
-                        <button type='submit' onClick={props.onConfirm}>OK</button>
+                    {/* <button type='submit' onClick={props.onConfirm}>OK</button> */}
+                    <button type='submit' onClick={handleConfirm}>OK</button>
                     </footer>
             </div>
         </div>
