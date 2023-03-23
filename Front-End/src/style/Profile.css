@@ -185,3 +185,19 @@
     text-align: left;
     padding: 15px;
 }
+
+.accept i {
+    color: rgb(14, 128, 20);
+    font-size: 30px;
+    margin-right: 20px;
+}
+
+.deny i {
+    color:rgb(94, 33, 33);
+    font-size: 30px;
+    margin-right: 20px;
+}
+
+.response {
+    display: flex;
+}

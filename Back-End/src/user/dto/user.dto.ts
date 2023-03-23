@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsString, IsNumber, MaxLength } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import { DirMessDto } from './../../chat/dir-mess/dir-mess.dto';
+import { FriendsDto } from 'src/friendship/dto/friends.dto';
 
 export class UserDto {
 	//Data transfer object
@@ -24,6 +25,8 @@ export class UserDto {
 
 	avatar: string;
 	ftAvatar: string;
-  friendsTo: UserDto[];
-  dirMessEmited: DirMessDto[];
+
+	receivedFriendships: FriendsDto[];
+
+	dirMessEmited: DirMessDto[];
 }

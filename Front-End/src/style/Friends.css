@@ -73,7 +73,7 @@
     filter: drop-shadow(3.97px 2.97px 0px #000000);
 }
 
-li {
+.User li {
     list-style-type: none;
     margin-right: 300px;
     margin-bottom: 30px;

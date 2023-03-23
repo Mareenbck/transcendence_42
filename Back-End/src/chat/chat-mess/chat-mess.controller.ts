@@ -14,8 +14,8 @@ export class ChatMessController {
   }
 
   @Post()
-    async create( @Body() {content, chatroomId, authorId}): Promise<CreateChatMessDto> {
-    const msg = await this.prismaService.chatroomMessage.create({data: {content, chatroomId, authorId}});
+    async create( @Body() {authorId, content, chatroomId, }): Promise<CreateChatMessDto> {
+    const msg = await this.prismaService.chatroomMessage.create({data: {authorId, content, chatroomId,}});
     return msg;
   }
 

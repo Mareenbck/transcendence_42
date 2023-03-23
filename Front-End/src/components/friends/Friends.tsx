@@ -11,48 +11,74 @@ const Friends = () => {
 	const [friends, setFriends] = useState<any[]>([]);
 	const authCtx = useContext(AuthContext);
 
-
-	const isLoggedIn = authCtx.isLoggedIn;
-	const id = authCtx.userId;
+	// const isLoggedIn = authCtx.isLoggedIn;
+	const currentUserId = authCtx.userId;
 
 	const onlineFriends = friends.filter(friend => friend.status === 'ONLINE');
 	const offlineFriends = friends.filter(friend => friend.status === 'OFFLINE');
 	const playingFriends = friends.filter(friend => friend.status === 'PLAYING');
 
-	useEffect(() => {
-		const url = "http://localhost:3000/users/";
-		const fetchUsers = async () => {
-			const response = await fetch(
-				url, 
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${authCtx.token}`
-					}
-				}
-			)
-			const data = await response.json();
-			setFriends(data);		
+
+	const handleDemand = async (event: FormEvent, receiverId: number) => {
+		event.preventDefault();
+		try {
+			const response = await fetch(`http://localhost:3000/friendship/create`,{
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				  Authorization: `Bearer ${authCtx.token}`,
+				},
+				body: JSON.stringify({requesterId: currentUserId, receiverId: receiverId}),
+			});
+			await response.json();
+			if (!response.ok) {
+				console.log("POST error on /friendship/create");
+				return "error";
+			  }
+		} catch (error) {
+			console.log("error", error);
+		  }
 		}
-		fetchUsers();
-	}, [])
+
+		useEffect(() => {
+			const url = "http://localhost:3000/users/";
+			const fetchUsers = async () => {
+				const response = await fetch(
+					url,
+					{
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${authCtx.token}`
+						}
+					}
+				)
+				const data = await response.json();
+				setFriends(data);
+			}
+			fetchUsers();
+		}, [])
 
 	return (
 		<>
 		<div className= {style.mainPos}>
-			<div className='global'>  
-			{isLoggedIn && <SideBar className={style.position}  title="Welcome" /*username = {authCtx.username}*/ isLoggedIn = {isLoggedIn} />}
+			<div className='global'>
+				<SideBar title="Welcome" />
 				<div className="User">
-				<h1 className='h1'>USERS LIST</h1>
-				<div className='line'></div>
+					<h1 className='h1'>USERS LIST</h1>
+					<div className='line'></div>
 					<h2 className="title">Online Users :</h2>
 					<ul>
 						{onlineFriends.map(friend => (
 							<li key={friend.id} className='friend'>
-								<img className='avatar-img' src={friend.avatar} alt="avatar"></img>
+								{friend.avatar ? <img className='avatar-img' src={friend.avatar} alt={"avatar"} /> : <img className='avatar-img' src={friend.ftAvatar} alt={"ftAvatar"} />}
 								<span className='friend-username'>{friend.username}</span>
-								<button className='button'>Send friend request</button>
+								<form onSubmit={(event) => handleDemand(event, friend.id)}>
+									<button type="submit" className='add-friend'><i className="fa-solid fa-user-plus"></i></button>
+								</form>
+								<Link to="/chat/message">
+								<i className="fa-solid fa-comments"></i>
+								</Link>
 							</li>
 						))}
 					</ul>
@@ -66,13 +92,12 @@ const Friends = () => {
 						{playingFriends.map(friend => (
 						<li key={friend.id}><img src={friend.avatar}></img>{friend.username}</li>))}
 					</ul>
-				</div> 
+				</div>
 			</div>
 		</div>
-
 		</>
 	  );
 
 }
 
-export default Friends; 
+export default Friends;

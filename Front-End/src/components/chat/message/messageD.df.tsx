@@ -1,4 +1,4 @@
-export interface MessageDDto
+export interface MessageDDf
 {
   id: number;
   content:  string;

@@ -7,14 +7,16 @@ import style from '../style/Menu.module.css'
 
 const Profile = () =>  {
 	const authCtx = useContext(AuthContext);
+	const [demands, setDemands] = useState<any[]>([]);
+	const [friends, setFriends] = useState<any[]>([]);
+	const prendingDemands = demands.filter(demand => demand.status === 'PENDING');
 
+	const currentUserId = authCtx.userId;
 	const isLoggedIn = authCtx.isLoggedIn;
 	const { id } = useParams();
 	const ftAvatar = authCtx.ftAvatar;
 	const username = localStorage.getItem('username');
 	const [avatar, setAvatar] = useState<string | null>(null);
-
-	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		setAvatar(authCtx.avatar);
@@ -28,10 +30,72 @@ const Profile = () =>  {
 		}
 	}, [id]);
 
+	useEffect(() => {
+		const url = "http://localhost:3000/friendship/received";
+		const fetchDemands = async () => {
+			const response = await fetch(
+				url,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${authCtx.token}`
+					},
+					body: JSON.stringify({id: currentUserId}),
+				}
+			)
+			const data = await response.json();
+			setDemands(data);
+		}
+		fetchDemands();
+	}, [])
+
+	useEffect(() => {
+		const url = "http://localhost:3000/friendship/friends";
+		const fetchFriends = async () => {
+			const response = await fetch(
+				url,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${authCtx.token}`
+					},
+					body: JSON.stringify({id: currentUserId}),
+				}
+			)
+			const data = await response.json();
+			console.log("DATA///////")
+			console.log(data)
+			setFriends(data);
+		}
+		fetchFriends();
+	}, [])
+
+	const handleAccept = async (event: FormEvent, demandId: number, res: string) => {
+		event.preventDefault();
+		try {
+			const response = await fetch(`http://localhost:3000/friendship/update`,{
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				  Authorization: `Bearer ${authCtx.token}`,
+				},
+				body: JSON.stringify({demandId: demandId, response: res}),
+			});
+			await response.json();
+			if (!response.ok) {
+				console.log("POST error on /friendship/validate");
+				return "error";
+			  }
+		} catch (error) {
+			console.log("error", error);
+		  }
+		}
 	return (
 		<>
-			<div className={style.mainPos}>
-				<SideBar title="Settings" />
+		<div className={style.mainPos}>
+			<SideBar title="Profile" />
 			<div className="contain-set">
 
 		{/* <img src={avatarUrl} alt={avatar ? "avatar" : "ftAvatar"} /> */}
@@ -44,6 +108,14 @@ const Profile = () =>  {
 				<div className="title">
 					<div className="status-friends"></div>
 					<h5>My Friends</h5>
+					<ul>
+						{friends.map(friend => (
+						<li key={friend.id} className='friend'>
+							{/* {friend.avatar ? <img className='avatar-img' src={friend.avatar} alt={"avatar"} /> : <img className='avatar-img' src={friend.ftAvatar} alt={"ftAvatar"} />} */}
+							<span className='friend-username'>{friend.username}</span>
+						</li>
+						))}
+				</ul>
 				</div>
 			</div>
 			<div className='friends-card'>
@@ -72,13 +144,28 @@ const Profile = () =>  {
 				<h5>Victory</h5>
 			</div>
 		</div>
+		<div className='User'>
+			<h2 className="title">Demands :</h2>
+			<ul>
+				{prendingDemands.map(demand => (
+					<li key={demand.id} className='friend'>
+						{demand.requester.avatar ? <img className='avatar-img' src={demand.requester.avatar} alt={"avatar"} /> : <img className='avatar-img' src={demand.requester.ftAvatar} alt={"ftAvatar"} />}
+						<span className='friend-username'>{demand.requester.username}</span>
+						<form onSubmit={(event) => {handleAccept(event, demand.id, 'ACCEPTED')}} className='accept'>
+							<button type="submit" className='add-friend'><i className="fa-regular fa-circle-check"></i></button>
+						</form>
+						<form onSubmit={(event) => {handleAccept(event, demand.id, 'REFUSED')}} className='deny'>
+							<button type="submit" className='add-friend'><i className="fa-solid fa-xmark"></i></button>
+						</form>
+					</li>
+				))}
+			</ul>
+		</div>
 
-		{/* {!isLoggedIn && <Navigate to="/" replace={true} />} */}
-		{/* {isLoggedIn && <h2>PROFILE</h2>} */}
+		{!isLoggedIn && <Navigate to="/" replace={true} />}
 		{/* {isLoggedIn && <p>Votre Token: {authCtx.token} </p>} */}
 		{/* {isLoggedIn && <p>Votre userid : {authCtx.userId} </p>} */}
-		{isLoggedIn && <button onClick={authCtx.logout}>LOGOUT </button>}
-		{/* {isLoggedIn && <Link to="/" onClick={authCtx.logout}>LOGOUT</Link>} */}
+		{/* {isLoggedIn && <button onClick={authCtx.logout}>LOGOUT </button>} */}
 			</div>
 		</div>
 		</>

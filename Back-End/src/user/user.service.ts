@@ -37,6 +37,7 @@ export class UserService {
 					id: id,
 				},
 			});
+			// return user;
 			const userDTO = plainToClass(UserDto, user);
 			return userDTO;
 		} catch (error) {
@@ -133,5 +134,24 @@ export class UserService {
       throw new BadRequestException('getUser error : ' + error);
     }
   }
+
+
+  async addFriendOnTable(id1: number, id2: number) {
+	console.log("id1---------->")
+	console.log(id1)
+	console.log("id2---------->")
+	console.log(id2)
+	const updateUser = await this.prisma.user.update({
+		where: {
+			id: id1 ,
+		},
+		include: { friends: true, friendOf: true },
+		data: {
+			friends: { connect: { id: id2 } },
+		},
+	});
+	return updateUser;
+}
+
 
 }

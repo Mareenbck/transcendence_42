@@ -1,0 +1,81 @@
+.sidebar {
+	display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #699BF7;
+	width: 40%;
+    height: 100vh;
+}
+
+.sidebar h4 {
+	font-style: normal;
+	font-weight: 700;
+	font-size: 28px;
+	line-height: 36px;
+	color: black;
+	margin-top: 56px;
+	margin-left: 64px;
+}
+
+.links {
+	display: flex;
+	margin-left: 35px;
+}
+
+.links ul {
+	list-style-type: none;
+}
+
+.links .li {
+	display: flex;
+    align-items: center;
+	font-style: normal;
+	font-weight: 900;
+	font-size: 18px;
+	line-height: 20px;
+}
+
+.li span {
+	font-size: 63px;
+	color: rgb(203, 217, 242);
+	font-weight: 200;
+	margin-right: 20px;
+	width: 61px;
+}
+
+#bord {
+	color: black;
+}
+
+.links a {
+    font-weight: 700;
+    font-size: 19px;
+    color: black;
+}
+
+.links a.active {
+    font-weight: 700;
+    font-size: 19px;
+    color: rgb(105, 105, 105);
+}
+
+.hexa {
+	position: relative;
+	top: 20px;
+	width: 100px;
+	height: 100px;
+  }
+
+  .bi-hexagon-fill {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+  }
+
+  .bi-hexagon {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+  }

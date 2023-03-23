@@ -1,4 +1,4 @@
-export interface ConversationDto
+export interface ConversationDf
 {
   id:    number;
   name:  string;

@@ -11,6 +11,7 @@ import { Chatroom2Module } from './chat/chatroom2/chatroom2.module';
 import { JeuxModule } from './jeux/jeux.module';
 import { GameModule } from './game/game.module';
 import { GameGateway } from './game/game.gateway';
+import { FriendshipModule } from './friendship/friendship.module';
 
 
 @Module({
@@ -20,6 +21,7 @@ import { GameGateway } from './game/game.gateway';
 		}),
 		AuthModule,
 		UserModule,
+		FriendshipModule,
 		PrismaModule,
 		JwtModule.register({ secret: `${process.env.JWT_SECRET}` }),
 		Chatroom2Module,

@@ -16,22 +16,26 @@ const addUser = (userId, socketId) => {
 }
 
 const removeUser = (socketId) => {
-  users = users.filter(user => user.socketId !== socketId)
+  users = users.filter(user => user.socketId !== socketId);
+  roomUsers = roomUsers.filter( room => +room.socketId !== +socketId);
 }
 
 const getUser = (userId) => {
-
-//  console.log("TTTTTTTTTTTTTTTTT");
-//  console.log(users);
-//    console.log("TTTTTTTTTTTTTTTTT");
-//  console.log(userId);
-//    console.log("TTTTTTTTTTTTTTTTT");
   return users.find(user => +user.userId.userId === +userId)
 }
 
-@WebSocketGateway(8001, { cors: {origin: "http://localhost:8080",}, })
+
+let roomUsers = [];
+
+const addRoomUser = (roomId, userId, socketId) => {
+  roomUsers = roomUsers.filter( room => +room.userId !== +userId);
+  roomId && roomUsers.push({roomId, userId, socketId});
+}
+
+// @WebSocketGateway(8001, { cors: {origin: "http://localhost:8080",}, })
+@WebSocketGateway(8001, { cors: 'http://localhost/chat/message' })
+
 export class ChatGateway {
-  //implements OnGatewayConnection, OnGatewayDisconnect
   @WebSocketServer()
   server;
 
@@ -45,19 +49,38 @@ export class ChatGateway {
         this.server.emit("getUsers", users);
       });
 
-      socket.on("sendMD", ({author, receiver, content }) => {
-        console.log("XXXXXXXXXXXXXXXXXXXX");
-        console.log(receiver);
+      socket.on("userRoom", ({roomId, userId}) => {
+        addRoomUser(roomId, userId, socket.id);
+        console.log(roomUsers);
+      });
+
+      socket.on("sendMChat", ({authorId, chatroomId, content }) => {
+        const roomUs = roomUsers.filter( roomU => +roomU.roomId === chatroomId);
+        for(const roomU of roomUs) {
+          this.server.to(roomU.socketId).emit("getMChat", {
+            authorId,
+            chatroomId,
+            content,
+          });
+        }
+      });
+
+      socket.on("sendMD", ({content, author, receiver}) => {
         const user = getUser(receiver);
-        console.log("sending to : ");
-        console.log(user);
         this.server.to(user.socketId).emit("getMD", {
+          content,
           author,
           receiver,
-          content,
         });
       });
 
+      socket.on("sendConv", ({author, content,}) => {
+        for(const user of users) {
+          this.server.to(user.socketId).emit("getConv", {
+            content,
+          });
+        }
+      });
 
       socket.on('disconnect', () => {
         console.log(socket.id);
@@ -65,25 +88,6 @@ export class ChatGateway {
         removeUser(socket.id);
         this.server.emit("getUsers", users);
       });
-    });
-  };
-
-
-  @SubscribeMessage('messagex')
-  handleMessage(@MessageBody() message2): void {
-    console.log(message2);
-    this.server.emit('message2', message2);
-  }
-
-  @SubscribeMessage('m3')
-  onNewMesage(@MessageBody() body: any) {
-    console.log(body.authorId);
-  //this.server.emit('onMessage', {
-  //  msg: 'NewMessage',
-  //  content: body,
-  //});
-  }
-  //  this.server.emit('message', content);
-
-
+    }
+  )};
 }
