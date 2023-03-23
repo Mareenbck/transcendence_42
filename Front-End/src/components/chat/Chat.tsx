@@ -7,8 +7,6 @@ import ConversationReq from "./conversation/conversation.req"
 import MessageReq from "./message/message.req"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
-import ConversationDf from "./conversation/conversation.df"
-import MessageDf from "./message/message.df"
 import './Chat.css'
 import React from 'react';
 import PopUp from './PopUpChannel';
