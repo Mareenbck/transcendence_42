@@ -75,6 +75,7 @@ export class ChatGateway {
       });
 
       socket.on("sendConv", ({author, content,}) => {
+        console.log(content);
         for(const user of users) {
           this.server.to(user.socketId).emit("getConv", {
             content,

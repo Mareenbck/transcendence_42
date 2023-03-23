@@ -1,7 +1,7 @@
-import JeuDto from "./scores.dto"
+//import JeuDto from "./scores.dto"
 
-export class JeuApi {
-  static async getJeux(roomId: number) : Promise<JeuDto[]> {
+export class JeuReq {
+  static async getJeux(roomId: number) {
     try {
       const resp = await fetch(`http://localhost:3000/jeux`)
       const data = await resp.json();
@@ -13,4 +13,4 @@ export class JeuApi {
   };
 }
 
-export default JeuApi;
+export default JeuReq;

@@ -5,13 +5,13 @@ import AuthContext from '../../store/AuthContext';
 import { useContext } from "react";
 import SideBar from '../../components/auth/SideBar';
 import style from '../../style/Menu.module.css'
-import JeuApi from "./scores.api"
-import JeuDto from "./scores.dto"
+import JeuReq from "./scores.req"
+//import JeuDto from "./scores.dto"
 
 
 function Score() {
 
-const [jeux, setJeux] = useState<JeuDto[]> ([]);
+const [jeux, setJeux] = useState ([]);
 
   useEffect(() => {
     async function getJeux() {

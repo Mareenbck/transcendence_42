@@ -1,3 +1,4 @@
+/*
 export interface JeuDto
 {
  id: number;
@@ -7,4 +8,4 @@ export interface JeuDto
  createdAt: Date;
 
 }
-
+*/

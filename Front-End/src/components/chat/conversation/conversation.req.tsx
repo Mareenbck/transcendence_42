@@ -1,7 +1,9 @@
-import ConversationDf from "./conversation.df"
+//import ConversationDf from "./conversation.df"
+//static async getAll() : Promise<ConversationDf[]> {
+// static async postRoom(user, newConv) : Promise<ConversationDf[]> {
 
 export class ConversationReq {
-  static async getAll() : Promise<ConversationDf[]> {
+  static async getAll() {
     try {
       const resp = await fetch("http://localhost:3000/chatroom2", {method: "GET"})
       const data = await resp.json();
@@ -13,7 +15,7 @@ export class ConversationReq {
 
   };
 
- static async postRoom(user, newConv) : Promise<ConversationDf[]> {
+ static async postRoom(user, newConv) {
     try {
       const resp = await fetch(`http://localhost:3000/chatroom2`,
       {
