@@ -20,4 +20,3 @@ export class Chatroom2Controller {
   }
 }
 
-

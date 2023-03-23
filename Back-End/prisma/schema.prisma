@@ -105,6 +105,7 @@ model Chatroom {
   cr_messages ChatroomMessage[]
 }
 
+
 model ChatroomUsers {
   createdAt DateTime  @default(now())
   id          Int     @id @default(autoincrement())
