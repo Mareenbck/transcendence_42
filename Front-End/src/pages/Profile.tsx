@@ -72,6 +72,28 @@ const Profile = () =>  {
 		fetchFriends();
 	}, [])
 
+	const handleRemoveFriend = async(event: FormEvent, friendId: number) => {
+		event.preventDefault();
+		try {
+			const response = await fetch(`http://localhost:3000/friendship/delete`,{
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				  Authorization: `Bearer ${authCtx.token}`,
+				},
+				body: JSON.stringify({friendId: friendId, currentId: currentUserId}),
+			});
+			await response.json();
+			if (!response.ok) {
+				console.log("POST error on /friendship/delete");
+				return "error";
+			}
+		} catch (error) {
+			console.log("error", error);
+		  }
+
+	}
+
 	const handleAccept = async (event: FormEvent, demandId: number, res: string) => {
 		event.preventDefault();
 		try {
@@ -113,9 +135,12 @@ const Profile = () =>  {
 						<li key={friend.id} className='friend'>
 							{/* {friend.avatar ? <img className='avatar-img' src={friend.avatar} alt={"avatar"} /> : <img className='avatar-img' src={friend.ftAvatar} alt={"ftAvatar"} />} */}
 							<span className='friend-username'>{friend.username}</span>
+							<form onSubmit={(event) => {handleRemoveFriend(event, friend.id)}} className='deny'>
+								<button type="submit" className='add-friend'><i className="fa-solid fa-xmark"></i></button>
+							</form>
 						</li>
 						))}
-				</ul>
+					</ul>
 				</div>
 			</div>
 			<div className='friends-card'>

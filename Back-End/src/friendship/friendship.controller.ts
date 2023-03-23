@@ -38,24 +38,15 @@ export class FriendshipController {
 			await this.friendshipService.addFriend(result);
 		}
 		if (result.status === 'REFUSED') {
-			//supprimer la demande
+			await this.friendshipService.deleteRefusedFriendship();
 		}
 		return result;
 	}
 
-	// @Post('refuse')
-	// async refuseDemand(@Body() demandId: any) {
-	// 	const result = await this.friendshipService.refuseFriendship(demandId);
-	// 	return result;
-	// 	//actualise le status de la demande et enregistre dans la DB
-	// 	//return la firendship
-	// }
-
-	@Post('delete')
-	async deleteFriendship() {
-		//si demande refusee supprime la firendship
-		// si amis remove supprime la firenship
-		//return friendship
+	@Post('/delete')
+	async deleteFriend(@Body() usersId: number) {
+		const user = this.friendshipService.removeFriend(usersId);
+		return user;
 	}
 
 
