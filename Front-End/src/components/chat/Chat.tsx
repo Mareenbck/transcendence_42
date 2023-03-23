@@ -199,7 +199,7 @@ function Chat() {
 const createNewConv = async (e: FormEvent) => {
   e.preventDefault();
   if (newConversation === "") {
-    return; // ne rien faire si l'input est vide
+    return; 
   }
   const newConv = {
     name: newConversation,
@@ -215,7 +215,7 @@ const createNewConv = async (e: FormEvent) => {
     const res = await ConversationReq.postRoom(user, newConv);
     setConversations([res, ...conversations]);
     setNewConversation("");
-    setShowPopUp(true); // afficher la fenêtre popup après avoir créé une nouvelle conversation
+    setShowPopUp(true); 
   } catch(err) {
     console.log(err);
   }
@@ -224,11 +224,9 @@ const createNewConv = async (e: FormEvent) => {
 const handleChannelNameChange = (e: FormEvent) => {
   const value = e.target.value;
   setNewConversation(value);
-  setIsDisabled(value === ""); // désactiver le bouton si la valeur est vide
+  setIsDisabled(value === "");
 };
 
-
-// const [channels, setChannelName] = useState([]);
 const [showPopUp, setShowPopUp] = useState(false);
 const [isDisabled, setIsDisabled] = useState(true);
 
@@ -251,7 +249,7 @@ return (
                   onConfirm={() => setShowPopUp(false)}
                 />
               ) : null}
-            </form>
+          </form>
             { conversations.map((c) => (
               <div key={c.name + c.id} onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
                 <Conversation conversation={c}/>

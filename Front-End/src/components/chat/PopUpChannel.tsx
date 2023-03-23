@@ -4,6 +4,7 @@ import { useEffect, useContext, useState, FormEvent } from 'react'
 import "../../style/PopUpChannel.css"
 import "../../pages/Setting.tsx"
 import AuthContext from '../../store/AuthContext';
+import Chat from './Chat';
 
 
 function PopUp(props: any) {
@@ -95,7 +96,7 @@ function PopUp(props: any) {
                     </form>
                 </div>
                 <footer className='actions'>
-                    <button onClick={props.onConfirm}>OK</button>
+                    <button type='submit' onClick={props.onConfirm}>OK</button>
                 </footer>
             </div>
         </div>
