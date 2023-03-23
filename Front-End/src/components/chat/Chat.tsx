@@ -198,7 +198,7 @@ return (
         {showPopUp ? (
             <PopUp
             title="Creation d'un nouveau Channel"
-            message="Choisissez les options de votre channel"
+            message="Choisissez les options de votre channe    l"
             onConfirm={() => setShowPopUp(false)}
         />
         ) : null}
