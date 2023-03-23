@@ -195,12 +195,12 @@ function Chat() {
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
 	setSelectedFile(event.target.files[0]);
 };
-const handleChannelNameChange = (e: FormEvent) => {
-  setNewConversation(e.target.value);
-};
 
 const createNewConv = async (e: FormEvent) => {
   e.preventDefault();
+  if (newConversation === "") {
+    return; // ne rien faire si l'input est vide
+  }
   const newConv = {
     name: newConversation,
     avatar: ""
@@ -215,12 +215,22 @@ const createNewConv = async (e: FormEvent) => {
     const res = await ConversationReq.postRoom(user, newConv);
     setConversations([res, ...conversations]);
     setNewConversation("");
-  } catch(err) {console.log(err)}
+    setShowPopUp(true); // afficher la fenêtre popup après avoir créé une nouvelle conversation
+  } catch(err) {
+    console.log(err);
+  }
+};
+
+const handleChannelNameChange = (e: FormEvent) => {
+  const value = e.target.value;
+  setNewConversation(value);
+  setIsDisabled(value === ""); // désactiver le bouton si la valeur est vide
 };
 
 
-const [channels, setChannelName] = useState([]);
+// const [channels, setChannelName] = useState([]);
 const [showPopUp, setShowPopUp] = useState(false);
+const [isDisabled, setIsDisabled] = useState(true);
 
 return (
   <>
@@ -228,18 +238,18 @@ return (
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
-            <form onSubmit={createNewConv}>
+          <form onSubmit={createNewConv}>
               <label>
                 New channel name:
                 <input type="text" value={newConversation} onChange={handleChannelNameChange} />
               </label>
-              <button type="submit" onClick={() => setShowPopUp(true)}>Create new channel</button>
-                  {showPopUp ? (
-                    <PopUp
+              <button type="submit" disabled={isDisabled}>Create new channel</button>
+              {showPopUp ? (
+                <PopUp
                   title="Creation d'un nouveau Channel"
-                  message="Choisissez les options de votre channe    l"
+                  message="Choisissez les options de votre channel"
                   onConfirm={() => setShowPopUp(false)}
-              />
+                />
               ) : null}
             </form>
             { conversations.map((c) => (
