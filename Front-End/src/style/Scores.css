@@ -4,6 +4,20 @@
     box-sizing: border-box;
 	font-family: 'Noto Sans', sans-serif;
 }
+
+
+.pos{
+    display: flex;
+    margin-top: 50%;
+}
+
+.midPos{
+    display:inline;
+    margin: 50px;
+    
+
+}
+
 .mainPos
 {
     position: absolute;
@@ -14,4 +28,19 @@
     width: 80%;
     height: 100vh;
     transition: all 0.5s ease.;
+}
+
+.title {
+    width: 704px;
+    height: 56px;
+    left: 450px;
+    top: 103px;
+
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 24px;
+	font-family: 'Noto Sans', sans-serif;
+
+    color: #000000;
 }

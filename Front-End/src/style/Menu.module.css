@@ -52,9 +52,17 @@
 .title
 {
 
+   
+
     text-align: center;
     margin: auto;
     margin-top: 0;
     font-weight: bold;
+
+     /* position: absolute; */
+     width: 208px;
+     height: 42px;
+     left: 774px;
+     top: 14px;
 }
 
