@@ -1,7 +1,7 @@
-import ConversationDto from "./conversation.dto"
+import ConversationDf from "./conversation.df"
 
-export class ConversationApi {
-  static async getAll() : Promise<ConversationDto[]> {
+export class ConversationReq {
+  static async getAll() : Promise<ConversationDf[]> {
     try {
       const resp = await fetch("http://localhost:3000/chatroom2", {method: "GET"})
       const data = await resp.json();
@@ -13,7 +13,7 @@ export class ConversationApi {
 
   };
 
- static async postRoom(user, newConv) : Promise<ConversationDto[]> {
+ static async postRoom(user, newConv) : Promise<ConversationDf[]> {
     try {
       const resp = await fetch(`http://localhost:3000/chatroom2`,
       {
@@ -37,4 +37,4 @@ export class ConversationApi {
   };
 }
 
-export default ConversationApi;
+export default ConversationReq;

@@ -1,8 +1,8 @@
-import MessageDto from "./message.dto"
-import MessageDDto from "./messageD.dto"
+import MessageDf from "./message.df"
+import MessageDDf from "./messageD.df"
 
-export class MessageApi {
-  static async getMess(roomId: number) : Promise<MessageDto[]> {
+export class MessageReq {
+  static async getMess(roomId: number) : Promise<MessageDf[]> {
     try {
       const resp = await fetch(`http://localhost:3000/chat-mess/room/${roomId}`)
       const data = await resp.json();
@@ -14,8 +14,9 @@ export class MessageApi {
 
   };
 
-  static async postMess(message2) : Promise<MessageDto[]> {
+  static async postMess(message2) : Promise<MessageDf[]> {
     try {
+      console.log(message2);
       const resp = await fetch(`http://localhost:3000/chat-mess`,
       {
         method: "post",
@@ -35,7 +36,7 @@ export class MessageApi {
 
   };
 
-  static async getDirMess(me: number, friend: number) : Promise<MessageDDto[]> {
+  static async getDirMess(me: number, friend: number) : Promise<MessageDDf[]> {
     try {
       const resp = await fetch(`http://localhost:3000/dir-mess/${me}/${friend}`)
       const data = await resp.json();
@@ -44,11 +45,9 @@ export class MessageApi {
     catch (err) {
       console.log(err);
     }
-
   };
 
-  static async postDirMess(messageD) : Promise<MessageDDto[]> {
-//    console.log(messageD)
+  static async postDirMess(messageD) : Promise<MessageDDf[]> {
     try {
       const resp = await fetch(`http://localhost:3000/dir-mess`,
       {
@@ -72,5 +71,5 @@ export class MessageApi {
 
 }
 
-export default MessageApi;
+export default MessageReq;
 

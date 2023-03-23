@@ -1,4 +1,4 @@
-export interface MessageDto
+export interface MessageDf
 {
   id: number;
   chatroomId:    number;

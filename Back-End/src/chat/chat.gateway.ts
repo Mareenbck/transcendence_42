@@ -66,15 +66,20 @@ export class ChatGateway {
       });
 
       socket.on("sendMD", ({content, author, receiver}) => {
-        console.log("rrrrrrrrr");
-
-        console.log(author);
         const user = getUser(receiver);
         this.server.to(user.socketId).emit("getMD", {
           content,
           author,
           receiver,
         });
+      });
+
+      socket.on("sendConv", ({author, content,}) => {
+        for(const user of users) {
+          this.server.to(user.socketId).emit("getConv", {
+            content,
+          });
+        }
       });
 
       socket.on('disconnect', () => {
@@ -84,6 +89,5 @@ export class ChatGateway {
         this.server.emit("getUsers", users);
       });
     }
-
-)};
+  )};
 }

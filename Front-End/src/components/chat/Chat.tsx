@@ -3,12 +3,12 @@ import AuthContext from '../../store/AuthContext';
 import io, { Socket } from "socket.io-client";
 import MessagesInput from "./MessagesInput"
 import Conversation from "./conversation/conversation"
-import ConversationApi from "./conversation/conversation.api"
-import MessageApi from "./message/message.api"
+import ConversationReq from "./conversation/conversation.req"
+import MessageReq from "./message/message.req"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
-import ConversationDto from "./conversation/conversation.dto"
-import MessageDto from "./message/message.dto"
+import ConversationDf from "./conversation/conversation.df"
+import MessageDf from "./message/message.df"
 import './Chat.css'
 
 function Chat() {
@@ -20,6 +20,7 @@ function Chat() {
   const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
   const [AMessageD, setAMessageD] = useState (null);
   const [AMessageChat, setAMessageChat] = useState (null);
+  const [AConversation, setAConversation] = useState (null);
   const [conversations, setConversations] = useState<ConversationDto[]> ([]);
   const [currentChat, setCurrentChat] = useState (null);
   const [currentDirect, setCurrentDirect] = useState (null);
@@ -28,6 +29,7 @@ function Chat() {
   const [newMessage2, setNewMessage2] = useState ("");
   const [newMessageD, setNewMessageD] = useState ("");
   const scrollRef = useRef();
+  const [newConversation, setNewConversation] = useState([]);
 
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
@@ -42,7 +44,6 @@ function Chat() {
     })
 
     socket.current.on("getMD", (data)=> {
-    console.log(data);
       setAMessageD({
         content: data.content,
         author: data.author,
@@ -53,25 +54,42 @@ function Chat() {
   }, []);
 
   useEffect(() => {
+    socket.current.on("getConv", data => {
+      setAConversation({
+        name: data.content.name,
+        avatar: data.content.avatar,
+      });
+    });
+  }, []);
+
+  useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
     setMessages2(prev=>[...prev, AMessageChat]);
-    },[AMessageChat, currentChat])
+  },[AMessageChat, currentChat])
 
   useEffect(() => {
     AMessageD && currentDirect?.id === AMessageD.sender &&
     setMessagesD(prev=>[...prev, AMessageD]);
-    },[AMessageD, currentDirect])
+  },[AMessageD, currentDirect])
+
+  useEffect(() => {
+    AConversation && setConversations(prev=>[AConversation, ...prev]);
+  }, [AConversation]);
+
 
   useEffect(() => {
     socket.current.emit("addUser", user);
-    socket.current.on("getUsers", users => {
-      setOnlineUsers(users);
-    });
   },[user])
 
   useEffect(() => {
+    socket.current.on("getUsers", users => {
+      setOnlineUsers(users);
+    });
+   })
+
+  useEffect(() => {
     async function getAllConv() {
-      const response = await ConversationApi.getAll();
+      const response = await ConversationReq.getAll();
       setConversations(response);
      };
     getAllConv();
@@ -82,7 +100,7 @@ function Chat() {
     {
       async function getMess() {
         try {
-          const response = await MessageApi.getMess(currentChat?.id);
+          const response = await MessageReq.getMess(currentChat?.id);
           setMessages2(response);
           socket?.current.emit("userRoom", {
             userId: user.userId,
@@ -101,7 +119,7 @@ function Chat() {
     {
     async function getDirMess() {
       try {
-        const response = await MessageApi.getDirMess(id, currentDirect?.userId);
+        const response = await MessageReq.getDirMess(id, currentDirect?.userId);
         setMessagesD(response);
       } catch(err) {
         console.log(err);
@@ -127,7 +145,7 @@ function Chat() {
       })
 
     try {
-      const res = await MessageApi.postMess(message2);
+      const res = await MessageReq.postMess(message2);
       setMessages2([...messages2, res]);
       setNewMessage2("");
     } catch(err) {console.log(err)}
@@ -148,7 +166,7 @@ function Chat() {
     })
 
     try {
-      const res2 = await MessageApi.postDirMess(messageD);
+      const res2 = await MessageReq.postDirMess(messageD);
       setMessagesD([...messagesD, res2]);
       setNewMessageD("");
     } catch(err) {console.log(err)}
@@ -170,17 +188,21 @@ function Chat() {
     setNewConversation(e.target.value);
   };
 
-  const [newConversation, setNewConversation] = useState([]);
-
   const createNewConv = async (e: FormEvent) => {
     e.preventDefault();
     const newConv = {
       name: newConversation,
       avatar: ""
     };
+
+    socket?.current.emit("sendConv", {
+      author: +id,
+      content: newConv,
+    })
+
     try {
-      const res = await ConversationApi.postRoom(user, newConv);
-      setConversations([...conversations, res]);
+      const res = await ConversationReq.postRoom(user, newConv);
+      setConversations([res, ...conversations]);
       setNewConversation("");
     } catch(err) {console.log(err)}
   };
@@ -202,7 +224,7 @@ function Chat() {
               <button type="submit">Create new channel</button>
             </form>
             { conversations.map((c) => (
-              <div onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
+              <div key={c.name + c.id} onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
                 <Conversation conversation={c}/>
               </div>
             ))}
@@ -216,7 +238,7 @@ function Chat() {
               <div className="chatBoxTop">
                 { messages2.length ?
                   messages2.map((m) => (
-                    <div ref={scrollRef}>
+                    <div key={m.id} ref={scrollRef}>
                       <Message2 message2={m} own={m.authorId === +id} />
                     </div>
                   )) : <span className="noConversationText2" > No message in this room yet. </span>
@@ -236,13 +258,13 @@ function Chat() {
             </>
             :
             currentDirect ?
-                 <>
+              <>
               <div className="chatBoxTop">
                 { messagesD.length ?
-                  messagesD?.map((m) => (
-                    <div ref={scrollRef}>
-                      <MessageD messageD={m} own={m?.author === +id} />
-                    </div>
+                    messagesD?.map((m) => (
+                      <div key={m.id} ref={scrollRef}>
+                        <MessageD messageD={m} own={m?.author === +id} />
+                      </div>
                   )) : <span className="noConversationText2" > No message with this friend yet. </span>
                 }
               </div>
@@ -269,33 +291,32 @@ function Chat() {
               </div>
             </>
               : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
-            }
+          }
           </div>
         </div>
         <div className="chatOnline">
           <div className="chatOnlineW">
-    <div className="chatOnline">
-      { onlineUsers ? onlineUsers?.map((o) => (
-        +o?.userId.userId !== +id ?
-        <>
-        <div className="chatOnlineFriend" onClick={()=> {setCurrentDirect(o?.userId); setCurrentChat(null)}} >
-          <div className="chatOnlineImgContainer">
-            <img  className="chatOnlineImg"
-              src={ o?.userId.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
-              alt=""
-            />
-            <div className="chatOnlineBadge"></div>
-          </div>
-          <span className="chatOnlineName"> {o?.userId.username} </span>
-        </div>
-        </>
-        : null
-      )) : <span className="noConversationText2" > Nobody online. </span>}
-    </div>
+            <div className="chatOnline">
+              { onlineUsers ? onlineUsers?.map((o) => (
+                +o?.userId.userId !== +id ?
+                  <div  key={o?.userId} className="chatOnlineFriend" onClick={()=> {setCurrentDirect(o?.userId); setCurrentChat(null)}} >
+                    <div className="chatOnlineImgContainer">
+                      <img  className="chatOnlineImg"
+                        src={ o?.userId.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
+                        alt=""
+                      />
+                      <div className="chatOnlineBadge"></div>
+                    </div>
+                    <span className="chatOnlineName"> {o?.userId.username} </span>
+                  </div>
+                : null
+                )) : <span className="noConversationText2" > Nobody online. </span>
+              }
+            </div>
           </div>
         </div>
       </div>
-</>
+    </>
   )
 
 }
