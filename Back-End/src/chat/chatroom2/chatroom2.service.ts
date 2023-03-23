@@ -32,4 +32,5 @@ export class Chatroom2Service {
   remove(id: number) {
     return this.prisma.chatroom.delete({where: {id: id}});;
   }
+  
 }

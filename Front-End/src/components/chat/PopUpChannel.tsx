@@ -8,14 +8,15 @@ import Chat from './Chat';
 
 
 function PopUp(props: any) {
-
-    const authCtx = useContext(AuthContext);
+    
+    const authCtx = useContext(AuthContext);    
+    const [isPublic, setIsPublic] = useState(true);
+    const [isPrivate, setIsPrivate] = useState(true);
     const [selectedFile, setSelectedFile] = useState('');
 
 
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault();
-		// Vous pouvez envoyer le fichier sélectionné au serveur ici
 		const formData = new FormData();
 		formData.append("file", selectedFile);
 		try {
@@ -44,8 +45,6 @@ function PopUp(props: any) {
 	};
 
 
-    const [isPublic, setIsPublic] = useState(true);
-    const [isPrivate, setIsPrivate] = useState(true);
     return (
         <div className='popup-overlay'>
             <div className='global-popup'>
@@ -69,24 +68,28 @@ function PopUp(props: any) {
                             className='circle'
                             type='radio'
                             value='private'
-                            checked={!isPublic}
-                            onChange={() => setIsPublic(false)}
+                            checked={!isPublic && isPrivate}
+                            onChange={() => {
+                                setIsPublic(false);
+                                setIsPrivate(true);
+                            }}
                         />
                         Private
                     </label>
                     <label className='wrap-circle'>
-                    <input
-                    className='circle'
-                    type='radio'
-                    value='protected'
-                    checked={!isPublic && !isPrivate}
-                    onChange={() => {
-                        setIsPublic(false);
-                        setIsPrivate(false);
-                    }}
-                    />
-                    Protected
-                </label>
+                        <input
+                            className='circle'
+                            type='radio'
+                            value='protected'
+                            checked={!isPublic && !isPrivate}
+                            onChange={() => {
+                                setIsPublic(false);
+                                setIsPrivate(false);
+                            }}
+                        />
+                        Protected
+                    </label>
+
                 </div>
                 <div className='choose-avatar'>
                     <p>Chose an avatar for your new channel</p>
@@ -95,9 +98,9 @@ function PopUp(props: any) {
                         <button type='submit'>Upload</button>
                     </form>
                 </div>
-                <footer className='actions'>
-                    <button type='submit' onClick={props.onConfirm}>OK</button>
-                </footer>
+                    <footer className='actions'>
+                        <button type='submit' onClick={props.onConfirm}>OK</button>
+                    </footer>
             </div>
         </div>
     );
