@@ -48,6 +48,4 @@ export class FriendshipController {
 		const user = this.friendshipService.removeFriend(usersId);
 		return user;
 	}
-
-
 }
