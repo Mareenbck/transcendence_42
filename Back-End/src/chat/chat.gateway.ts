@@ -24,7 +24,6 @@ const getUser = (userId) => {
   return users.find(user => +user.userId.userId === +userId)
 }
 
-
 let roomUsers = [];
 
 const addRoomUser = (roomId, userId, socketId) => {

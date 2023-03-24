@@ -28,18 +28,36 @@ function Chat() {
   const [messagesD, setMessagesD] = useState<MessageDDto[]> ([]);
   const [newMessage2, setNewMessage2] = useState ("");
   const [newMessageD, setNewMessageD] = useState ("");
+  const [otherUsers, setOtherUsers] = useState ("");
   const scrollRef = useRef();
   const authCtx = useContext(AuthContext);
   const usernameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState('');
-
   const [newConversation, setNewConversation] = useState([]);
 
-  
+  useEffect(() => {
+    const url = "http://localhost:3000/users/";
+    const fetchUsers = async () => {
+      const response = await fetch(
+        url,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authCtx.token}`
+          }
+        }
+      )
+      const data = await response.json();
+      setOtherUsers(data.filter(u => !(onlineUsers.some(e => e.id === u.id))));
+      }
+    fetchUsers();
+  }, [onlineUsers])
+
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
-    
+
     socket.current.on("getMChat", (data)=> {
       setAMessageChat({
         authorId: data.authorId,
@@ -100,7 +118,15 @@ function Chat() {
     };
     getAllConv();
   }, []);
-  
+/*
+  useEffect(() => {
+    async function getAllUsers() {
+      const response = await .getAll();
+      setAllUsers(response);
+    };
+    getAllUsers();
+  }, []);
+ */
   useEffect(() => {
     if (currentChat)
     {
@@ -125,8 +151,10 @@ function Chat() {
     {
       async function getDirMess() {
         try {
-          const response = await MessageReq.getDirMess(id, currentDirect?.userId);
-          setMessagesD(response);
+          if (currentDirect?.userId)
+            { setMessagesD(await MessageReq.getDirMess(id, currentDirect?.userId))}
+          else
+            {setMessagesD(await MessageReq.getDirMess(id, currentDirect?.id))};
         } catch(err) {
           console.log(err);
         }
@@ -159,18 +187,26 @@ function Chat() {
   
   const handleSubmitD = async (e)=> {
     e.preventDefault();
+    const r = currentDirect?.userId ? +currentDirect?.userId : +currentDirect?.id;
     const messageD = {
       author: +id,
       content: newMessageD,
-      receiver: +currentDirect?.userId,
+      receiver: r,
     };
-    
-    socket?.current.emit("sendMD", {
-      author: +id,
-      receiver: +currentDirect?.userId,
-      content: newMessageD,
-    })
-    
+
+   console.log("VVVVVVVVVVVVVV");
+    console.log(currentDirect?.userId);
+
+//    if (onlineUsers.find(user => +user.userId.userId === currentDirect?.userId.userId))
+    if (currentDirect?.userId)
+    {
+      socket?.current.emit("sendMD", {
+        author: +id,
+        receiver: +currentDirect?.userId,
+        content: newMessageD,
+      })
+    }
+
     try {
       const res2 = await MessageReq.postDirMess(messageD);
       setMessagesD([...messagesD, res2]);
@@ -186,52 +222,47 @@ function Chat() {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
   }, [messagesD]);
   
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({behaviour: "smooth"})
-  }, [conversations]);
-  
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
-	setSelectedFile(event.target.files[0]);
-};
-const handleChannelNameChange = (e: FormEvent) => {
-  setNewConversation(e.target.value);
-};
-
-const createNewConv = async (e: FormEvent) => {
-  e.preventDefault();
-  const newConv = {
-    name: newConversation,
-    avatar: ""
+	 setSelectedFile(event.target.files[0]);
   };
+
+  const handleChannelNameChange = (e: FormEvent) => {
+    setNewConversation(e.target.value);
+  };
+
+  const createNewConv = async (e: FormEvent) => {
+    e.preventDefault();
+    const newConv = {
+      name: newConversation,
+      avatar: ""
+    };
   
-  socket?.current.emit("sendConv", {
-    author: +id,
-    content: newConv,
-  })
+    socket?.current.emit("sendConv", {
+      author: +id,
+      content: newConv,
+    })
   
-  try {
-    const res = await ConversationReq.postRoom(user, newConv);
-    setConversations([res, ...conversations]);
-    setNewConversation("");
-  } catch(err) {console.log(err)}
-};
+    try {
+      const res = await ConversationReq.postRoom(user, newConv);
+      setConversations([res, ...conversations]);
+      setNewConversation("");
+    } catch(err) {console.log(err)}
+  };
 
 
-const [channels, setChannelName] = useState([]);
-const [showPopUp, setShowPopUp] = useState(false);
+  const [channels, setChannelName] = useState([]);
+  const [showPopUp, setShowPopUp] = useState(false);
 
-return (
+  return (
   <>
   {" "}
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
+          <div className="conversationListe">
             <form onSubmit={createNewConv}>
-              <label>
-                New channel name:
-                <input type="text" value={newConversation} onChange={handleChannelNameChange} />
-              </label>
-              <button type="submit" onClick={() => setShowPopUp(true)}>Create new channel</button>
+                <input type="text" placeholder="New channel name ? " className="chatMessageInput" value={newConversation} onChange={handleChannelNameChange} />
+              <button className="chatSubmitButton" type="submit" onClick={() => setShowPopUp(true)}>Create new channel</button>
                   {showPopUp ? (
                     <PopUp
                   title="Creation d'un nouveau Channel"
@@ -245,6 +276,7 @@ return (
                 <Conversation conversation={c}/>
               </div>
             ))}
+          </div>
           </div>
         </div>
         <div className="chatBox">
@@ -295,13 +327,13 @@ return (
                 {currentChat ?
                   <>
                     <button className="chatSubmitButton" onClick={handleSubmit}>
-                      SendROOM
+                      Send
                     </button>
                   </>
                   :
                   <>
                     <button className="chatSubmitButton" onClick={handleSubmitD}>
-                      SendFriend
+                      Send
                     </button>
                   </>
                 }
@@ -329,12 +361,29 @@ return (
                 : null
                 )) : <span className="noConversationText2" > Nobody online. </span>
               }
+              { otherUsers ? otherUsers?.map((o) => (
+                +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
+                  <div  key={o?.userId} className="chatOnlineFriend" onClick={()=> {setCurrentDirect(o); setCurrentChat(null)}} >
+                    <div className="chatOnlineImgContainer">
+                      <img  className="chatOnlineImg"
+                        src={ o?.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
+                        alt=""
+                      />
+                    </div>
+                    <span className="chatOnlineName"> {o?.username} </span>
+                  </div>
+                : null
+                )) : <span className="noConversationText2" > Nobody online. </span>
+              }
             </div>
           </div>
+        </div>
+        <div className="allOtherUsers">
+
         </div>
       </div>
     </>
   )
-            }
+}
 
 export default Chat;
