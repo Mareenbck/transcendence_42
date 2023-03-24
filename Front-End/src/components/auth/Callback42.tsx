@@ -30,6 +30,7 @@ function Callback42() {
 					localStorage.setItem('username', username);
 					localStorage.setItem('avatar', avatar);
 					localStorage.setItem('ftAvatar', ftAvatar);
+					localStorage.setItem('is2FA', data.user.twoFA);
 					const twofa: any = await authCtx.login(token, userId);
 					if (twofa) {
 						window.close();

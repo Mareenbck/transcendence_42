@@ -69,4 +69,12 @@ export class TwoFactorAuthService {
 		await this.authservice.updateRefreshToken(dto.id, tokens.refresh_token);
 		return tokens;
 	}
+
+	async getIs2FA (dto: TwoFactorDto) {
+		const user = await this.userService.getByEmail(dto.email);
+		if (!user) {
+			throw new UnauthorizedException('Invalid User');
+		}
+		return user.twoFA
+	}
 }

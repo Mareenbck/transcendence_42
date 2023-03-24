@@ -25,6 +25,7 @@ export class UserDto {
 
 	avatar: string;
 	ftAvatar: string;
+	is2FA: boolean;
 
 	receivedFriendships: FriendsDto[];
 

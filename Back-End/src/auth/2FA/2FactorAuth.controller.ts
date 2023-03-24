@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Get,
 	HttpCode,
 	Post,
 	Res,
@@ -21,6 +22,13 @@ export class TwoFactorAuthenticationController {
 		private readonly twoFactorAuthService: TwoFactorAuthService,
 		private userService: UserService,
 	) { }
+
+	@Get('')
+	@UseGuards(JwtGuard)
+	async get2FA(@GetUser() user: TwoFactorDto) {
+		const is2FA = await this.twoFactorAuthService.getIs2FA(user);
+		return is2FA;
+	}
 
 	@Post('/generate')
 	@UseGuards(JwtGuard)
@@ -59,5 +67,7 @@ export class TwoFactorAuthenticationController {
 		}
 		return this.twoFactorAuthService.loginWith2fa(user);
 	}
+
+
 }
 
