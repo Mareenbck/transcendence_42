@@ -68,6 +68,11 @@ function Game() {
     const initWinner = (data: gameWinner)=>{
         setGameWinner(data);
     }
+//////////////////////////////////////////////////////////
+    useEffect(() => {
+        socket.current.emit("addUser", user);
+      },[user])
+///////////////////////////////////////////////////////
 
     //get data from the server and redraw canvas
     useEffect(() => {
