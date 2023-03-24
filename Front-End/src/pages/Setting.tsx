@@ -8,6 +8,7 @@ import style from '../style/Menu.module.css'
 import SwitchUnstyled from '@mui/base/SwitchUnstyled';
 import { Switch } from '@mui/material';
 import Switch2FA from '../components/settings/Switch2FA';
+import ButtonSettings from '../components/settings/ButtonSettings';
 
 
 
@@ -100,47 +101,9 @@ const Setting = () => {
 		}
 	}
 
-	// const handle2FA = async (event: FormEvent) => {
-	// 	event.preventDefault();
-	// 	try {
-	// 		const response = await fetch(`http://localhost:3000/auth/2fa/turn-on`,{
-	// 			method: 'POST',
-	// 			headers: {
-	// 			  'Content-Type': 'application/json',
-	// 			  Authorization: `Bearer ${authCtx.token}`,
-	// 			},
-	// 			body: JSON.stringify({}),
-	// 		})
-	// 		if (!response.ok) {
-	// 			console.log("POST error on /auth/2fa/turn-on");
-	// 			return "error";
-	// 		  }
-	// 		setIsTwoFAEnabled(true);
-	// 	} catch (error) {
-	// 		console.log("error", error);
-	// 	  }
-	// }
-
-	// const handle2FAOff = async (event: FormEvent) => {
-	// 	event.preventDefault();
-	// 	try {
-	// 		const response = await fetch(`http://localhost:3000/auth/2fa/turn-off`,{
-	// 			method: 'POST',
-	// 			headers: {
-	// 			  'Content-Type': 'application/json',
-	// 			  Authorization: `Bearer ${authCtx.token}`,
-	// 			},
-	// 			body: JSON.stringify({}),
-	// 		})
-	// 		if (!response.ok) {
-	// 			console.log("POST error on /auth/2fa/turn-off");
-	// 			return "error";
-	// 		  }
-	// 		setIsTwoFAEnabled(false);
-	// 	} catch (error) {
-	// 		console.log("error", error);
-	// 	  }
-	// }
+	const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setIsTwoFAEnabled(event.target.checked);
+	};
 
 	useEffect(() => {
 		if (isTwoFAEnabled) {
@@ -186,7 +149,9 @@ const Setting = () => {
 								onChange={handle2FA}
 								inputProps={{ 'aria-label': 'controlled' }}
 							/> */}
-							<Switch2FA/>
+							<Switch2FA onChange={handleSwitchChange} />
+							<ButtonSettings is2FAEnabled={isTwoFAEnabled} title="2FA"></ButtonSettings>
+							{/* <Switch2FA/> */}
 						{/* <form onSubmit={handle2FA} >
 							<button type="submit">Enable</button>
 						</form>

@@ -2,10 +2,11 @@ import { useContext, useEffect, useState } from 'react';
 import { Switch } from '@mui/material';
 import React from 'react';
 import AuthContext from '../../store/AuthContext';
+import '../../style/Switch2FA.css';
 
-const Switch2FA = () => {
-	const authCtx = useContext(AuthContext);s
-	const [isTwoFAEnabled, setIsTwoFAEnabled] = useState(authCtx.is2FA);
+const Switch2FA = (props: any) => {
+	const authCtx = useContext(AuthContext);
+	const [isTwoFAEnabled, setIsTwoFAEnabled] = useState(false);
 
 	useEffect(() => {
 		fetchIs2FA(authCtx.token);
@@ -87,7 +88,7 @@ const Switch2FA = () => {
 			checked={isTwoFAEnabled}
 			onChange={handle2FA}
 			name="toggle-switch"
-			color="primary"
+			className="custom-switch"
 		/>
 	)
 }
