@@ -29,6 +29,9 @@ model User {
 
 	games               UserOnGame[]
 
+  blocked             User[]       @relation("Blocked")
+  blockedFrom         User[]       @relation("Blocked")
+
   friends             User[]        @relation("Friends")
   friendOf            User[]        @relation("Friends")
   sentFriendships     Friendship[]  @relation("SentFriendships")
