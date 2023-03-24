@@ -5,8 +5,8 @@ import {
   WebSocketGateway,
   ConnectedSocket
 } from '@nestjs/websockets';
-
 import {Server, Socket} from 'socket.io'
+import { GameService } from './game.service'
 
 interface ball {
   x: number;
@@ -37,8 +37,38 @@ const ballR = 15;
 const racketSpeedY = 10;
 const period = 100;
 
+//all connected
+let users = [];
+//two players
+//let players = [];
 
-@WebSocketGateway(8001, { cors: {origin: "http://localhost:8080",} })  //'http://localhost/game/*'
+//////////////////////////////////////////////////////////
+const addUser = (userId, socketId) => {
+  console.log(userId);
+  !users.some((user) => +user.userId.userId === +userId.userId) &&
+    users.push({userId, socketId})
+  // users.push(userId)
+}
+
+const removeUser = (socketId) => {
+  users = users.filter(user => user.socketId !== socketId);
+  roomUsers = roomUsers.filter( room => +room.socketId !== +socketId);
+}
+
+const getUser = (userId) => {
+  return users.find(user => +user.userId.userId === +userId)
+}
+
+let roomUsers = [];
+
+const addRoomUser = (roomId, userId, socketId) => {
+  roomUsers = roomUsers.filter( room => +room.userId !== +userId);
+  if (roomUsers.length < 2)
+    roomId && roomUsers.push({roomId, userId, socketId});
+}
+////////////////////////////////////////////////////////////////
+
+@WebSocketGateway(8001, { cors: 'http://localhost/game/*' })
 export class GameGateway {
  
   private isrunning: boolean = false; // define the interval property
@@ -57,13 +87,41 @@ export class GameGateway {
   private winner: string = '';
   private leave: string = '';
 
-  //all connected
-  private connectedClients: Socket[] = [];
-  //two players
-  private players: Socket[] = [];
+  // //all connected
+  // private connectedClients: Socket[] = [];
+  // //two players
+  // private players: Socket[] = [];
 
   @WebSocketServer() server: Server;
+///////////////////////////////////////////////////////////////
+  onModuleInit(){
+    this.server.on('connection', (socket) => {
+console.log(socket.id);
+console.log('Connected');
 
+      socket.on("addUser", (userId) => {
+        addUser(userId, socket.id);
+        this.server.emit("getUsers", users);
+      });
+
+      socket.on("userRoom", ({roomId, userId}) => {
+        addRoomUser(roomId, userId, socket.id);
+console.log(roomUsers);
+      });
+
+      socket.on("gameStart", ({authorId, gameroomId, content }) => {
+        const roomUs = roomUsers.filter( roomU => +roomU.roomId === gameroomId);
+        for(const roomU of roomUs) {
+          this.server.to(roomU.socketId).emit("getMChat", {
+            authorId,
+            gameroomId,
+            content,
+          });
+        }
+      });
+    }); 
+  }
+/////////////////////////////////////////////////////////////////////
   //emit game 
   private emit2all(){
     this.server.emit('pong', {
@@ -75,11 +133,15 @@ export class GameGateway {
     }); 
   }
 
+@SubscribeMessage('addUser')
+
+
 @SubscribeMessage('move')
 onChgEvent(
   @MessageBody() message: string,
   @ConnectedSocket() client: Socket
 ): void {
+  
   const player = this.players.indexOf(client);
   if(player == -1) return;
 console.log(`message ${message} from ${client} (${player})`);
