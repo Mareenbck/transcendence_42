@@ -17,7 +17,22 @@ import UserChart from '../auth/UserChart'
 
 
 const Scores = () => {
-    const [jeux, setJeux] = useState<JeuDto[]> ([]);
+  //1, defination state as Array exp:post: []
+  const response =[
+    {id : 1, UserName: "saray", UserScore: 1},
+    {id : 2, UserName: "maryia", UserScore: 10},
+    {id : 3, UserName: "emma", UserScore: 7},
+    {id : 4, UserName: "theo", UserScore: 9},
+    {id : 5, UserName: "marine", UserScore: 3},
+  ];
+
+  //2, I have an Array from API = > response
+  // setstate({ post: response.data})
+  const [list, setList] = useState<response[]> ([]);
+
+  
+
+  /*const [jeux, setJeux] = useState<JeuDto[]> ([]);
 
   useEffect(() => {
     async function getJeux() {
@@ -29,20 +44,27 @@ const Scores = () => {
       }
     };
     getJeux();
-    }, []);
+    }, []);*/
     
-    return(
-
+    return(  
        <div className= {style.mainPos}>
           <SideBar title="Scores" />  
           <div className="midPos">
             <h1 className={style.title}>PONDIUM</h1> 
+
             <div className="pos">
-                <UserChart />
-                <UserChart /> 
-            </div> 
-          </div>    
-        </div>        
+                {response.map( (id ) => {
+                  return(
+                    <UserChart key={id} userName={id.UserName} />
+                  )
+                })
+              }
+              <UserChart  userName="saray"/>
+            </div>  
+          </div>  
+
+        </div>
+            
      )           
   }
 

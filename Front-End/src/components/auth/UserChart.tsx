@@ -8,7 +8,7 @@ const UserChart= (props: any) => {
 
     return (
         <div className="cadre">
-            <p>UserName</p>
+            <p>{props.userName}</p>
             <p>add frind</p>
         </div>  
     )
