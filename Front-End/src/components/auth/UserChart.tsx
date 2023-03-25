@@ -6,11 +6,16 @@ import AuthContext from "../../store/AuthContext";
 
 const UserChart= (props: any) => {
 
+    const h = (props.h) * (100) / 5
+
     return (
-        <div className="cadre">
-            <p>{props.userName}</p>
-            <p>add frind</p>
-        </div>  
+        <div className="combPos">
+            <div className="cadre" style={{height: h}}>
+                <p>{props.userName}</p>
+                <p>{props.h}</p>
+            </div>
+            <img  src={props.image}/>
+        </div> 
     )
 
 }

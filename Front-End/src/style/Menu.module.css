@@ -51,7 +51,8 @@
 
 .title
 {
-
+    /*border-bottom: 3px solid rgb(143, 143, 243);
+    padding-bottom: 80px;*/
    
 
     text-align: center;
@@ -64,5 +65,7 @@
      height: 42px;
      left: 774px;
      top: 14px;
+
+     
 }
 

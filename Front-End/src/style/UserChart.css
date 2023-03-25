@@ -1,10 +1,45 @@
+
+.combPos{
+    display: flex;
+    flex-direction: column-reverse;
+    flex: 0;
+    align-items:center;
+    margin-top: auto;
+   padding-top: 0;
+}
 .cadre{
-    background-color: darkkhaki;
-    padding: 20px;
+    
+    padding: 40px;
+    padding-top: 5px;
+    padding-left: auto;
+    padding-right: auto;
+    text-align: center;
+    
     border: 3px solid black;
     margin: 20px;
+    margin-top: 0;
     width: 100px;
-    height: 300px;
-    border-radius: 15%;
+    direction:initial;
+    border-radius: 4%;
+    margin-bottom: 2;
+    background: linear-gradient(0deg, #003ba5, #84c4e9);
+    color: antiquewhite;
+    font: bold;
+    
+}
 
+img{
+    width: 70%;
+    margin:0 ;
+    padding: 0;
+    border-radius: 100%;
+    
+
+}
+
+p{
+    margin: 0;
+    text-align:right;
+    font-size: medium;
+    
 }
