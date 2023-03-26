@@ -54,7 +54,8 @@ const ButtonSettings = (props: any) => {
 	return (
 		<>
 		<style>{customStyles}</style>
-			<Button variant="contained" className={`custom-button ${props.is2FAEnabled ? 'active' : ''}`} onClick={handleClick}>{title}</Button>
+			<Button variant="contained" className={`custom-button ${props.is2FAEnabled ? 'active' : ''}`} onClick={handleClick}>{title}
+			</Button>
 		</>
 	)
 }

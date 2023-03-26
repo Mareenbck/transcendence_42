@@ -143,8 +143,13 @@ const Setting = () => {
 					<h3>AVATAR</h3>
 					<p>The image needs to be a .jpg file and can have a maximum size of 5MB</p>
 					<div className="form-set">
-						<input type="file" onChange={handleFileChange} />
-						<ButtonSettings onSubmit={handleSubmit} title="Upload"></ButtonSettings>
+							<label className="upload-button">
+								<input type="file" onChange={handleFileChange} style={{ display: 'none' }} />
+								<ButtonSettings onSubmit={handleSubmit} title="Upload" component="label">
+								</ButtonSettings>
+							</label>
+						{/* <input type="file" onChange={handleFileChange} /> */}
+						{/* <ButtonSettings onSubmit={handleSubmit} title="Upload" component="label"></ButtonSettings> */}
 						<ButtonSettings onSubmit={handleRestore} title="Restore"></ButtonSettings>
 					</div>
 				</div>

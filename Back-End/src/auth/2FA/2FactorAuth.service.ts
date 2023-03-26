@@ -16,7 +16,7 @@ export class TwoFactorAuthService {
 		private readonly configService: ConfigService,
 		private readonly userService: UserService,
 		private prisma: PrismaService
-	) { }
+	) {}
 
 	async generate2FAsecret(email: string) {
 		// Generate a 2FA secret
