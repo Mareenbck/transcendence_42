@@ -6,40 +6,22 @@ import '../../style/Switch2FA.css';
 
 const Switch2FA = (props: any) => {
 	const authCtx = useContext(AuthContext);
-	const [isTwoFAEnabled, setIsTwoFAEnabled] = useState(false);
+	const [isTwoFAEnabled, setIsTwoFAEnabled] = useState(props.is2FAEnabled);
 
 	useEffect(() => {
-		fetchIs2FA(authCtx.token);
-	}, [isTwoFAEnabled]);
+		setIsTwoFAEnabled(props.is2FAEnabled);
+	}, [props.is2FAEnabled]);
 
-	const fetchIs2FA = async (token: string) => {
-		try {
-			const response = await fetch(`http://localhost:3000/auth/2fa`, {
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			});
-			if (!response.ok) {
-				return "error"
-			}
-			const data = await response.json()
-			setIsTwoFAEnabled(data);
-			return "success";
-		} catch (error) {
-			return console.log("error", error);
-		}
-	}
-
-	const handle2FA = () => {
-		setIsTwoFAEnabled((prevIsTwoFAEnabled) => !prevIsTwoFAEnabled);
+	const handle2FA = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setIsTwoFAEnabled((prevIsTwoFAEnabled: any) => !prevIsTwoFAEnabled);
 		if (!isTwoFAEnabled) {
 			activate2FA();
+			props.onTwoFAChange(event.target.checked);
 		} else {
 			desactivate2FA();
+			props.onTwoFAChange(event.target.checked);
 		}
 	};
-
 
 	const activate2FA = async () => {
 		// event.preventDefault();
