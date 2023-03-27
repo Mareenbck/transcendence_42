@@ -7,6 +7,7 @@ import AuthContext from '../../store/AuthContext';
 import Chat from './Chat';
 import { socket } from '../../service/socket';
 import ConversationReq from "./conversation/conversation.req"
+import { Modal } from '@mui/material';
 
 
 
@@ -55,12 +56,8 @@ function PopUp(props: any) {
 		setSelectedFile(event.target.files[0]);
 	};
 
-    const handleConfirm = () => {
-        props.onSubmit(channelStatus);
-        props.onConfirm();
-      };
-
-        const [channelName, setchannelName] = useState('');
+    const [channelName, setchannelName] = useState('');
+    const [channelStatus, setChannelStatus] = useState('');
 
     
     const handleChannelNameChange = (e: FormEvent) => {
@@ -69,90 +66,94 @@ function PopUp(props: any) {
         setIsDisabled(value === "");
     };
 
-    const createNewChannel = async (e: FormEvent) => {
 
+    const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
+        if (channelName === "") {
+          return; 
+        }
         const newConv = {
-          name: channelName,
-          avatar: "",
+            name: channelName,
+            isPublic: isPublic,
+            isPrivate: isPrivate,
+            isProtected: isProtected,
+            avatar: selectedFile
         };
-        
-        socket?.current.emit("sendConv", {
-          author: +id,
-          content: newConv,
-        })
+        // socket?.current.emit("sendConv", {
+        //   author: +id,
+        //   content: newConv,
+        // })
         try {
+            console.log("arrive dans le try")
           const res = await ConversationReq.postRoom(user, newConv);
           setConversations([res, ...conversations]);
-          setchannelName("");
           setShowPopUp(true); 
         } catch(err) {
           console.log(err);
         }
-    };
-      
+    };    
 
-    return (
-        <div className='popup-overlay'>
-            <div className='global-popup'>
-                <header className='header-popup'>
-                    <h2>{props.title}</h2>
-                </header>
-                <label>
+return (
+    <div className='popup-overlay'>
+        <div className='global-popup'>
+            <header className='header-popup'>
+                <h2>{props.title}</h2>
+            </header>
+            <label>
                 New channel name:
                 <input type="text" value={channelName} onChange={handleChannelNameChange} />
-              </label>
-                <div className='content-button'>
-                    <p>{props.message}</p>
-                    <label className='wrap-circle'>
-                        <input
-                            className='circle'
-                            type='radio'
-                            checked={isPublic}
-                            onChange={() => setIsPublic(true)}
-                        />
-                        Public
-                    </label>
-                    <label className='wrap-circle'>
-                        <input
-                            className='circle'
-                            type='radio'
-                            checked={!isPublic && isPrivate}
-                            onChange={() => {
-                                setIsPublic(false);
-                                setIsPrivate(true);
-                            }}
-                        />
-                        Private
-                    </label>
-                    <label className='wrap-circle'>
-                        <input
-                            className='circle'
-                            type='radio'
-                            checked={!isPublic && !isPrivate}
-                            onChange={() => {
-                                setIsPublic(false);
-                                setIsPrivate(false);
-                                setIsProtected(true);
-                            }}
-                        />
-                        Protected
-                    </label>
-
-                </div>
-                <div className='choose-avatar'>
-                    <p>Chose an avatar for your new channel</p>
-                    <form onSubmit={handleSubmit}>
-                        <input type="file" onChange={handleFileChange} />
-                        <button type='submit'>Upload</button>
-                    </form>
-                </div>
-                    <footer className='actions'>
-                    <button type='submit' onClick={props.onConfirm}>OK</button>
-                    </footer>
+            </label>
+            <div className='content-button'>
+                <p>{props.message}</p>
+                <label className='wrap-circle'>
+                    <input
+                        className='circle'
+                        type='radio'
+                        checked={isPublic}
+                        onChange={() => setIsPublic(true)}
+                    />
+                    Public
+                </label>
+                <label className='wrap-circle'>
+                    <input
+                        className='circle'
+                        type='radio'
+                        checked={!isPublic && isPrivate}
+                        onChange={() => {
+                            setIsPublic(false);
+                            setIsPrivate(true);
+                        }}
+                    />
+                    Private
+                </label>
+                <label className='wrap-circle'>
+                    <input
+                        className='circle'
+                        type='radio'
+                        checked={!isPublic && !isPrivate}
+                        onChange={() => {
+                            setIsPublic(false);
+                            setIsPrivate(false);
+                            setIsProtected(true);
+                        }}
+                    />
+                    Protected
+                </label>
             </div>
+            <div className='choose-avatar'>
+                <p>Choose an avatar for your new channel</p>
+                <form onSubmit={handleSubmit}>
+                    <input type="file" onChange={handleFileChange} />
+                    <button type='submit'>Upload</button>
+                </form>
+            </div>
+            <footer className='actions'>
+                <button type='submit' onClick={createNewChannel}>OK</button>
+                <button onClick={props.onCancel}>Cancel</button>
+            </footer>
         </div>
-    );
+    </div>
+);
 }
 
 export default PopUp;

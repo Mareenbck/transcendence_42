@@ -2,18 +2,41 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { CreateChatroom2Dto, CreateRoomDto } from './dto/create-chatroom2.dto';
 import { UpdateChatroom2Dto } from './dto/update-chatroom2.dto';
+import { Prisma, UserChannelVisibility } from '@prisma/client';
+
+// enum UserChannelVisibility {
+//   PUBLIC,
+//   PRIVATE,
+//   PWD_PROTECTED
+// }
 
 @Injectable()
 export class Chatroom2Service {
   constructor(private prisma: PrismaService){}
 
-  async create(createChatroom2Dto: CreateRoomDto) {
-      const {name}=createChatroom2Dto;
-       return await this.prisma.chatroom.create({data: {
-        name: name,
-        avatar: "http://localhost:8080/public/images/news.jpeg",
-        // status: status
-      }});
+    async create(newConv: any) {
+      const { name, avatar, isPublic, isPrivate, isProtected } = newConv;
+      let visibility: UserChannelVisibility;
+      if (isPrivate) {
+        visibility = UserChannelVisibility.PRIVATE;
+      } else if (isPublic) {
+        visibility = UserChannelVisibility.PUBLIC;
+      } else if (isProtected) {
+        visibility = UserChannelVisibility.PWD_PROTECTED;
+      }
+  
+      console.log('CREATE CHATROOMDTO');
+      console.log(newConv);
+      const newChannel = await this.prisma.chatroom.create({
+        data: {
+          name: name,
+          avatar: '',
+          visibility: visibility,
+        },
+      });
+      console.log("NEW CHANNEL --- ")
+      console.log(newChannel)
+      return newChannel;
   }
 
   findAll() {

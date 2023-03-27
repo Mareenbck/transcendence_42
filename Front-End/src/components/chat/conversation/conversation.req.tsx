@@ -24,7 +24,8 @@ export class ConversationReq {
         },
         body: JSON.stringify(newConv),
       });
-
+      console.log("RESPONSE")
+      console.log(resp)
       if (!resp.ok) {
         const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
         throw new Error(message);

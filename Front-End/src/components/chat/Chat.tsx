@@ -204,15 +204,17 @@ const createNewChannel = async (e: FormEvent) => {
     if (channelName === "") {
         return; 
       }
-    const newConv = {
-      name: channelName,
-      avatar: "",
-    //   status: "" // ici set une varialbe comme name Channelname
+      const newChannel = {
+        name: channelName,
+        isPublic: isPublic,
+        isPrivate: isPrivate,
+        isProtected: isProtected,
+        avatar: selectedFile
     };
     
     socket?.current.emit("sendConv", {
       author: +id,
-      content: newConv,
+      content: newChannel,
     })
     try {
       const res = await ConversationReq.postRoom(user, newConv);
@@ -249,16 +251,16 @@ return (
         <div className="chatMenu">
           <div className="chatMenuW">
           <form onSubmit={handleFormSubmit}>
-      <button onClick={handleCreateChannel}>Create new channel</button>
-      {showPopUp && (
-        <PopUp
-          title="Création d'un nouveau channel"
-          message="Choisissez les options de votre channel"
-          onConfirm={createNewChannel}
-          onCancel={() => setShowPopUp(false)}
-        >
-        </PopUp>
-      )}
+            <button onClick={handleCreateChannel}>Create new channel</button>
+            {showPopUp && (
+                <PopUp
+                title="Création d'un nouveau channel"
+                message="Choisissez les options de votre channel"
+                //   onConfirm={createNewChannel}
+                onCancel={() => setShowPopUp(false)}
+                >
+                </PopUp>
+            )}
         </form>
             { conversations.map((c) => (
               <div key={c.name + c.id} onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >

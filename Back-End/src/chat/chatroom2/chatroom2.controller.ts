@@ -3,15 +3,19 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateChatroom2Dto } from './dto/create-chatroom2.dto';
 import { UpdateChatroom2Dto } from './dto/update-chatroom2.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Chatroom2Service } from './chatroom2.service';
 
 @Controller('chatroom2')
 export class Chatroom2Controller {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService, private chatRoomService: Chatroom2Service) {}
 
   @Post()
-    async create( @Body() {name, avatar }): Promise<CreateChatroom2Dto> {
-    const msg = await this.prismaService.chatroom.create({data: {name, avatar}});
-    return msg;
+    async create( @Body() newConv: any): Promise<CreateChatroom2Dto> {
+      console.log("NEW CONV")
+      console.log(newConv)
+      const newChannel = await this.chatRoomService.create(newConv);
+    
+    return null
   }
 
   @Get()
