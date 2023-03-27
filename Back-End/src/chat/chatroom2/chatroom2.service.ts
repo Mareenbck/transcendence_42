@@ -30,8 +30,9 @@ export class Chatroom2Service {
       data: updateChatroom2Dto });
   }
 
-  remove(id: number) {
-    return this.prisma.chatroom.delete({where: {id: id}});;
-  }
+  // async deleteChatroom(id: number) {
+  //   return await this.prisma.chatroom.delete({ 
+  //     where: { id } });
+  // }
   
 }

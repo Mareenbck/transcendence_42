@@ -5,6 +5,9 @@ import "../../style/PopUpChannel.css"
 import "../../pages/Setting.tsx"
 import AuthContext from '../../store/AuthContext';
 import Chat from './Chat';
+import { socket } from '../../service/socket';
+import ConversationReq from "./conversation/conversation.req"
+
 
 
 function PopUp(props: any) {
@@ -14,6 +17,11 @@ function PopUp(props: any) {
     const [isPrivate, setIsPrivate] = useState(true);
     const [isProtected, setIsProtected] = useState(true);
     const [selectedFile, setSelectedFile] = useState('');
+    const [conversations, setConversations] = useState<ConversationDto[]> ([]);
+    const [showPopUp, setShowPopUp] = useState(false);
+    const user = useContext(AuthContext);
+    const id = user.userId;
+
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
@@ -40,6 +48,9 @@ function PopUp(props: any) {
         }
     };
 
+    const [isDisabled, setIsDisabled] = useState(true);
+
+
 	const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
 		setSelectedFile(event.target.files[0]);
 	};
@@ -56,6 +67,28 @@ function PopUp(props: any) {
         const value = e.target.value;
         setchannelName(value);
         setIsDisabled(value === "");
+    };
+
+    const createNewChannel = async (e: FormEvent) => {
+
+        e.preventDefault();
+        const newConv = {
+          name: channelName,
+          avatar: "",
+        };
+        
+        socket?.current.emit("sendConv", {
+          author: +id,
+          content: newConv,
+        })
+        try {
+          const res = await ConversationReq.postRoom(user, newConv);
+          setConversations([res, ...conversations]);
+          setchannelName("");
+          setShowPopUp(true); 
+        } catch(err) {
+          console.log(err);
+        }
     };
       
 
@@ -116,7 +149,6 @@ function PopUp(props: any) {
                 </div>
                     <footer className='actions'>
                     <button type='submit' onClick={props.onConfirm}>OK</button>
-                    {/* <button type='submit' onClick={handleConfirm}>OK</button> */}
                     </footer>
             </div>
         </div>

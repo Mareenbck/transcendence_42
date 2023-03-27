@@ -18,5 +18,10 @@ export class Chatroom2Controller {
     async findAll(): Promise<CreateChatroom2Dto[]> {
     return this.prismaService.chatroom.findMany();
   }
+
+  // @Post(':id/delete')
+  // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {
+  //   return await this.prismaService.chatroom.deleteChatroom(id);
+  // }
 }
 

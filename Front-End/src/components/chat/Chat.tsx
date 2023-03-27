@@ -201,6 +201,9 @@ function Chat() {
 const createNewChannel = async (e: FormEvent) => {
 
     e.preventDefault();
+    if (channelName === "") {
+        return; 
+      }
     const newConv = {
       name: channelName,
       avatar: "",
@@ -227,6 +230,15 @@ const handleChannelNameChange = (e: FormEvent) => {
   setIsDisabled(value === "");
 };
 
+const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setShowPopUp(true);
+  };
+
+  const handleCreateChannel = () => {
+    setShowPopUp(true);
+  };
+
 const [showPopUp, setShowPopUp] = useState(false);
 const [isDisabled, setIsDisabled] = useState(true);
 
@@ -236,19 +248,18 @@ return (
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
-          <form onSubmit={createNewChannel}> 
-            <label>
-                {/* <input type="text" value={channelName} onChange={handleChannelNameChange} /> */}
-              </label>
-              <button type="submit" disabled={isDisabled}>Create new channel</button>
-              {showPopUp ? (
-                <PopUp
-                  title="Creation d'un nouveau Channel"
-                  message="Choisissez les options de votre channel"
-                  onConfirm={() => setShowPopUp(false)}
-                />
-              ) : null}
-          </form>
+          <form onSubmit={handleFormSubmit}>
+      <button onClick={handleCreateChannel}>Create new channel</button>
+      {showPopUp && (
+        <PopUp
+          title="Création d'un nouveau channel"
+          message="Choisissez les options de votre channel"
+          onConfirm={createNewChannel}
+          onCancel={() => setShowPopUp(false)}
+        >
+        </PopUp>
+      )}
+        </form>
             { conversations.map((c) => (
               <div key={c.name + c.id} onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
                 <Conversation conversation={c}/>
