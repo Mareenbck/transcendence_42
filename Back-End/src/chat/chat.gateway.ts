@@ -8,7 +8,7 @@ import {
 
 let users = [];
 
-const addUser = (userId, socketId) => {
+const addUser = (userId , socketId) => {
   console.log(userId);
   !users.some((user) => +user.userId.userId === +userId.userId) &&
     users.push({userId, socketId})

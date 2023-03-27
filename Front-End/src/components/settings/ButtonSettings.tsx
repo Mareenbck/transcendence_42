@@ -33,13 +33,9 @@ const customStyles = `
 const ButtonSettings = (props: any) => {
 
 	const [title, setTitle] = useState('');
-	console.log("title---->")
-	console.log(title)
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 		if (props.title === 'Upload') {
-			console.log("event--->")
-			console.log(event)
 			const input = document.createElement("input");
 			input.type = "file";
 			input.accept = "image/*";
@@ -51,8 +47,6 @@ const ButtonSettings = (props: any) => {
 			};
 			input.click();
 		} else {
-			console.log("props title")
-			console.log(props.title)
 			props.onSubmit(event); // appel à la fonction onSubmit passée en tant que propriété
 		}
 	}

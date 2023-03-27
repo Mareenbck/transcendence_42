@@ -67,6 +67,10 @@ const Setting = () => {
 	const handleUsername = async (event: FormEvent) => {
 		event.preventDefault();
 		const newUsername = usernameInputRef.current!.value;
+		if(newUsername === "") {
+			alert("Please enter a valid username.");
+			return;
+		}
 		const userId = authCtx.userId;
 		try {
 			const response = await fetch(`http://localhost:3000/users/${userId}/username`, {
@@ -82,7 +86,7 @@ const Setting = () => {
 				console.log("POST error on ${userId}/username ");
 				return "error";
 			}
-			localStorage.setItem("username", newUsername);
+			authCtx.updateUsername(newUsername);
 			return "success";
 		} catch (error) {
 			return console.log("error", error);

@@ -11,6 +11,7 @@ const defaultValue = {
 	ftAvatar: '',
 	is2FA: false,
 	updateAvatar: (avatarUrl: string) => {},
+	updateUsername: (newUsername: string) => {},
 	fetchAvatar: async (userId: string) => {},
 	login: async (token: string, userId: string) => {},
 	logout: () => { }
@@ -36,6 +37,12 @@ export const AuthContextProvider = (props: any) => {
 			setAvatar(`${avatarUrl}?v=${timestamp}`);
 		} else {
 			setAvatar('');
+		}
+	  };
+
+	  const updateUsername = (newUsername: string) => {
+		if (newUsername) {
+			setUsername(newUsername);
 		}
 	  };
 
@@ -111,6 +118,7 @@ export const AuthContextProvider = (props: any) => {
 		fetchHandler: fetchHandler,
 		fetchAvatar: fetchAvatar,
 		updateAvatar: updateAvatar,
+		updateUsername: updateUsername,
 	};
 
 	return (
