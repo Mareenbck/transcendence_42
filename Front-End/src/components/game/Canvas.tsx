@@ -43,8 +43,8 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
                 //Score
                 context.font = "40px Verdana";
                 context.lineWidth = 2;
-                context.fillText(`${gamestate.left}`, gameinit.table_width/2 - 80, 50);
-                context.fillText(`${gamestate.right }`, gameinit.table_width/2 + 50, 50);
+                context.fillText(`${gamestate.scoreL}`, gameinit.table_width/2 - 80, 50);
+                context.fillText(`${gamestate.scoreR }`, gameinit.table_width/2 + 50, 50);
             
 
                 if (gamewinner.leave){
@@ -55,7 +55,7 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
                     context.font = "40px Verdana";
                     context.lineWidth = 2;
                     context.fillText(`${gamewinner.leave}`, 100, gameinit.table_height/2);
-                    context.fillText("left the game" , gameinit.table_width/2 + 100, gameinit.table_height/2);
+                    context.fillText("scoreL the game" , gameinit.table_width/2 + 100, gameinit.table_height/2);
                 }
                 //if winner
                 // if (gamewinner.winner){

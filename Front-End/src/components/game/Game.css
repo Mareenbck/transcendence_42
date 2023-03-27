@@ -11,6 +11,6 @@ h2{
 .racket{
     background-color: rgb(3, 164, 19);
     position: absolute;
-    left: x;
+    scoreL: x;
     top: y;
 }

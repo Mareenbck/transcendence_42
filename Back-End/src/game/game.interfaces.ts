@@ -1,41 +1,47 @@
-export interface IProfil{
+export interface profile{
 	socket: any;
-	user: any;
+	userId: number;
 }
 
-export interface IPlayer{
-	
-	racket: IRacket;
+export interface player{
+	profil: profile;
+	racket: racket;
 	score: number;
 	winner: boolean;
 }
 
-export interface IBall {
+export interface ball {
 	x: number;
 	y: number;
 }
   
-export interface IRacket {
+export interface racket {
 	x: number;
 	y: number;
 }
   
-export interface IGameState {
-	player1: IProfil;
-	player2: IProfil;
-	ball: IBall;
-}
- 
-export interface IGameInit {
-	tableWidth: number; 
-	tableHeight: number;
+export interface gameInit {
+	table_width: number;
+	table_height: number;
 	ballR: number;
 	ballSpeed: number; 
-	racketSpeedY: number;
+	// racketSpeedY: number;
 	racketWidth: number;
 	racketHeight: number;
+	right: number;
+	left: number
 }
 
+
+
+
+
+// export interface IGameState {
+// 	player1: IProfil;
+// 	player2: IProfil;
+// 	ball: IBall;
+// }
+ 
 // export enum GameStatus {
 // 	STARTING = 'starting',
 // 	PLAYING = 'playing',
@@ -51,7 +57,7 @@ export interface IGameInit {
 export const GameParams = {
 	GAME_WIDTH: 1600, // 
 	GAME_HEIGHT: 900,
-	RACKET_SPEED_Y: 10,
+	RACKET_SPEED_Y: 5,
 	RACKET_HEIGHT: 120,
 	RACKET_WIDTH: 10,
 	BALL_RADIUS: 15,

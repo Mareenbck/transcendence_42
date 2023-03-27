@@ -12,8 +12,8 @@ export interface gameState {
     racket1: racket;
     racket2: racket;
     ball: ball;
-    right: number;
-    left: number
+    scoreR: number;
+    scoreL: number
 }
 
 export interface gameInit {
@@ -22,8 +22,8 @@ export interface gameInit {
     racket_width: number,
     racket_height: number,
     ballR: number
-    right: number;
-    left: number
+    scoreR: number;
+    scoreL: number
 }
 
 export interface gameWinner {

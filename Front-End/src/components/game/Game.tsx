@@ -12,7 +12,7 @@ import { socket } from '../../service/socket';
 function Game() {
     const user = useContext(AuthContext);
     const id = user.userId;
-    const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
+ //   const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
 
     const [gameinit, setGameInit] = useState<gameInit>(
         {
@@ -21,8 +21,8 @@ function Game() {
             ballR: 15,
             racket_width: 10,
             racket_height: 100,
-            right: 0,
-            left: 0
+            scoreR: 0,
+            scoreL: 0
         }
     );
     // const [gameinit, setGameInit] = useState<gameInit>(
@@ -32,8 +32,8 @@ function Game() {
     //         ballR: 15,
     //         racket_width: 10,
     //         racket_height: 100,
-    //         right: 0,
-    //         left: 0
+    //         scoreR: 0,
+    //         scoreL: 0
     //     }
     // );
 
@@ -44,8 +44,8 @@ function Game() {
             ball: {x: 400, y: 200},
             racket1: {x: 10, y: 150},
             racket2: {x: 790 - gameinit.racket_width , y: 150},
-            right: 0,
-            left: 0
+            scoreR: 0,
+            scoreL: 0
         }
     );
 
