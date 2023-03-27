@@ -12,7 +12,7 @@ export class Chatroom2Service {
        return await this.prisma.chatroom.create({data: {
         name: name,
         avatar: "http://localhost:8080/public/images/news.jpeg",
-        status: status
+        // status: status
       }});
   }
 

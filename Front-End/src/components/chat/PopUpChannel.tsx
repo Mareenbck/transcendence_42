@@ -15,32 +15,30 @@ function PopUp(props: any) {
     const [isProtected, setIsProtected] = useState(true);
     const [selectedFile, setSelectedFile] = useState('');
 
-	const handleSubmit = async (event: FormEvent) => {
-		event.preventDefault();
-		const formData = new FormData();
-		formData.append("file", selectedFile);
-		try {
-			const response = await fetch(`http://localhost:3000/users/upload`, {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${authCtx.token}`,
-				},
-				body: formData,
-			})
-			const data = await response.json();
-			if (!response.ok) {
-				console.log("POST error on ${userId}/username ");
-				return "error";
-			}
-			authCtx.fetchAvatar(data.id);
-			localStorage.setItem("avatar", data.avatar);
-			return "success";
-		} catch (error) {
-			return console.log("error", error);
-		}
-	};
-
-    const [channelStatus, setChannelStatus] = useState('');
+    const handleSubmit = async (event: FormEvent) => {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        try {
+            const response = await fetch(`http://localhost:3000/users/upload`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${authCtx.token}`,
+                },
+                body: formData,
+            })
+            const data = await response.json();
+            if (!response.ok) {
+                console.log("POST error on ${userId}/username ");
+                return "error";
+            }
+            authCtx.fetchAvatar(data.id);
+            localStorage.setItem("avatar", data.avatar);
+            return "success";
+        } catch (error) {
+            return console.log("error", error);
+        }
+    };
 
 	const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
 		setSelectedFile(event.target.files[0]);
@@ -64,7 +62,6 @@ function PopUp(props: any) {
                         <input
                             className='circle'
                             type='radio'
-                            value={channelStatus}
                             checked={isPublic}
                             onChange={() => setIsPublic(true)}
                         />
@@ -74,7 +71,6 @@ function PopUp(props: any) {
                         <input
                             className='circle'
                             type='radio'
-                            value={channelStatus}
                             checked={!isPublic && isPrivate}
                             onChange={() => {
                                 setIsPublic(false);
@@ -87,7 +83,6 @@ function PopUp(props: any) {
                         <input
                             className='circle'
                             type='radio'
-                            value={channelStatus}
                             checked={!isPublic && !isPrivate}
                             onChange={() => {
                                 setIsPublic(false);
@@ -107,8 +102,8 @@ function PopUp(props: any) {
                     </form>
                 </div>
                     <footer className='actions'>
-                    {/* <button type='submit' onClick={props.onConfirm}>OK</button> */}
-                    <button type='submit' onClick={handleConfirm}>OK</button>
+                    <button type='submit' onClick={props.onConfirm}>OK</button>
+                    {/* <button type='submit' onClick={handleConfirm}>OK</button> */}
                     </footer>
             </div>
         </div>
