@@ -201,13 +201,10 @@ function Chat() {
 const createNewChannel = async (e: FormEvent) => {
 
     e.preventDefault();
-    if (channelName === "") {
-      return; 
-    }
     const newConv = {
       name: channelName,
       avatar: "",
-      status: "" // ici set une varialbe comme name Channelname
+    //   status: "" // ici set une varialbe comme name Channelname
     };
     
     socket?.current.emit("sendConv", {
@@ -239,10 +236,9 @@ return (
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
-          <form onSubmit={createNewChannel}>
-              <label>
-                New channel name:
-                <input type="text" value={channelName} onChange={handleChannelNameChange} />
+          <form onSubmit={createNewChannel}> 
+            <label>
+                {/* <input type="text" value={channelName} onChange={handleChannelNameChange} /> */}
               </label>
               <button type="submit" disabled={isDisabled}>Create new channel</button>
               {showPopUp ? (

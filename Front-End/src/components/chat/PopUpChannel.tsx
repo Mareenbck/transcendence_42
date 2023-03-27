@@ -48,6 +48,15 @@ function PopUp(props: any) {
         props.onSubmit(channelStatus);
         props.onConfirm();
       };
+
+        const [channelName, setchannelName] = useState('');
+
+    
+    const handleChannelNameChange = (e: FormEvent) => {
+        const value = e.target.value;
+        setchannelName(value);
+        setIsDisabled(value === "");
+    };
       
 
     return (
@@ -56,6 +65,10 @@ function PopUp(props: any) {
                 <header className='header-popup'>
                     <h2>{props.title}</h2>
                 </header>
+                <label>
+                New channel name:
+                <input type="text" value={channelName} onChange={handleChannelNameChange} />
+              </label>
                 <div className='content-button'>
                     <p>{props.message}</p>
                     <label className='wrap-circle'>
@@ -111,4 +124,3 @@ function PopUp(props: any) {
 }
 
 export default PopUp;
-
