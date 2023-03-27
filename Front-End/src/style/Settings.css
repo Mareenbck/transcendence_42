@@ -39,11 +39,31 @@ p {
 }
 
 #username {
-	background: #D9D9D9;
+	background: #e4e4e4;
 	border: 1px solid rgba(0, 0, 0, 0.41);
 	border-radius: 8px;
 	box-sizing: border-box;
 	width: 273px;
 	height: 40px;
-	margin-right: 30px;
+	font-size: 12px;
+	font-family: 'Noto Sans', sans-serif;
 }
+
+.custom-field .MuiFormLabel-root {
+	line-height: 1.05rem;
+	font-family: 'Noto Sans', sans-serif;
+}
+
+.custom-field .MuiFilledInput-underline {
+	width: calc(95% + 2px);
+	box-sizing: border-box;
+}
+
+.custom-field .MuiFilledInput-underline:after {
+	border-bottom: 2px solid #C7B9FF;
+}
+
+.custom-field .MuiInputLabel-shrink {
+	color: #9980ff !important;
+	font-family: 'Noto Sans', sans-serif;
+  }

@@ -1,12 +1,11 @@
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import '../style/Settings.css'
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import AuthContext from '../store/AuthContext';
 import { useContext } from "react";
 import SideBar from '../components/auth/SideBar'
 import style from '../style/Menu.module.css'
-import SwitchUnstyled from '@mui/base/SwitchUnstyled';
-import { Switch } from '@mui/material';
+import { TextField } from '@mui/material';
 import Switch2FA from '../components/settings/Switch2FA';
 import ButtonSettings from '../components/settings/ButtonSettings';
 
@@ -14,19 +13,14 @@ import ButtonSettings from '../components/settings/ButtonSettings';
 
 const Setting = () => {
 	const authCtx = useContext(AuthContext);
-	const id = authCtx.userId;
 	const isLoggedIn = authCtx.isLoggedIn;
 	const usernameInputRef = useRef<HTMLInputElement>(null);
-	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [username, setUsername] = useState<string | null>(authCtx.username);
 	const [isTwoFAEnabled, setIsTwoFAEnabled] = useState(false);
-	const [selectedFile, setSelectedFile] = useState('');
 
-	const handleSubmit = async (event: FormEvent) => {
-		event.preventDefault();
+	const handleSubmit = async (file: File) => {
 		// Vous pouvez envoyer le fichier sélectionné au serveur ici
 		const formData = new FormData();
-		formData.append("file", selectedFile);
+		formData.append("file", file);
 		try {
 			const response = await fetch(`http://localhost:3000/users/upload`, {
 				method: 'POST',
@@ -46,10 +40,6 @@ const Setting = () => {
 		} catch (error) {
 			return console.log("error", error);
 		}
-	};
-
-	const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
-		setSelectedFile(event.target.files[0]);
 	};
 
 	const handleRestore = async (event: FormEvent) => {
@@ -135,7 +125,7 @@ const Setting = () => {
 					<h3>USERNAME</h3>
 					<p>Your username has to be unique and at most 20 characters long</p>
 					<div className="form-set">
-						<input id="username" ref={usernameInputRef} placeholder="Change your name..."/>
+						<TextField id="username" className="custom-field" label="Username" inputRef={usernameInputRef}  variant="filled" placeholder="Change your name..."/>
 						<ButtonSettings onSubmit={handleUsername} title="Submit"></ButtonSettings>
 					</div>
 				</div>
@@ -143,13 +133,7 @@ const Setting = () => {
 					<h3>AVATAR</h3>
 					<p>The image needs to be a .jpg file and can have a maximum size of 5MB</p>
 					<div className="form-set">
-							<label className="upload-button">
-								<input type="file" onChange={handleFileChange} style={{ display: 'none' }} />
-								<ButtonSettings onSubmit={handleSubmit} title="Upload" component="label">
-								</ButtonSettings>
-							</label>
-						{/* <input type="file" onChange={handleFileChange} /> */}
-						{/* <ButtonSettings onSubmit={handleSubmit} title="Upload" component="label"></ButtonSettings> */}
+						<ButtonSettings onSubmit={handleSubmit} title="Upload" component="label" htmlFor="fileInput"></ButtonSettings>
 						<ButtonSettings onSubmit={handleRestore} title="Restore"></ButtonSettings>
 					</div>
 				</div>

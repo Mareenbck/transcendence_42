@@ -33,10 +33,28 @@ const customStyles = `
 const ButtonSettings = (props: any) => {
 
 	const [title, setTitle] = useState('');
-
+	console.log("title---->")
+	console.log(title)
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
-		props.onSubmit(event); // appel à la fonction onSubmit passée en tant que propriété
+		if (props.title === 'Upload') {
+			console.log("event--->")
+			console.log(event)
+			const input = document.createElement("input");
+			input.type = "file";
+			input.accept = "image/*";
+			input.onchange = (e) => {
+				const file = (e.target as HTMLInputElement).files?.[0];
+				if (file) {
+					props.onSubmit(file);
+				}
+			};
+			input.click();
+		} else {
+			console.log("props title")
+			console.log(props.title)
+			props.onSubmit(event); // appel à la fonction onSubmit passée en tant que propriété
+		}
 	}
 
 	useEffect(() => {
