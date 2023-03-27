@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsNumber, MinLength, MaxLength } from 'class-validator';
 
-export class CreateChatroom2Dto
+export class CreateChatroomDto
 {
   id:    number;
 
@@ -11,4 +11,14 @@ export class CreateChatroom2Dto
   name:  string;
 
   avatar: string;
+}
+
+export class CreateRoomDto
+{
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(45)
+  name:  string;
+
 }

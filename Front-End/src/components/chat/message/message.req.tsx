@@ -1,8 +1,14 @@
-import MessageDf from "./message.df"
-import MessageDDf from "./messageD.df"
+//import MessageDf from "./message.df"
+//import MessageDDf from "./messageD.df"
+
+
+//  static async getMess(roomId: number) : Promise<MessageDf[]> {
+//  static async postMess(message2) : Promise<MessageDf[]> {
+//  static async getDirMess(me: number, friend: number) : Promise<MessageDDf[]> {
+//  static async postDirMess(messageD) : Promise<MessageDDf[]> {
 
 export class MessageReq {
-  static async getMess(roomId: number) : Promise<MessageDf[]> {
+  static async getMess(roomId: number) {
     try {
       const resp = await fetch(`http://localhost:3000/chat-mess/room/${roomId}`)
       const data = await resp.json();
@@ -14,7 +20,7 @@ export class MessageReq {
 
   };
 
-  static async postMess(message2) : Promise<MessageDf[]> {
+  static async postMess(message2) {
     try {
       console.log(message2);
       const resp = await fetch(`http://localhost:3000/chat-mess`,
@@ -36,7 +42,7 @@ export class MessageReq {
 
   };
 
-  static async getDirMess(me: number, friend: number) : Promise<MessageDDf[]> {
+  static async getDirMess(me: number, friend: number) {
     try {
       const resp = await fetch(`http://localhost:3000/dir-mess/${me}/${friend}`)
       const data = await resp.json();
@@ -47,7 +53,7 @@ export class MessageReq {
     }
   };
 
-  static async postDirMess(messageD) : Promise<MessageDDf[]> {
+  static async postDirMess(messageD) {
     try {
       const resp = await fetch(`http://localhost:3000/dir-mess`,
       {

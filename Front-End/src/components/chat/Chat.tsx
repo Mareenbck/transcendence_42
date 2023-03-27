@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState, useRef } from 'react'
+import { useEffect, useContext, useState, useRef, FormEvent } from 'react'
 import AuthContext from '../../store/AuthContext';
 import io, { Socket } from "socket.io-client";
 import MessagesInput from "./MessagesInput"
@@ -7,9 +7,9 @@ import ConversationReq from "./conversation/conversation.req"
 import MessageReq from "./message/message.req"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
-import ConversationDf from "./conversation/conversation.df"
-import MessageDf from "./message/message.df"
 import './Chat.css'
+import React from 'react';
+import PopUp from './PopUpChannel';
 
 function Chat() {
   const socket = useRef();
@@ -28,8 +28,32 @@ function Chat() {
   const [messagesD, setMessagesD] = useState<MessageDDto[]> ([]);
   const [newMessage2, setNewMessage2] = useState ("");
   const [newMessageD, setNewMessageD] = useState ("");
+  const [otherUsers, setOtherUsers] = useState ("");
   const scrollRef = useRef();
+  const authCtx = useContext(AuthContext);
+  const usernameInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState('');
   const [newConversation, setNewConversation] = useState([]);
+
+  useEffect(() => {
+    const url = "http://localhost:3000/users/";
+    const fetchUsers = async () => {
+      const response = await fetch(
+        url,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authCtx.token}`
+          }
+        }
+      )
+      const data = await response.json();
+      setOtherUsers(data.filter(u => !(onlineUsers.some(e => e.id === u.id))));
+      }
+    fetchUsers();
+  }, [onlineUsers])
 
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
@@ -42,7 +66,7 @@ function Chat() {
         createdAt: Date.now(),
       });
     })
-
+    
     socket.current.on("getMD", (data)=> {
       setAMessageD({
         content: data.content,
@@ -52,7 +76,7 @@ function Chat() {
       });
     });
   }, []);
-
+  
   useEffect(() => {
     socket.current.on("getConv", data => {
       setAConversation({
@@ -61,40 +85,48 @@ function Chat() {
       });
     });
   }, []);
-
+  
   useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
     setMessages2(prev=>[...prev, AMessageChat]);
   },[AMessageChat, currentChat])
-
+  
   useEffect(() => {
     AMessageD && currentDirect?.id === AMessageD.sender &&
     setMessagesD(prev=>[...prev, AMessageD]);
   },[AMessageD, currentDirect])
-
+  
   useEffect(() => {
     AConversation && setConversations(prev=>[AConversation, ...prev]);
   }, [AConversation]);
 
-
+  
   useEffect(() => {
     socket.current.emit("addUser", user);
   },[user])
-
+  
   useEffect(() => {
     socket.current.on("getUsers", users => {
       setOnlineUsers(users);
     });
-   })
-
+  })
+  
   useEffect(() => {
     async function getAllConv() {
       const response = await ConversationReq.getAll();
       setConversations(response);
-     };
+    };
     getAllConv();
   }, []);
-
+/*
+  useEffect(() => {
+    async function getAllUsers() {
+      const response = await .getAll();
+      setAllUsers(response);
+    };
+    getAllUsers();
+  }, []);
+ */
   useEffect(() => {
     if (currentChat)
     {
@@ -109,61 +141,71 @@ function Chat() {
         } catch(err) {
           console.log(err);
         }
-     };
-    getMess();
-  }
+      };
+      getMess();
+    }
   }, [currentChat]);
-
+  
   useEffect(() => {
     if (currentDirect)
     {
-    async function getDirMess() {
-      try {
-        const response = await MessageReq.getDirMess(id, currentDirect?.userId);
-        setMessagesD(response);
-      } catch(err) {
-        console.log(err);
-      }
-     };
-    getDirMess();
-  }
+      async function getDirMess() {
+        try {
+          if (currentDirect?.userId)
+            { setMessagesD(await MessageReq.getDirMess(id, currentDirect?.userId))}
+          else
+            {setMessagesD(await MessageReq.getDirMess(id, currentDirect?.id))};
+        } catch(err) {
+          console.log(err);
+        }
+      };
+      getDirMess();
+    }
   }, [currentDirect]);
-
+  
   const handleSubmit = async (e)=> {
     e.preventDefault();
     console.log("check error M2");
-      const message2 = {
-        authorId: +id,
-        content: newMessage2,
-        chatroomId: currentChat.id,
-      };
-
-      socket?.current.emit("sendMChat", {
-        authorId: +id,
-        chatroomId: +currentChat?.id,
-        content: newMessage2,
-      })
-
+    const message2 = {
+      authorId: +id,
+      content: newMessage2,
+      chatroomId: currentChat.id,
+    };
+    
+    socket?.current.emit("sendMChat", {
+      authorId: +id,
+      chatroomId: +currentChat?.id,
+      content: newMessage2,
+    })
+    
     try {
       const res = await MessageReq.postMess(message2);
       setMessages2([...messages2, res]);
       setNewMessage2("");
     } catch(err) {console.log(err)}
   }
-
+  
   const handleSubmitD = async (e)=> {
     e.preventDefault();
+    const r = currentDirect?.userId ? +currentDirect?.userId : +currentDirect?.id;
     const messageD = {
       author: +id,
       content: newMessageD,
-      receiver: +currentDirect?.userId,
+      receiver: r,
     };
 
-    socket?.current.emit("sendMD", {
+   console.log("VVVVVVVVVVVVVV");
+    console.log(currentDirect?.userId);
+
+//    if (onlineUsers.find(user => +user.userId.userId === currentDirect?.userId.userId))
+    if (currentDirect?.userId)
+    {
+      socket?.current.emit("sendMD", {
         author: +id,
         receiver: +currentDirect?.userId,
         content: newMessageD,
-    })
+      })
+    }
 
     try {
       const res2 = await MessageReq.postDirMess(messageD);
@@ -171,18 +213,18 @@ function Chat() {
       setNewMessageD("");
     } catch(err) {console.log(err)}
   }
-
+  
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
   }, [messages2]);
-
+  
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
   }, [messagesD]);
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({behaviour: "smooth"})
-  }, [conversations]);
+  
+  const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
+	 setSelectedFile(event.target.files[0]);
+  };
 
   const handleChannelNameChange = (e: FormEvent) => {
     setNewConversation(e.target.value);
@@ -194,12 +236,12 @@ function Chat() {
       name: newConversation,
       avatar: ""
     };
-
+  
     socket?.current.emit("sendConv", {
       author: +id,
       content: newConv,
     })
-
+  
     try {
       const res = await ConversationReq.postRoom(user, newConv);
       setConversations([res, ...conversations]);
@@ -208,26 +250,33 @@ function Chat() {
   };
 
 
+  const [channels, setChannelName] = useState([]);
+  const [showPopUp, setShowPopUp] = useState(false);
+
   return (
-    <>
-      {" "}
-
-
+  <>
+  {" "}
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
+          <div className="conversationListe">
             <form onSubmit={createNewConv}>
-              <label>
-                New channel name:
-                <input type="text" value={newConversation} onChange={handleChannelNameChange} />
-              </label>
-              <button type="submit">Create new channel</button>
+                <input type="text" placeholder="New channel name ? " className="chatMessageInput" value={newConversation} onChange={handleChannelNameChange} />
+              <button className="chatSubmitButton" type="submit" onClick={() => setShowPopUp(true)}>Create new channel</button>
+                  {showPopUp ? (
+                    <PopUp
+                  title="Creation d'un nouveau Channel"
+                  message="Choisissez les options de votre channe    l"
+                  onConfirm={() => setShowPopUp(false)}
+              />
+              ) : null}
             </form>
             { conversations.map((c) => (
               <div key={c.name + c.id} onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
                 <Conversation conversation={c}/>
               </div>
             ))}
+          </div>
           </div>
         </div>
         <div className="chatBox">
@@ -278,13 +327,13 @@ function Chat() {
                 {currentChat ?
                   <>
                     <button className="chatSubmitButton" onClick={handleSubmit}>
-                      SendROOM
+                      Send
                     </button>
                   </>
                   :
                   <>
                     <button className="chatSubmitButton" onClick={handleSubmitD}>
-                      SendFriend
+                      Send
                     </button>
                   </>
                 }
@@ -312,12 +361,29 @@ function Chat() {
                 : null
                 )) : <span className="noConversationText2" > Nobody online. </span>
               }
+              { otherUsers ? otherUsers?.map((o) => (
+                +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
+                  <div  key={o?.userId} className="chatOnlineFriend" onClick={()=> {setCurrentDirect(o); setCurrentChat(null)}} >
+                    <div className="chatOnlineImgContainer">
+                      <img  className="chatOnlineImg"
+                        src={ o?.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
+                        alt=""
+                      />
+                    </div>
+                    <span className="chatOnlineName"> {o?.username} </span>
+                  </div>
+                : null
+                )) : <span className="noConversationText2" > Nobody online. </span>
+              }
             </div>
           </div>
+        </div>
+        <div className="allOtherUsers">
+
         </div>
       </div>
     </>
   )
-
 }
+
 export default Chat;

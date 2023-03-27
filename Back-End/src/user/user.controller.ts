@@ -27,7 +27,6 @@ export class UserController {
 	constructor(private userService: UserService) { }
 
 	@Get('')
-	// @UseGuards(JwtGuard)
 	async getAllUsers() {
 		const allUsers = await this.userService.getUsers();
 		return allUsers;
