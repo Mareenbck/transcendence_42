@@ -50,19 +50,22 @@ export class Game {
 	//initialisation score
 	private scoreR : number = 0;
 	private scoreL : number = 0;
-	private winner: string = '';
+	private winner: number = 0;
 	private leave: boolean = false;
+	
 	server: any;
 	socket: any;
 	
 	constructor(
 		idPlayerR: profile,
 		idPlayerL: profile,
-		prismaService: PrismaService,
+		//prismaService: PrismaService,
 	) {
-		this.idPlayerR = idPlayerR;
-		this.idPlayerL = idPlayerL;
-		this.prismaService = prismaService;
+		this.playerR.profil.socket = idPlayerR.socket;
+		this.playerR.profil.userId = idPlayerR.userId;
+		this.playerL.profil.socket = idPlayerL.socket;
+		this.playerL.profil.userId = idPlayerL.userId;
+		//this.prismaService = prismaService;
 	}
 
 
@@ -77,7 +80,7 @@ export class Game {
 		}); 
 	}
 
-	private init(){
+	public init(){
 		this.socket.emit('init-pong', {
 			table_width: width,
 			table_height: height,
@@ -173,7 +176,8 @@ console.log("run");
 		clearInterval(this.interval);
 		this.isrunning = false;
 		let winner = this.playerL.profil.userId;
-		this.server.emit('winner', {winner: winner, leave: this.leave});
+		this.server.emit('winner', {winner: winner, leave: this.leave});   
+
 	})
 
 	this.playerL.profil.socket.on('disconect', () => {
@@ -183,8 +187,7 @@ console.log("run");
 		let winner = this.playerR.profil.userId;
 		this.server.emit('winner', {winner: winner, leave: this.leave});
 	})
-
-
+	
     this.interval = setInterval(() => {
       this.updatePositions();
       // Emit the updated positions of the ball and the rocket to all connected clients

@@ -1,3 +1,8 @@
+export interface player{
+    socket: any;
+	userId: number;
+}
+
 export interface ball {
     x: number;
     y: number;

@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
-// import io, { Socket } from "socket.io-client"
+//import io, { Socket } from "socket.io-client"
 import Canvas from './Canvas'
 import Winner from './Winner'
 import './Game.css'
-import type { gameInit, gameState, gameWinner } from './type'
-import { Socket } from 'socket.io-client';
+import type { gameInit, gameState, gameWinner, player } from './type'
 import { socket } from '../../service/socket';
 
 
 function Game() {
     const user = useContext(AuthContext);
-    const id = user.userId;
- //   const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
+    const [users, setOnlineSpectators] = useState<[player]> ();
+    const [players, setOnlinePlayers] = useState<[player]> ();
+
 
     const [gameinit, setGameInit] = useState<gameInit>(
         {
@@ -54,24 +54,39 @@ function Game() {
             winner: '',
             leave: ''
        } 
-    )
-
+    );
 
     const initListener = (data: gameInit)=>{
         setGameInit(data);
     }
-
     const updateListener = (data: gameState)=>{
         setGameState(data);
     }
-
     const initWinner = (data: gameWinner)=>{
         setGameWinner(data);
     }
+
 //////////////////////////////////////////////////////////
+
     useEffect(() => {
-        socket.current.emit("addUser", user);
-      },[user])
+console.log(user);
+        socket.emit("addUser", user);
+    },[user]);
+
+    useEffect(() => {
+        socket.on("getPlayers", (players: React.SetStateAction<[player] | undefined>) => {
+            setOnlinePlayers(players);
+        });
+    })
+
+    useEffect(() => {
+        socket.on("getSpectators", (users: React.SetStateAction<[player] | undefined>) => {
+            setOnlineSpectators(users);
+        });
+    })
+
+console.log('players front', players);
+console.log('users Front', users)
 ///////////////////////////////////////////////////////
 
     //get data from the server and redraw canvas
@@ -97,9 +112,9 @@ function Game() {
 		if (event.code === "ArrowDown") {
 			socket?.emit('move', "down")
 		}
-		if (event.code === "Space") {
-			socket?.emit('move', "start")
-		}
+		// if (event.code === "Space") {
+		// 	socket?.emit('move', "start")
+		// }
 	};
 
     if (!gamewinner.winner){

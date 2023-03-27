@@ -1,6 +1,6 @@
 export interface profile{
 	socket: any;
-	userId: number;
+	userId: any;
 }
 
 export interface player{
@@ -28,8 +28,8 @@ export interface gameInit {
 	// racketSpeedY: number;
 	racketWidth: number;
 	racketHeight: number;
-	right: number;
-	left: number
+	// rscoreR: number;
+	// scoreL: number
 }
 
 
