@@ -136,22 +136,38 @@ export class UserService {
   }
 
 
-  async addFriendOnTable(id1: number, id2: number) {
-	console.log("id1---------->")
-	console.log(id1)
-	console.log("id2---------->")
-	console.log(id2)
-	const updateUser = await this.prisma.user.update({
-		where: {
-			id: id1 ,
-		},
-		include: { friends: true, friendOf: true },
-		data: {
-			friends: { connect: { id: id2 } },
-		},
-	});
-	return updateUser;
-}
+	async addFriendOnTable(id1: number, id2: number) {
+		const updateUser = await this.prisma.user.update({
+			where: {
+				id: id1 ,
+			},
+			include: { friends: true, friendOf: true },
+			data: {
+				friends: { connect: { id: id2 } },
+			},
+		});
+		return updateUser;
+	}
+
+	async removeFriendOnTable(id1: number, id2: number) {
+		try {
+			const user = await this.prisma.user.findUnique({
+				where: { id: id1 },
+				include: { friends: true, friendOf: true }
+				});
+			if (!user) {
+				throw new Error(`User with id ${id1} not found.`);
+			}
+			const updatedFriends = user.friends.filter((friend) => friend.id !== id2);
+			const updatedUser = await this.prisma.user.update({
+				where: { id: id1 },
+				data: { friendOf: { set: updatedFriends } },
+			  });
+			return updatedUser;
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
 
 }

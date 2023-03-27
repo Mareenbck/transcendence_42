@@ -15,8 +15,6 @@ export class FriendshipService {
 				receiverId: receiverId,
 			},
 		});
-		console.log("friendship--->");
-		console.log(friendship);
 		return friendship
 	}
 
@@ -38,58 +36,6 @@ export class FriendshipService {
 		}
 	  }
 
-// 	async getUsers() {
-// 		const allUsers = await this.prisma.user.findMany();
-// 		return allUsers;
-// 	}
-
-// 	async getUser(id: number) {
-// 		if (id === undefined) {
-// 			throw new BadRequestException('Undefined user ID');
-// 		}
-// 		try {
-// 			const user = await this.prisma.user.findUniqueOrThrow({
-// 				where: {
-// 					id: id,
-// 				},
-// 			});
-// 			const userDTO = plainToClass(UserDto, user);
-// 			return userDTO;
-// 		} catch (error) {
-// 			throw new BadRequestException('getUser error : ' + error);
-// 		}
-// 	}
-
-// 	async getByEmail(email: string): Promise<User | null> {
-// 		const user = await this.prisma.user.findUnique({
-// 			where: {
-// 				email: email,
-// 			},
-// 		});
-// 		return user;
-// 	}
-
-// 	async set2FASecretToUser(secret: string, email: string) {
-// 		return this.prisma.user.update({
-// 			where: { email: email },
-// 			data: { twoFAsecret: secret },
-// 		});
-// 	}
-
-// 	async turnOn2FA(email: string) {
-// 		return this.prisma.user.update({
-// 			where: { email: email },
-// 			data: { twoFA: true },
-// 		});
-// 	}
-
-// 	async turnOff2FA(email: string) {
-// 		return this.prisma.user.update({
-// 			where: { email: email },
-// 			data: { twoFA: false },
-// 		});
-// 	}
-
 	async updateFriendship(id: any) {
 		const { demandId, response } = id
 		const friendhip = await this.prisma.friendship.update({
@@ -103,14 +49,15 @@ export class FriendshipService {
 		return friendhip;
 	}
 
-
-
 	async addFriend(request: any) {
 		const { requesterId, receiverId } = request;
 		const requester = await this.userService.getUser(parseInt(requesterId));
 		const receiver = await this.userService.getUser(parseInt(receiverId));
 		await this.userService.addFriendOnTable(requester.id, receiver.id)
 		await this.userService.addFriendOnTable(receiver.id, requester.id)
+		const user = this.userService.getUser(receiver.id);
+		console.log(" user dans add friend")
+		console.log(user)
 	}
 
 	async showFriends(userId: any){
@@ -126,68 +73,41 @@ export class FriendshipService {
 		}
 	}
 
+	async findFriendship(userOne: number, userTwo: number) {
+		const friendships = await this.prisma.friendship.findMany({
+			where: {
+				OR: [
+				  { requesterId: userOne, receiverId: userTwo },
+				  { requesterId: userTwo, receiverId: userOne },
+				],
+			  },
+		  });
+		const friendship = friendships[0];
+		return friendship;
+	}
 
+	async findAndDeleteFriendship(userOne: number, userTwo: number) {
+		const friendship = await this.findFriendship(userOne, userTwo);
+		if (!friendship) {
+			throw new BadRequestException('getReceivedFriendships error : ');
+		}
 
-	// async refuseFriendship(id: any) {
-	// 	const { demandId } = id
-	// 	const friendhip = await this.prisma.friendship.update({
-	// 		where: {
-	// 			id: parseInt(demandId),
-	// 		},
-	// 		data: {
-	// 			status: 'REFUSED',
-	// 		},
-	// 	});
-	// 	return friendhip;
-	// }
+		await this.prisma.friendship.delete({
+		  where: { id: friendship.id },
+		});
+	}
 
+	async deleteRefusedFriendship() {
+		await this.prisma.friendship.deleteMany({
+			where: { status: 'REFUSED'},
+		});
+	}
 
-// 	async updateAvatar(id: number, newAvatar: string) {
-// 		const updateUser = await this.prisma.user.update({
-// 			where: {
-// 				id: id,
-// 			},
-// 			data: {
-// 				avatar: newAvatar,
-// 			},
-// 		});
-// 		return updateUser;
-// 	}
-
-// 	async restoreAvatar(id: number) {
-// 		const updateUser = await this.prisma.user.update({
-// 			where: {
-// 				id: id,
-// 			},
-// 			data: {
-// 				avatar: '',
-// 			},
-// 		});
-// 		return updateUser;
-// 	}
-
-//   async getFriends(userId: number) {
-//     if (userId === undefined || isNaN(userId) ) {
-//       throw new BadRequestException('Undefined user for Friends');
-//     }
-//     try {
-//       const user = await this.prisma.user.findUniqueOrThrow({
-//         where: {id: userId, },
-//       });
-//       console.log(user)
-
-
-//  //     const friends = user.friendsTo.map((friendId) => {
-//  //       return this.getUser(friendId);
-//  //     })
-//   //    let friendList = [];
-//   //    friends.map((friend) => {const {id, username, avatar} = friend;
-//   //      friendList.push({id, username, avatar});
-//   //    });
-//   //    return friendList;
-//     } catch (error) {
-//       throw new BadRequestException('getUser error : ' + error);
-//     }
-//   }
-
+	async removeFriend(usersId: any) {
+		const { friendId, currentId } = usersId;
+		const updatedCurrent = await this.userService.removeFriendOnTable(parseInt(currentId), friendId)
+		await this.userService.removeFriendOnTable(friendId, parseInt(currentId))
+		await this.findAndDeleteFriendship(friendId, parseInt(currentId));
+		return updatedCurrent;
+	}
 }

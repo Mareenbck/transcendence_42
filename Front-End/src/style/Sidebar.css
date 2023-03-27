@@ -8,13 +8,19 @@
 }
 
 .sidebar h4 {
-	font-style: normal;
 	font-weight: 700;
 	font-size: 28px;
 	line-height: 36px;
 	color: black;
-	margin-top: 56px;
-	margin-left: 64px;
+}
+
+.sidebar .title {
+	display: flex;
+	margin-top: 64px;
+	margin-left: 50px;
+	width: inherit;
+	align-items: center;
+	margin-bottom: 30px;
 }
 
 .links {

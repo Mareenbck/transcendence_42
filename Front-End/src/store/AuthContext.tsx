@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 //creation du context pour auth
 //pour stocker les  data user
@@ -11,6 +11,7 @@ const defaultValue = {
 	ftAvatar: '',
 	is2FA: false,
 	updateAvatar: (avatarUrl: string) => {},
+	updateUsername: (newUsername: string) => {},
 	fetchAvatar: async (userId: string) => {},
 	login: async (token: string, userId: string) => {},
 	logout: () => { }
@@ -28,7 +29,7 @@ export const AuthContextProvider = (props: any) => {
 	const [username, setUsername] = useState<string | null>(usernameLocalStorage);
 	const [avatar, setAvatar] = useState<string | null>('');
 	const [ftAvatar, setftAvatar] = useState<string | null>(ftAvatarLocalStorage);
-	const [is2FA, setIs2FA] = useState<boolean>(false);
+	const [is2FA, setIs2FA] = useState<boolean>();
 
 	const updateAvatar = (avatarUrl: string) => {
 		if (avatarUrl) {
@@ -36,6 +37,12 @@ export const AuthContextProvider = (props: any) => {
 			setAvatar(`${avatarUrl}?v=${timestamp}`);
 		} else {
 			setAvatar('');
+		}
+	  };
+
+	  const updateUsername = (newUsername: string) => {
+		if (newUsername) {
+			setUsername(newUsername);
 		}
 	  };
 
@@ -65,11 +72,13 @@ export const AuthContextProvider = (props: any) => {
 				}
 			});
 			const data = await response.json();
-			console.log(data);
+			console.log("DATA")
+			console.log(data)
 			setUserId(data.id);
 			setUsername(data.username);
 			setAvatar(data.avatar);
 			setftAvatar(data.ftAvatar);
+			// setIs2FA(data.twoFA);
 			localStorage.setItem('username', data.username);
 			return data
 		} catch (error) {
@@ -77,10 +86,10 @@ export const AuthContextProvider = (props: any) => {
 		}
 	};
 
-
 	const loginHandler = async (token: string, userId: string) => {
 		setToken(token);
 		const data = await fetchHandler(token, userId);
+		setIs2FA(data.twoFA);
 		return data.twoFA;
 	};
 
@@ -109,6 +118,7 @@ export const AuthContextProvider = (props: any) => {
 		fetchHandler: fetchHandler,
 		fetchAvatar: fetchAvatar,
 		updateAvatar: updateAvatar,
+		updateUsername: updateUsername,
 	};
 
 	return (

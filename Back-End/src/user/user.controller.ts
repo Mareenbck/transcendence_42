@@ -81,8 +81,6 @@ export class UserController {
 	@Get('/:id/avatar')
 	@UseGuards(JwtGuard)
 	async getAvatar(@GetCurrentUserId() id: number, @Res() res: Response) {
-		console.log("user--->")
-		console.log(id)
 		try {
 			const user = await this.userService.getUser(id);
 			// >>>> const avatar a mettre dans service

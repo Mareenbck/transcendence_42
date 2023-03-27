@@ -13,10 +13,9 @@ const Friends = () => {
 
 	// const isLoggedIn = authCtx.isLoggedIn;
 	const currentUserId = authCtx.userId;
-
-	const onlineFriends = friends.filter(friend => friend.status === 'ONLINE');
-	const offlineFriends = friends.filter(friend => friend.status === 'OFFLINE');
-	const playingFriends = friends.filter(friend => friend.status === 'PLAYING');
+	const onlineFriends = friends.filter(friend => friend.status === 'ONLINE' && friend.id !== parseInt(currentUserId));
+	const offlineFriends = friends.filter(friend => friend.status === 'OFFLINE'&& friend.id !== currentUserId);
+	const playingFriends = friends.filter(friend => friend.status === 'PLAYING'&& friend.id !== currentUserId);
 
 
 	const handleDemand = async (event: FormEvent, receiverId: number) => {

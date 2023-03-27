@@ -1,0 +1,29 @@
+.custom-switch {
+	width: 90px !important;
+	cursor: pointer;
+}
+
+/* barre de switch */
+.custom-switch .MuiSwitch-track {
+	height: 10px;
+}
+
+/* cursor valide */
+.custom-switch .Mui-checked {
+	width: 95px;
+}
+
+/* ||| cursor ||| */
+.custom-switch .MuiSwitch-thumb {
+	margin-top: -2px;
+	background-color:#606060;
+	/* background-color: #c41111; */
+}
+
+.custom-switch .Mui-checked .MuiSwitch-thumb {
+	background-color: #b8a8fb;
+}
+.css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
+background-color: #C7B9FF !important;
+}
+

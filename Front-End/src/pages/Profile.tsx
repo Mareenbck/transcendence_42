@@ -48,7 +48,7 @@ const Profile = () =>  {
 			setDemands(data);
 		}
 		fetchDemands();
-	}, [])
+	}, [demands])
 
 	useEffect(() => {
 		const url = "http://localhost:3000/friendship/friends";
@@ -65,12 +65,52 @@ const Profile = () =>  {
 				}
 			)
 			const data = await response.json();
-			console.log("DATA///////")
-			console.log(data)
 			setFriends(data);
 		}
 		fetchFriends();
-	}, [])
+	}, [friends])
+
+	// const api = {
+	// 	get: (path: string) => {
+
+	// 	},
+	// 	post: async (path: string, body: any) => {
+	// 		const url = "http://localhost:3000/friendship/friends";
+	// 		const response = await fetch(
+	// 			url,
+	// 			{
+	// 				method: "POST",
+	// 				headers: {
+	// 					"Content-Type": "application/json",
+	// 					Authorization: `Bearer ${authCtx.token}`
+	// 				},
+	// 				body: JSON.stringify({id: currentUserId}),
+	// 			}
+	// 		)
+	// 		const data = await response.json();
+	// 	}
+	// }
+
+	const handleRemoveFriend = async(event: FormEvent, friendId: number) => {
+		event.preventDefault();
+		try {
+			const response = await fetch(`http://localhost:3000/friendship/delete`,{
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				  Authorization: `Bearer ${authCtx.token}`,
+				},
+				body: JSON.stringify({friendId: friendId, currentId: currentUserId}),
+			});
+			await response.json();
+			if (!response.ok) {
+				console.log("POST error on /friendship/delete");
+				return "error";
+			}
+		} catch (error) {
+			console.log("error", error);
+		}
+	}
 
 	const handleAccept = async (event: FormEvent, demandId: number, res: string) => {
 		event.preventDefault();
@@ -87,11 +127,12 @@ const Profile = () =>  {
 			if (!response.ok) {
 				console.log("POST error on /friendship/validate");
 				return "error";
-			  }
+			}
 		} catch (error) {
 			console.log("error", error);
-		  }
 		}
+	}
+
 	return (
 		<>
 		<div className={style.mainPos}>
@@ -108,17 +149,28 @@ const Profile = () =>  {
 				<div className="title">
 					<div className="status-friends"></div>
 					<h5>My Friends</h5>
+				</div>
+				<div className='friend'>
 					<ul>
 						{friends.map(friend => (
-						<li key={friend.id} className='friend'>
-							{/* {friend.avatar ? <img className='avatar-img' src={friend.avatar} alt={"avatar"} /> : <img className='avatar-img' src={friend.ftAvatar} alt={"ftAvatar"} />} */}
-							<span className='friend-username'>{friend.username}</span>
+							<li key={friend.id}>
+							<div className='friends-infos'>
+								<span>{friend.username}</span>
+								<div className='action-friend'>
+									<form onSubmit={(event) => {handleRemoveFriend(event, friend.id)}}>
+										<button type="submit"><i className="fa-solid fa-user-xmark fa-2xs"></i></button>
+									</form>
+									<i className="fa-solid fa-user-xmark fa-2xs"></i>
+									<i className="fa-solid fa-user-xmark fa-2xs"></i>
+								</div>
+							</div>
+							{friend.avatar ? <img className='avatar-img' src={friend.avatar} alt={"avatar"} /> : <img className='avatar-img' src={friend.ftAvatar} alt={"ftAvatar"} />}
 						</li>
 						))}
-				</ul>
+					</ul>
 				</div>
 			</div>
-			<div className='friends-card'>
+			<div className='rank-card'>
 				<div className="title">
 					<div className="status-rank"></div>
 					<h5>My Rank</h5>
