@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import '../../style/Sidebar.css'
 import { Link, useLocation } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
-import AccountMenu from "../AccountMenu";
 import MyAccountMenu from "../AccountMenu";
 
 
@@ -12,8 +11,8 @@ const Sidebar = (props: any) => {
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
     const [username, setUsername] = useState(authCtx.username)
-    console.log("SIDEBAR USERNAME ")
-    console.log(authCtx.username)
+	console.log("SIDEBAR");
+	console.log(location)
     const links = [
         { name: "Play Games", path: "/game/play" },
         { name: "Chat", path: "/chat/message" },
@@ -36,7 +35,7 @@ const Sidebar = (props: any) => {
     return (
         <div className="sidebar">
             <div className="title">
-                <MyAccountMenu authCtx={authCtx} ></MyAccountMenu>
+                {/* <MyAccountMenu authCtx={authCtx} ></MyAccountMenu> */}
                 <h4>{username}</h4>
             </div>
             <br />

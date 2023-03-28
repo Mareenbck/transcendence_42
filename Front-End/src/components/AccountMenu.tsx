@@ -16,12 +16,12 @@ import { Link } from "react-router-dom";
 import MyAvatarM from './user/Avatar';
 import MyAvatarS from './user/Avatar';
 import SmallAvatar from './user/SmallAvatar';
+import HomeIcon from '@mui/icons-material/Home';
+
 
 export default function MyAccountMenu(props: any) {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
-	console.log("HAO")
-	console.log(props.authCtx)
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -29,7 +29,7 @@ export default function MyAccountMenu(props: any) {
 		setAnchorEl(null);
 	};
 
-
+	console.log("Account Menu");
 	return (
 	<React.Fragment>
 		{/* <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}> */}
@@ -97,7 +97,7 @@ export default function MyAccountMenu(props: any) {
 		</MenuItem>
 		<MenuItem>
 			<ListItemIcon>
-				<Settings fontSize="small" />
+				<HomeIcon color="action" />
 			</ListItemIcon>
 			<Link to={`/menu`}>Home</Link>
 		</MenuItem>

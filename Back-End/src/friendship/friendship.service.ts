@@ -56,8 +56,6 @@ export class FriendshipService {
 		await this.userService.addFriendOnTable(requester.id, receiver.id)
 		await this.userService.addFriendOnTable(receiver.id, requester.id)
 		const user = this.userService.getUser(receiver.id);
-		console.log(" user dans add friend")
-		console.log(user)
 	}
 
 	async showFriends(userId: any){

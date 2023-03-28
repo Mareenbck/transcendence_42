@@ -208,9 +208,9 @@ export class AuthService {
 			};
 		}
 
-		async getFortyTwoUserProfile(accessToken: string): Promise<Profile_42> {
-			try {
-				const headers = { Authorization: `Bearer ${accessToken}` };
+	async getFortyTwoUserProfile(accessToken: string): Promise<Profile_42> {
+		try {
+			const headers = { Authorization: `Bearer ${accessToken}` };
 			const url = 'https://api.intra.42.fr/v2/me';
 
 			const response = await fetch(url, { headers });
