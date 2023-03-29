@@ -12,7 +12,6 @@ import MessageDf from "./message/message.df"
 import './Chat.css'
 import React from 'react';
 import PopUp from './PopUpChannel';
-import { create } from '@mui/material/styles/createTransitions';
 
 function Chat() {
   const socket = useRef();
@@ -198,25 +197,7 @@ function Chat() {
 	setSelectedFile(event.target.files[0]);
 };
 
-const createNewChannel = async (e: FormEvent) => {
-  e.preventDefault();
-  if (channelName === "") {
-    return;
-  }
-  const newConv = {
-    name: channelName,
-    isPublic: isPublic,
-    isPrivate: isPrivate,
-    isProtected: isProtected,
-  };
-  try {
-      const res = await ConversationReq.postRoom(user, newConv);
-      setConversations([res, ...conversations]);
-      setchannelName("");
-  } catch (err) { 
-    console.log(err);
-  }
-};
+
 
 const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -236,27 +217,41 @@ return (
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
-          <form onSubmit={handleFormSubmit}>
-            <button onClick={handleCreateChannel}>Create new channel</button>
-            {showPopUp && (
-                <PopUp
-                title="Création d'un nouveau channel"
-                message="Choisissez les options de votre channel"
-                onCancel={() => setShowPopUp(false)}
-                onClick={() => setShowPopUp(false)}
-                onSubmit={createNewChannel}
-                >
-                </PopUp>
-
+            <form onSubmit={handleFormSubmit}>
+              <button onClick={handleCreateChannel}>Create new channel</button>
+              {showPopUp && (
+                  <PopUp
+                  title="Création d'un nouveau channel"
+                  message="Choisissez les options de votre channel"
+                  onCancel={() => setShowPopUp(false)}
+                  onClick={() => setShowPopUp(false)}
+                  onSubmit={handleFormSubmit}
+                  >
+                  </PopUp>
             )}
-        </form>
-            { conversations.map((c) => (
-              <div key={c.name + c.id} onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
-                <Conversation conversation={c}/>
-              </div>
-            ))}
+            </form>
+            {conversations.map((c) => (
+                <div key={c.name + c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
+                 <div className="conversation">
+                  <div className="conversation-name">
+                    <Conversation conversation={c}/>
+                  </div>
+                  <div className="conversation-icon">
+                    {c.isPrivate ? (
+                      <i className="fas fa-lock icon-private" title="Private Channel"></i>
+                    ) : c.isProtected ? (
+                      <i className="fas fa-key icon-protected" title="Protected Channel"></i>
+                    ) : (
+                      <i className="fas fa-globe icon-public" title="Public Channel"></i>
+                    )}
+                  </div>
+                </div>
+
+                </div>
+              ))}
+
+            </div>
           </div>
-        </div>
         <div className="chatBox">
           <div className="chatBoxW">
           {

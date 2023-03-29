@@ -45,22 +45,27 @@ function PopUp(props: any) {
         try {
             const res = await ConversationReq.postRoom(user, newConv);
             setConversations([res, ...conversations]);
-            setchannelName("");
+            console.log("OU EST L'ERREUR ? ")
         } catch (err) { 
           console.log(err);
         }
     };
+
+    const createAndClose = async (e:FormEvent) => {
+        try {
+            await createNewChannel(e);
+            setShowPopUp(false);
+            props.onClick();
+        } catch (err) {
+            console.log(err);
+        }
+    }
     
+      
     const handleFormSubmit = (e) => {
         e.preventDefault();
         setShowPopUp(false);
       };
-    
-      
-    const createAndClose = async (e:FormEvent) => {
-        createNewChannel(e);
-        props.onClick();
-    }
 
 return (
     <div className='popup-overlay'>
