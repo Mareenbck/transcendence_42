@@ -18,10 +18,10 @@ let players = [];
 
 const addUser = (userId, socketId) => {
   if (players.length < 2) {
-console.log('players',userId);
+// console.log('player 21', userId);
     !players.some((user) => +user.userId.userId === +userId.userId) &&
     players.push({userId, socketId})
-console.log('players', players);
+// console.log(`24 players [] ='${players}'`);
   } else {
     !users.some((user) => +user.userId.userId === +userId.userId) &&
     users.push({userId, socketId})
@@ -48,24 +48,24 @@ export class GameGateway {
   prismaService: PrismaService;
   onModuleInit(){
     this.server.on('connection', (socket) => {
-console.log(socket.id);
-console.log('Connected');
+console.log('51 Connected socket = ', socket.id);
 
       socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
-console.log ('players',players);
-console.log ('users',users);
+console.log ('55 players = ',players.length);
+console.log ('56 users = ',users.length);
 
         // const user = getUser(users);
         // const player = getPlayers(players);
         this.server.emit("getSpectators", users);
         this.server.emit("getPlayers", players);
-         if (players.length = 2) {
-          const game = new Game( players[0] , players[1],
-            // { socket: players[0].socketId, userId: players[0].userId },
-            // { socket: players[1].socketId, userId: players[1].userId },
+this.server.clients[socket.id].on('move', ()=>{console.log('----move---')});
+        if (players.length == 2) {
+          const game = new Game( 
+            players[0] , players[1],
+            this.server,
             //this.websocketsService,
-            //this.prismaService,
+            this.prismaService,
             //this.achievementsService,
           );
           //this.games.push(game);
@@ -75,8 +75,7 @@ console.log ('users',users);
       });
 
       socket.on('disconnect', () => {
-        console.log(socket.id);
-        console.log('Disconnected');
+console.log(`78 Disconnected socket.id = ${socket.id}`);
         removeUser(socket.id);
         this.server.emit("getSpectator", users);
       });

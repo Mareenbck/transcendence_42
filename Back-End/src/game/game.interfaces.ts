@@ -1,10 +1,12 @@
+import {Socket} from 'socket.io';
+
 export interface profile{
-	socket: any;
+	socketId: any;
 	userId: any;
 }
 
 export interface player{
-	profil: profile;
+	profile: profile;
 	racket: racket;
 	score: number;
 	winner: boolean;
@@ -55,8 +57,8 @@ export interface gameInit {
 // }
 
 export const GameParams = {
-	GAME_WIDTH: 1600, // 
-	GAME_HEIGHT: 900,
+	GAME_WIDTH: 800, // 
+	GAME_HEIGHT: 400,
 	RACKET_SPEED_Y: 5,
 	RACKET_HEIGHT: 120,
 	RACKET_WIDTH: 10,

@@ -85,8 +85,8 @@ console.log(user);
         });
     })
 
-console.log('players front', players);
-console.log('users Front', users)
+// console.log('players front', players);
+// console.log('users Front', users)
 ///////////////////////////////////////////////////////
 
     //get data from the server and redraw canvas
@@ -105,7 +105,7 @@ console.log('users Front', users)
 
 	// onKeyDown handler function
 	const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-//console.log("event.code = ", event.code);
+console.log("event.code = ", event.code);
 		if (event.code === "ArrowUp") {
 			socket?.emit('move', "up")
 		}
