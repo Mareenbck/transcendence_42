@@ -55,7 +55,7 @@ function Chat() {
     });
     setOnlineUsers2(online);
 
-  }, [onlineUsers]);
+  }, []);
 
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
@@ -291,7 +291,9 @@ console.log(+data.id !== +id);
 
 
   const getDirect = (userX) => {
-    if (!(getUser(+id).blockedFrom.find(u => +u.id === +userX.userId)))
+    const i = getUser(+id);
+    console.log(i)
+    if (i && !i.blockedFrom.find(u => +u.id === +userX.userId) && !i.blockedFrom.find((i)=> +id === +i))
     {
       setCurrentDirect(userX);
       setCurrentChat(null)
