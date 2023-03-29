@@ -14,48 +14,15 @@ import { Modal } from '@mui/material';
 function PopUp(props: any) {
     
     const authCtx = useContext(AuthContext);    
-    const [isPublic, setIsPublic] = useState(true);
-    const [isPrivate, setIsPrivate] = useState(true);
-    const [isProtected, setIsProtected] = useState(true);
+    const [isPublic, setIsPublic] = useState(false);
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [isProtected, setIsProtected] = useState(false);
     const [selectedFile, setSelectedFile] = useState('');
     const [conversations, setConversations] = useState<ConversationDto[]> ([]);
-    const [showPopUp, setShowPopUp] = useState(false);
+    const [showPopUp, setShowPopUp] = useState(true);
     const user = useContext(AuthContext);
     const id = user.userId;
-
-
-    const handleSubmit = async (event: FormEvent) => {
-        event.preventDefault();
-        const formData = new FormData();
-        formData.append("file", selectedFile);
-        try {
-            const response = await fetch(`http://localhost:3000/users/upload`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${authCtx.token}`,
-                },
-                body: formData,
-            })
-            const data = await response.json();
-            if (!response.ok) {
-                console.log("POST error on ${userId}/username ");
-                return "error";
-            }
-            authCtx.fetchAvatar(data.id);
-            localStorage.setItem("avatar", data.avatar);
-            return "success";
-        } catch (error) {
-            return console.log("error", error);
-        }
-    };
-
     const [isDisabled, setIsDisabled] = useState(true);
-
-
-	const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
-		setSelectedFile(event.target.files[0]);
-	};
-
     const [channelName, setchannelName] = useState('');
     
     const handleChannelNameChange = (e: FormEvent) => {
@@ -64,32 +31,36 @@ function PopUp(props: any) {
         setIsDisabled(value === "");
     };
 
-
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
-        setShowPopUp(false);
         if (channelName === "") {
-          return; 
+          return;
         }
         const newConv = {
-            name: channelName,
-            isPublic: isPublic,
-            isPrivate: isPrivate,
-            isProtected: isProtected,
+          name: channelName,
+          isPublic: isPublic,
+          isPrivate: isPrivate,
+          isProtected: isProtected,
         };
-        // socket?.current.emit("sendConv", {
-        //   author: +id,
-        //   content: newConv,
-        // })
         try {
-            console.log("arrive dans le try")
-          const res = await ConversationReq.postRoom(user, newConv);
-          setConversations([res, ...conversations]);
-          setShowPopUp(false); 
-        } catch(err) {
+            const res = await ConversationReq.postRoom(user, newConv);
+            setConversations([res, ...conversations]);
+            setchannelName("");
+        } catch (err) { 
           console.log(err);
         }
-    };    
+    };
+    
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        setShowPopUp(false);
+      };
+    
+      
+    const createAndClose = async (e:FormEvent) => {
+        createNewChannel(e);
+        props.onClick();
+    }
 
 return (
     <div className='popup-overlay'>
@@ -108,7 +79,11 @@ return (
                         className='circle'
                         type='radio'
                         checked={isPublic}
-                        onChange={() => setIsPublic(true)}
+                        onChange={() => {
+                            setIsPublic(true);
+                            setIsPrivate(false);
+                            setIsProtected(false);
+                        }} 
                     />
                     Public
                 </label>
@@ -120,6 +95,7 @@ return (
                         onChange={() => {
                             setIsPublic(false);
                             setIsPrivate(true);
+                            setIsProtected(false)
                         }}
                     />
                     Private
@@ -139,8 +115,8 @@ return (
                 </label>
             </div>
             <footer className='actions'>
-                <button type='submit' onClick={createNewChannel}>OK</button>
-                <button onClick={props.onCancel}>Cancel</button>
+                <button type='submit' onSubmit={handleFormSubmit} onClick={createAndClose}>OK</button>
+                <button onSubmit={handleFormSubmit} onClick={props.onCancel}>Cancel</button>
             </footer>
         </div>
     </div>

@@ -12,6 +12,7 @@ import MessageDf from "./message/message.df"
 import './Chat.css'
 import React from 'react';
 import PopUp from './PopUpChannel';
+import { create } from '@mui/material/styles/createTransitions';
 
 function Chat() {
   const socket = useRef();
@@ -70,6 +71,7 @@ function Chat() {
     });
   }, []);
   
+
   useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
     setMessages2(prev=>[...prev, AMessageChat]);
@@ -196,35 +198,25 @@ function Chat() {
 	setSelectedFile(event.target.files[0]);
 };
 
-
-
 const createNewChannel = async (e: FormEvent) => {
-
-    e.preventDefault();
-    if (channelName === "") {
-        return; 
-      }
-      const newChannel = {
-        name: channelName,
-        isPublic: isPublic,
-        isPrivate: isPrivate,
-        isProtected: isProtected,
-    };
-    
-    socket?.current.emit("sendConv", {
-      author: +id,
-      content: newChannel,
-    })
-    try {
+  e.preventDefault();
+  if (channelName === "") {
+    return;
+  }
+  const newConv = {
+    name: channelName,
+    isPublic: isPublic,
+    isPrivate: isPrivate,
+    isProtected: isProtected,
+  };
+  try {
       const res = await ConversationReq.postRoom(user, newConv);
       setConversations([res, ...conversations]);
       setchannelName("");
-      setShowPopUp(true); 
-    } catch(err) {
-      console.log(err);
-    }
+  } catch (err) { 
+    console.log(err);
+  }
 };
-
 
 const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -236,7 +228,7 @@ const handleFormSubmit = (e) => {
   };
 
 const [showPopUp, setShowPopUp] = useState(false);
-const [isDisabled, setIsDisabled] = useState(true);
+
 
 return (
   <>
@@ -250,10 +242,12 @@ return (
                 <PopUp
                 title="Création d'un nouveau channel"
                 message="Choisissez les options de votre channel"
-                  onConfirm={createNewChannel}
                 onCancel={() => setShowPopUp(false)}
+                onClick={() => setShowPopUp(false)}
+                onSubmit={createNewChannel}
                 >
                 </PopUp>
+
             )}
         </form>
             { conversations.map((c) => (

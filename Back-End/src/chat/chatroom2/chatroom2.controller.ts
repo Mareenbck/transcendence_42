@@ -12,8 +12,9 @@ export class Chatroom2Controller {
   @Post()
     async create( @Body() newConv: any): Promise<CreateChatroom2Dto> {
       const newChannel = await this.chatRoomService.create(newConv);
-    
-    return null
+      console.log("NEW CHANNEL CONTROLLER")
+      console.log(newChannel)
+    return newChannel;
   }
 
   @Get()
