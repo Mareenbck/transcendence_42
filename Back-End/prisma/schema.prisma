@@ -29,7 +29,7 @@ model User {
 
 	games               UserOnGame[]
 
-  blocked             User[]       @relation("Blocked")
+  blockedTo           User[]       @relation("Blocked")
   blockedFrom         User[]       @relation("Blocked")
 
   friends             User[]        @relation("Friends")

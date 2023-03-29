@@ -7,12 +7,11 @@ import {
 } from '@nestjs/websockets';
 
 let users = [];
+let roomUsers = [];
 
-const addUser = (userId , socketId) => {
-  console.log(userId);
+const addUser = (userId, socketId) => {
   !users.some((user) => +user.userId.userId === +userId.userId) &&
     users.push({userId, socketId})
-  // users.push(userId)
 }
 
 const removeUser = (socketId) => {
@@ -23,8 +22,6 @@ const removeUser = (socketId) => {
 const getUser = (userId) => {
   return users.find(user => +user.userId.userId === +userId)
 }
-
-let roomUsers = [];
 
 const addRoomUser = (roomId, userId, socketId) => {
   roomUsers = roomUsers.filter( room => +room.userId !== +userId);
@@ -55,22 +52,26 @@ export class ChatGateway {
 
       socket.on("sendMChat", ({authorId, chatroomId, content }) => {
         const roomUs = roomUsers.filter( roomU => +roomU.roomId === chatroomId);
-        for(const roomU of roomUs) {
-          this.server.to(roomU.socketId).emit("getMChat", {
-            authorId,
-            chatroomId,
-            content,
-          });
+        if (roomUs.length > 1) {
+          for(const roomU of roomUs) {
+            this.server.to(roomU.socketId).emit("getMChat", {
+              authorId,
+              chatroomId,
+              content,
+            });
+          }
         }
       });
 
       socket.on("sendMD", ({content, author, receiver}) => {
         const user = getUser(receiver);
-        this.server.to(user.socketId).emit("getMD", {
-          content,
-          author,
-          receiver,
-        });
+        if (user) {
+          this.server.to(user.socketId).emit("getMD", {
+            content,
+            author,
+            receiver,
+          });
+        };
       });
 
       socket.on("sendConv", ({author, content,}) => {
@@ -80,6 +81,26 @@ export class ChatGateway {
             content,
           });
         }
+      });
+
+      socket.on("toBlock", ({blockFrom, blockTo,}) => {
+      const userTo = getUser(blockTo);
+      const userFrom = getUser(blockFrom);
+        if (userTo) {
+          this.server.to(userTo.socketId).emit("wasBlocked", {
+            id: blockFrom,
+            user: userFrom,
+          });
+        };
+      });
+
+      socket.on("toUnblock", ({blockFrom, blockTo,}) => {
+      const userTo = getUser(blockTo);
+        if (userTo) {
+          this.server.to(userTo.socketId).emit("wasUnblocked", {
+            blockFrom,
+          });
+        };
       });
 
       socket.on('disconnect', () => {

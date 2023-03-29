@@ -5,6 +5,7 @@ import MessagesInput from "./MessagesInput"
 import Conversation from "./conversation/conversation"
 import ConversationReq from "./conversation/conversation.req"
 import MessageReq from "./message/message.req"
+import ChatReq from "./Chat.req"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
 import './Chat.css'
@@ -13,11 +14,12 @@ import PopUp from './PopUpChannel';
 
 function Chat() {
   const socket = useRef();
-  const [messages, setMessages] = useState<string[]>([]);
+  // const [messages, setMessages] = useState<string[]>([]);
   const user = useContext(AuthContext);
-  const isLoggedIn = user.isLoggedIn;
+  // const isLoggedIn = user.isLoggedIn;
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
+  const [onlineUsers2, setOnlineUsers2] = useState ([]);
   const [AMessageD, setAMessageD] = useState (null);
   const [AMessageChat, setAMessageChat] = useState (null);
   const [AConversation, setAConversation] = useState (null);
@@ -28,36 +30,35 @@ function Chat() {
   const [messagesD, setMessagesD] = useState<MessageDDto[]> ([]);
   const [newMessage2, setNewMessage2] = useState ("");
   const [newMessageD, setNewMessageD] = useState ("");
-  const [otherUsers, setOtherUsers] = useState ("");
+  const [otherUsers, setOtherUsers] = useState <UserDto[]> ([]);
+  const [allUsers, setAllUsers] = useState <UserDto[]> ([]);
   const scrollRef = useRef();
-  const authCtx = useContext(AuthContext);
   const usernameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState('');
   const [newConversation, setNewConversation] = useState([]);
+  const [toBlock, setToBlock] = useState(null);
+  const [toUnblock, setToUnblock] = useState(null);
+  const [didBlock, setDidBlock] = useState(null);
+  const [wasBlocked, setWasBlocked] = useState(null);
 
   useEffect(() => {
-    const url = "http://localhost:3000/users/";
-    const fetchUsers = async () => {
-      const response = await fetch(
-        url,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authCtx.token}`
-          }
-        }
-      )
-      const data = await response.json();
-      setOtherUsers(data.filter(u => !(onlineUsers.some(e => e.id === u.id))));
-      }
-    fetchUsers();
-  }, [onlineUsers])
+    async function getAllUsersWithBlocked(user: AuthContext) {
+      const response = await ChatReq.getAllUsersWithBlocked();
+      setAllUsers(response);
+      setOtherUsers(response.filter(u => !(onlineUsers.some(e => +e.userId.userId === +u.id))));
+    };
+       getAllUsersWithBlocked();
+    let online = [];
+    onlineUsers.map(u=>{
+      online.push(getUser(+u.userId.userId));
+    });
+    setOnlineUsers2(online);
+
+  }, [onlineUsers]);
 
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
-
     socket.current.on("getMChat", (data)=> {
       setAMessageChat({
         authorId: data.authorId,
@@ -66,7 +67,6 @@ function Chat() {
         createdAt: Date.now(),
       });
     })
-    
     socket.current.on("getMD", (data)=> {
       setAMessageD({
         content: data.content,
@@ -86,7 +86,7 @@ function Chat() {
     });
   }, []);
   
-  useEffect(() => {
+ useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
     setMessages2(prev=>[...prev, AMessageChat]);
   },[AMessageChat, currentChat])
@@ -100,16 +100,21 @@ function Chat() {
     AConversation && setConversations(prev=>[AConversation, ...prev]);
   }, [AConversation]);
 
-  
   useEffect(() => {
     socket.current.emit("addUser", user);
   },[user])
   
   useEffect(() => {
     socket.current.on("getUsers", users => {
+      let online = [];
+//      users.map(u => {
+//        online.push(getUser(+u.userId.userId));
+ //     });
+ ///     setOnlineUsers(online);
+  //    console.log(online);
       setOnlineUsers(users);
     });
-  })
+  });
   
   useEffect(() => {
     async function getAllConv() {
@@ -118,15 +123,7 @@ function Chat() {
     };
     getAllConv();
   }, []);
-/*
-  useEffect(() => {
-    async function getAllUsers() {
-      const response = await .getAll();
-      setAllUsers(response);
-    };
-    getAllUsers();
-  }, []);
- */
+
   useEffect(() => {
     if (currentChat)
     {
@@ -162,10 +159,147 @@ function Chat() {
       getDirMess();
     }
   }, [currentDirect]);
-  
-  const handleSubmit = async (e)=> {
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({behaviour: "smooth"})
+  }, [messages2]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({behaviour: "smooth"})
+  }, [messagesD]);
+
+  useEffect(() => {
+    socket.current.on("wasBlocked", data => {
+console.log(data);
+console.log(+data.id !== +id);
+      if (+data.id !== +id)
+      {
+  //      if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +data.id)) {
+       console.log("dddddddddd 2");
+          const i = allUsers.findIndex(userX => +userX.id === +data.id);
+          const j = allUsers.find(userX => +userX.id === +data.id);
+          j.blockedFrom.push(+data.id);
+          const NewAll = allUsers;
+          NewAll.splice(i, 1, j);
+          setAllUsers([...NewAll]);
+    //    setOnlineUsers([...onlineUsers]);
+   //     }
+      }
+    })
+
+    socket.current.on("wasUnblocked", data => {
+      if (+data.id !== +id)
+      {
+        if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +data.id)) {
+          const i = allUsers.findIndex(userX => +userX.id === +data.id);
+          const j = allUsers.find(userX => +userX.id === +data.id);
+          j.blockedFrom = j.blockedFrom.filter(u => +u.id !== +id);
+          j.blockedFrom = j.blockedFrom.filter(i => +i !== +id);
+          const NewAll = allUsers;
+          NewAll.splice(i, 1, toUnblock);
+          setAllUsers([...NewAll]);
+        }
+      }
+    })
+  }, []);
+
+  useEffect(() => {
+    if (toBlock)
+    {
+      socket?.current.emit("toBlock", {
+        blockTo: +toBlock.id,
+        blockFrom: +id,
+      })
+
+      console.log("fffffffffffffffffff");
+            console.log(toBlock.id);
+      async function blockUser() {
+        try {
+          const res = await ChatReq.postBlock(user, toBlock.id);
+        } catch(err) {console.log(err)}
+      };
+      blockUser(toBlock);
+      if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +toBlock.id)) {
+        const i = allUsers.findIndex(userX => +userX.id === +toBlock.id);
+        toBlock.blockedFrom.push(+user.userId);
+        const NewAll = allUsers;
+        NewAll.splice(i, 1, toBlock);
+        setAllUsers([...NewAll]);
+    //    setOnlineUsers([...onlineUsers]);
+      }
+      if (otherUsers && otherUsers.find(user => +user.id === +toBlock.id)) {
+        const i = otherUsers.findIndex(user => +user.id === +toBlock.id);
+        toBlock.blockedFrom.push(+user.userId);
+        const NewOthers = otherUsers;
+        NewOthers.splice(i, 1, toBlock);
+        setOtherUsers([...NewOthers]);
+      }
+      setToBlock(null);
+    }
+    if (toUnblock)
+    {
+      socket?.current.emit("toUnblock", {
+        blockTo: +toUnblock.id,
+        blockFrom: +id,
+      })
+      async function unblockUser() {
+        try {
+          const res = await ChatReq.postUnblock(user, toUnblock.id);
+        } catch(err) {console.log(err)}
+      };
+      unblockUser(toUnblock);
+      if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +toUnblock.id)) {
+        const i = allUsers.findIndex(userX => +userX.id === +toUnblock.id);
+        toUnblock.blockedFrom = toUnblock.blockedFrom.filter(u => +u.id !== +user.userId);
+        toUnblock.blockedFrom = toUnblock.blockedFrom.filter(i => +i !== +user.userId);
+        const NewAll = allUsers;
+        NewAll.splice(i, 1, toUnblock);
+        setAllUsers([...NewAll]);
+      }
+      if (otherUsers && otherUsers.find(user => +user.id === +toUnblock.id)) {
+        const i = otherUsers.findIndex(user => +user.id === +toUnblock.id);
+        toUnblock.blockedFrom = toUnblock.blockedFrom.filter(u => +u.id !== +user.userId);
+        toUnblock.blockedFrom = toUnblock.blockedFrom.filter(i => +i !== +user.userId);
+        const NewOthers = otherUsers;
+        NewOthers.splice(i, 1, toUnblock);
+        setOtherUsers([...NewOthers]);
+      }
+      setToUnblock(null);
+    }
+  }, [toBlock, toUnblock]);
+
+  const getAvatar = (userId) => {
+    const u = allUsers.find(user => +user?.id === +userId);
+    return (u && u.avatar);
+  };
+
+  const getUser = (userId) => {
+    return allUsers.find(user => +user?.id === +userId);
+  };
+
+  const amIBlocked = (userXid) : string => {
+    return getUser(+id)?.blockedFrom.find(u => +u.id === +userXid) ? "chatOnlineNotFriend" : "chatOnlineFriend";
+  }
+
+  const isHeBlocked = (userXid) => {
+    const i = getUser(userXid);
+    if (i && i.blockedFrom && !i?.blockedFrom.find((u)=>(+id === +u?.id)) && !i.blockedFrom.find((i)=>(+id === +i)))
+      {return (true);};
+    }
+
+// !getUser(o.userId.userId).blockedFrom.find((u)=>(+id === +u?.id)) && !getUser(o.userId.userId).blockedFrom.find((i)=>(+id === +i)) ?
+
+
+  const getDirect = (userX) => {
+    if (!(getUser(+id).blockedFrom.find(u => +u.id === +userX.userId)))
+    {
+      setCurrentDirect(userX);
+      setCurrentChat(null)
+    }
+  }
+
+  const handleSubmit = async (e: FormEvent)=> {
     e.preventDefault();
-    console.log("check error M2");
     const message2 = {
       authorId: +id,
       content: newMessage2,
@@ -185,7 +319,7 @@ function Chat() {
     } catch(err) {console.log(err)}
   }
   
-  const handleSubmitD = async (e)=> {
+  const handleSubmitD = async (e: FormEvent)=> {
     e.preventDefault();
     const r = currentDirect?.userId ? +currentDirect?.userId : +currentDirect?.id;
     const messageD = {
@@ -194,10 +328,6 @@ function Chat() {
       receiver: r,
     };
 
-   console.log("VVVVVVVVVVVVVV");
-    console.log(currentDirect?.userId);
-
-//    if (onlineUsers.find(user => +user.userId.userId === currentDirect?.userId.userId))
     if (currentDirect?.userId)
     {
       socket?.current.emit("sendMD", {
@@ -213,14 +343,6 @@ function Chat() {
       setNewMessageD("");
     } catch(err) {console.log(err)}
   }
-  
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({behaviour: "smooth"})
-  }, [messages2]);
-  
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({behaviour: "smooth"})
-  }, [messagesD]);
   
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
 	 setSelectedFile(event.target.files[0]);
@@ -248,7 +370,6 @@ function Chat() {
       setNewConversation("");
     } catch(err) {console.log(err)}
   };
-
 
   const [channels, setChannelName] = useState([]);
   const [showPopUp, setShowPopUp] = useState(false);
@@ -288,7 +409,7 @@ function Chat() {
                 { messages2.length ?
                   messages2.map((m) => (
                     <div key={m.id} ref={scrollRef}>
-                      <Message2 message2={m} own={m.authorId === +id} />
+                      <Message2 message2={m} avatar={getAvatar(m.authorId)} own={m.authorId === +id} />
                     </div>
                   )) : <span className="noConversationText2" > No message in this room yet. </span>
                 }
@@ -312,7 +433,7 @@ function Chat() {
                 { messagesD.length ?
                     messagesD?.map((m) => (
                       <div key={m.id} ref={scrollRef}>
-                        <MessageD messageD={m} own={m?.author === +id} />
+                        <MessageD messageD={m} avatar={getAvatar(m.author)} own={m?.author === +id} />
                       </div>
                   )) : <span className="noConversationText2" > No message with this friend yet. </span>
                 }
@@ -348,39 +469,59 @@ function Chat() {
             <div className="chatOnline">
               { onlineUsers ? onlineUsers?.map((o) => (
                 +o?.userId.userId !== +id ?
-                  <div  key={o?.userId} className="chatOnlineFriend" onClick={()=> {setCurrentDirect(o?.userId); setCurrentChat(null)}} >
-                    <div className="chatOnlineImgContainer">
-                      <img  className="chatOnlineImg"
-                        src={ o?.userId.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
-                        alt=""
-                      />
-                      <div className="chatOnlineBadge"></div>
+                  <div  key={o?.userId.userId} className={amIBlocked(o?.userId.userId)}  >
+                    <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
+                      <div className="chatOnlineImgContainer">
+                        <img  className="chatOnlineImg"
+                          src={ getAvatar(o?.userId.userId) ? getAvatar(o?.userId.userId) : "http://localhost:8080/public/images/no-avatar.png"}
+                          alt=""
+                        />
+                        <div className="chatOnlineBadge"></div>
+                      </div>
+                      <span className="chatOnlineName"> {o?.userId.username} </span>
                     </div>
-                    <span className="chatOnlineName"> {o?.userId.username} </span>
+                    { isHeBlocked(o.userId.userId) ?
+                      <button className="chatSubmitButton" onClick={() => {setToBlock(getUser(o.userId.userId))}} >
+                          Block
+                      </button>
+                     :
+                       <button className="chatSubmitButton2" onClick={() => {setToUnblock(getUser(o.userId.userId))}} >
+                          UnBlock
+                      </button>
+                    }
                   </div>
                 : null
-                )) : <span className="noConversationText2" > Nobody online. </span>
+                )) : null
               }
               { otherUsers ? otherUsers?.map((o) => (
                 +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
-                  <div  key={o?.userId} className="chatOnlineFriend" onClick={()=> {setCurrentDirect(o); setCurrentChat(null)}} >
-                    <div className="chatOnlineImgContainer">
-                      <img  className="chatOnlineImg"
-                        src={ o?.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
-                        alt=""
-                      />
+                  <div  key={o?.id} className={amIBlocked(o?.id)} >
+                    <div className="fname" onClick={()=> {getDirect(o)}} >
+                      <div className="chatOnlineImgContainer">
+                        <img  className="chatOnlineImg"
+                          src={ o?.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
+                          alt=""
+                        />
+                      </div>
+                      <span className="chatOnlineName"> {o?.username} </span>
                     </div>
-                    <span className="chatOnlineName"> {o?.username} </span>
+                    { !o.blockedFrom.find((u)=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i)=>(+user.userId === +i)) ?
+                      <button className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
+                          Block
+                      </button>
+                     :
+                       <button className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
+                          UnBlock
+                      </button>
+                    }
                   </div>
                 : null
-                )) : <span className="noConversationText2" > Nobody online. </span>
+                )) : <span className="noConversationText2" > Nobody in the air... </span>
               }
             </div>
           </div>
         </div>
-        <div className="allOtherUsers">
 
-        </div>
       </div>
     </>
   )
