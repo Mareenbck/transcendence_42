@@ -57,8 +57,6 @@ function PopUp(props: any) {
 	};
 
     const [channelName, setchannelName] = useState('');
-    const [channelStatus, setChannelStatus] = useState('');
-
     
     const handleChannelNameChange = (e: FormEvent) => {
         const value = e.target.value;
@@ -69,6 +67,7 @@ function PopUp(props: any) {
 
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
+        setShowPopUp(false);
         if (channelName === "") {
           return; 
         }
@@ -77,7 +76,6 @@ function PopUp(props: any) {
             isPublic: isPublic,
             isPrivate: isPrivate,
             isProtected: isProtected,
-            avatar: selectedFile
         };
         // socket?.current.emit("sendConv", {
         //   author: +id,
@@ -87,7 +85,7 @@ function PopUp(props: any) {
             console.log("arrive dans le try")
           const res = await ConversationReq.postRoom(user, newConv);
           setConversations([res, ...conversations]);
-          setShowPopUp(true); 
+          setShowPopUp(false); 
         } catch(err) {
           console.log(err);
         }
@@ -139,13 +137,6 @@ return (
                     />
                     Protected
                 </label>
-            </div>
-            <div className='choose-avatar'>
-                <p>Choose an avatar for your new channel</p>
-                <form onSubmit={handleSubmit}>
-                    <input type="file" onChange={handleFileChange} />
-                    <button type='submit'>Upload</button>
-                </form>
             </div>
             <footer className='actions'>
                 <button type='submit' onClick={createNewChannel}>OK</button>

@@ -101,7 +101,6 @@ model Chatroom {
   id      Int     @id @default(autoincrement())
   visibility UserChannelVisibility   @default(PUBLIC)
   name    String
-  avatar  String
   users   ChatroomUsers[]
   cr_messages ChatroomMessage[]
 }

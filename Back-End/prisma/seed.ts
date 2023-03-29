@@ -53,48 +53,6 @@ async function main() {
   const d4 = add(new Date(), { days: 4})
   const d5 = add(new Date(), { days: 5})
 
-  const croom1 = await prisma.chatroom.create({
-    data: {
-      name: 'café',
-      avatar: "http://localhost:8080/public/images/news.jpeg"
-    }
-  })
-  console.log(croom1)
-
-  const croom2 = await prisma.chatroom.create({
-    data: {
-      name: 'news',
-      avatar: "http://localhost:8080/public/images/cafe.jpeg"
-    }
-  })
-  console.log(croom1)
-
-  const chatM1 = await prisma.chatroomMessage.create({
-    data: {
-      createdAt:     d1,
-      content: 'Salut, Ca va ?',
-      chatroom: {connect: { id: croom1.id}},
-      author: {connect: { id: user2.id }}
-    }})
-
-  console.log(chatM1)
-
-
-  const chatM2 = await prisma.chatroomMessage.create({
-    data: {
-      createdAt:     d2,
-      content: 'Qui veut un café ?',
-      chatroom: {connect: { id: croom1.id}},
-      author: {connect: { id: user2.id }}
-    }})
-
-  const chatM3 = await prisma.chatroomMessage.create({
-    data: {
-      createdAt:     d3,
-      content: 'Encore ?',
-      chatroom: {connect: { id: croom1.id}},
-      author: {connect: { id: user2.id }}
-    }})
 
  const chatDm1 = await prisma.directMessage.create({
     data: {

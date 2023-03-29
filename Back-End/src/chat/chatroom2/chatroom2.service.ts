@@ -4,11 +4,6 @@ import { CreateChatroom2Dto, CreateRoomDto } from './dto/create-chatroom2.dto';
 import { UpdateChatroom2Dto } from './dto/update-chatroom2.dto';
 import { Prisma, UserChannelVisibility } from '@prisma/client';
 
-// enum UserChannelVisibility {
-//   PUBLIC,
-//   PRIVATE,
-//   PWD_PROTECTED
-// }
 
 @Injectable()
 export class Chatroom2Service {
@@ -30,12 +25,9 @@ export class Chatroom2Service {
       const newChannel = await this.prisma.chatroom.create({
         data: {
           name: name,
-          avatar: '',
           visibility: visibility,
         },
       });
-      console.log("NEW CHANNEL --- ")
-      console.log(newChannel)
       return newChannel;
   }
 

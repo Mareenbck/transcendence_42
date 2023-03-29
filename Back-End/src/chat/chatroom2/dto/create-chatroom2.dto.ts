@@ -10,8 +10,6 @@ export class CreateChatroom2Dto
   @MaxLength(45)
   name:  string;
 
-  avatar: string;
-
 }
 
 export class CreateRoomDto
@@ -22,7 +20,6 @@ export class CreateRoomDto
   @MaxLength(45)
   name:  string;
 
-  avatar: string;
   isPublic: boolean;
   isPrivate: boolean;
   isProtected: boolean;

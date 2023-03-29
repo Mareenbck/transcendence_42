@@ -209,7 +209,6 @@ const createNewChannel = async (e: FormEvent) => {
         isPublic: isPublic,
         isPrivate: isPrivate,
         isProtected: isProtected,
-        avatar: selectedFile
     };
     
     socket?.current.emit("sendConv", {
@@ -226,11 +225,6 @@ const createNewChannel = async (e: FormEvent) => {
     }
 };
 
-const handleChannelNameChange = (e: FormEvent) => {
-  const value = e.target.value;
-  setchannelName(value);
-  setIsDisabled(value === "");
-};
 
 const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -256,7 +250,7 @@ return (
                 <PopUp
                 title="Création d'un nouveau channel"
                 message="Choisissez les options de votre channel"
-                //   onConfirm={createNewChannel}
+                  onConfirm={createNewChannel}
                 onCancel={() => setShowPopUp(false)}
                 >
                 </PopUp>
