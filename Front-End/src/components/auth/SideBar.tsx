@@ -11,8 +11,7 @@ const Sidebar = (props: any) => {
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
     const [username, setUsername] = useState(authCtx.username)
-	console.log("SIDEBAR");
-	console.log(location)
+
     const links = [
         { name: "Play Games", path: "/game/play" },
         { name: "Chat", path: "/chat/message" },
@@ -35,7 +34,7 @@ const Sidebar = (props: any) => {
     return (
         <div className="sidebar">
             <div className="title">
-                {/* <MyAccountMenu authCtx={authCtx} ></MyAccountMenu> */}
+                <MyAccountMenu authCtx={authCtx} ></MyAccountMenu>
                 <h4>{username}</h4>
             </div>
             <br />

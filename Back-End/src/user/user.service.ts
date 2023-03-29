@@ -45,6 +45,25 @@ export class UserService {
 		}
 	}
 
+	async getUserFriendList(id: number) {
+		if (id === undefined) {
+			throw new BadRequestException('Undefined user ID');
+		}
+		try {
+			const user = await this.prisma.user.findUnique({
+				where: {
+					id: id,
+				},
+				include: {
+					friendOf: true
+				}
+			});
+			return user;
+		} catch (error) {
+			throw new BadRequestException('getUser error : ' + error);
+		}
+	}
+
 	async getByEmail(email: string): Promise<User | null> {
 		const user = await this.prisma.user.findUnique({
 			where: {

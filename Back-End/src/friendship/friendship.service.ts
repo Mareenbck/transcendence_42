@@ -21,20 +21,20 @@ export class FriendshipService {
 	async getReceivedFriendships(userId: any) {
 		const { id } = userId;
 		try {
-		  const user = await this.userService.getUser(parseInt(id));
-		  const demands = await this.prisma.friendship.findMany({
+			const user = await this.userService.getUser(parseInt(id));
+			const demands = await this.prisma.friendship.findMany({
 			where: {
 				receiverId: user.id,
-			  },
-			  include: {
+			},
+			include: {
 				requester: true,
-			  },
-		  })
-		  return demands;
+			},
+		})
+			return demands;
 		} catch (error) {
-		  throw new BadRequestException('getReceivedFriendships error : ' + error);
+			throw new BadRequestException('getReceivedFriendships error : ' + error);
 		}
-	  }
+	}
 
 	async updateFriendship(id: any) {
 		const { demandId, response } = id
@@ -55,8 +55,14 @@ export class FriendshipService {
 		const receiver = await this.userService.getUser(parseInt(receiverId));
 		await this.userService.addFriendOnTable(requester.id, receiver.id)
 		await this.userService.addFriendOnTable(receiver.id, requester.id)
-		const user = this.userService.getUser(receiver.id);
 	}
+
+	// async getNewFriendList(request: any) {
+	// 	const { receiverId } = request;
+	// 	const receiver = await this.userService.getUser(parseInt(receiverId));
+	// 	const user = await this.userService.getUserFriendList(receiver.id);
+	// 	return user.friendOf
+	// }
 
 	async showFriends(userId: any){
 		const { id } = userId;

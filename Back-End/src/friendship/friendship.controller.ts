@@ -37,7 +37,7 @@ export class FriendshipController {
 		if (result.status === 'ACCEPTED') {
 			await this.friendshipService.addFriend(result);
 		}
-		if (result.status === 'REFUSED') {
+		else if (result.status === 'REFUSED') {
 			await this.friendshipService.deleteRefusedFriendship();
 		}
 		return result;

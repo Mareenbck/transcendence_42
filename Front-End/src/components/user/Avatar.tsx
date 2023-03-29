@@ -24,8 +24,10 @@ const customStyleS = `
 `;
 
 const MyAvatar = (props: any) => {
-
+	const authCtx = props.context;
 	const [style, setStyle] = useState('');
+	// const [avatar, setAvatar] =  useState<string | null>('');
+	const [content, setContent] = useState<any>(null);
 
 	useEffect(() => {
 		if (props.style === "sidebar") {
@@ -35,10 +37,20 @@ const MyAvatar = (props: any) => {
 		}
 	}, [props.style]);
 
+	useEffect(() => {
+		if (authCtx.userId === props.id) {
+			setContent(authCtx.avatar ? <Avatar className="custom-avatar" src={authCtx.avatar} /> : <Avatar className="custom-avatar" src={authCtx.ftAvatar} /> )
+		} else  {
+			setContent(props.avatar ? <Avatar className="custom-avatar" src={props.avatar} /> : <Avatar className="custom-avatar" src={props.ftAvatar} />)
+		}
+	}, [props.id]);
+
 	return (
 		<>
 		<style>{style}</style>
-			{props.src.avatar ? <Avatar className="custom-avatar" src={props.src.avatar} /> : <Avatar className="custom-avatar" src={props.src.ftAvatar} /> }
+			{content}
+			{/* {authCtx.avatar ? <Avatar className="custom-avatar" src={authCtx.avatar} /> : <Avatar className="custom-avatar" src={authCtx.ftAvatar} /> } */}
+			{/* <Avatar className="custom-avatar" src={avatar} /> */}
 		</>
 	)
 }

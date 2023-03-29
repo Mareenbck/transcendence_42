@@ -18,7 +18,6 @@ const Setting = () => {
 	const [isTwoFAEnabled, setIsTwoFAEnabled] = useState(false);
 
 	const handleSubmit = async (file: File) => {
-		// Vous pouvez envoyer le fichier sélectionné au serveur ici
 		const formData = new FormData();
 		formData.append("file", file);
 		try {

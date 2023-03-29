@@ -17,6 +17,9 @@ import MyAvatarM from './user/Avatar';
 import MyAvatarS from './user/Avatar';
 import SmallAvatar from './user/SmallAvatar';
 import HomeIcon from '@mui/icons-material/Home';
+import AuthContext from '../store/AuthContext';
+import { useContext } from 'react';
+import { FriendContext } from '../store/FriendshipContext';
 
 
 export default function MyAccountMenu(props: any) {
@@ -29,7 +32,6 @@ export default function MyAccountMenu(props: any) {
 		setAnchorEl(null);
 	};
 
-	console.log("Account Menu");
 	return (
 	<React.Fragment>
 		{/* <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}> */}
@@ -42,7 +44,7 @@ export default function MyAccountMenu(props: any) {
 			aria-haspopup="true"
 			aria-expanded={open ? 'true' : undefined}
 			>
-			<MyAvatar style="sidebar" src={props.authCtx} />
+			<MyAvatar style="sidebar" context={props.authCtx} id={props.authCtx.userId}/>
 			</IconButton>
 			</Tooltip>
       {/* </Box> */}
@@ -82,7 +84,7 @@ export default function MyAccountMenu(props: any) {
 		anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 		>
 		<MenuItem>
-			<MyAvatar src={props.authCtx} sx={{ width: 34, height: 34 }}/>
+			<MyAvatar context={props.authCtx} id={props.authCtx.userId} sx={{ width: 34, height: 34 }}/>
 			<Link to={`/users/profile/${props.authCtx.userId}`}>Profile</Link>
 		</MenuItem>
 		{/* <MenuItem onClick={handleClose}>
