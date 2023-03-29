@@ -1,9 +1,23 @@
-.chatOnlineFriend {
+.chatOnlineFriend,
+.chatOnlineNotFriend {
   display: flex;
   align-items: center;
   font-weight: 500;
   cursor: pointer;
   margin-top: 10px;
+  justify-content: space-between;
+}
+
+.chatOnlineNotFriend {
+  filter: grayscale(80%);
+  background-color: lightgrey;
+  border-radius: 10px;
+}
+
+
+.fname{
+  display: flex;
+  align-items: center;
 }
 
 .chatOnlineImgContainer {
@@ -86,14 +100,24 @@
   border: 2px solid black;
 }
 
-.chatSubmitButton {
+.chatSubmitButton,
+.chatSubmitButton2  {
   height: 40px;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   background-color: teal;
   color: white;
+  margin-right: 5px;
+  margin-left: 5px;
 }
+
+.chatSubmitButton2 {
+  border: solid;
+  background-color: white;
+  color: teal;
+}
+
 
 .chatOnline {
   flex: 3;
@@ -106,8 +130,6 @@
   padding: 10px;
   height: 100%;
 }
-
-
 
 .noConversationText {
   position: absolute;

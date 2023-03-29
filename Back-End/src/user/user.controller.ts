@@ -32,6 +32,13 @@ export class UserController {
 		return allUsers;
 	}
 
+  @Get('block/users')
+//  @UseGuards(JwtGuard)
+  async getAllUsersWithBlocked() {
+    const allUsers = await this.userService.getUsersWithBlocked();
+    return allUsers;
+  }
+
 	@Get('/profile/:id')
 	@UseGuards(JwtGuard)
 	async getMe(@GetCurrentUserId() id: string) {
@@ -78,6 +85,20 @@ export class UserController {
 		return (updatedUser);
 	}
 
+  @Post("block")
+  @UseGuards(JwtGuard)
+  async block(@Body() {blockFrom, blockTo}) {
+    const updatedUser = await this.userService.block(blockFrom, blockTo);
+  return (updatedUser);
+  }
+
+  @Post("unblock")
+  @UseGuards(JwtGuard)
+  async unblock(@Body() {blockFrom, unblockTo}) {
+    const updatedUser = await this.userService.unblock(blockFrom, unblockTo);
+  return (updatedUser);
+  }
+
 	@Get('/:id/avatar')
 	@UseGuards(JwtGuard)
 	async getAvatar(@GetCurrentUserId() id: number, @Res() res: Response) {
@@ -98,4 +119,8 @@ export class UserController {
 			throw new ForbiddenException('Not Found');
 		}
 	}
+
+
+
+
 }
