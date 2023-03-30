@@ -1,4 +1,4 @@
-import { 
+import {
   MessageBody,
   WebSocketServer,
   SubscribeMessage,
@@ -40,7 +40,7 @@ const period = 100;
 
 @WebSocketGateway(8001, { cors: 'http://localhost/game/*' })
 export class GameGateway {
- 
+
   private isrunning: boolean = false; // define the interval property
   private interval: NodeJS.Timeout; // define the interval property
   private ballSpeedX = ballSpeed;
@@ -64,7 +64,7 @@ export class GameGateway {
 
   @WebSocketServer() server: Server;
 
-  //emit game 
+  //emit game
   private emit2all(){
     this.server.emit('pong', {
       ball: this.ball,
@@ -72,7 +72,7 @@ export class GameGateway {
       racket2: this.rackets[1],
       right: this.right,
       left: this.left
-    }); 
+    });
   }
 
 @SubscribeMessage('move')
@@ -98,28 +98,28 @@ console.log(`message ${message} from ${client} (${player})`);
   else if (message == 'start' && !this.isrunning && this.players.length == 2) {
     this.isrunning = true;
     this.run();
-  }  
+  }
 }
 
 private updatePositions(): void
 {
-  if (this.ball.y > this.rackets[0].y 
-    && this.ball.y < this.rackets[0].y + racket_height 
+  if (this.ball.y > this.rackets[0].y
+    && this.ball.y < this.rackets[0].y + racket_height
     && this.ball.x - ballR < this.rackets[0].x + racket_width
     && this.ballSpeedX < 0) {
     // left racket reflection
     this.ballSpeedX = -this.ballSpeedX;
     this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
   }
-  else if (this.ball.y > this.rackets[1].y 
-    && this.ball.y < this.rackets[1].y + racket_height 
+  else if (this.ball.y > this.rackets[1].y
+    && this.ball.y < this.rackets[1].y + racket_height
     && this.ball.x + ballR > this.rackets[1].x
     && this.ballSpeedX > 0) {
     // right racket reflection
     this.ballSpeedX = -this.ballSpeedX;
     this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
   }
-  
+
   // board reflections
   if (this.ball.x < ballR) {
     ++this.right;
@@ -142,16 +142,16 @@ console.log('right loss', this.left, this.right);
   this.ball.y += this.ballSpeedY;
 //console.log(this.ballX, this.ballY);
 }
-    
+
   private run(){
-console.log("run");
+// console.log("run");
     this.interval = setInterval(() => {
       this.updatePositions();
       // Emit the updated positions of the ball and the rocket to all connected clients
       this.emit2all();
       if (this.left >= 10 || this.right >= 10){
-console.log('stop game')
-        clearInterval(this.interval); 
+// console.log('stop game')
+        clearInterval(this.interval);
         this.isrunning = false;
         this.winner = this.left > this.right ? 'player_left' : 'player_right';
         this.server.emit('winner', {winner: this.winner})
@@ -202,6 +202,6 @@ console.log(`Disconnection: connectedClients =  ${this.connectedClients} (player
       this.left = 0;
       this.right = 0;
     }
-  } 
+  }
 }
 

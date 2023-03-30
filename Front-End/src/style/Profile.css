@@ -34,12 +34,11 @@
     padding-left: 10px;
 }
 
-.rank-card {
+.card {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 24px 24px 0px 21px;
-    width: 345px;
     border: 4px solid #000000;
     box-shadow: 3.95px 4.95px 0px #000000;
     border-radius: 7.46612px;
@@ -47,54 +46,15 @@
     position: relative;
 }
 
-.rank-card h5{
+.card h5 {
     font-style: normal;
     font-weight: 700;
     font-size: 32px;
     line-height: 24px;
     align-self: center;
-	font-family: 'Noto Sans', sans-serif;
+    font-family: 'Noto Sans', sans-serif;
 }
 
-.friends-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 24px 24px 0px 21px;
-    width: 345px;
-    border: 4px solid #000000;
-    box-shadow: 3.95px 4.95px 0px #000000;
-    border-radius: 7.46612px;
-	justify-content: space-between;
-    position: relative;
-}
-
-.friends-card h5{
-    font-style: normal;
-    font-weight: 700;
-    font-size: 32px;
-    line-height: 24px;
-    align-self: center;
-	font-family: 'Noto Sans', sans-serif;
-}
-
-.head {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-around;
-}
-
-.rank {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background-color: black;
-	height: 60px;
-	width: 60px;
-	border-radius: 15px;
-    margin-left: 10px;
-}
 
 .flex h2 {
 	align-self: center;
@@ -107,16 +67,6 @@
 	font-family: 'Inter';
 }
 
-.font {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: white;
-	font-size: 24px;
-	width: 50px;
-	height: 50px;
-}
-
 .flex {
 	display: flex;
 	margin-bottom: 35px;
@@ -126,23 +76,12 @@
 	font-size: 28px;
 }
 
-.status-rank {
+.status {
 	position: relative;
 	width: 8px;
 	height: 65px;
     top: 0px;
     right: 27px;
-	background: #FF5166;
-	border-radius: 27.3758px;
-}
-
-.status-friends {
-	position: relative;
-	width: 8px;
-	height: 65px;
-    top: 0;
-    right: 27px;
-	background: #5551FF;
 	border-radius: 27.3758px;
 }
 
@@ -150,12 +89,48 @@
     display: flex;
 }
 
-.body {
+.container-profile {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 80px;
+    height: fit-content;
+    padding-top: 80px;
+    padding-left: 70px;
+}
+
+.card-wrapper {
+    grid-template-columns: repeat(3, 1fr);
+    grid-column: span 2;
+}
+
+.background-icon {
     display: flex;
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    height: 60px;
+    width: 60px;
+    border-radius: 15px;
+    margin-left: 10px;
+}
+
+.font {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+}
+
+@media (max-width: 768px) {
+    .container-profile {
+      grid-template-columns: 1fr;
+    }
+    .card-wrapper {
+        grid-template-columns: 1fr;
+      }
 }
 
 .body h5{
@@ -168,52 +143,22 @@
     margin-left: 20px;
 }
 
-.history {
-    width: 345px;
-    text-align: left;
-    padding: 15px;
-
-}
-
-.victory {
-    width: 345px;
-    text-align: left;
-    padding: 15px;
-}
-
-.level {
-    width: 230px;
-    text-align: left;
-    padding: 15px;
-}
-
-.accept i {
+.accept {
     color: rgb(14, 128, 20);
     font-size: 30px;
-    margin-right: 20px;
+	width: fit-content;
+	cursor: pointer;
 }
 
-.deny i {
+.deny {
     color:rgb(94, 33, 33);
     font-size: 30px;
-    margin-right: 20px;
+	width: fit-content;
+	cursor: pointer;
 }
 
-.response {
-    display: flex;
-}
-
-.friends-card ul {
-	list-style-type: none;
-}
-
-.friend li {
-    display: flex;
-}
-
-.friend {
-    left: -35px;
-    position: relative;
+li {
+    list-style-type: none;
 }
 
 .friends-infos {
@@ -250,3 +195,8 @@
     /* align-items: ; */
 }
 
+.friend {
+	left: -35px;
+	position: relative;
+	display: flex;
+}

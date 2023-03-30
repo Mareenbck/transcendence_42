@@ -16,19 +16,21 @@ import { Link } from "react-router-dom";
 import MyAvatarM from './user/Avatar';
 import MyAvatarS from './user/Avatar';
 import SmallAvatar from './user/SmallAvatar';
+import HomeIcon from '@mui/icons-material/Home';
+import AuthContext from '../store/AuthContext';
+import { useContext } from 'react';
+import { FriendContext } from '../store/FriendshipContext';
+
 
 export default function MyAccountMenu(props: any) {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
-	console.log("HAO")
-	console.log(props.authCtx)
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-
 
 	return (
 	<React.Fragment>
@@ -42,7 +44,7 @@ export default function MyAccountMenu(props: any) {
 			aria-haspopup="true"
 			aria-expanded={open ? 'true' : undefined}
 			>
-			<MyAvatar style="sidebar" src={props.authCtx} />
+			<MyAvatar style="sidebar" authCtx={props.authCtx} id={props.authCtx.userId}/>
 			</IconButton>
 			</Tooltip>
       {/* </Box> */}
@@ -82,7 +84,7 @@ export default function MyAccountMenu(props: any) {
 		anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 		>
 		<MenuItem>
-			<MyAvatar src={props.authCtx} sx={{ width: 34, height: 34 }}/>
+			<MyAvatar authCtx={props.authCtx} id={props.authCtx.userId} sx={{ width: 34, height: 34 }}/>
 			<Link to={`/users/profile/${props.authCtx.userId}`}>Profile</Link>
 		</MenuItem>
 		{/* <MenuItem onClick={handleClose}>
@@ -97,7 +99,7 @@ export default function MyAccountMenu(props: any) {
 		</MenuItem>
 		<MenuItem>
 			<ListItemIcon>
-				<Settings fontSize="small" />
+				<HomeIcon color="action" />
 			</ListItemIcon>
 			<Link to={`/menu`}>Home</Link>
 		</MenuItem>

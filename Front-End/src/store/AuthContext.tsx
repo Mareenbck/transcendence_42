@@ -46,7 +46,7 @@ export const AuthContextProvider = (props: any) => {
 		}
 	  };
 
-	  const fetchAvatar = async (userId: string) => {
+	const fetchAvatar = async (userId: string) => {
 		  try {
 			  const response = await fetch(`http://localhost:3000/users/${userId}/avatar`, {
 				  method: 'GET',
@@ -72,8 +72,6 @@ export const AuthContextProvider = (props: any) => {
 				}
 			});
 			const data = await response.json();
-			console.log("DATA")
-			console.log(data)
 			setUserId(data.id);
 			setUsername(data.username);
 			setAvatar(data.avatar);

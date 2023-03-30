@@ -54,6 +54,7 @@ function Chat() {
         createdAt: Date.now(),
       });
     })
+    
     socket.current.on("getMD", (data)=> {
       setAMessageD({
         content: data.content,
@@ -63,7 +64,7 @@ function Chat() {
       });
     });
   }, []);
-  
+
   useEffect(() => {
     socket.current.on("getConv", data => {
       setAConversation({
@@ -72,6 +73,8 @@ function Chat() {
       });
     });
   }, []);
+
+
 
   useEffect(() => {
     socket.current.emit("addUser", user);
@@ -97,6 +100,7 @@ function Chat() {
     });
   }, []);
 
+
   useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
     setMessages2(prev=>[...prev, AMessageChat]);
@@ -113,6 +117,17 @@ function Chat() {
 
 
 
+  useEffect(() => {
+    socket.current.emit("addUser", user);
+  },[user])
+
+  useEffect(() => {
+    socket.current.on("getUsers", users => {
+      setOnlineUsers(users);
+    });
+  })
+
+
 ////////////////////////////////////////////////
 // Partie II : va chercher les infos de la base de donnée
 ////////////////////////////////////////////////
@@ -126,6 +141,7 @@ function Chat() {
   useEffect(() => {
     getAllUsersWithBlocked(user);
   }, []);
+
 
   useEffect(() => {
     async function getAllConv() {
@@ -153,7 +169,7 @@ function Chat() {
       getMess();
     }
   }, [currentChat]);
-  
+
   useEffect(() => {
     if (currentDirect)
     {
@@ -170,6 +186,9 @@ function Chat() {
       getDirMess();
     }
   }, [currentDirect]);
+
+
+
 
 
 ////////////////////////////////////////////////
@@ -313,22 +332,24 @@ function Chat() {
       content: newMessage2,
       chatroomId: currentChat.id,
     };
-    
+
     socket?.current.emit("sendMChat", {
       authorId: +id,
       chatroomId: +currentChat?.id,
       content: newMessage2,
     })
-    
+
     try {
       const res = await MessageReq.postMess(message2);
       setMessages2([...messages2, res]);
       setNewMessage2("");
     } catch(err) {console.log(err)}
   }
+
   
 // Direct message
   const handleSubmitD = async (e: FormEvent)=> {
+
     e.preventDefault();
     const r = currentDirect?.userId ? +currentDirect?.userId : +currentDirect?.id;
     const messageD = {
@@ -351,10 +372,13 @@ function Chat() {
       setNewMessageD("");
     } catch(err) {console.log(err)}
   }
+
+
   
 ////////////////////////////////////////////////
 // Partie VI : Scroll to view
 ////////////////////////////////////////////////
+
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
@@ -368,6 +392,7 @@ function Chat() {
 ////////////////////////////////////////////////
 // Partie VII : Channels pour EMMA
 ////////////////////////////////////////////////
+
 
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
 	 setSelectedFile(event.target.files[0]);
@@ -387,12 +412,12 @@ function Chat() {
       name: newConversation,
       avatar: ""
     };
-  
+
     socket?.current.emit("sendConv", {
       author: +id,
       content: newConv,
     })
-  
+
     try {
       const res = await ConversationReq.postRoom(user, newConv);
       setConversations([res, ...conversations]);

@@ -1,6 +1,6 @@
 import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
-import SideBar from '../auth/SideBar';
+import SideBar from '../SideBar';
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
@@ -31,7 +31,7 @@ const Scores = () => {
   const authCtx = useContext(AuthContext);
   const [list, setList] = useState<response[]> ([]);
   const [avatar, setAvatar] = useState<string | null>(null);
-  
+
 
   useEffect(() => {
 		setAvatar(authCtx.avatar);
@@ -50,31 +50,31 @@ const Scores = () => {
     };
     getJeux();
     }, []);*/
-    
-    return(  
+
+    return(
        <div className= {style.mainPos}>
-          <SideBar title="Scores" />  
+          <SideBar title="Scores" />
           <div className="midPos">
-            <h1 className={style.title}>PONDIUM</h1> 
+            <h1 className={style.title}>PONDIUM</h1>
             <hr width="100%" color="green" />
 
             <div className="pos">
                 {response.map( (id ) => {
                   return(
-                    
-				             
+
+
                     <UserChart key={id} image ={id.avatar} userName={id.UserName}  h={(id.UserScore)}/>
                   )
                 })
               }
-             
-             
-            </div>  
-          </div>  
+
+
+            </div>
+          </div>
 
         </div>
-            
-     )           
+
+     )
   }
 
 
