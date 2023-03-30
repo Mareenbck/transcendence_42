@@ -27,8 +27,8 @@ const addRoomUser = (roomId, userId, socketId) => {
   roomId && roomUsers.push({roomId, userId, socketId});
 }
 
-@WebSocketGateway(8001, { cors: {origin: "http://localhost:8080",}, })
-//@WebSocketGateway(8001, { cors: 'http://localhost/chat/message' })
+//@WebSocketGateway(8001, { cors: {origin: "http://localhost:8080",}, })
+@WebSocketGateway(8001, { cors: 'http://localhost/chat/message' })
 
 export class ChatGateway {
   @WebSocketServer()
@@ -94,10 +94,12 @@ export class ChatGateway {
       });
 
       socket.on("toUnblock", ({blockFrom, blockTo,}) => {
-      const userTo = getUser(blockTo);
+        const userTo = getUser(blockTo);
+        const userFrom = getUser(blockFrom);
         if (userTo) {
           this.server.to(userTo.socketId).emit("wasUnblocked", {
-            blockFrom,
+            id: blockFrom,
+            user: userFrom,
           });
         };
       });
