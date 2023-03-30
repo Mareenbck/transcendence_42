@@ -39,8 +39,18 @@ export class Game {
 
 	// private idPlayerR: profile;
 	// private idPlayerL: profile;
-	private playerL: player;
-	private playerR: player;
+	private playerL: player = {
+		profile: {} as profile, 
+		racket: {x: 10, y: (height - racket_height)/2},
+		score: 0,
+		winner: false
+	};
+	private playerR: player = {
+		profile: {} as profile, 
+		racket: {x: width - racket_width - 10, y: (height - racket_height)/2},
+		score: 0,
+		winner: false
+	};
 
 	private spectatorSockets: any[] = [];
 	private isrunning: boolean = false; // define the interval property
@@ -63,33 +73,12 @@ export class Game {
 	// socket: any;
 	
 	constructor(
-		idPlayerR: profile,
-		idPlayerL: profile,
 		server: Server,
 		prismaService: PrismaService,
 	) {
 console.log("constructor Class.game");
-
 		this.server = server;
-		// this.idPlayerR = idPlayerR;
-		// this.idPlayerL = idPlayerL;
-			this.prismaService = prismaService;
-	
-	
-			this.playerL  =	{ profile: idPlayerL, 
-								racket: {x: 10, y: (height - racket_height)/2},
-								score: 0,
-								winner: false
-							};
-//console.log("84 constructor Class.game idPlayerL", idPlayerL);
-
-			this.playerR = 	{ profile: idPlayerR, 
-								racket: {x: width - racket_width - 10, y: (height - racket_height)/2},
-								score: 0,
-								winner: false
-							};
-//console.log("88 constructor Class.game playerL socket", this.playerL.profile.socketId);
-
+		this.prismaService = prismaService;
 		}
 
 //emit game 
@@ -103,9 +92,9 @@ console.log("constructor Class.game");
 		}); 
 	}
 
-	public init(){
-console.log("init");
-		this.server.emit('init-pong', { // room connection
+	public init(socket: Socket){
+console.log(`init socket ${socket}`);
+		socket.emit('init-pong', { // room connection
 			table_width: width,
 			table_height: height,
 			racket_width: racket_width,
@@ -141,7 +130,7 @@ private updatePositions(): void
 console.log('left loss', this.playerL.score, this.playerR.score);
     this.ball.x = width / 2 - this.ballSpeedX;
     this.ball.y = height / 2 - this.ballSpeedX;
-    ballSpeed = ballSpeed + 1;
+    ++ballSpeed;
     this.ballSpeedX = ballSpeed;
 console.log('ballSpeed = ', ballSpeed);
   } else if (this.ball.x > width - ballR) {
@@ -150,8 +139,8 @@ console.log('ballSpeed = ', ballSpeed);
 console.log('right loss', this.playerL.score, this.playerR.score);
     this.ball.x = width / 2 - this.ballSpeedX;
     this.ball.y = height / 2 - this.ballSpeedX;
-    ballSpeed = ballSpeed + 1;
-    this.ballSpeedX = - ballSpeed;
+    ++ballSpeed;
+    this.ballSpeedX = -ballSpeed;
 console.log('ballSpeed = ', ballSpeed);
   } else if (this.ball.y < ballR || this.ball.y > height - ballR) {
     this.ballSpeedY = -this.ballSpeedY;
@@ -162,62 +151,62 @@ console.log('ballSpeed = ', ballSpeed);
 //console.log(this.ballX, this.ballY);
 }
     
-public run(): void {
-console.log("this.server.sockets", this.server.sockets.sockets.size);
-	const socketR: Socket = this.server.sockets.sockets[this.playerR.profile.socketId]; 
-	const socketL: Socket = this.server.sockets.sockets[this.playerL.profile.socketId]; 
+private player_move = (message: string, player: player) => {
+console.log("playerR move", message);
+	if (message == 'up') {
+		if (player.racket.y > 0) {
+			player.racket.y -= racketSpeedY;
+		}
+		this.emit2all();
+	} else if (message == 'down') {
+		if (player.racket.y < height - racket_height) {
+			player.racket.y += racketSpeedY;
+		}
+		this.emit2all();
+	}
+};
 
+public run(
+	idPlayerR: profile,
+	idPlayerL: profile,
+): void {
 console.log("run");
-// console.log("161 Class.game playerL", this.playerL);
-// console.log("161 Class.game playerR", this.playerR.profile.socketId);
+console.log("idPlayerR", idPlayerR);
+console.log("idPlayerL", idPlayerL);
+	this.playerR.profile = idPlayerR;
+	this.playerL.profile = idPlayerL;
+
 
 // move rakets
-	socketR?.on('move', (message: string) => {
-console.log("playerR move", message);
-		if (message == 'up') {
-			if (this.playerR.racket.y > 0) {
-			this.playerR.racket.y -= racketSpeedY;
-			}
-			this.emit2all();
-		} else if (message == 'down') {
-			if (this.playerR.racket.y < height - racket_height) {
-			this.playerR.racket.y += racketSpeedY;
-			}
-			this.emit2all();
-		}
+	// const socketR = this.server.sockets.sockets.get(idPlayerR.socketId); 
+	// socketR.on('move', (m:string) => {this.player_move(m, this.playerR)})
+	idPlayerR.socketId.forEach((id) => {
+		const socket = this.server.sockets.sockets.get(id); 
+		socket.on('move', (m:string) => {this.player_move(m, this.playerR)})
 	});
-	socketL?.on('move', (message: string) => {
-console.log("playerL move", message);
-		if (message == 'up') {
-			if (this.playerL.racket.y > 0) {
-			this.playerL.racket.y -= racketSpeedY;
-			}
-			this.emit2all();
-		} else if (message == 'down') {
-			if (this.playerL.racket.y < height - racket_height) {
-			this.playerL.racket.y += racketSpeedY;
-			}
-			this.emit2all();
-		}
+
+	idPlayerL.socketId.forEach((id) => {
+		const socket = this.server.sockets.sockets.get(id); 
+		socket.on('move', (m:string) => {this.player_move(m, this.playerL)});
 	});
 
 //disconect
-	socketR?.on('disconect', () => {
-console.log("playerR disconect");
-		clearInterval(this.interval);
-		this.isrunning = false;
-		let winner = this.playerL.profile.userId;
-		this.server.emit('winner', {winner: winner, leave: this.leave});   
+// 	socketR?.on('disconect', () => {
+// console.log("playerR disconect");
+// 		clearInterval(this.interval);
+// 		this.isrunning = false;
+// 		let winner = this.playerL.profile.userId;
+// 		this.server.emit('winner', {winner: winner, leave: this.leave});   
 
-	})
+// 	})
 
-	socketL?.on('disconect', () => {
-console.log("playerL disconect");
-		clearInterval(this.interval);
-		this.isrunning = false;
-		let winner = this.playerR.profile.userId;
-		this.server.emit('winner', {winner: winner, leave: this.leave});
-	})
+// 	socketL?.on('disconect', () => {
+// console.log("playerL disconect");
+// 		clearInterval(this.interval);
+// 		this.isrunning = false;
+// 		let winner = this.playerR.profile.userId;
+// 		this.server.emit('winner', {winner: winner, leave: this.leave});
+// 	})
 	
     this.interval = setInterval(() => {
       this.updatePositions();

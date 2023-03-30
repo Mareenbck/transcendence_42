@@ -9,18 +9,29 @@ import {Server, Socket} from 'socket.io'
 import { GameService } from './game.service';
 import { Game } from './game.class';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { profile } from './game.interfaces';
 
 
 //all connected
 let users = [];
 //two players
-let players = [];
+let players: profile [] = [];
 
 const addUser = (userId, socketId) => {
   if (players.length < 2) {
-// console.log('player 21', userId);
-    !players.some((user) => +user.userId.userId === +userId.userId) &&
-    players.push({userId, socketId})
+console.log('22 player ', userId);
+    const index = players.findIndex((x) => +x.userId.userId === +userId.userId);
+console.log('24 player index ', index);
+    if (index === -1) {
+console.log('26 players.push({userId: userId, socketId: [socketId]})');
+      // If s1 does not exist, add it with a new list containing s2
+      players.push({userId: userId, socketId: [socketId]});
+    } else {
+console.log('30 players[index]', players[index]);
+      // If s1 exists, append s2 to the existing list of s1
+      !players[index].socketId.some((socket) => +socket === +socketId) &&
+      players[index].socketId.push(socketId)
+    }
 // console.log(`24 players [] ='${players}'`);
   } else {
     !users.some((user) => +user.userId.userId === +userId.userId) &&
@@ -45,32 +56,36 @@ const removeUser = (socketId) => {
 export class GameGateway {
  
   @WebSocketServer() server: Server;
+
   prismaService: PrismaService;
+
   onModuleInit(){
-    this.server.on('connection', (socket) => {
+    const game = new Game( 
+      this.server,
+      //this.websocketsService,
+      this.prismaService,
+      //this.achievementsService,
+    );
+
+    this.server.on('connection', (socket: Socket) => {
 console.log('51 Connected socket = ', socket.id);
+      game.init(socket);
 
       socket.on("addUser", (userId) => {
         addUser(userId, socket.id);
-console.log ('55 players = ',players.length);
+console.log ('55 players = ', players.length);
 console.log ('56 users = ',users.length);
+console.log ('55 players = ', players);
 
         // const user = getUser(users);
         // const player = getPlayers(players);
         this.server.emit("getSpectators", users);
         this.server.emit("getPlayers", players);
-this.server.clients[socket.id].on('move', ()=>{console.log('----move---')});
         if (players.length == 2) {
-          const game = new Game( 
-            players[0] , players[1],
-            this.server,
-            //this.websocketsService,
-            this.prismaService,
-            //this.achievementsService,
-          );
           //this.games.push(game);
-          game.init();
-          game.run();
+          game.run(
+            players[0], players[1],
+          );
         }
       });
 

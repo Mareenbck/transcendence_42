@@ -1,7 +1,7 @@
 import {Socket} from 'socket.io';
 
 export interface profile{
-	socketId: any;
+	socketId: any [];
 	userId: any;
 }
 
