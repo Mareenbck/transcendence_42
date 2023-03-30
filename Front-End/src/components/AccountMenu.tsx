@@ -44,7 +44,7 @@ export default function MyAccountMenu(props: any) {
 			aria-haspopup="true"
 			aria-expanded={open ? 'true' : undefined}
 			>
-			<MyAvatar style="sidebar" authCtx={props.authCtx} id={props.authCtx.userId}/>
+			<MyAvatar style='m' authCtx={props.authCtx} id={props.authCtx.userId}/>
 			</IconButton>
 			</Tooltip>
       {/* </Box> */}

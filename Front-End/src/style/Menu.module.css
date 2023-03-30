@@ -12,7 +12,7 @@
     top: 0;
     left: 0;
     height: 100vh;
-    transition: all 0.5s ease.;
+    transition: all 0.5s ease;
 }
 
 
@@ -53,7 +53,7 @@
 {
     /*border-bottom: 3px solid rgb(143, 143, 243);
     padding-bottom: 80px;*/
-   
+
 
     text-align: center;
     margin: auto;
@@ -66,6 +66,6 @@
      left: 774px;
      top: 14px;
 
-     
+
 }
 
