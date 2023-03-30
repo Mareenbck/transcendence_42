@@ -36,25 +36,33 @@ function Chat() {
   const usernameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState('');
-  const [newConversation, setNewConversation] = useState([]);
+  const [newConversation, setNewConversation] = useState("");
   const [toBlock, setToBlock] = useState(null);
   const [toUnblock, setToUnblock] = useState(null);
   const [didBlock, setDidBlock] = useState(null);
   const [wasBlocked, setWasBlocked] = useState(null);
+  const [fromBlock, setFromBlock] = useState<number>([]);
 
-  useEffect(() => {
     async function getAllUsersWithBlocked(user: AuthContext) {
       const response = await ChatReq.getAllUsersWithBlocked();
       setAllUsers(response);
       setOtherUsers(response.filter(u => !(onlineUsers.some(e => +e.userId.userId === +u.id))));
     };
-       getAllUsersWithBlocked();
+
+  useEffect(() => {
+  /*  async function getAllUsersWithBlocked(user: AuthContext) {
+      const response = await ChatReq.getAllUsersWithBlocked();
+      setAllUsers(response);
+      setOtherUsers(response.filter(u => !(onlineUsers.some(e => +e.userId.userId === +u.id))));
+    };*/
+    getAllUsersWithBlocked(user);
     let online = [];
     onlineUsers.map(u=>{
       online.push(getUser(+u.userId.userId));
     });
     setOnlineUsers2(online);
-
+    console.log(online);
+    console.log(allUsers);
   }, []);
 
   useEffect(() => {
@@ -110,8 +118,8 @@ function Chat() {
 //      users.map(u => {
 //        online.push(getUser(+u.userId.userId));
  //     });
- ///     setOnlineUsers(online);
-  //    console.log(online);
+ //     setOnlineUsers(online);
+ //       console.log(online);
       setOnlineUsers(users);
     });
   });
@@ -167,39 +175,39 @@ function Chat() {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
   }, [messagesD]);
-
+/*
   useEffect(() => {
     socket.current.on("wasBlocked", data => {
-console.log(data);
-console.log(+data.id !== +id);
       if (+data.id !== +id)
-      {
-  //      if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +data.id)) {
-       console.log("dddddddddd 2");
-          const i = allUsers.findIndex(userX => +userX.id === +data.id);
-          const j = allUsers.find(userX => +userX.id === +data.id);
-          j.blockedFrom.push(+data.id);
-          const NewAll = allUsers;
-          NewAll.splice(i, 1, j);
-          setAllUsers([...NewAll]);
-    //    setOnlineUsers([...onlineUsers]);
-   //     }
-      }
-    })
+        {
+          setFromBlock([+data.id, ...fromBlock]);
+        }
+      });
+  }, []);
+*/
+  useEffect(() => {
+   socket.current.on("wasBlocked", data => {
 
+//  if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +toBlock.id)) {
+        const i = allUsers.findIndex(userX => +userX.id === +id);
+        allUsers.find(userX => +userX.id === +id).blockedFrom.push(+data.userId.userId);
+console.log(i);
+        j.blockedFrom.push(+data.user);
+        const NewAll = allUsers;
+        NewAll.splice(i, 1, j);
+        setAllUsers([...NewAll]);
+
+  //    }
+    });
+}, []);
+
+
+
+
+  useEffect(() => {
     socket.current.on("wasUnblocked", data => {
       if (+data.id !== +id)
-      {
-        if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +data.id)) {
-          const i = allUsers.findIndex(userX => +userX.id === +data.id);
-          const j = allUsers.find(userX => +userX.id === +data.id);
-          j.blockedFrom = j.blockedFrom.filter(u => +u.id !== +id);
-          j.blockedFrom = j.blockedFrom.filter(i => +i !== +id);
-          const NewAll = allUsers;
-          NewAll.splice(i, 1, toUnblock);
-          setAllUsers([...NewAll]);
-        }
-      }
+      { setFromBlock(fromBlock.filter(i => +i !== +data.id)); }
     })
   }, []);
 
@@ -210,9 +218,6 @@ console.log(+data.id !== +id);
         blockTo: +toBlock.id,
         blockFrom: +id,
       })
-
-      console.log("fffffffffffffffffff");
-            console.log(toBlock.id);
       async function blockUser() {
         try {
           const res = await ChatReq.postBlock(user, toBlock.id);
@@ -225,7 +230,6 @@ console.log(+data.id !== +id);
         const NewAll = allUsers;
         NewAll.splice(i, 1, toBlock);
         setAllUsers([...NewAll]);
-    //    setOnlineUsers([...onlineUsers]);
       }
       if (otherUsers && otherUsers.find(user => +user.id === +toBlock.id)) {
         const i = otherUsers.findIndex(user => +user.id === +toBlock.id);
@@ -278,17 +282,23 @@ console.log(+data.id !== +id);
   };
 
   const amIBlocked = (userXid) : string => {
-    return getUser(+id)?.blockedFrom.find(u => +u.id === +userXid) ? "chatOnlineNotFriend" : "chatOnlineFriend";
-  }
+    if (getUser(+id)?.blockedFrom.find(u => +u.id === +userXid) || isFoundB(userXid))
+      { return "chatOnlineNotFriend"; }
+    else
+      {return "chatOnlineFriend";}
+  };
+
+  const isFoundB = (userXid) => {
+    fromBlock.some(element => {
+      return (+element === +userXid);
+    });
+  };
 
   const isHeBlocked = (userXid) => {
     const i = getUser(userXid);
     if (i && i.blockedFrom && !i?.blockedFrom.find((u)=>(+id === +u?.id)) && !i.blockedFrom.find((i)=>(+id === +i)))
       {return (true);};
     }
-
-// !getUser(o.userId.userId).blockedFrom.find((u)=>(+id === +u?.id)) && !getUser(o.userId.userId).blockedFrom.find((i)=>(+id === +i)) ?
-
 
   const getDirect = (userX) => {
     const i = getUser(+id);
@@ -351,11 +361,17 @@ console.log(+data.id !== +id);
   };
 
   const handleChannelNameChange = (e: FormEvent) => {
-    setNewConversation(e.target.value);
+  console.log(e.target.value);
+    if (e.target.value) {
+      setNewConversation(e.target.value);
+    }
   };
 
   const createNewConv = async (e: FormEvent) => {
     e.preventDefault();
+    console.log(newConversation);
+    if (newConversation)
+    {
     const newConv = {
       name: newConversation,
       avatar: ""
@@ -371,6 +387,7 @@ console.log(+data.id !== +id);
       setConversations([res, ...conversations]);
       setNewConversation("");
     } catch(err) {console.log(err)}
+    }
   };
 
   const [channels, setChannelName] = useState([]);
