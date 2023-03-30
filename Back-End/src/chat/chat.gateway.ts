@@ -1,4 +1,3 @@
-
 import {
   MessageBody,
   WebSocketServer,
@@ -28,8 +27,8 @@ const addRoomUser = (roomId, userId, socketId) => {
   roomId && roomUsers.push({roomId, userId, socketId});
 }
 
-// @WebSocketGateway(8001, { cors: {origin: "http://localhost:8080",}, })
-@WebSocketGateway(8001, { cors: 'http://localhost/chat/message' })
+@WebSocketGateway(8001, { cors: {origin: "http://localhost:8080",}, })
+//@WebSocketGateway(8001, { cors: 'http://localhost/chat/message' })
 
 export class ChatGateway {
   @WebSocketServer()
