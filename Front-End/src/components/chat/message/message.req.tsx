@@ -1,12 +1,3 @@
-//import MessageDf from "./message.df"
-//import MessageDDf from "./messageD.df"
-
-
-//  static async getMess(roomId: number) : Promise<MessageDf[]> {
-//  static async postMess(message2) : Promise<MessageDf[]> {
-//  static async getDirMess(me: number, friend: number) : Promise<MessageDDf[]> {
-//  static async postDirMess(messageD) : Promise<MessageDDf[]> {
-
 export class MessageReq {
   static async getMess(roomId: number) {
     try {

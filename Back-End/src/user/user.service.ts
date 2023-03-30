@@ -23,9 +23,17 @@ export class UserService {
 	}
 
 	async getUsers() {
-		const allUsers = await this.prisma.user.findMany();
+		const allUsers = await this.prisma.user.findMany({
+    });
 		return allUsers;
 	}
+
+  async getUsersWithBlocked() {
+    const allUsers = await this.prisma.user.findMany({
+      include: { blockedFrom: true, blockedTo: true }
+    });
+    return allUsers;
+  }
 
 	async getUser(id: number) {
 		if (id === undefined) {
@@ -188,5 +196,42 @@ export class UserService {
 		}
 	}
 
+  async block(blockFrom: number, blockTo: number) {
+          console.log("llllll");
+      console.log(blockFrom);
+    const updateUser = await this.prisma.user.update({
+      where: {
+        id: +blockFrom,
+      },
+      data: {
+        blockedTo: {
+          connect: [{ id: +blockTo }],
+        },
+      },
+      include: {
+        blockedTo: true,
+        blockedFrom: true,
+      },
+    })
+    return updateUser;
+  };
+
+  async unblock(blockFrom: number, unblockTo: number) {
+    const updateUser = await this.prisma.user.update({
+      where: {
+        id: +blockFrom,
+      },
+      data: {
+        blockedTo: {
+          disconnect: [{ id: +unblockTo }],
+        },
+      },
+      include: {
+        blockedTo: true,
+        blockedFrom: true,
+      },
+    })
+    return updateUser;
+  };
 
 }

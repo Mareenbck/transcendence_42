@@ -12,7 +12,7 @@ import { JeuxModule } from './jeux/jeux.module';
 import { GameModule } from './game/game.module';
 import { GameGateway } from './game/game.gateway';
 import { FriendshipModule } from './friendship/friendship.module';
-
+import { GlobalModule } from './gateway/global.module';
 
 @Module({
 	imports: [
@@ -26,6 +26,7 @@ import { FriendshipModule } from './friendship/friendship.module';
 		JwtModule.register({ secret: `${process.env.JWT_SECRET}` }),
 		ChatroomModule,
 		ChatMessModule,
+    GlobalModule,
 		DirMessModule,
 		JeuxModule,
 		GameModule,

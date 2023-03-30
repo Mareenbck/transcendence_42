@@ -29,5 +29,8 @@ export class UserDto {
 
 	receivedFriendships: FriendsDto[];
 
+  blockedTo: UserDto[];
+  blockedFrom: UserDto[];
+
 	dirMessEmited: DirMessDto[];
 }

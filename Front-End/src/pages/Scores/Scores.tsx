@@ -6,8 +6,6 @@ import { useContext } from "react";
 import SideBar from '../../components/SideBar';
 import style from '../../style/Menu.module.css'
 import JeuReq from "./scores.req"
-//import JeuDto from "./scores.dto"
-
 
 function Score() {
 
