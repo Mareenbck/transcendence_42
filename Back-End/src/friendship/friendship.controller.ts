@@ -4,10 +4,15 @@ import { FriendshipService } from './friendship.service';
 import { GetCurrentUserId } from '../decorators/get-userId.decorator';
 import { FriendsDto } from './dto/friends.dto';
 import { GetUser } from 'src/auth/decorator';
+import path = require('path');
+import { UserService } from 'src/user/user.service';
+import { Response } from 'express';
+
 
 @Controller('friendship')
 export class FriendshipController {
-	constructor(private friendshipService: FriendshipService) { }
+	constructor(private friendshipService: FriendshipService,
+				private userService: UserService) { }
 
 	@Post('/create')
 	async openFriendship(@Body() usersId: any) {
@@ -47,5 +52,25 @@ export class FriendshipController {
 	async deleteFriend(@Body() usersId: number) {
 		const user = this.friendshipService.removeFriend(usersId);
 		return user;
+	}
+
+	@Get('/:id/avatar')
+	async getAvatar(@Param('id') id: string, @Res() res: Response) {
+		try {
+			const user = await this.userService.getUser(parseInt(id));
+			// >>>> const avatar a mettre dans service
+			if (user.avatar) {
+				const fileName = path.basename(user.avatar)
+				const result = res.sendFile(fileName, { root: process.env.UPLOAD_DIR });
+				return result
+			}
+			else if (!user.ftAvatar && !user.avatar) {
+				const fileName = process.env.DEFAULT_AVATAR;
+				const result = res.sendFile(fileName, { root: process.env.PATH_DEFAULT_AVATAR });
+				return result
+			}
+		} catch {
+			throw new ForbiddenException('Not Found');
+		}
 	}
 }

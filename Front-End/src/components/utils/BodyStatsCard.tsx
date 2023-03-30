@@ -13,9 +13,6 @@ const BodyStatsCard = (props: any) => {
 		}
 	}, [props.icon])
 
-	console.log("icon--->")
-	console.log(icon)
-
 	return (
 		<>
 		<div className='flex'>

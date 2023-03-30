@@ -19,7 +19,7 @@ const ShowFriends = (props: any) => {
 		<AvatarGroup>
 			{friendCtx.friends.map((friend: Friend) => (
 				<li key={friend.id}>
-					<MyAvatar context={authCtx} id={friend.id} avatar={friend.avatar} ftAvatar={friend.ftAvatar}></MyAvatar>
+					<MyAvatar authCtx={authCtx} id={friend.id} avatar={friend.avatar} ftAvatar={friend.ftAvatar}></MyAvatar>
 				</li>
 			))}
 		</AvatarGroup>

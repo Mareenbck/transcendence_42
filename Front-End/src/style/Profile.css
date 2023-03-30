@@ -39,20 +39,11 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 24px 24px 0px 21px;
-    /* width: 345px; */
-    /* height: 270px; */
     border: 4px solid #000000;
     box-shadow: 3.95px 4.95px 0px #000000;
     border-radius: 7.46612px;
 	justify-content: space-between;
     position: relative;
-    /* margin-left: 7rem; */
-}
-
-.flex-around {
-    display: flex;
-    justify-content: space-around;
-    width: 80%;
 }
 
 .card h5 {
@@ -65,12 +56,6 @@
 }
 
 
-.head {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-}
-
 .flex h2 {
 	align-self: center;
 	font-style: normal;
@@ -82,16 +67,6 @@
 	font-family: 'Inter';
 }
 
-.font {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: white;
-	font-size: 24px;
-	width: 50px;
-	height: 50px;
-}
-
 .flex {
 	display: flex;
 	margin-bottom: 35px;
@@ -100,7 +75,6 @@
 	color: white;
 	font-size: 28px;
 }
-
 
 .status {
 	position: relative;
@@ -113,14 +87,6 @@
 
 .title {
     display: flex;
-}
-
-.body {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    padding-right: 20%;
 }
 
 .container-profile {
@@ -177,37 +143,22 @@
     margin-left: 20px;
 }
 
-.accept i {
+.accept {
     color: rgb(14, 128, 20);
     font-size: 30px;
-    margin-right: 20px;
+	width: fit-content;
+	cursor: pointer;
 }
 
-.deny i {
+.deny {
     color:rgb(94, 33, 33);
     font-size: 30px;
-    margin-right: 20px;
-}
-
-.response {
-    display: flex;
-}
-
-.friends-card ul {
-	list-style-type: none;
-}
-
-.friend li {
-    display: flex;
+	width: fit-content;
+	cursor: pointer;
 }
 
 li {
     list-style-type: none;
-}
-
-.friend {
-    left: -35px;
-    position: relative;
 }
 
 .friends-infos {
@@ -244,3 +195,8 @@ li {
     /* align-items: ; */
 }
 
+.friend {
+	left: -35px;
+	position: relative;
+	display: flex;
+}

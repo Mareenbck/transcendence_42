@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import '../../style/Sidebar.css'
+import '../style/Sidebar.css'
 import { Link, useLocation } from "react-router-dom";
-import AuthContext from "../../store/AuthContext";
-import MyAccountMenu from "../AccountMenu";
+import AuthContext from "../store/AuthContext";
+import MyAccountMenu from "./AccountMenu";
 
 
 const Sidebar = (props: any) => {

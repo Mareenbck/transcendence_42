@@ -2,7 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import AuthContext from "../store/AuthContext";
-import SideBar from '../components/auth/SideBar'
+import SideBar from '../components/SideBar'
 import style from '../style/Menu.module.css'
 
 const Menu = () => {

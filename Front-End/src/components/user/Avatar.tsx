@@ -23,8 +23,18 @@ const customStyleS = `
 	}
 `;
 
+const customStyleXS = `
+	.custom-avatar-small {
+		width: 15px;
+		height: 15px;
+		border: 2.97px solid #FFFFFF;
+		filter: drop-shadow(4.97px 3.97px 0px #000000);
+		margin-right: 25px;
+	}
+`;
+
 const MyAvatar = (props: any) => {
-	const authCtx = props.context;
+	const authCtx = props.authCtx;
 	const [style, setStyle] = useState('');
 	// const [avatar, setAvatar] =  useState<string | null>('');
 	const [content, setContent] = useState<any>(null);
@@ -32,6 +42,8 @@ const MyAvatar = (props: any) => {
 	useEffect(() => {
 		if (props.style === "sidebar") {
 			setStyle(customStylesSidebar);
+		} else if (props.style ==='xs') {
+			setStyle(customStyleXS);
 		} else {
 			setStyle(customStyleS);
 		}
@@ -43,7 +55,7 @@ const MyAvatar = (props: any) => {
 		} else  {
 			setContent(props.avatar ? <Avatar className="custom-avatar" src={props.avatar} /> : <Avatar className="custom-avatar" src={props.ftAvatar} />)
 		}
-	}, [props.id]);
+	}, [authCtx.avatar, props.avatar]);
 
 	return (
 		<>

@@ -29,10 +29,7 @@ export const FriendContextProvider = (props: any) => {
 		getFriends(authCtx.token, authCtx.userId);
 	}, []);
 
-	console.log("friends DANS CTX")
-	console.log(friends)
 	const createDemand = async (receiverId: number, token: string, currentId: string) => {
-		console.log("create demand dans context:")
 		try {
 			const response = await fetch(`http://localhost:3000/friendship/create`, {
 				method: 'POST',
@@ -58,15 +55,18 @@ export const FriendContextProvider = (props: any) => {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`
+					// Authorization: `Bearer ${token}`
 				},
 				body: JSON.stringify({ id: currentId }),
 			}
 		)
 		const data = await response.json();
-		setDemands(data);
+		const updatedDemands = await Promise.all(data.map(async (demand: Demand) => {
+			const avatar = await fetchAvatar(demand.requester.id);
+			return { ...demand, requester: {...demand.requester, avatar }};
+		}));
+		setDemands(updatedDemands);
 	}
-
 
 	const getFriends = async (token: string, currentId: string) => {
 		const response = await fetch(
@@ -74,13 +74,33 @@ export const FriendContextProvider = (props: any) => {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`
+					// Authorization: `Bearer ${token}`
 				},
 				body: JSON.stringify({ id: currentId }),
 			}
 		)
 		const data = await response.json();
-		setFriends(data);
+
+		// For each friend in the data array, fetch their avatar
+		const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
+			const avatar = await fetchAvatar(friend.id);
+			return { ...friend, avatar };
+		}));
+		setFriends(updatedFriends);
+	}
+
+	const fetchAvatar = async (userId: number) => {
+		try {
+			const response = await fetch(`http://localhost:3000/friendship/${userId}/avatar`, {
+				method: 'GET',
+			});
+			if (response.ok) {
+				const blob = await response.blob();
+				return (URL.createObjectURL(blob));
+			}
+		} catch (error) {
+			return console.log("error", error);
+		}
 	}
 
 	const removeFriend = async (friendId: number, currentId: string, token: string) => {

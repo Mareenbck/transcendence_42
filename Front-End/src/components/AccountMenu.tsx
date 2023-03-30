@@ -44,7 +44,7 @@ export default function MyAccountMenu(props: any) {
 			aria-haspopup="true"
 			aria-expanded={open ? 'true' : undefined}
 			>
-			<MyAvatar style="sidebar" context={props.authCtx} id={props.authCtx.userId}/>
+			<MyAvatar style="sidebar" authCtx={props.authCtx} id={props.authCtx.userId}/>
 			</IconButton>
 			</Tooltip>
       {/* </Box> */}
@@ -84,7 +84,7 @@ export default function MyAccountMenu(props: any) {
 		anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 		>
 		<MenuItem>
-			<MyAvatar context={props.authCtx} id={props.authCtx.userId} sx={{ width: 34, height: 34 }}/>
+			<MyAvatar authCtx={props.authCtx} id={props.authCtx.userId} sx={{ width: 34, height: 34 }}/>
 			<Link to={`/users/profile/${props.authCtx.userId}`}>Profile</Link>
 		</MenuItem>
 		{/* <MenuItem onClick={handleClose}>

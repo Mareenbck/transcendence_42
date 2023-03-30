@@ -3,7 +3,7 @@ import '../style/Settings.css'
 import { Navigate } from "react-router-dom";
 import AuthContext from '../store/AuthContext';
 import { useContext } from "react";
-import SideBar from '../components/auth/SideBar'
+import SideBar from '../components/SideBar'
 import style from '../style/Menu.module.css'
 import { TextField } from '@mui/material';
 import Switch2FA from '../components/settings/Switch2FA';
