@@ -81,7 +81,7 @@ console.log ('55 players = ', players);
         // const player = getPlayers(players);
         this.server.emit("getSpectators", users);
         this.server.emit("getPlayers", players);
-        if (players.length == 2) {
+        if (players.length == 2 ) {
           //this.games.push(game);
           game.run(
             players[0], players[1],

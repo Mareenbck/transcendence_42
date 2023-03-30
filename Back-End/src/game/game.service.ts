@@ -1,26 +1,10 @@
-import {Injectable} from '@nestjs/common';
-import { 
-	MessageBody,
-	WebSocketServer,
-	SubscribeMessage,
-	WebSocketGateway
-  } from '@nestjs/websockets';
-import {Server, Socket} from 'socket.io'
-
+import { Injectable } from '@nestjs/common';
+import { CreateJeuDto } from './dto/create-game.dto';
+import { UpdateJeuDto } from './dto/update-game.dto';
 
 @Injectable()
 export class GameService {
-
-}
-
-/*
-import { Injectable } from '@nestjs/common';
-import { CreateGameDto } from './dto/create-game.dto';
-import { UpdateGameDto } from './dto/update-game.dto';
-
-@Injectable()
-export class GamesService {
-  create(createGameDto: CreateGameDto) {
+  create(createGameDto: CreateJeuDto) {
     return 'This action adds a new game';
   }
 
@@ -32,7 +16,7 @@ export class GamesService {
     return `This action returns a #${id} game`;
   }
 
-  update(id: number, updateGameDto: UpdateGameDto) {
+  update(id: number, updateGameDto: UpdateJeuDto) {
     return `This action updates a #${id} game`;
   }
 
@@ -40,4 +24,5 @@ export class GamesService {
     return `This action removes a #${id} game`;
   }
 }
-*/
+
+

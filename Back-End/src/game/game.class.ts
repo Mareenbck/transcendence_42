@@ -31,14 +31,7 @@ const period = GameParams.PERIOD
 export class Game {
 	private prismaService: PrismaService;
 
-	// private playerR: player = {profile: {} as profile, /*{socket: {} as Socket, userId: ''}*/
-	// 	racket: {x: 10, y: (height - racket_height)/2},
-	// 	score: 0,
-	// 	winner: false};
-	//= {} as player;
-
-	// private idPlayerR: profile;
-	// private idPlayerL: profile;
+// initialization of players (L - left, R - right)
 	private playerL: player = {
 		profile: {} as profile, 
 		racket: {x: 10, y: (height - racket_height)/2},
@@ -55,23 +48,15 @@ export class Game {
 	private spectatorSockets: any[] = [];
 	private isrunning: boolean = false; // define the interval property
 	private interval: NodeJS.Timeout; // define the interval property
+	private leave: boolean = false;
+
 	private ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
 	private ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
-	
 	private ball: ball = {x: width/2, y: height/2};
-	//private racketL: racket = {x: 10, y: (height - racket_height)/2};
-	//private racketR: racket = {x: width - racket_width - 10, y: (height - racket_height)/2};	
-  
-	//initialisation score
-	// private scoreR : number = 0;
-	// private scoreL : number = 0;
-	// private winner: number = 0;
-	private leave: boolean = false;
-	
+		
 	private server: Server;
 
-	// socket: any;
-	
+		
 	constructor(
 		server: Server,
 		prismaService: PrismaService,
@@ -81,9 +66,9 @@ console.log("constructor Class.game");
 		this.prismaService = prismaService;
 		}
 
-//emit game 
+// emit game - tacking the changing coordinates of rackets and ball
 	private emit2all(){
-		this.server.emit('pong', {
+		this.server.emit('pong', { // !!! sens for each room
 		ball: this.ball,
 		racket1: this.playerR.racket,
 		racket2: this.playerL.racket,
@@ -91,10 +76,10 @@ console.log("constructor Class.game");
 		scoreL: this.playerL.score
 		}); 
 	}
-
+// initialization of game // during the ferst connection to the game
 	public init(socket: Socket){
 console.log(`init socket ${socket}`);
-		socket.emit('init-pong', { // room connection
+		socket.emit('init-pong', { 
 			table_width: width,
 			table_height: height,
 			racket_width: racket_width,
@@ -104,7 +89,7 @@ console.log(`init socket ${socket}`);
 			scoreL: this.playerL.score
 		});
 	}
-
+// game logic ...
 private updatePositions(): void
 {
   if (this.ball.y > this.playerL.racket.y 

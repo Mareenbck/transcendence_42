@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateJeuDto } from './dto/create-jeu.dto';
-import { UpdateJeuDto } from './dto/update-jeu.dto';
+import { CreateJeuDto } from '../game/dto/create-game.dto';
+import { UpdateJeuDto } from '../game/dto/update-game.dto';
 import { BadRequestException,Injectable } from '@nestjs/common';
 
 @Controller('jeux')
