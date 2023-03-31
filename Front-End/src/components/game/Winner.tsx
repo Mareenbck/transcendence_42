@@ -18,7 +18,8 @@ const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ) => {
 				context.fillStyle = "#8c66ff";
 				context.strokeStyle = "#230047";
 				context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
-						
+				
+				// Draw the star
 				drawStar(gameinit.table_width/2, gameinit.table_height/2, 20, 200, 100, 'gold','coral', 0);		
 				
 				function drawStar(centerX: number, centerY: number, points: number, outer: number, inner: number, fill: string, stroke: string, line: number) {
@@ -39,11 +40,17 @@ const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ) => {
 					context.stroke()
 				}
 				context.font = "40px Verdana";
+				// Add the avatar
+				const img = new Image();
+				img.src = 'gamewinner.winner.avatar';
+				img.onload = () => {
+					context.drawImage(img, gameinit.table_width/2 + 100, gameinit.table_height / 2);
+				}
 
-				context.fillStyle = "black";
+				context.fillStyle = "#8c66ff";
 				context.lineWidth = 4;
-				context.fillText("WINNER:", 100, gameinit.table_height / 2);
-				context.fillText(`${gamewinner.winner}`, gameinit.table_width/2 + 100, gameinit.table_height / 2);
+				context.fillText("WINNER:", 310, 150);
+				//context.fillText(`${gamewinner.winner}`, gameinit.table_width/2 + 100, gameinit.table_height / 2);
 			}
         }
 		

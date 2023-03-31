@@ -134,23 +134,22 @@ console.log('ballSpeed = ', ballSpeed);
 	}
 
 //function: move rackets	
-	private player_move = (message: string, player: player) => {
-console.log("playerR move", message);
-		if (message == 'up') {
-			if (player.racket.y > 0) {
-				player.racket.y -= racketSpeedY;
-			}
-			this.emit2all();
-		} else if (message == 'down') {
-			if (player.racket.y < height - racket_height) {
-				player.racket.y += racketSpeedY;
-			}
-			this.emit2all();
-		}
-	};
+// 	private player_move = (message: string, player: player) => {
+// console.log("playerR move", message);
+// 		if (message == 'up') {
+// 			if (player.racket.y > 0) {
+// 				player.racket.y -= racketSpeedY;
+// 			}
+// 			this.emit2all();
+// 		} else if (message == 'down') {
+// 			if (player.racket.y < height - racket_height) {
+// 				player.racket.y += racketSpeedY;
+// 			}
+// 			this.emit2all();
+// 		}
+// 	};
 
 	private player_disconect = (player: player) => {
-		clearInterval(this.interval);
 		this.isrunning = false;
 		let winner = player;
 		this.server.emit('winner', {winner: winner, leave: this.leave}); // room
@@ -168,18 +167,56 @@ console.log("idPlayerL", idPlayerL);
 		this.playerR.profile = idPlayerR;
 		this.playerL.profile = idPlayerL;
 		this.isrunning = true;
-		
+		const socketR = this.server.sockets.sockets.get(idPlayerR.socketId);
+		const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
+console.log("socketR", socketR.id);
+console.log("socketL", socketL.id);		
 
 
 // move rakets
-	const socketR = this.server.sockets.sockets.get(idPlayerR.socketId); 
-	socketR.on('move', (m:string) => {this.player_move(m, this.playerR)})
+	socketR.on ('move', (message: string) => {
+console.log("playerR move", message);
+		if (message == 'up') {
+			if (this.playerR.racket.y > 0) {
+				this.playerR.racket.y -= racketSpeedY;
+			}
+			this.emit2all();
+		} else if (message == 'down') {
+			if (this.playerR.racket.y < height - racket_height) {
+				this.playerR.racket.y += racketSpeedY;
+			}
+			this.emit2all();
+		}
+	});
+
+	socketL.on ('move', (message: string) => {
+console.log("playerL move", message);
+		if (message == 'up') {
+			if (this.playerL.racket.y > 0) {
+				this.playerL.racket.y -= racketSpeedY;
+			}
+			this.emit2all();
+		} else if (message == 'down') {
+			if (this.playerL.racket.y < height - racket_height) {
+				this.playerL.racket.y += racketSpeedY;
+			}
+			this.emit2all();
+		}
+	});
+
+
+
+
+
+	// const socketR = this.server.sockets.sockets.get(idPlayerR.socketId); 
+	// socketR.on('move', (m:string) => {this.player_move(m, this.playerR)})
+
 	// idPlayerR.socketId.forEach((id) => {
 	// 	const socket = this.server.sockets.sockets.get(id); 
 	// 	socket.on('move', (m:string) => {this.player_move(m, this.playerR)})
 	// });
-	const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
-	socketR.on('move', (m:string) => {this.player_move(m, this.playerL)})
+	// const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
+	// socketR.on('move', (m:string) => {this.player_move(m, this.playerL)})
 
 	// idPlayerL.socketId.forEach((id) => {
 	// 	const socket = this.server.sockets.sockets.get(id); 
@@ -190,11 +227,15 @@ console.log("idPlayerL", idPlayerL);
 	socketR?.on('disconect', () => {
 console.log("playerR disconect");
 		this.player_disconect(this.playerL.profile.userId);
+		clearInterval(this.interval);
+		this.isrunning = false;
 	})
 
 	socketL?.on('disconect', () => {
 console.log("playerL disconect");
 		this.player_disconect(this.playerR.profile.userId);
+		clearInterval(this.interval);
+		this.isrunning = false;
 	})
 
 //interval function: update the game at the certain period until the score reaches MAX
@@ -204,8 +245,11 @@ console.log("playerL disconect");
 		this.emit2all();
 		if (this.playerL.score >= 4 || this.playerR.score >= 4){ //score MAX - change here
 console.log('stop game')
+			this.isrunning = false;
 			this.player_disconect(this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId);	
 		}
+		clearInterval(this.interval);
+console.log('period', period)
     }, period);
 }
 

@@ -94,7 +94,7 @@ console.log(user);
         socket?.on('init-pong', initListener);
         socket?.on('pong', updateListener);
         socket?.on('winner', initWinner )
-          
+    console.log("winner = ", gamewinner.winner);        
         return () => {
             socket?.off('init-pong', initListener);
             socket?.off('pong', updateListener);
@@ -112,9 +112,6 @@ console.log("event.code = ", event.code);
 		if (event.code === "ArrowDown") {
 			socket?.emit('move', "down")
 		}
-		// if (event.code === "Space") {
-		// 	socket?.emit('move', "start")
-		// }
 	};
 
     if (!gamewinner.winner){
