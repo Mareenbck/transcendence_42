@@ -1,14 +1,15 @@
+import AuthContext from '../../store/AuthContext';
 
 export class ChatReq {
 
-  static async getAllUsersWithBlocked(user) {
+  static async getAllUsersWithBlocked(user: AuthContext) {
     try {
       const resp = await fetch(`http://localhost:3000/users/block/users`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
- //         Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${user.token}`
         }
       });
       if (!resp.ok) {
@@ -22,7 +23,7 @@ export class ChatReq {
     }
   };
 
-  static async postBlock(user, userId) {
+  static async postBlock(user: AuthContext, userId: number) {
     try {
       const resp = await fetch(`http://localhost:3000/users/block`,
       {
@@ -45,7 +46,7 @@ export class ChatReq {
     }
   };
 
-  static async postUnblock(user, userId) {
+  static async postUnblock(user: AuthContext, userId: number) {
     try {
       const resp = await fetch(`http://localhost:3000/users/unblock`,
       {
@@ -67,9 +68,6 @@ export class ChatReq {
       console.log(err);
     }
   };
-
-
-
 }
 
 export default ChatReq;

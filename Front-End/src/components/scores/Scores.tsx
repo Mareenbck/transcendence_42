@@ -191,9 +191,6 @@ const Scores = () => {
         </table>
       </div>
 
-
-
-
       <div>
         <table>
           <thead>
@@ -219,10 +216,6 @@ const Scores = () => {
           </tbody>
         </table>
       </div>
-
-
-
-
       </>
      )
   }
