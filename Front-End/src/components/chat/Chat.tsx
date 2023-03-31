@@ -100,6 +100,16 @@ function Chat() {
     });
   }, []);
 
+  useEffect(() => {
+    socket.current.emit("addUser", user);
+  },[user])
+
+  useEffect(() => {
+    socket.current.on("getUsers", users => {
+      setOnlineUsers(users);
+    });
+  })
+
 
   useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
@@ -115,17 +125,6 @@ function Chat() {
     AConversation && setConversations(prev=>[AConversation, ...prev]);
   }, [AConversation]);
 
-
-
-  useEffect(() => {
-    socket.current.emit("addUser", user);
-  },[user])
-
-  useEffect(() => {
-    socket.current.on("getUsers", users => {
-      setOnlineUsers(users);
-    });
-  })
 
 
 ////////////////////////////////////////////////

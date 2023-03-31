@@ -35,6 +35,13 @@ export class UserService {
     return allUsers;
   }
 
+  async getUsersWithGames() {
+   const allUsers = await this.prisma.user.findMany({
+      include: { playerOne: true, playerTwo: true, winner: true }
+    });
+    return allUsers;
+  }
+
 	async getUser(id: number) {
 		if (id === undefined) {
 			throw new BadRequestException('Undefined user ID');
@@ -197,8 +204,6 @@ export class UserService {
 	}
 
   async block(blockFrom: number, blockTo: number) {
-          console.log("llllll");
-      console.log(blockFrom);
     const updateUser = await this.prisma.user.update({
       where: {
         id: +blockFrom,
