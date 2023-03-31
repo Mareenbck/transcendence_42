@@ -35,9 +35,11 @@ let players: profile [] = [];
 // console.log(`24 players [] ='${players}'`);
   const addUser = (userId, socketId) => {
     if (players.length < 2) {
-console.log('22 player ', userId);
       !players.some((user) => +user.userId.userId === +userId.userId) &&
       players.push({userId, socketId})
+console.log('40 players = ', players);
+console.log('41 player[0] = ', players[0]);
+
   } else {
     !users.some((user) => +user.userId.userId === +userId.userId) &&
     users.push({userId, socketId})
@@ -92,8 +94,8 @@ console.log ('56 users = ',users.length);
         }
       });
 
-      socket.on('disconnect', () => {//??
-console.log(`78 Disconnected socket.id = ${socket.id}`);
+       socket.on('disconnect', () => {//??
+//console.log(`78 Disconnected socket.id = ${socket.id}`);
         removeUser(socket.id);
         this.server.emit("getSpectator", users);
       });
