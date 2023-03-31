@@ -1,7 +1,7 @@
 import {Socket} from 'socket.io';
 
 export interface profile{
-	socketId: any [];
+	socketId: any; //socketId: any [];
 	userId: any;
 }
 
@@ -27,11 +27,10 @@ export interface gameInit {
 	table_height: number;
 	ballR: number;
 	ballSpeed: number; 
-	// racketSpeedY: number;
 	racketWidth: number;
 	racketHeight: number;
-	// rscoreR: number;
-	// scoreL: number
+	scoreR: number;
+	scoreL: number
 }
 
 

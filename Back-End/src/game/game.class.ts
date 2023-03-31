@@ -12,7 +12,6 @@ import {
 		profile,
 		player,
 		ball,
-		racket,
 		gameInit,
 		GameParams
 	 } from './game.interfaces';
@@ -45,7 +44,7 @@ export class Game {
 		winner: false
 	};
 
-	private spectatorSockets: any[] = [];
+//	private spectatorSockets: any[] = [];
 	private isrunning: boolean = false; // define the interval property
 	private interval: NodeJS.Timeout; // define the interval property
 	private leave: boolean = false;
@@ -60,23 +59,24 @@ export class Game {
 	constructor(
 		server: Server,
 		prismaService: PrismaService,
+		//spectatorSockets: any[]
 	) {
 console.log("constructor Class.game");
 		this.server = server;
 		this.prismaService = prismaService;
-		}
+	}
 
-// emit game - tacking the changing coordinates of rackets and ball
+// function: emit game - tacking the changing coordinates of rackets and ball
 	private emit2all(){
 		this.server.emit('pong', { // !!! sens for each room
-		ball: this.ball,
-		racket1: this.playerR.racket,
-		racket2: this.playerL.racket,
-		scoreR: this.playerR.score,
-		scoreL: this.playerL.score
+			ball: this.ball,
+			racket1: this.playerR.racket,
+			racket2: this.playerL.racket,
+			scoreR: this.playerR.score,
+			scoreL: this.playerL.score
 		}); 
 	}
-// initialization of game // during the ferst connection to the game
+// function: initialization of game // during the ferst connection to the game
 	public init(socket: Socket){
 console.log(`init socket ${socket}`);
 		socket.emit('init-pong', { 
@@ -89,158 +89,128 @@ console.log(`init socket ${socket}`);
 			scoreL: this.playerL.score
 		});
 	}
-// game logic ...
-private updatePositions(): void
-{
-  if (this.ball.y > this.playerL.racket.y 
-    && this.ball.y < this.playerL.racket.y + racket_height 
-    && this.ball.x - ballR < this.playerL.racket.x + racket_width
-    && this.ballSpeedX < 0) {
-    // left racket reflection
-    this.ballSpeedX = -this.ballSpeedX;
-    this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
-  }
-  else if (this.ball.y > this.playerR.racket.y 
-    && this.ball.y < this.playerR.racket.y + racket_height 
-    && this.ball.x + ballR > this.playerR.racket.x
-    && this.ballSpeedX > 0) {
-    // right racket reflection
-    this.ballSpeedX = -this.ballSpeedX;
-    this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
-  }
-  
-  // board reflections
-  if (this.ball.x < ballR) {
-    ++this.playerR.score;
+// function: game logic ...
+	private updatePositions(): void
+	{
+		if (this.ball.y > this.playerL.racket.y 
+			&& this.ball.y < this.playerL.racket.y + racket_height 
+			&& this.ball.x - ballR < this.playerL.racket.x + racket_width
+			&& this.ballSpeedX < 0) {
+	// left racket reflection
+			this.ballSpeedX = -this.ballSpeedX;
+			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
+		}
+		else if (this.ball.y > this.playerR.racket.y 
+			&& this.ball.y < this.playerR.racket.y + racket_height 
+			&& this.ball.x + ballR > this.playerR.racket.x
+			&& this.ballSpeedX > 0) {
+	// right racket reflection
+			this.ballSpeedX = -this.ballSpeedX;
+			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
+		}
+	
+	// board reflections
+		if (this.ball.x < ballR) {
+			++this.playerR.score;
 console.log('left loss', this.playerL.score, this.playerR.score);
-    this.ball.x = width / 2 - this.ballSpeedX;
-    this.ball.y = height / 2 - this.ballSpeedX;
-    ++ballSpeed;
-    this.ballSpeedX = ballSpeed;
+			this.ball.x = width / 2 - this.ballSpeedX;
+			this.ball.y = height / 2 - this.ballSpeedX;
+			++ballSpeed;
+			this.ballSpeedX = ballSpeed;
 console.log('ballSpeed = ', ballSpeed);
-  } else if (this.ball.x > width - ballR) {
-    this.ballSpeedX = -this.ballSpeedX;
-    ++this.playerL.score;
+		} else if (this.ball.x > width - ballR) {
+			this.ballSpeedX = -this.ballSpeedX;
+			++this.playerL.score;
 console.log('right loss', this.playerL.score, this.playerR.score);
-    this.ball.x = width / 2 - this.ballSpeedX;
-    this.ball.y = height / 2 - this.ballSpeedX;
-    ++ballSpeed;
-    this.ballSpeedX = -ballSpeed;
+			this.ball.x = width / 2 - this.ballSpeedX;
+			this.ball.y = height / 2 - this.ballSpeedX;
+			++ballSpeed;
+			this.ballSpeedX = -ballSpeed;
 console.log('ballSpeed = ', ballSpeed);
-  } else if (this.ball.y < ballR || this.ball.y > height - ballR) {
-    this.ballSpeedY = -this.ballSpeedY;
-  }
-
-  this.ball.x += this.ballSpeedX;
-  this.ball.y += this.ballSpeedY;
-//console.log(this.ballX, this.ballY);
-}
-    
-private player_move = (message: string, player: player) => {
-console.log("playerR move", message);
-	if (message == 'up') {
-		if (player.racket.y > 0) {
-			player.racket.y -= racketSpeedY;
+		} else if (this.ball.y < ballR || this.ball.y > height - ballR) {
+			this.ballSpeedY = -this.ballSpeedY;
 		}
-		this.emit2all();
-	} else if (message == 'down') {
-		if (player.racket.y < height - racket_height) {
-			player.racket.y += racketSpeedY;
-		}
-		this.emit2all();
+			this.ball.x += this.ballSpeedX;
+			this.ball.y += this.ballSpeedY;
 	}
-};
 
-public run(
-	idPlayerR: profile,
-	idPlayerL: profile,
-): void {
+//function: move rackets	
+	private player_move = (message: string, player: player) => {
+console.log("playerR move", message);
+		if (message == 'up') {
+			if (player.racket.y > 0) {
+				player.racket.y -= racketSpeedY;
+			}
+			this.emit2all();
+		} else if (message == 'down') {
+			if (player.racket.y < height - racket_height) {
+				player.racket.y += racketSpeedY;
+			}
+			this.emit2all();
+		}
+	};
+
+	private player_disconect = (player: player) => {
+		clearInterval(this.interval);
+		this.isrunning = false;
+		let winner = player;
+		this.server.emit('winner', {winner: winner, leave: this.leave}); // room
+//!!!  BD
+	}  
+
+// function: run game
+	public run(
+		idPlayerR: profile,
+		idPlayerL: profile,
+	): void {
 console.log("run");
 console.log("idPlayerR", idPlayerR);
 console.log("idPlayerL", idPlayerL);
-	this.playerR.profile = idPlayerR;
-	this.playerL.profile = idPlayerL;
+		this.playerR.profile = idPlayerR;
+		this.playerL.profile = idPlayerL;
+		this.isrunning = true;
+		
 
 
 // move rakets
-	// const socketR = this.server.sockets.sockets.get(idPlayerR.socketId); 
-	// socketR.on('move', (m:string) => {this.player_move(m, this.playerR)})
-	idPlayerR.socketId.forEach((id) => {
-		const socket = this.server.sockets.sockets.get(id); 
-		socket.on('move', (m:string) => {this.player_move(m, this.playerR)})
-	});
+	const socketR = this.server.sockets.sockets.get(idPlayerR.socketId); 
+	socketR.on('move', (m:string) => {this.player_move(m, this.playerR)})
+	// idPlayerR.socketId.forEach((id) => {
+	// 	const socket = this.server.sockets.sockets.get(id); 
+	// 	socket.on('move', (m:string) => {this.player_move(m, this.playerR)})
+	// });
+	const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
+	socketR.on('move', (m:string) => {this.player_move(m, this.playerL)})
 
-	idPlayerL.socketId.forEach((id) => {
-		const socket = this.server.sockets.sockets.get(id); 
-		socket.on('move', (m:string) => {this.player_move(m, this.playerL)});
-	});
+	// idPlayerL.socketId.forEach((id) => {
+	// 	const socket = this.server.sockets.sockets.get(id); 
+	// 	socket.on('move', (m:string) => {this.player_move(m, this.playerL)});
+	// });
 
-//disconect
-// 	socketR?.on('disconect', () => {
-// console.log("playerR disconect");
-// 		clearInterval(this.interval);
-// 		this.isrunning = false;
-// 		let winner = this.playerL.profile.userId;
-// 		this.server.emit('winner', {winner: winner, leave: this.leave});   
+//handling disconection
+	socketR?.on('disconect', () => {
+console.log("playerR disconect");
+		this.player_disconect(this.playerL.profile.userId);
+	})
 
-// 	})
+	socketL?.on('disconect', () => {
+console.log("playerL disconect");
+		this.player_disconect(this.playerR.profile.userId);
+	})
 
-// 	socketL?.on('disconect', () => {
-// console.log("playerL disconect");
-// 		clearInterval(this.interval);
-// 		this.isrunning = false;
-// 		let winner = this.playerR.profile.userId;
-// 		this.server.emit('winner', {winner: winner, leave: this.leave});
-// 	})
-	
+//interval function: update the game at the certain period until the score reaches MAX
     this.interval = setInterval(() => {
-      this.updatePositions();
-      // Emit the updated positions of the ball and the rocket to all connected clients
-      this.emit2all();
-      if (this.playerL.score >= 11 || this.playerR.score >= 11){
+		this.updatePositions();
+	// Emit the updated positions of the ball and the rocket to all connected clients
+		this.emit2all();
+		if (this.playerL.score >= 4 || this.playerR.score >= 4){ //score MAX - change here
 console.log('stop game')
-        clearInterval(this.interval); 
-        this.isrunning = false;
-        let winner = this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId;
-        this.server.emit('winner', {winner: winner})
-        // this.winner = '';
-        this.playerL.score = 0;
-        this.playerR.score = 0;
-      }
+			this.player_disconect(this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId);	
+		}
     }, period);
-  }
-
-
-
-
-  /*
-@SubscribeMessage('move')
-onChgEvent(
-  @MessageBody() message: string,
-  @ConnectedSocket() client: Socket
-): void {
-  
-  const player = this.players.indexOf(client);
-  if(player == -1) return;
-console.log(`message ${message} from ${client} (${player})`);
-  if (message == 'up') {
-    if (this.rackets[player].y > 0) {
-      this.rackets[player].y -= racketSpeedY;
-    }
-    this.emit2all();
-
-  } else if (message == 'down') {
-    if (this.rackets[player].y < height - racket_height) {
-      this.rackets[player].y += racketSpeedY;
-    }
-    this.emit2all();
-  }
-  else if (message == 'start' && !this.isrunning && this.players.length == 2) {
-    this.isrunning = true;
-    this.run();
-  }  
 }
-*/
+
+
 
 //   handleConnection(socket: Socket, ...args: any[]){
 //     const username = socket.handshake.query.userName as string;
