@@ -41,7 +41,7 @@ const Scores = () => {
 
               //aller chercher les users
   async function getAllUsers(authCtx: AuthContext) {
-    const resp = await ChatReq.getAllUsersWithBlocked(authCtx);
+    const resp = await ChatReq.getAllUsersWithGames(authCtx);
     setAllUsers(resp);
   };
   useEffect(() => {
