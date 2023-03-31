@@ -3,7 +3,7 @@ import { add } from 'date-fns';
 const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.jeu.deleteMany({}) // never in production
+  await prisma.game.deleteMany({}) // never in production
   await prisma.directMessage.deleteMany({}) // never in production
   await prisma.chatroomMessage.deleteMany({}) // never in production
   await prisma.chatroom.deleteMany({}) // never in production
@@ -14,7 +14,7 @@ async function main() {
   const user = await prisma.user.create({
     data: {
       email: 'theo@theo.fr',
-      username: 'theo',
+      username: 'Emma Seed',
        hash: 'ezfe',
     }
   })
@@ -23,7 +23,7 @@ async function main() {
   const user2 = await prisma.user.create({
     data: {
       email: 'MAMA@dde.fr',
-      username: 'mama',
+      username: 'Mariya Seed',
       hash: 'ezfzefzfe',
     }
   })
@@ -32,7 +32,7 @@ async function main() {
   const user3 = await prisma.user.create({
     data: {
       email: 'Mddvdvdv@dde.fr',
-      username: 'mamacdcdcdc',
+      username: 'Bob Seed',
       hash: 'ezfzefzfesdcs',
     }
   })
@@ -41,7 +41,7 @@ async function main() {
   const user4 = await prisma.user.create({
     data: {
       email: 'Mddvdvdbbv@dde.fr',
-      username: 'mamacfzefzedcdcdc',
+      username: 'Marine Seed',
       hash: 'ezfzefzfecececc',
     }
   })
@@ -113,23 +113,46 @@ async function main() {
     }
   })
 
- const j1 = await prisma.jeu.create({
+ const j1 = await prisma.game.create({
     data: {
       createdAt:     d5,
       playerOne: {connect: { id: user.id }},
       playerTwo:{connect: { id: user2.id }},
       winner:{connect: { id: user2.id }},
+      score1: 10,
+      score2: 8,
     }
   })
- const j2 = await prisma.jeu.create({
+ const j2 = await prisma.game.create({
     data: {
-      createdAt:     d4,
+      createdAt:     d5,
       playerOne: {connect: { id: user3.id }},
       playerTwo:{connect: { id: user4.id }},
       winner:{connect: { id: user4.id }},
+      score1: 10,
+      score2: 2,
     }
   })
-
+  const j3 = await prisma.game.create({
+    data: {
+      createdAt:     d5,
+      playerOne: {connect: { id: user3.id }},
+      playerTwo:{connect: { id: user4.id }},
+      winner:{connect: { id: user3.id }},
+      score1: 1,
+      score2: 10,
+    }
+  })
+   const j4 = await prisma.game.create({
+    data: {
+      createdAt:     d5,
+      playerOne: {connect: { id: user2.id }},
+      playerTwo:{connect: { id: user4.id }},
+      winner:{connect: { id: user2.id }},
+      score1: 10,
+      score2: 0,
+    }
+  })
 }
 
 main()

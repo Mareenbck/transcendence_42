@@ -39,6 +39,14 @@ export class UserController {
     return allUsers;
   }
 
+  @Get('games')
+//  @UseGuards(JwtGuard)
+  async getAllUsersWithGames() {
+    const allUsers = await this.userService.getUsersWithGames();
+    return allUsers;
+  }
+
+
 	@Get('/profile/:id')
 	@UseGuards(JwtGuard)
 	async getMe(@GetCurrentUserId() id: string) {
