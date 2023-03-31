@@ -33,14 +33,14 @@ export class UserController {
 	}
 
   @Get('block/users')
-//  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   async getAllUsersWithBlocked() {
     const allUsers = await this.userService.getUsersWithBlocked();
     return allUsers;
   }
 
   @Get('games')
-//  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   async getAllUsersWithGames() {
     const allUsers = await this.userService.getUsersWithGames();
     return allUsers;

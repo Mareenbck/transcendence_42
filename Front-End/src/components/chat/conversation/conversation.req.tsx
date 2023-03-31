@@ -1,11 +1,19 @@
+import AuthContext from '../../store/AuthContext';
+
 //import ConversationDf from "./conversation.df"
 //static async getAll() : Promise<ConversationDf[]> {
 // static async postRoom(user, newConv) : Promise<ConversationDf[]> {
 
 export class ConversationReq {
-  static async getAll() {
+  static async getAll(user: AuthContext) {
     try {
-      const resp = await fetch("http://localhost:3000/chatroom2", {method: "GET"})
+      const resp = await fetch("http://localhost:3000/chatroom2",
+      { method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`
+        }
+      });
       const data = await resp.json();
           return data;
     }
@@ -15,7 +23,7 @@ export class ConversationReq {
 
   };
 
- static async postRoom(user, newConv) {
+ static async postRoom(user: AuthContext, newConv) {
     try {
       const resp = await fetch(`http://localhost:3000/chatroom2`,
       {

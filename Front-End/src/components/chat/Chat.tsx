@@ -132,7 +132,7 @@ function Chat() {
 ////////////////////////////////////////////////
 
   async function getAllUsersWithBlocked(user: AuthContext) {
-    const response = await ChatReq.getAllUsersWithBlocked();
+    const response = await ChatReq.getAllUsersWithBlocked(user);
     setAllUsers(response);
     setOtherUsers(response.filter(u => !(onlineUsers.some(e => +e.userId.userId === +u.id))));
   };
@@ -143,19 +143,19 @@ function Chat() {
 
 
   useEffect(() => {
-    async function getAllConv() {
-      const response = await ConversationReq.getAll();
+    async function getAllConv(user: AuthContext) {
+      const response = await ConversationReq.getAll(user);
       setConversations(response);
     };
-    getAllConv();
+    getAllConv(user);
   }, []);
 
   useEffect(() => {
     if (currentChat)
     {
-      async function getMess() {
+      async function getMess(user: AuthContext) {
         try {
-          const response = await MessageReq.getMess(currentChat?.id);
+          const response = await MessageReq.getMess(user, currentChat?.id);
           setMessages2(response);
           socket?.current.emit("userRoom", {
             userId: user.userId,
@@ -165,24 +165,24 @@ function Chat() {
           console.log(err);
         }
       };
-      getMess();
+      getMess(user);
     }
   }, [currentChat]);
 
   useEffect(() => {
     if (currentDirect)
     {
-      async function getDirMess() {
+      async function getDirMess(user: AuthContext) {
         try {
           if (currentDirect?.userId)
-            { setMessagesD(await MessageReq.getDirMess(id, currentDirect?.userId))}
+            { setMessagesD(await MessageReq.getDirMess(user, id, currentDirect?.userId))}
           else
-            {setMessagesD(await MessageReq.getDirMess(id, currentDirect?.id))};
+            {setMessagesD(await MessageReq.getDirMess(user, id, currentDirect?.id))};
         } catch(err) {
           console.log(err);
         }
       };
-      getDirMess();
+      getDirMess(user);
     }
   }, [currentDirect]);
 
@@ -207,7 +207,7 @@ function Chat() {
   }, [fromBlock]);
 
   useEffect(() => {
-    if (allUsers !== undefined && fromBlock !== user.userId.userId) {
+    if (allUsers !== undefined && unfromBlock !== user.userId.userId) {
       const i = allUsers.findIndex(userX => +userX.id === +id);
       const j = allUsers.find(userX => +userX.id === +id);
       j.blockedFrom = j.blockedFrom.filter(u => +u.id !== unfromBlock);
@@ -312,7 +312,7 @@ function Chat() {
 
   const getDirect = (userX) => {
     const i = getUser(+id);
-    if (i && !i.blockedFrom.find(u => +u.id === +userX.userId) && !i.blockedFrom.find((i)=> +id === +i))
+    if (i && (i.blockedFrom.find(u => +u.id === +userX.userId) === undefined ) && (i.blockedFrom.find((i)=> +id === +i) === undefined ))
     {
       setCurrentDirect(userX);
       setCurrentChat(null)
@@ -339,7 +339,7 @@ function Chat() {
     })
 
     try {
-      const res = await MessageReq.postMess(message2);
+      const res = await MessageReq.postMess(user, message2);
       setMessages2([...messages2, res]);
       setNewMessage2("");
     } catch(err) {console.log(err)}
@@ -366,7 +366,7 @@ function Chat() {
       })
     }
     try {
-      const res2 = await MessageReq.postDirMess(messageD);
+      const res2 = await MessageReq.postDirMess(user, messageD);
       setMessagesD([...messagesD, res2]);
       setNewMessageD("");
     } catch(err) {console.log(err)}
@@ -486,7 +486,7 @@ function Chat() {
               <div className="chatBoxTop">
                 { messagesD.length ?
                     messagesD?.map((m) => (
-                      <div key={m.id} ref={scrollRef}>
+                      <div key={m.createdAt} ref={scrollRef}>
                         <MessageD messageD={m} avatar={getAvatar(m.author)} own={m?.author === +id} />
                       </div>
                   )) : <span className="noConversationText2" > No message with this friend yet. </span>
