@@ -52,7 +52,7 @@ const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ) => {
     return (<canvas ref={canvasRef} width={gameinit.table_width} height={gameinit.table_height} />)
 }
 
-export default Winner
+export default Winner;
 
 //https://imapo.ru/%d1%84%d0%b5%d0%b9%d0%b5%d1%80%d0%b2%d0%b5%d1%80%d0%ba%d0%b8-%d0%bd%d0%b0-html5-canvas-%d0%b8-jquery/
 
