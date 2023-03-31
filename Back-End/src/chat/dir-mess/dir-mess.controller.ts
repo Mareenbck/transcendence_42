@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards} from '@nestjs/common';
 import { DirMessService } from './dir-mess.service';
 import { DirMessDto } from './dir-mess.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import AuthContext from '../../store/AuthContext';
+import { JwtGuard} from 'src/auth/guard';
 
 @Controller('dir-mess')
 export class DirMessController {
