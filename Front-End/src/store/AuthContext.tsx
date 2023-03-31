@@ -31,6 +31,14 @@ export const AuthContextProvider = (props: any) => {
 	const [ftAvatar, setftAvatar] = useState<string | null>(ftAvatarLocalStorage);
 	const [is2FA, setIs2FA] = useState<boolean>();
 
+	useEffect(() => {
+		fetchHandler(token, userId);
+	}, [username])
+
+	useEffect(() => {
+		fetchAvatar(userId);
+	}, [])
+
 	const updateAvatar = (avatarUrl: string) => {
 		if (avatarUrl) {
 			const timestamp = new Date().getTime();
@@ -40,11 +48,11 @@ export const AuthContextProvider = (props: any) => {
 		}
 	  };
 
-	  const updateUsername = (newUsername: string) => {
-		if (newUsername) {
-			setUsername(newUsername);
-		}
-	  };
+		const updateUsername = (newUsername: string) => {
+			if (newUsername) {
+				setUsername(newUsername);
+			}
+		};
 
 	const fetchAvatar = async (userId: string) => {
 		  try {
@@ -74,9 +82,7 @@ export const AuthContextProvider = (props: any) => {
 			const data = await response.json();
 			setUserId(data.id);
 			setUsername(data.username);
-			setAvatar(data.avatar);
 			setftAvatar(data.ftAvatar);
-			// setIs2FA(data.twoFA);
 			localStorage.setItem('username', data.username);
 			return data
 		} catch (error) {

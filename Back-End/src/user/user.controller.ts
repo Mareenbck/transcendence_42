@@ -51,6 +51,8 @@ export class UserController {
 	async updateUsername(@GetCurrentUserId() id: string, @Body('username') username: string) {
 		try {
 			const result = await this.userService.updateUsername(id, username);
+			console.log("result dans update ")
+			console.log(result)
 			return result;
 		} catch {
 			throw new ForbiddenException('Username already exists');

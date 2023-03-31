@@ -9,26 +9,36 @@ import FriendsDemands from '../components/friends/FriendsDemands';
 import ShowFriends from '../components/friends/ShowFriends';
 import ProfileCard from '../components/user/ProfileCard';
 import Card from '../components/utils/Card';
+import MyProfile from '../components/user/MyProfile';
+import UserProfile from '../components/user/UserProfile';
 
-const Profile = () =>  {
+const Profile = (props: any) =>  {
+	const { id } = useParams();
+	// const [user, setUser] = useState(null);
+
 	const authCtx = useContext(AuthContext);
-	const friendCtx = useContext(FriendContext);
+	const isMyProfile = authCtx.userId === id;
+	// const friendCtx = useContext(FriendContext);
 	const isLoggedIn = authCtx.isLoggedIn;
 
+	// useEffect(() => {
+	// 	// Charge les données utilisateur à partir de l'API
+	// 	fetch(`/api/users/${id}`)
+	// 		.then(response => response.json())
+	// 		.then(data => setUser(data))
+	// 		.catch(error => console.error(error));
+	// }, [id]);
 
 	return (
 		<>
 		<div className={style.mainPos}>
-			<SideBar title="Profile" />
-			<div className='container-profile'>
-				<ProfileCard context={authCtx}></ProfileCard>
-				<Card color='blue' title="My Level" icon="level" type="stats" height="270px" width="355px"></Card>
-				<Card color='red' title="My Rank" icon="rank" type="stats" height="270px" width="355px"></Card>
-					<Card color='green' title="My Friends" type="showFriends" width="355px"friendCtx={friendCtx} authCtx={authCtx} height="auto"></Card>
-				<div className='card-wrapper'>
-					<Card color='yellow' title="Match History" type="match" width="100%"></Card>
+				<div>
+					{isMyProfile ? (
+						<MyProfile></MyProfile>
+					): (
+						<UserProfile></UserProfile>
+						)}
 				</div>
-			</div>
 			{!isLoggedIn && <Navigate to="/" replace={true} />}
 		</div>
 		</>

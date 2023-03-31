@@ -1,7 +1,10 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Friendship } from '@prisma/client';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
+import path = require('path');
+import { Response } from 'express';
+
 
 @Injectable()
 export class FriendshipService {
@@ -68,8 +71,8 @@ export class FriendshipService {
 		const { id } = userId;
 		try {
 			const user = await this.prisma.user.findUnique({
-			where: { id: parseInt(id) },
-			include: { friends: true, friendOf: true }
+				where: { id: parseInt(id) },
+				include: { friends: true, friendOf: true }
 			});
 			return user;
 		} catch (error) {
@@ -95,7 +98,6 @@ export class FriendshipService {
 		if (!friendship) {
 			throw new BadRequestException('getReceivedFriendships error : ');
 		}
-
 		await this.prisma.friendship.delete({
 		  where: { id: friendship.id },
 		});
@@ -113,5 +115,25 @@ export class FriendshipService {
 		await this.userService.removeFriendOnTable(friendId, parseInt(currentId))
 		await this.findAndDeleteFriendship(friendId, parseInt(currentId));
 		return updatedCurrent;
+	}
+
+	async getUserAvatar(userId: number, res: Response) {
+		try {
+			const user = await this.userService.getUser(userId);
+			if (user.avatar) {
+				const fileName = path.basename(user.avatar)
+				const result = res.sendFile(fileName, { root: process.env.UPLOAD_DIR });
+				return result
+			}
+			else if (!user.ftAvatar && !user.avatar) {
+				const fileName = process.env.DEFAULT_AVATAR;
+				const result = res.sendFile(fileName, { root: process.env.PATH_DEFAULT_AVATAR });
+				return result
+			} else if (user.ftAvatar && !user.avatar) {
+				return res.status(204).send();
+			}
+		} catch {
+			throw new ForbiddenException('Not Found');
+		}
 	}
 }

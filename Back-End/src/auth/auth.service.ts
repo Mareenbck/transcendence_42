@@ -37,10 +37,6 @@ export class AuthService {
 			// return a hashed user
 			const tokens = await this.generateTokens(user.id, user.email);
 			await this.updateRefreshToken(user.id, tokens.refresh_token);
-			// await this.uploadService.download_avatar(
-			// 	user.id,
-			// 	process.env.DEFAULT_AVATAR,
-			// );
 			return tokens;
 		} catch(error) {
 			if (error instanceof PrismaClientKnownRequestError) {
@@ -98,7 +94,7 @@ export class AuthService {
 	}
 
 	async signout(userId: number): Promise<void> {
-		// delete refresh token (log out)
+		// delete refresh token	aaaq	 K NNKJ (log out)
 		await this.prisma.user.updateMany({
 			where: {
 				id: userId,

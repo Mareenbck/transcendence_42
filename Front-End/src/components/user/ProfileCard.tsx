@@ -8,7 +8,13 @@ const ProfileCard = (props: any) => {
 	const { id } = useParams();
 
 	useEffect(() => {
-		setAvatar(authCtx.avatar);
+		if(props.user) {
+			setAvatar(props.user.avatar)
+		}
+		else {
+
+			setAvatar(authCtx.avatar);
+		}
 	}, [authCtx.avatar]);
 
 	useEffect(() => {

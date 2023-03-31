@@ -22,12 +22,14 @@ export const FriendContextProvider = (props: any) => {
 	const authCtx = useContext(AuthContext);
 
 	useEffect (() => {
-		getDemands(authCtx.token, authCtx.userId);
+		if (authCtx.isLoggedIn) {
+			getDemands(authCtx.token, authCtx.userId);
+			getFriends(authCtx.token, authCtx.userId);
+		}
 	}, []);
 
-	useEffect (() => {
-		getFriends(authCtx.token, authCtx.userId);
-	}, []);
+	// useEffect (() => {
+	// }, []);
 
 	const createDemand = async (receiverId: number, token: string, currentId: string) => {
 		try {
@@ -63,6 +65,9 @@ export const FriendContextProvider = (props: any) => {
 		const data = await response.json();
 		const updatedDemands = await Promise.all(data.map(async (demand: Demand) => {
 			const avatar = await fetchAvatar(demand.requester.id);
+			if (!avatar) {
+				return demand;
+			}
 			return { ...demand, requester: {...demand.requester, avatar }};
 		}));
 		setDemands(updatedDemands);
@@ -95,8 +100,11 @@ export const FriendContextProvider = (props: any) => {
 				method: 'GET',
 			});
 			if (response.ok) {
+				if (response.status === 204) {
+					return null
+				}
 				const blob = await response.blob();
-				return (URL.createObjectURL(blob));
+				return URL.createObjectURL(blob);
 			}
 		} catch (error) {
 			return console.log("error", error);

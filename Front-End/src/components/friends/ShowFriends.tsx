@@ -3,44 +3,48 @@ import { FriendContext } from "../../store/FriendshipContext";
 import Friend from '../../interfaces/IFriendship'
 import { AvatarGroup } from '@mui/material';
 import MyAvatar from "../user/Avatar";
+import { Button } from '@mui/material';
+import { Link } from "react-router-dom";
 
 
 const ShowFriends = (props: any) => {
 	const friendCtx = useContext(FriendContext);
 	const authCtx = props.authCtx;
 
+	const [hoveredFriendId, setHoveredFriendId] = useState<any>();
+
 	const handleRemoveFriend = async (event: FormEvent, friendId: number) => {
 		event.preventDefault();
-		friendCtx.removeFriend(friendId, props.currentId, props.token)
+		friendCtx.removeFriend(friendId, authCtx.userId, authCtx.token)
+	}
+
+	const handleMouseOver = (friendId: number) => {
+		setHoveredFriendId(friendId);
+	}
+
+	const handleMouseOut = () => {
+		setHoveredFriendId(null);
 	}
 
 	return (
 		<>
 		<AvatarGroup>
 			{friendCtx.friends.map((friend: Friend) => (
-				<li key={friend.id}>
-					<MyAvatar style='l' authCtx={authCtx} id={friend.id} avatar={friend.avatar} ftAvatar={friend.ftAvatar}></MyAvatar>
+				<li key={friend.id} onMouseOver={() => handleMouseOver(friend.id)} onMouseOut={handleMouseOut}>
+					<div className="icon-friends">
+						<div className={hoveredFriendId === friend.id ? 'avatar-hovered' : ''}>
+							<MyAvatar style='l' authCtx={authCtx} id={friend.id} avatar={friend.avatar} ftAvatar={friend.ftAvatar} />
+						</div>
+							{hoveredFriendId === friend.id && (
+							<button className="button-remove" onClick={(event) => handleRemoveFriend(event, friend.id)}><i className="fa-solid fa-user-xmark fa-2xs"></i></button>
+							)}
+							<Link to={`/users/profile/${friend.id}`}>{friend.username}</Link>
+							{/* <Link to={} ></Link> */}
+					</div>
 				</li>
 			))}
 		</AvatarGroup>
 		<br />
-			{/* <ul>
-				{friendCtx.friends.map((friend: Friend) => (
-					<li key={friend.id}>
-					<div className='friends-infos'>
-						<span>{friend.username}</span>
-						<div className='action-friend'>
-							<form onSubmit={(event) => {handleRemoveFriend(event, friend.id)}}>
-								<button type="submit"><i className="fa-solid fa-user-xmark fa-2xs"></i></button>
-							</form>
-							<i className="fa-solid fa-user-xmark fa-2xs"></i>
-							<i className="fa-solid fa-user-xmark fa-2xs"></i>
-						</div>
-					</div>
-					{friend.avatar ? <img className='avatar-img' src={friend.avatar} alt={"avatar"} /> : <img className='avatar-img' src={friend.ftAvatar} alt={"ftAvatar"} />}
-				</li>
-				))}
-			</ul> */}
 		</>
 	)
 }

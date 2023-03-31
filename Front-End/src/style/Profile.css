@@ -232,3 +232,29 @@ li {
 	font-weight: bold;
 	border-radius: 50%;
 }
+
+.avatar-hovered {
+	filter: grayscale(100%);
+}
+
+.button-remove {
+	position: absolute;
+	/* top: 0;
+	right: 0; */
+	font-size: 30px;
+	background-color: transparent;
+	filter: 'none';
+	border: none;
+	outline: none;
+	cursor: pointer;
+}
+
+.button-remove i {
+	font-size: 20px;
+	color: rgb(231, 9, 9);
+}
+
+.icon-friends {
+	display: flex;
+	align-content: center;
+}
