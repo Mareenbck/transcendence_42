@@ -6,6 +6,29 @@ export class ChatReq {
     try {
       const resp = await fetch(`http://localhost:3000/users/block/users`,
       {
+
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`
+        }
+      });
+      if (!resp.ok) {
+        const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
+        throw new Error(message);
+      }
+      const data = await resp.json();
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  static async getAllUsersWithGames(user: AuthContext) {
+    try {
+      const resp = await fetch(`http://localhost:3000/users/games`,
+      {
+
         method: "GET",
         headers: {
           "Content-Type": "application/json",
