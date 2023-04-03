@@ -202,9 +202,6 @@ function Chat() {
   
 };
 
-const updateConversations = (newConversation) => {
-  setConversations((prevConversations) => [newConversation, ...prevConversations]);
-};
 
 const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -216,7 +213,6 @@ const handleFormSubmit = (e) => {
   };
 
 const [showPopUp, setShowPopUp] = useState(false);
-const [visu, setVisu] = useState<{ id: number; visibility: string }[]>([]);
 
 
 return (
@@ -233,8 +229,8 @@ return (
                   message="Choisissez les options de votre channel"
                   onCancel={() => setShowPopUp(false)}
                   onClick={() => setShowPopUp(false)}
-                  onSubmit={handleFormSubmit}
-                  updateConversations={updateConversations}
+                  onSubmit={{handleFormSubmit}}
+                  
                   >
                   </PopUp>
             )}
@@ -246,7 +242,7 @@ return (
                           <Conversation conversation={c}/>
                       </div>
                       <div className="conversation-icon">
-                      <ChannelVisibility conversation={c}/>                                      
+                      <ChannelVisibility conversation={c}/>
                       </div>
                     </div>
                 </div>

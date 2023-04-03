@@ -14,7 +14,7 @@ import { Modal } from '@mui/material';
 function PopUp(props: any) {
     
     const authCtx = useContext(AuthContext);    
-    const [isPublic, setIsPublic] = useState(false);
+    const [isPublic, setIsPublic] = useState(true);
     const [isPrivate, setIsPrivate] = useState(false);
     const [isProtected, setIsProtected] = useState(false);
     const [selectedFile, setSelectedFile] = useState('');
