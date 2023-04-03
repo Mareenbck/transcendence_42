@@ -1,29 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import '../../style/Profile.css'
 import { useParams } from "react-router-dom";
+import { FriendContext } from "../../store/FriendshipContext";
 
 const ProfileCard = (props: any) => {
-	const authCtx = props.context;
-	const [avatar, setAvatar] = useState<string | null>(null);
+	const authCtx = props.authCtx;
+	const friendCtx = useContext(FriendContext);
+	// const user = props.user;
+
+	const [avatar, setAvatar] = useState<any>();
+	const [ftAvatar, setftAvatar] = useState<any>();
+	const [username, setUsername] = useState<any>();
 	const { id } = useParams();
+	const isMyProfile = parseInt(authCtx.userId) === parseInt(id);
+	const [user, setUser] = useState(null);
 
 	useEffect(() => {
-		setAvatar(authCtx.avatar);
-	}, [authCtx.avatar]);
+		getUser(id)
+		// if(!isMyProfile) {
+			const fetchData = async () => {
+				const avat: any = await friendCtx.fetchAvatar(id);
+				if (avat) {
+					setAvatar(avat);
+				}
+			};
+			fetchData();
+		// }
+	}, [id, isMyProfile])
 
-	useEffect(() => {
-		if (!avatar) {
-			authCtx.fetchAvatar(id);
-		} else {
-			authCtx.updateAvatar(avatar);
-		}
-	}, [id]);
+
+	const getUser = async (id: string) => {
+		try {
+			const response = await fetch(
+			`http://localhost:3000/users/friends/${id}`, {
+				method: "GET",
+			})
+			if (response.ok) {
+				const data = await response.json();
+				setUser(data);
+				setUsername(data.username)
+				setftAvatar(isMyProfile ? authCtx.ftAvatar : data.ftAvatar)
+				// setAvatar(isMyProfile ? authCtx.avatar : data.avatar);
+			} else {
+				console.log("POST error on /friendship/create");
+				return "error";
+			}
+		} catch (error) {
+			console.log("error", error);
+	 	}
+	}
 
 	return (
 		<>
 		<div className='profile-card'>
-			{avatar ? <img src={avatar} alt={"avatar"} /> : <img src={authCtx.ftAvatar} alt={"ftAvatar"} />}
-			{authCtx.isLoggedIn && <h5>{authCtx.username} </h5>}
+			{avatar ? <img src={avatar} alt="avatar" /> : <img src={ftAvatar} alt="ftAvatar"/>}
+			{/* {avatar ? <img src={avatar} alt={"avatar"} /> : <img src={authCtx.ftAvatar} alt={"ftAvatar"} />} */}
+			{isMyProfile ? <h5>{authCtx.username}</h5> : <h5>{username}</h5> }
 		</div>
 		</>
 	)

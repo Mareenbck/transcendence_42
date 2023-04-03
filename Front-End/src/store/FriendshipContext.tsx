@@ -6,9 +6,10 @@ import Friend from '../interfaces/IFriendship'
 const defaultValue = {
 	demands: [] as Demand[],
 	friends: [] as Friend[],
-	createDemand: (receiverId: number, token: string, currentId: string) => { },
-	getDemands: (token: string, currentId: string) => { },
-	getFriends: (token: string, currentId: string) => { },
+	fetchAvatar: async (userId: number) => {},
+	createDemand: async (receiverId: number, token: string, currentId: string) => { },
+	getDemands: async (token: string, currentId: string) => { },
+	getFriends: async (token: string, currentId: string) => { },
 	removeFriend: (friendId: number, currentId: string, token: string) => { },
 	updateDemand: (demandId: number, res: string, token: string) => { },
 };
@@ -22,11 +23,10 @@ export const FriendContextProvider = (props: any) => {
 	const authCtx = useContext(AuthContext);
 
 	useEffect (() => {
-		getDemands(authCtx.token, authCtx.userId);
-	}, []);
-
-	useEffect (() => {
-		getFriends(authCtx.token, authCtx.userId);
+		if (authCtx.isLoggedIn) {
+			getDemands(authCtx.token, authCtx.userId);
+			getFriends(authCtx.token, authCtx.userId);
+		}
 	}, []);
 
 	const createDemand = async (receiverId: number, token: string, currentId: string) => {
@@ -63,6 +63,9 @@ export const FriendContextProvider = (props: any) => {
 		const data = await response.json();
 		const updatedDemands = await Promise.all(data.map(async (demand: Demand) => {
 			const avatar = await fetchAvatar(demand.requester.id);
+			if (!avatar) {
+				return demand;
+			}
 			return { ...demand, requester: {...demand.requester, avatar }};
 		}));
 		setDemands(updatedDemands);
@@ -95,8 +98,11 @@ export const FriendContextProvider = (props: any) => {
 				method: 'GET',
 			});
 			if (response.ok) {
+				if (response.status === 204) {
+					return null
+				}
 				const blob = await response.blob();
-				return (URL.createObjectURL(blob));
+				return URL.createObjectURL(blob);
 			}
 		} catch (error) {
 			return console.log("error", error);
@@ -146,6 +152,7 @@ export const FriendContextProvider = (props: any) => {
 	const contextValue = {
 		demands,
 		friends,
+		fetchAvatar,
 		createDemand,
 		getDemands,
 		getFriends,

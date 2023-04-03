@@ -56,21 +56,9 @@ export class FriendshipController {
 
 	@Get('/:id/avatar')
 	async getAvatar(@Param('id') id: string, @Res() res: Response) {
-		try {
-			const user = await this.userService.getUser(parseInt(id));
-			// >>>> const avatar a mettre dans service
-			if (user.avatar) {
-				const fileName = path.basename(user.avatar)
-				const result = res.sendFile(fileName, { root: process.env.UPLOAD_DIR });
-				return result
-			}
-			else if (!user.ftAvatar && !user.avatar) {
-				const fileName = process.env.DEFAULT_AVATAR;
-				const result = res.sendFile(fileName, { root: process.env.PATH_DEFAULT_AVATAR });
-				return result
-			}
-		} catch {
-			throw new ForbiddenException('Not Found');
-		}
+		const avatar = await this.friendshipService.getUserAvatar(parseInt(id), res);
+		console.log("avatar")
+		console.log(avatar)
+		return avatar;
 	}
 }

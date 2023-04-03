@@ -85,7 +85,11 @@
 	border-radius: 27.3758px;
 }
 
-.title {
+.MuiBadge-root {
+	margin-left: 60px;
+	font-size: 40px;
+}
+.title-card {
     display: flex;
 }
 
@@ -199,4 +203,58 @@ li {
 	left: -35px;
 	position: relative;
 	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	width: 170px;
+}
+
+.demand-username {
+	font-size: 15px;
+}
+
+.badge-unstyled {
+	position: relative;
+	display: inline-block;
+}
+
+.badge-unstyled .badge-notification {
+	position: absolute;
+	top: -5px;
+	right: -10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 20px;
+	height: 20px;
+	background-color: red;
+	color: white;
+	font-size: 12px;
+	font-weight: bold;
+	border-radius: 50%;
+}
+
+.avatar-hovered {
+	filter: grayscale(100%);
+}
+
+.button-remove {
+	position: absolute;
+	/* top: 0;
+	right: 0; */
+	font-size: 30px;
+	background-color: transparent;
+	filter: 'none';
+	border: none;
+	outline: none;
+	cursor: pointer;
+}
+
+.button-remove i {
+	font-size: 20px;
+	color: rgb(231, 9, 9);
+}
+
+.icon-friends {
+	display: flex;
+	align-content: center;
 }

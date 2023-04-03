@@ -23,17 +23,16 @@ export class UserService {
 	}
 
 	async getUsers() {
-		const allUsers = await this.prisma.user.findMany({
-    });
+		const allUsers = await this.prisma.user.findMany({});
 		return allUsers;
 	}
 
-  async getUsersWithBlocked() {
-    const allUsers = await this.prisma.user.findMany({
-      include: { blockedFrom: true, blockedTo: true }
-    });
-    return allUsers;
-  }
+	async getUsersWithBlocked() {
+		const allUsers = await this.prisma.user.findMany({
+			include: { blockedFrom: true, blockedTo: true }
+		});
+		return allUsers;
+	}
 
   async getUsersWithGames() {
    const allUsers = await this.prisma.user.findMany({
@@ -145,30 +144,21 @@ export class UserService {
 		return updateUser;
 	}
 
-  async getFriends(userId: number) {
-    if (userId === undefined || isNaN(userId) ) {
-      throw new BadRequestException('Undefined user for Friends');
-    }
-    try {
-      const user = await this.prisma.user.findUniqueOrThrow({
-        where: {id: userId, },
-      });
-      console.log(user)
-
-
- //     const friends = user.friendsTo.map((friendId) => {
- //       return this.getUser(friendId);
- //     })
-  //    let friendList = [];
-  //    friends.map((friend) => {const {id, username, avatar} = friend;
-  //      friendList.push({id, username, avatar});
-  //    });
-  //    return friendList;
-    } catch (error) {
-      throw new BadRequestException('getUser error : ' + error);
-    }
-  }
-
+	async getFriends(id: number) {
+		if (id === undefined) {
+			throw new BadRequestException('Undefined user ID');
+		}
+		try {
+			const user = await this.prisma.user.findUniqueOrThrow({
+				where: {
+					id: id,
+				},
+			});
+			return user;
+		} catch (error) {
+			throw new BadRequestException('getUser error : ' + error);
+		}
+	}
 
 	async addFriendOnTable(id1: number, id2: number) {
 		const updateUser = await this.prisma.user.update({
@@ -193,11 +183,16 @@ export class UserService {
 				throw new Error(`User with id ${id1} not found.`);
 			}
 			const updatedFriends = user.friends.filter((friend) => friend.id !== id2);
+			const updatedFriendOf = user.friendOf.filter((friend) => friend.id !== id2);
 			const updatedUser = await this.prisma.user.update({
-				where: { id: id1 },
-				data: { friendOf: { set: updatedFriends } },
-			  });
-			return updatedUser;
+					where: { id: id1 },
+					data: {
+						friends: { set: updatedFriends },
+						friendOf: { set: updatedFriendOf }
+					},
+					include: { friends: true, friendOf: true }
+				  });
+				  return updatedUser;
 		} catch (error) {
 			console.error(error);
 		}

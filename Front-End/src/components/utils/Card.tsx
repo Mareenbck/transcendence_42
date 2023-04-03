@@ -38,7 +38,7 @@ const Card = (props: any) => {
 	return (
 		<>
 			<div className='card' style={styles}>
-				<TitleCard color={color} title={props.title}></TitleCard>
+				<TitleCard color={color} title={props.title} type={props.type} friendCtx={props.friendCtx} authCtx={props.authCtx}></TitleCard>
 				{content}
 			</div>
 		</>
