@@ -46,6 +46,7 @@ export interface gameWinner {
     leave: string;
 }
 
+<<<<<<< HEAD
 export interface star {
     centerX: number;
     centerY: number; // the center point of the star
@@ -55,4 +56,8 @@ export interface star {
     fill: string;
     stroke: string;//the fill and stroke colors to apply
     line: number; //the linewidth of the stroke
+=======
+export  interface backColorGame{
+    backColorGame: string;
+>>>>>>> chenge color
 }
