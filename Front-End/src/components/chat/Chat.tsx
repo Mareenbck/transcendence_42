@@ -218,18 +218,6 @@ const handleFormSubmit = (e) => {
 const [showPopUp, setShowPopUp] = useState(false);
 const [visu, setVisu] = useState<{ id: number; visibility: string }[]>([]);
 
-useEffect(() => {
-    const updatedVisu = conversations.map(c => {
-      if (c.isPrivate) {
-        return { id: c.id, visibility: "private" };
-      } else if (c.isProtected) {
-        return { id: c.id, visibility: "protected" };
-      } else {
-        return { id: c.id, visibility: "public" };
-      }
-    });
-    setVisu(updatedVisu); // Mise à jour du state 'visu'
-}, [conversations]);
 
 return (
   <>
@@ -254,12 +242,12 @@ return (
             {conversations.map((c) => (
                 <div key={c.name + c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
                     <div className="conversation">
-                    <div className="conversation-name">
-                        <Conversation conversation={c}/>
-                    </div>
-                    <div className="conversation-icon">
-                    <ChannelVisibility conversation={c} visu={visu} />                                      
-                    </div>
+                      <div className="conversation-name">
+                          <Conversation conversation={c}/>
+                      </div>
+                      <div className="conversation-icon">
+                      <ChannelVisibility conversation={c}/>                                      
+                      </div>
                     </div>
                 </div>
                 ))}

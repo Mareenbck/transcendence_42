@@ -11,22 +11,11 @@ interface Conversation {
 
 interface Props {
     conversation: Conversation;
-    visu: { id: number; visibility: string }[];
   }
   
-  const ChannelVisibility = ({ conversation, visu }: Props) => {
+  const ChannelVisibility = ({ conversation}: Props) => {
     const [visibility, setVisibility] = useState("");
   
-
-    
-    useEffect(() => {
-      console.log("VISIBILIITY")
-      console.log(conversation.visibility)
-      const currentVisu = visu.find(v => v.id === conversation.id);
-      if (currentVisu) {
-        setVisibility(currentVisu.visibility);
-      }
-    }, [conversation.id, visu]);
   
     function getIconByChannelType() {
       let icon;
@@ -38,7 +27,7 @@ interface Props {
             title="Private conversations"
           ></i>
         );
-      } else if (conversation.visibility === "PROTECTED") {
+      } else if (conversation.visibility === "PWD_PROTECTED") {
         icon = (
           <i
             className="fas fa-key icon-protected"
