@@ -197,8 +197,6 @@ function Chat() {
 	setSelectedFile(event.target.files[0]);
 };
 
-
-
 const handleFormSubmit = (e) => {
     e.preventDefault();
     setShowPopUp(true);

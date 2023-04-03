@@ -24,6 +24,7 @@ function PopUp(props: any) {
     const id = user.userId;
     const [isDisabled, setIsDisabled] = useState(true);
     const [channelName, setchannelName] = useState('');
+
     
     const handleChannelNameChange = (e: FormEvent) => {
         const value = e.target.value;
