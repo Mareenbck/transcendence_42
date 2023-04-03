@@ -39,14 +39,14 @@ const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ) => {
 					context.lineWidth=line;
 					context.stroke()
 				}
+				
+				// // Add the avatar
+				// const img = new Image();
+				// img.src = 'gamewinner.winner.ftAvatar';
+				// img.onload = () => {
+				// 	context.drawImage(img, gameinit.table_width/2 + 100, gameinit.table_height / 2);
+				// }
 				context.font = "40px Verdana";
-				// Add the avatar
-				const img = new Image();
-				img.src = 'gamewinner.winner.avatar';
-				img.onload = () => {
-					context.drawImage(img, gameinit.table_width/2 + 100, gameinit.table_height / 2);
-				}
-
 				context.fillStyle = "#8c66ff";
 				context.lineWidth = 4;
 				context.fillText("WINNER:", 310, 150);

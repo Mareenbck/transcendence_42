@@ -28,7 +28,8 @@ export interface gameInit {
 	racketWidth: number;
 	racketHeight: number;
 	scoreR: number;
-	scoreL: number
+	scoreL: number;
+	winner: any;
 }
 
 

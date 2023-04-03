@@ -76,7 +76,7 @@ export class GameGateway {
 
     this.server.on('connection', (socket: Socket) => {
 console.log('51 Connected socket = ', socket.id);
-      game.init(socket); //game initialization on connection
+      if(socket) {game.init(socket);} //game initialization on connection
       socket.on("addUser", (userId) => {
         addUser(userId, socket.id); // add user : array users or array players
 console.log ('55 players = ', players.length);
@@ -91,11 +91,14 @@ console.log ('56 users = ',users.length);
           game.run(
             players[0], players[1], // start game with 2 players
           );
+          players = [];
+console.log ('95 players = ', players.length);
+console.log ('96 users = ',users.length);         
         }
       });
 
-       socket.on('disconnect', () => {//??
-//console.log(`78 Disconnected socket.id = ${socket.id}`);
+      this.server.sockets.sockets.get(socket.id).on('disconnect', () => {//??
+console.log(`78 Disconnected socket.id = ${socket.id}`);
         removeUser(socket.id);
         this.server.emit("getSpectator", users);
       });

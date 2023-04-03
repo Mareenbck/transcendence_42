@@ -88,7 +88,7 @@ const Scores = () => {
         },
         body: JSON.stringify({
           playerOneId: 2,
-          playerTwoId: 3,
+          playerTwoId: 4,
           winnerId: 2,
           score1: 1,
           score2: 10,
