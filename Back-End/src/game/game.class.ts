@@ -14,6 +14,7 @@ import {
 		gameInit,
 		GameParams
 	 } from './game.interfaces';
+import { GameService } from './game.service';
 
 		
 var ballSpeed = GameParams.BALL_DEFAULT_SPEED;
@@ -23,11 +24,11 @@ const racket_height = GameParams.RACKET_HEIGHT;
 const racket_width = GameParams.RACKET_WIDTH;
 const racketSpeedY = GameParams.RACKET_SPEED_Y;
 const ballR = GameParams.BALL_RADIUS;
-const period = GameParams.PERIOD
+let period = GameParams.PERIOD
 
 
 export class Game {
-	private prismaService: PrismaService;
+	//private prismaService: PrismaService;
 
 // initialization of players (L - left, R - right)
 	private playerL: player = {
@@ -51,8 +52,11 @@ export class Game {
 	private ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
 	private ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
 	private ball: ball = {x: width/2, y: height/2};
+	private winner: player;
 		
 	private server: Server;
+	private prismaService: PrismaService;
+
 
 		
 	constructor(
@@ -77,7 +81,7 @@ console.log("constructor Class.game");
 	}
 // function: initialization of game // during the ferst connection to the game
 	public init(socket: Socket){
-console.log(`init socket ${socket}`);
+console.log(`init socket ${socket.id}`);
 		socket.emit('init-pong', { 
 			table_width: width,
 			table_height: height,
@@ -85,7 +89,8 @@ console.log(`init socket ${socket}`);
 			racket_height: racket_height,
 			ballR: ballR,
 			scoreR: this.playerR.score,
-			scoreL: this.playerL.score
+			scoreL: this.playerL.score, 
+			winner:''
 		});
 	}
 // function: game logic ...
@@ -151,9 +156,8 @@ console.log('ballSpeed = ', ballSpeed);
 
 	private player_disconect = (player: player) => {
 		this.isrunning = false;
-		let winner = player;
-		this.server.emit('winner', {winner: winner, leave: this.leave}); // room
-//!!!  BD
+		this.winner = player;
+		this.server.emit('winner', {winner: this.winner, leave: this.leave}); // room
 	}  
 
 // function: run game
@@ -241,16 +245,18 @@ console.log("playerL disconect");
 //interval function: update the game at the certain period until the score reaches MAX
     this.interval = setInterval(() => {
 		this.updatePositions();
-	// Emit the updated positions of the ball and the rocket to all connected clients
+		// Emit the updated positions of the ball and the rocket to all connected clients
 		this.emit2all();
 		if (this.playerL.score >= 4 || this.playerR.score >= 4){ //score MAX - change here
-console.log('stop game')
+
 			this.isrunning = false;
-			this.player_disconect(this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId);	
+			this.winner =  this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId;
+			this.player_disconect(this.winner);	
+			clearInterval(this.interval);
+			this.prismaService.game.create(this.playerR.profile.userId, this.playerL.profile.userId, this.winner.profile.userId, this.playerR.profile.userId, this.playerL.profile.userId);
 		}
-		clearInterval(this.interval);
-console.log('period', period)
     }, period);
+console.log('stop game')
 }
 
 
