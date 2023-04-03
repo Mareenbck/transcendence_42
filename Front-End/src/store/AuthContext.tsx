@@ -32,11 +32,15 @@ export const AuthContextProvider = (props: any) => {
 	const [is2FA, setIs2FA] = useState<boolean>();
 
 	useEffect(() => {
-		fetchHandler(token, userId);
+		if (userId) {
+			fetchHandler(token, userId);
+		}
 	}, [username])
 
 	useEffect(() => {
-		fetchAvatar(userId);
+		if (userId) {
+			fetchAvatar(userId);
+		}
 	}, [])
 
 	const updateAvatar = (avatarUrl: string) => {
@@ -48,11 +52,11 @@ export const AuthContextProvider = (props: any) => {
 		}
 	  };
 
-		const updateUsername = (newUsername: string) => {
-			if (newUsername) {
-				setUsername(newUsername);
-			}
-		};
+	const updateUsername = (newUsername: string) => {
+		if (newUsername) {
+			setUsername(newUsername);
+		}
+	};
 
 	const fetchAvatar = async (userId: string) => {
 		  try {

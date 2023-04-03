@@ -57,8 +57,6 @@ export class FriendshipController {
 	@Get('/:id/avatar')
 	async getAvatar(@Param('id') id: string, @Res() res: Response) {
 		const avatar = await this.friendshipService.getUserAvatar(parseInt(id), res);
-		console.log("avatar")
-		console.log(avatar)
 		return avatar;
 	}
 }
