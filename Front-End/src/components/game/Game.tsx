@@ -5,9 +5,28 @@ import './Game.css'
 import type { gameInit, gameState, gameWinner } from './type'
 import { Socket } from 'socket.io-client';
 import { socket } from '../../service/socket';
+import ColorModal from './modal.tsx/ColorModal';
+
 
 
 function Game() {
+
+    // Pour partis de Modal select Color,
+    
+    const [ShowColorModal, setShowColorModal] = useState(false); 
+    const handleColorModal = () => {
+        setShowColorModal(true)
+    }
+    const handleClose = () => {
+        setShowColorModal(false)
+    }
+
+    const [backColorGame, setbackColorGame] = useState<string>("green");
+    const changColor = () => {
+        setbackColorGame("red");
+        setShowColorModal(false)
+    }
+    //**** */
 
     const [gameinit, setGameInit] = useState<gameInit>(
         {
@@ -82,10 +101,15 @@ function Game() {
 
     return (
         <div tabIndex={0} onKeyDown={keyDownHandler}>
-            <h2> Game </h2>
-            <div>
-                <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} />
-            </div>
+            
+                <h2 style={{background: backColorGame}}> Game </h2>
+                <div>
+                     <button onClick={handleColorModal}>Change Color</button>
+                    {ShowColorModal && <ColorModal handelClose={handleClose}  changColor={changColor}/>}
+                    <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />
+                    
+                </div>
+              
         </div>
     );
 }
