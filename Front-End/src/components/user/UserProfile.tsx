@@ -10,33 +10,38 @@ import Card from '../utils/Card';
 
 const UserProfile = (props: any) => {
 	const authCtx = useContext(AuthContext);
-	const friendCtx = useContext(FriendContext);
 	const isLoggedIn = authCtx.isLoggedIn;
 	const [user, setUser] = useState(null);
 
-	const getUser = async (token: string, currentId: string) => {
-		const response = await fetch(
-			`http://localhost:3000/users/profile/${props.id}`, {
-			method: "GET",
-		}
-		)
-		const data = await response.json();
+	useEffect(() => {
+		getUser(props.id)
+	}, [props.id])
 
-		// For each friend in the data array, fetch their avatar
-		// const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
-		// 	const avatar = await fetchAvatar(friend.id);
-		// 	return { ...friend, avatar };
-		// }));
-		setUser(data);
+
+	const getUser = async (id: string) => {
+		try {
+			const response = await fetch(
+			`http://localhost:3000/users/friends/${id}`, {
+				method: "GET",
+			})
+			if (response.ok) {
+				const data = await response.json();
+				setUser(data);
+			} else {
+				console.log("POST error on /friendship/create");
+				return "error";
+			}
+		} catch (error) {
+			console.log("error", error);
+	 	}
 	}
-
 
 	return (
 		<>
 			<div className={style.mainPos}>
 				<SideBar title="Profile" />
 				<div className='container-profile'>
-					<ProfileCard context={authCtx} user={user}></ProfileCard>
+					<ProfileCard authCtx={authCtx} user={user} id={props.id}></ProfileCard>
 					<Card color='blue' title="My Level" icon="level" type="stats" height="270px" width="355px"></Card>
 					<Card color='red' title="My Rank" icon="rank" type="stats" height="270px" width="355px"></Card>
 					{/* <Card color='green' title="My Friends" type="showFriends" width="355px" friendCtx={friendCtx} authCtx={authCtx} height="auto"></Card> */}

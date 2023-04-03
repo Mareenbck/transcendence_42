@@ -6,9 +6,10 @@ import Friend from '../interfaces/IFriendship'
 const defaultValue = {
 	demands: [] as Demand[],
 	friends: [] as Friend[],
-	createDemand: (receiverId: number, token: string, currentId: string) => { },
-	getDemands: (token: string, currentId: string) => { },
-	getFriends: (token: string, currentId: string) => { },
+	fetchAvatar: async (userId: number) => {},
+	createDemand: async (receiverId: number, token: string, currentId: string) => { },
+	getDemands: async (token: string, currentId: string) => { },
+	getFriends: async (token: string, currentId: string) => { },
 	removeFriend: (friendId: number, currentId: string, token: string) => { },
 	updateDemand: (demandId: number, res: string, token: string) => { },
 };
@@ -27,9 +28,6 @@ export const FriendContextProvider = (props: any) => {
 			getFriends(authCtx.token, authCtx.userId);
 		}
 	}, []);
-
-	// useEffect (() => {
-	// }, []);
 
 	const createDemand = async (receiverId: number, token: string, currentId: string) => {
 		try {
@@ -154,6 +152,7 @@ export const FriendContextProvider = (props: any) => {
 	const contextValue = {
 		demands,
 		friends,
+		fetchAvatar,
 		createDemand,
 		getDemands,
 		getFriends,

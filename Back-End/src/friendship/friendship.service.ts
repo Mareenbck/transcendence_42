@@ -123,13 +123,19 @@ export class FriendshipService {
 			if (user.avatar) {
 				const fileName = path.basename(user.avatar)
 				const result = res.sendFile(fileName, { root: process.env.UPLOAD_DIR });
+				console.log("result dans user.avatar")
+				console.log(result)
 				return result
 			}
 			else if (!user.ftAvatar && !user.avatar) {
 				const fileName = process.env.DEFAULT_AVATAR;
 				const result = res.sendFile(fileName, { root: process.env.PATH_DEFAULT_AVATAR });
+				console.log("result dans default")
+				console.log(result)
+
 				return result
 			} else if (user.ftAvatar && !user.avatar) {
+				console.log("else ni ft ni avatar")
 				return res.status(204).send();
 			}
 		} catch {

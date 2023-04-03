@@ -137,30 +137,21 @@ export class UserService {
 		return updateUser;
 	}
 
-	async getFriends(userId: number) {
-		if (userId === undefined || isNaN(userId) ) {
-			throw new BadRequestException('Undefined user for Friends');
+	async getFriends(id: number) {
+		if (id === undefined) {
+			throw new BadRequestException('Undefined user ID');
 		}
 		try {
 			const user = await this.prisma.user.findUniqueOrThrow({
-				where: {id: userId, },
-		});
-		console.log(user)
-
-
- //     const friends = user.friendsTo.map((friendId) => {
- //       return this.getUser(friendId);
- //     })
-  //    let friendList = [];
-  //    friends.map((friend) => {const {id, username, avatar} = friend;
-  //      friendList.push({id, username, avatar});
-  //    });
-  //    return friendList;
-    } catch (error) {
-      throw new BadRequestException('getUser error : ' + error);
-    }
-  }
-
+				where: {
+					id: id,
+				},
+			});
+			return user;
+		} catch (error) {
+			throw new BadRequestException('getUser error : ' + error);
+		}
+	}
 
 	async addFriendOnTable(id1: number, id2: number) {
 		const updateUser = await this.prisma.user.update({
@@ -176,9 +167,6 @@ export class UserService {
 	}
 
 	async removeFriendOnTable(id1: number, id2: number) {
-		console.log("id1 ------>")
-		console.log(id1)
-		console.log(id2)
 		try {
 			const user = await this.prisma.user.findUnique({
 				where: { id: id1 },
@@ -187,14 +175,8 @@ export class UserService {
 			if (!user) {
 				throw new Error(`User with id ${id1} not found.`);
 			}
-			console.log("user---->")
-			console.log(user)
 			const updatedFriends = user.friends.filter((friend) => friend.id !== id2);
 			const updatedFriendOf = user.friendOf.filter((friend) => friend.id !== id2);
-			console.log("updatedFriends---->")
-			console.log(updatedFriends)
-			console.log("updatedFriendOf---->")
-			console.log(updatedFriendOf)
 			const updatedUser = await this.prisma.user.update({
 					where: { id: id1 },
 					data: {
@@ -203,8 +185,6 @@ export class UserService {
 					},
 					include: { friends: true, friendOf: true }
 				  });
-			console.log("updatedUser---->")
-			console.log(updatedUser)
 				  return updatedUser;
 		} catch (error) {
 			console.error(error);

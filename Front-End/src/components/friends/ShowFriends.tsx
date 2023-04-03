@@ -39,7 +39,6 @@ const ShowFriends = (props: any) => {
 							<button className="button-remove" onClick={(event) => handleRemoveFriend(event, friend.id)}><i className="fa-solid fa-user-xmark fa-2xs"></i></button>
 							)}
 							<Link to={`/users/profile/${friend.id}`}>{friend.username}</Link>
-							{/* <Link to={} ></Link> */}
 					</div>
 				</li>
 			))}

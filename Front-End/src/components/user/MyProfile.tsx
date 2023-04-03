@@ -18,7 +18,7 @@ const MyProfile = () => {
 			<div className={style.mainPos}>
 				<SideBar title="Profile" />
 				<div className='container-profile'>
-					<ProfileCard context={authCtx}></ProfileCard>
+					<ProfileCard authCtx={authCtx} ></ProfileCard>
 					<Card color='blue' title="My Level" icon="level" type="stats" height="270px" width="355px"></Card>
 					<Card color='red' title="My Rank" icon="rank" type="stats" height="270px" width="355px"></Card>
 					<Card color='green' title="My Friends" type="showFriends" width="355px" friendCtx={friendCtx} authCtx={authCtx} height="auto"></Card>
