@@ -30,3 +30,7 @@ export interface gameWinner {
     winner: string;
     leave: string;
 }
+
+export  interface backColorGame{
+    backColorGame: string;
+}

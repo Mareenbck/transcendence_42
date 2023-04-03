@@ -2,11 +2,11 @@ import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
 import type {gameInit, gameState, gameWinner} from './type'
 
-const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner} ): JSX => {
+const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, backColorGame: backColorGame} ): JSX => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
     const gamewinner = props.gamewinner;
- 
+    const backColorGame = props.backColorGame;
     const canvasRef = useRef<HTMLCanvasElement>(null);  
     
     useEffect(() => {
@@ -15,7 +15,7 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
 
             if (context ) {
                 // Draw the table
-                context.fillStyle = "black";
+                context.fillStyle = backColorGame;
                 context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
 
                 // center dotted line
