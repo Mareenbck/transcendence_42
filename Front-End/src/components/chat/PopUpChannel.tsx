@@ -80,18 +80,19 @@ return (
             </label>
             <div className='content-button'>
                 <p>{props.message}</p>
+              
                 <label className='wrap-circle'>
                     <input
                         className='circle'
                         type='radio'
-                        checked={isPublic}
+                        checked={!isPublic && !isPrivate}
                         onChange={() => {
-                            setIsPublic(true);
+                            setIsPublic(false);
                             setIsPrivate(false);
-                            setIsProtected(false);
-                        }} 
+                            setIsProtected(true);
+                        }}
                     />
-                    Public
+                    Protected
                 </label>
                 <label className='wrap-circle'>
                     <input
@@ -110,15 +111,16 @@ return (
                     <input
                         className='circle'
                         type='radio'
-                        checked={!isPublic && !isPrivate}
+                        checked={isPublic}
                         onChange={() => {
-                            setIsPublic(false);
+                            setIsPublic(true);
                             setIsPrivate(false);
-                            setIsProtected(true);
-                        }}
+                            setIsProtected(false);
+                        }} 
                     />
-                    Protected
+                    Public
                 </label>
+                
             </div>
             <footer className='actions'>
                 <button type='submit' onSubmit={handleFormSubmit} onClick={createAndClose}>OK</button>

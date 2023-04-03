@@ -12,6 +12,8 @@ import MessageDf from "./message/message.df"
 import './Chat.css'
 import React from 'react';
 import PopUp from './PopUpChannel';
+import ChannelVisibility from './ChannelVisibility';
+
 
 function Chat() {
   const socket = useRef();
@@ -194,7 +196,14 @@ function Chat() {
   }, [conversations]);
   
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
-	setSelectedFile(event.target.files[0]);
+  setSelectedFile(event.target.files[0]);
+  
+
+  
+};
+
+const updateConversations = (newConversation) => {
+  setConversations((prevConversations) => [newConversation, ...prevConversations]);
 };
 
 const handleFormSubmit = (e) => {
@@ -207,7 +216,20 @@ const handleFormSubmit = (e) => {
   };
 
 const [showPopUp, setShowPopUp] = useState(false);
+const [visu, setVisu] = useState<{ id: number; visibility: string }[]>([]);
 
+useEffect(() => {
+    const updatedVisu = conversations.map(c => {
+      if (c.isPrivate) {
+        return { id: c.id, visibility: "private" };
+      } else if (c.isProtected) {
+        return { id: c.id, visibility: "protected" };
+      } else {
+        return { id: c.id, visibility: "public" };
+      }
+    });
+    setVisu(updatedVisu); // Mise à jour du state 'visu'
+}, [conversations]);
 
 return (
   <>
@@ -224,30 +246,23 @@ return (
                   onCancel={() => setShowPopUp(false)}
                   onClick={() => setShowPopUp(false)}
                   onSubmit={handleFormSubmit}
+                  updateConversations={updateConversations}
                   >
                   </PopUp>
             )}
             </form>
             {conversations.map((c) => (
                 <div key={c.name + c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
-                 <div className="conversation">
-                  <div className="conversation-name">
-                    <Conversation conversation={c}/>
-                  </div>
-                  <div className="conversation-icon">
-                    {c.isPrivate ? (
-                      <i className="fas fa-lock icon-private" title="Private Channel"></i>
-                    ) : c.isProtected ? (
-                      <i className="fas fa-key icon-protected" title="Protected Channel"></i>
-                    ) : (
-                      <i className="fas fa-globe icon-public" title="Public Channel"></i>
-                    )}
-                  </div>
+                    <div className="conversation">
+                    <div className="conversation-name">
+                        <Conversation conversation={c}/>
+                    </div>
+                    {/* <div className="conversation-icon">
+                    <ChannelVisibility conversation={c} visu={visu} />                                      
+                    </div> */}
+                    </div>
                 </div>
-
-                </div>
-              ))}
-
+                ))}
             </div>
           </div>
         <div className="chatBox">
@@ -338,6 +353,6 @@ return (
       </div>
     </>
   )
-            }
+}
 
 export default Chat;
