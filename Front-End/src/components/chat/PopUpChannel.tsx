@@ -18,7 +18,7 @@ function PopUp(props: any) {
     const [isPrivate, setIsPrivate] = useState(false);
     const [isProtected, setIsProtected] = useState(false);
     const [selectedFile, setSelectedFile] = useState('');
-    const [conversations, setConversations] = useState<ConversationDto[]> ([]);
+    const [conversations, setConversations] = useState([]);
     const [showPopUp, setShowPopUp] = useState(true);
     const user = useContext(AuthContext);
     const id = user.userId;

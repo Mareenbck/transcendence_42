@@ -25,7 +25,7 @@ function Chat() {
   const [AMessageD, setAMessageD] = useState (null);
   const [AMessageChat, setAMessageChat] = useState (null);
   const [AConversation, setAConversation] = useState (null);
-  const [conversations, setConversations] = useState<ConversationDto[]> ([]);
+  const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState (null);
   const [currentDirect, setCurrentDirect] = useState (null);
   const [messages2, setMessages2] = useState<MessageDto[]> ([]);
@@ -257,9 +257,9 @@ return (
                     <div className="conversation-name">
                         <Conversation conversation={c}/>
                     </div>
-                    {/* <div className="conversation-icon">
+                    <div className="conversation-icon">
                     <ChannelVisibility conversation={c} visu={visu} />                                      
-                    </div> */}
+                    </div>
                     </div>
                 </div>
                 ))}
