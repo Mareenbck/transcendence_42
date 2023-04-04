@@ -216,9 +216,22 @@ const Scores = () => {
           </tbody>
         </table>
       </div>
-      </>
-     )
-  }
+     
+     
+
+     
+      <div className="pos">
+                {allUsers.map( (g) => {
+                  return(
+                    <UserChart key={g?.id} userName={g?.username}  h={(getScore(g))}/>
+                  )
+                })
+              }
+
+        </div>
+        </>
+    )
+    }
 
 
 export default Scores;
