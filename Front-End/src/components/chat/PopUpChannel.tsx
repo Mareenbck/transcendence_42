@@ -2,12 +2,10 @@ import React, { useRef } from 'react';
 import { Popup } from 'reactjs-popup';
 import { useEffect, useContext, useState, FormEvent } from 'react'
 import "../../style/PopUpChannel.css"
-import "../../pages/Setting.tsx"
 import AuthContext from '../../store/AuthContext';
 import Chat from './Chat';
 import { socket } from '../../service/socket';
 import ConversationReq from "./conversation/conversation.req"
-import { Modal } from '@mui/material';
 
 
 
@@ -67,10 +65,11 @@ function PopUp(props: any) {
         }
     }
     
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = (e:FormEvent) => {
         e.preventDefault();
         setShowPopUp(false);
       };
+      
 
 return (
     <div className='popup-overlay'>

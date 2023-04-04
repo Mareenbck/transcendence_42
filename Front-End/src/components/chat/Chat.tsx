@@ -386,8 +386,6 @@ function Chat() {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
   }, [messagesD]);
 
-
-
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
   setSelectedFile(event.target.files[0]);
 };
@@ -419,8 +417,7 @@ return (
                   message="Choisissez les options de votre channel"
                   onCancel={() => setShowPopUp(false)}
                   onClick={() => setShowPopUp(false)}
-                  onSubmit={{handleFormSubmit}}
-                  
+                  onSubmit={{handleFormSubmit}}        
                   >
                   </PopUp>
             )}
