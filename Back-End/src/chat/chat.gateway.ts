@@ -4,6 +4,8 @@ import {
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
+import { AuthService } from 'src/auth/auth.service';
+
 
 let users = [];
 let roomUsers = [];
@@ -31,17 +33,30 @@ const addRoomUser = (roomId, userId, socketId) => {
 @WebSocketGateway(8001, { cors: 'http://localhost/chat/message' })
 
 export class ChatGateway {
+constructor(private authService: AuthService){}
   @WebSocketServer()
   server;
 
   onModuleInit(){
     this.server.on('connection', (socket) => {
       console.log(socket.id);
-      console.log('Connected');
+      console.log('Connected CHAT');
 
       socket.on("addUser", (userId) => {
-        addUser(userId, socket.id);
-        this.server.emit("getUsers", users);
+        if (userId.token){
+          try {
+            this.authService.verifySocketToken(userId.token)
+            addUser(userId, socket.id);
+            this.server.emit("getUsers", users);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        else {
+          this.server.to(socket.socketId).emit("notAuth", {
+            content: "Not Authorised User",
+          });
+        }
       });
 
       socket.on("userRoom", ({roomId, userId}) => {
@@ -106,7 +121,7 @@ export class ChatGateway {
 
       socket.on('disconnect', () => {
         console.log(socket.id);
-        console.log('Disconnected');
+        console.log('Disconnected CHAT');
         removeUser(socket.id);
         this.server.emit("getUsers", users);
       });

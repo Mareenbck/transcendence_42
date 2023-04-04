@@ -49,6 +49,7 @@ function Chat() {
 
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
+//    socket.current.data.fromPage = "chat";
 
     socket.current.on("getMChat", (data)=> {
       setAMessageChat({
@@ -85,6 +86,12 @@ function Chat() {
   useEffect(() => {
     socket.current.on("getUsers", users => {
       setOnlineUsers(users);
+    });
+  });
+
+  useEffect(() => {
+    socket.current.on("notAuth", data => {
+      window.location.replace('/root');
     });
   });
 
@@ -194,7 +201,7 @@ function Chat() {
 ////////////////////////////////////////////////
 
   useEffect(() => {
-    if (allUsers !== undefined && fromBlock && fromBlock !== user.userId.userId) {
+    if (allUsers !== undefined && user.userId && fromBlock && fromBlock !== user.userId.userId) {
       const i = allUsers.findIndex(userX => +userX.id === +id);
       const j = allUsers.find(userX => +userX.id === +id);
       j?.blockedFrom.push(fromBlock);
@@ -206,7 +213,8 @@ function Chat() {
   }, [fromBlock]);
 
   useEffect(() => {
-    if (allUsers !== undefined && unfromBlock !== user.userId.userId) {
+    console.log(user.userId);
+    if (allUsers !== undefined && user.userId && unfromBlock !== user.userId.userId) {
       const i = allUsers.findIndex(userX => +userX.id === +id);
       const j = allUsers.find(userX => +userX.id === +id);
       j.blockedFrom = j.blockedFrom.filter(u => +u.id !== unfromBlock);
