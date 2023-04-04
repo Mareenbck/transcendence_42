@@ -12,7 +12,7 @@ import { Modal } from '@mui/material';
 
 
 function PopUp(props: any) {
-    
+
     const authCtx = useContext(AuthContext);    
     const [isPublic, setIsPublic] = useState(true);
     const [isPrivate, setIsPrivate] = useState(false);
@@ -25,7 +25,6 @@ function PopUp(props: any) {
     const [isDisabled, setIsDisabled] = useState(true);
     const [channelName, setchannelName] = useState('');
 
-    
     const handleChannelNameChange = (e: FormEvent) => {
         const value = e.target.value;
         setchannelName(value);
@@ -43,10 +42,16 @@ function PopUp(props: any) {
           isPrivate: isPrivate,
           isProtected: isProtected,
         };
-        try {
-            const res = await ConversationReq.postRoom(user, newConv);
-            setConversations([res, ...conversations]);
-            console.log("OU EST L'ERREUR ? ")
+
+    //     socket?.current.emit("sendMD", {
+    //         author: +id,
+    //         receiver: +currentDirect?.userId,
+    //         content: newConv,
+    // });
+    try {
+        const res = await ConversationReq.postRoom(user, newConv);
+        // setConversations([res, ...conversations]);
+        props.newConv(newConv);
         } catch (err) { 
           console.log(err);
         }
@@ -62,7 +67,6 @@ function PopUp(props: any) {
         }
     }
     
-      
     const handleFormSubmit = (e) => {
         e.preventDefault();
         setShowPopUp(false);
