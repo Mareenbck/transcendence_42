@@ -63,15 +63,20 @@ const removeUser = (socketId) => {
 export class GameGateway {
  
   @WebSocketServer() server: Server;
+  //  constructor(
+  //       private prisma: PrismaService,
+  //       private service: GameService ){}
 
-  prismaService: PrismaService; ///constructor?
+  prisma: PrismaService; ///constructor?
+  gameService: GameService;
 
   onModuleInit(){
     const game = new Game( 
       this.server,
       //this.websocketsService,
-      this.prismaService,
+      this.prisma,
       //this.achievementsService,
+      this.gameService
     );
 
     this.server.on('connection', (socket: Socket) => {

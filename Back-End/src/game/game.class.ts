@@ -1,10 +1,3 @@
-import { 
-	MessageBody,
-	WebSocketServer,
-	SubscribeMessage,
-	WebSocketGateway,
-	ConnectedSocket
-  } from '@nestjs/websockets';
 import {Server, Socket} from 'socket.io'
 import { PrismaService} from '../prisma/prisma.service';
 import { 
@@ -15,6 +8,7 @@ import {
 		GameParams
 	 } from './game.interfaces';
 import { GameService } from './game.service';
+import { PrismaClient } from '@prisma/client';
 
 		
 var ballSpeed = GameParams.BALL_DEFAULT_SPEED;
@@ -28,7 +22,7 @@ let period = GameParams.PERIOD
 
 
 export class Game {
-	//private prismaService: PrismaService;
+
 
 // initialization of players (L - left, R - right)
 	private playerL: player = {
@@ -56,6 +50,7 @@ export class Game {
 		
 	private server: Server;
 	private prismaService: PrismaService;
+	private gameService: GameService;
 
 
 		
@@ -63,11 +58,15 @@ export class Game {
 		server: Server,
 		prismaService: PrismaService,
 		//spectatorSockets: any[]
+		gameService: GameService
 	) {
 console.log("constructor Class.game");
 		this.server = server;
 		this.prismaService = prismaService;
+		this.gameService = gameService;
 	}
+	prisma = new PrismaClient()
+
 
 // function: emit game - tacking the changing coordinates of rackets and ball
 	private emit2all(){
@@ -178,35 +177,35 @@ console.log("socketL", socketL.id);
 
 
 // move rakets
-	socketR.on ('move', (message: string) => {
+		socketR.on ('move', (message: string) => {
 console.log("playerR move", message);
-		if (message == 'up') {
-			if (this.playerR.racket.y > 0) {
-				this.playerR.racket.y -= racketSpeedY;
+			if (message == 'up') {
+				if (this.playerR.racket.y > 0) {
+					this.playerR.racket.y -= racketSpeedY;
+				}
+				this.emit2all();
+			} else if (message == 'down') {
+				if (this.playerR.racket.y < height - racket_height) {
+					this.playerR.racket.y += racketSpeedY;
+				}
+				this.emit2all();
 			}
-			this.emit2all();
-		} else if (message == 'down') {
-			if (this.playerR.racket.y < height - racket_height) {
-				this.playerR.racket.y += racketSpeedY;
-			}
-			this.emit2all();
-		}
-	});
+		});
 
-	socketL.on ('move', (message: string) => {
-console.log("playerL move", message);
-		if (message == 'up') {
-			if (this.playerL.racket.y > 0) {
-				this.playerL.racket.y -= racketSpeedY;
+		socketL.on ('move', (message: string) => {
+	console.log("playerL move", message);
+			if (message == 'up') {
+				if (this.playerL.racket.y > 0) {
+					this.playerL.racket.y -= racketSpeedY;
+				}
+				this.emit2all();
+			} else if (message == 'down') {
+				if (this.playerL.racket.y < height - racket_height) {
+					this.playerL.racket.y += racketSpeedY;
+				}
+				this.emit2all();
 			}
-			this.emit2all();
-		} else if (message == 'down') {
-			if (this.playerL.racket.y < height - racket_height) {
-				this.playerL.racket.y += racketSpeedY;
-			}
-			this.emit2all();
-		}
-	});
+		});
 
 
 
@@ -228,69 +227,63 @@ console.log("playerL move", message);
 	// });
 
 //handling disconection
-	socketR?.on('disconect', () => {
-console.log("playerR disconect");
-		this.player_disconect(this.playerL.profile.userId);
-		clearInterval(this.interval);
-		this.isrunning = false;
-	})
+		socketR?.on('disconect', () => {
+	console.log("playerR disconect");
+			this.player_disconect(this.playerL.profile.userId);
+			clearInterval(this.interval);
+			this.isrunning = false;
+		})
 
-	socketL?.on('disconect', () => {
-console.log("playerL disconect");
-		this.player_disconect(this.playerR.profile.userId);
-		clearInterval(this.interval);
-		this.isrunning = false;
-	})
+		socketL?.on('disconect', () => {
+	console.log("playerL disconect");
+			this.player_disconect(this.playerR.profile.userId);
+			clearInterval(this.interval);
+			this.isrunning = false;
+		})
 
 //interval function: update the game at the certain period until the score reaches MAX
-    this.interval = setInterval(() => {
-		this.updatePositions();
-		// Emit the updated positions of the ball and the rocket to all connected clients
-		this.emit2all();
-		if (this.playerL.score >= 4 || this.playerR.score >= 4){ //score MAX - change here
+		this.interval = setInterval(() => {
+			this.updatePositions();
+			// Emit the updated positions of the ball and the rocket to all connected clients
+			this.emit2all();
+			if (this.playerL.score >= 2 || this.playerR.score >= 2){ //score MAX - change here
 
-			this.isrunning = false;
-			this.winner =  this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId;
-			this.player_disconect(this.winner);	
-			clearInterval(this.interval);
-			this.prismaService.game.create(this.playerR.profile.userId, this.playerL.profile.userId, this.winner.profile.userId, this.playerR.profile.userId, this.playerL.profile.userId);
-		}
-    }, period);
+				this.isrunning = false;
+				this.winner =  this.playerL.score > this.playerR.score ? this.playerL : this.playerR;
+				this.player_disconect(this.winner);	
+				clearInterval(this.interval);
+				
+				if (!this.isrunning){
+console.log("257 winner", this.winner.profile.userId.userId)
+// this.gameService.create(data: {
+// 				playerOne: {
+// 					connect: {id: this.playerR.profile.userId.userId}},
+// 				playerTwo: {
+// 					connect: {id: this.playerL.profile.userId.userId}},
+// 				winner: {
+// 					connect: { id: this.winner.profile.userId.userId}},
+// 					score1: this.playerR.score,
+// 					score2: this.playerL.score,
+// 			} );
+					// let promisses = [];
+					// promisses.push(
+						this.prisma.game.create({
+							data: {
+								playerOne: {
+									connect: {id: this.playerR.profile.userId.userId}},
+								playerTwo: {
+									connect: {id: this.playerL.profile.userId.userId}},
+								winner: {
+									connect: { id: this.winner.profile.userId.userId}},
+									score1: this.playerR.score,
+									score2: this.playerL.score,
+							}
+					});
+				}
+			}
+		}, period);
 console.log('stop game')
-}
-
-
-
-//   handleConnection(socket: Socket, ...args: any[]){
-//     const username = socket.handshake.query.userName as string;
-//     const socket = socket.id;
-//     this.connectedClients = [...this.connectedClients, socket];
-//     if(this.players.length < 2){
-//        this.players = [...this.players, socket];
-//        this.winner = '';
-//        this.leave = '';
-//       this.server.emit('winner', {winner: this.winner, leave: this.leave})
-//     }
-// console.log(`user ${username} is connected on ${socket}`);
-// console.log(`Connection: connectedClients =  ${this.connectedClients} (players =  ${this.players})`);
-
-  // emit initial game settings
+	}
 
 }
 
-//   handleDisconnect(socket: Socket){
-//     this.connectedClients = this.connectedClients.filter(item => item != socket);
-//     this.players = this.players.filter(item => item != socket);
-//     this.leave = 'leave_id';
-// console.log(`Disconnection: connectedClients =  ${this.connectedClients} (players =  ${this.players})`);
-//     if(this.players.length == 1 ){
-//       clearInterval(this.interval);
-//       this.isrunning = false;
-//       this.winner = 'player[0]';
-//       this.server.emit('winner', {winner: this.winner, leave: this.leave})
-//       // this.leave = '';
-//       // this.winner = ''
-//       this.scoreL = 0;
-//       this.scoreR = 0;
-//     }
-//   } 
