@@ -387,10 +387,6 @@ function Chat() {
   }, [messagesD]);
 
 
-////////////////////////////////////////////////
-// Partie VII : Channels pour EMMA
-////////////////////////////////////////////////
-
 
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
   setSelectedFile(event.target.files[0]);
