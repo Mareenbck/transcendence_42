@@ -19,9 +19,10 @@ interface Conversation {
 
 interface Props {
   conversation: Conversation;
+  channelName: string;
 }
 
-export default function ChannelVisibilityIcon({conversation}: Props) {
+export default function ChannelVisibilityIcon({conversation, channelName}: Props) {
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -66,8 +67,8 @@ export default function ChannelVisibilityIcon({conversation}: Props) {
       {getIconByChannelType()}
       <Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
         <Box className="modal-content">
-          <h2>Welcome to channel settings</h2>
-          <div>Do you want to change the password ? </div>
+          <h2>Welcome to {channelName} settings</h2>
+          <div>Do you want to change the password ?</div>
         </Box>
       </Modal>
     </div>
