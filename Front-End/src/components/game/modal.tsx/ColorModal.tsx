@@ -1,6 +1,10 @@
 import React from 'react';
 import'../../../style/ColorModal.css';
 
+type props = {
+	changcolor : any;
+	handelclose: any;
+}
 
 function ColorModal(props: any) {
 	return (
@@ -11,7 +15,7 @@ function ColorModal(props: any) {
 				</header>
 				<div className='content'>	
 					<div className='btm-contain'>
-						<button  className = "btn" onClick={props.changColor} style={{backgroundColor: "red"}}>Red</button>
+						<button  className = "btn" onClick={props.changColor/*("red")*/}   style={{backgroundColor: "red"}} >Red</button>
 						<button  className = "btn" onClick={props.changColor} style={{backgroundColor: "blue"}}>Blue</button>
 					</div>
 				</div>

@@ -13,6 +13,7 @@ const Sidebar = (props: any) => {
     const [username, setUsername] = useState(authCtx.username)
 
     const links = [
+        {/* name: "Play Games", path: "/game/play" */},
         { name: "Play Games", path: "/game/play" },
         { name: "Chat", path: "/chat/message" },
         { name: "Scores", path: "/scores" },
