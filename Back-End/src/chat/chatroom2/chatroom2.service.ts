@@ -1,12 +1,12 @@
 import { PrismaService } from '../../prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
-import { CreateChatroom2Dto, CreateRoomDto } from './dto/create-chatroom2.dto';
-import { UpdateChatroom2Dto } from './dto/update-chatroom2.dto';
+import { CreateChatroomDto, CreateRoomDto } from './dto/create-chatroom2.dto';
 import { Prisma, UserChannelVisibility } from '@prisma/client';
-
+import { BadRequestException, Injectable} from '@nestjs/common';
+import { Chatroom } from '@prisma/client';
+import { UpdateChatroomDto } from './dto/update-chatroom2.dto';
 
 @Injectable()
-export class Chatroom2Service {
+export class ChatroomService {
   constructor(private prisma: PrismaService){}
 
     async create(newConv: any) {
@@ -39,7 +39,7 @@ export class Chatroom2Service {
     return this.prisma.chatroom.findUnique({where: {id: id}});;
   }
 
-  update(id: number, updateChatroom2Dto: UpdateChatroom2Dto) {
+  update(id: number, updateChatroom2Dto: UpdateChatroomDto) {
     return this.prisma.chatroom.update({
       where: {id: id},
       data: updateChatroom2Dto });

@@ -7,12 +7,11 @@ import { ChatGateway } from './chat/chat.gateway';
 import { JwtModule } from '@nestjs/jwt';
 import { ChatMessModule } from './chat/chat-mess/chat-mess.module';
 import { DirMessModule } from './chat/dir-mess/dir-mess.module';
-import { Chatroom2Module } from './chat/chatroom2/chatroom2.module';
-import { JeuxModule } from './jeux/jeux.module';
+import { ChatroomModule } from './chat/chatroom2/chatroom2.module';
 import { GameModule } from './game/game.module';
 import { GameGateway } from './game/game.gateway';
 import { FriendshipModule } from './friendship/friendship.module';
-
+import { GlobalModule } from './gateway/global.module';
 
 @Module({
 	imports: [
@@ -24,11 +23,10 @@ import { FriendshipModule } from './friendship/friendship.module';
 		FriendshipModule,
 		PrismaModule,
 		JwtModule.register({ secret: `${process.env.JWT_SECRET}` }),
-		Chatroom2Module,
+		ChatroomModule,
 		ChatMessModule,
+    GlobalModule,
 		DirMessModule,
-		Chatroom2Module,
-		JeuxModule,
 		GameModule,
 
 		// PassportModule.register({ defaultStrategy: '42' }),

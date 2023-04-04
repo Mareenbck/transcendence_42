@@ -4,10 +4,15 @@ import { FriendshipService } from './friendship.service';
 import { GetCurrentUserId } from '../decorators/get-userId.decorator';
 import { FriendsDto } from './dto/friends.dto';
 import { GetUser } from 'src/auth/decorator';
+import path = require('path');
+import { UserService } from 'src/user/user.service';
+import { Response } from 'express';
+
 
 @Controller('friendship')
 export class FriendshipController {
-	constructor(private friendshipService: FriendshipService) { }
+	constructor(private friendshipService: FriendshipService,
+				private userService: UserService) { }
 
 	@Post('/create')
 	async openFriendship(@Body() usersId: any) {
@@ -37,26 +42,21 @@ export class FriendshipController {
 		if (result.status === 'ACCEPTED') {
 			await this.friendshipService.addFriend(result);
 		}
-		if (result.status === 'REFUSED') {
-			//supprimer la demande
+		else if (result.status === 'REFUSED') {
+			await this.friendshipService.deleteRefusedFriendship();
 		}
 		return result;
 	}
 
-	// @Post('refuse')
-	// async refuseDemand(@Body() demandId: any) {
-	// 	const result = await this.friendshipService.refuseFriendship(demandId);
-	// 	return result;
-	// 	//actualise le status de la demande et enregistre dans la DB
-	// 	//return la firendship
-	// }
-
-	@Post('delete')
-	async deleteFriendship() {
-		//si demande refusee supprime la firendship
-		// si amis remove supprime la firenship
-		//return friendship
+	@Post('/delete')
+	async deleteFriend(@Body() usersId: number) {
+		const user = this.friendshipService.removeFriend(usersId);
+		return user;
 	}
 
-
+	@Get('/:id/avatar')
+	async getAvatar(@Param('id') id: string, @Res() res: Response) {
+		const avatar = await this.friendshipService.getUserAvatar(parseInt(id), res);
+		return avatar;
+	}
 }

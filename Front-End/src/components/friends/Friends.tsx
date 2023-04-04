@@ -1,6 +1,6 @@
 import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
-import SideBar from '../auth/SideBar';
+import SideBar from '../SideBar';
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import style from '../../style/Menu.module.css';
 import '../../style/Friends.css';
@@ -13,10 +13,9 @@ const Friends = () => {
 
 	// const isLoggedIn = authCtx.isLoggedIn;
 	const currentUserId = authCtx.userId;
-
-	const onlineFriends = friends.filter(friend => friend.status === 'ONLINE');
-	const offlineFriends = friends.filter(friend => friend.status === 'OFFLINE');
-	const playingFriends = friends.filter(friend => friend.status === 'PLAYING');
+	const onlineFriends = friends.filter(friend => friend.status === 'ONLINE' && friend.id !== parseInt(currentUserId));
+	const offlineFriends = friends.filter(friend => friend.status === 'OFFLINE'&& friend.id !== currentUserId);
+	const playingFriends = friends.filter(friend => friend.status === 'PLAYING'&& friend.id !== currentUserId);
 
 
 	const handleDemand = async (event: FormEvent, receiverId: number) => {

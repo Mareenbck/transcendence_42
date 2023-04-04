@@ -25,8 +25,12 @@ export class UserDto {
 
 	avatar: string;
 	ftAvatar: string;
+	is2FA: boolean;
 
 	receivedFriendships: FriendsDto[];
+
+  blockedTo: UserDto[];
+  blockedFrom: UserDto[];
 
 	dirMessEmited: DirMessDto[];
 }

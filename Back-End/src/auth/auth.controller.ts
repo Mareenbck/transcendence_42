@@ -60,4 +60,5 @@ export class AuthController {
 			console.log(error);
 		}
 	}
+
 }

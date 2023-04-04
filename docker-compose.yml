@@ -10,7 +10,7 @@ services:
       - postgres
     volumes:
       - ./Back-End:/usr/src/app
-      - /usr/src/app/node_modules
+      - back_node_modules:/usr/src/app/node_modules
     # command: npm run start:dev
     env_file:
         - ./Back-End/.env
@@ -26,7 +26,7 @@ services:
     container_name: "postgres"
     restart: always
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - my-postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     env_file:
@@ -42,7 +42,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./Front-End:/usr/src/app
-      - /usr/src/app/node_modules
+      - front_node_modules:/usr/src/app/node_modules
     command: npm run dev
     ports:
       - 8080:8080
@@ -53,6 +53,8 @@ networks:
   transcendence:
 
 volumes:
-  postgres:
+  my-postgres-data:
+  front_node_modules:
+  back_node_modules:
 
 

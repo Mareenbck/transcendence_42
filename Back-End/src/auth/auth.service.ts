@@ -37,10 +37,6 @@ export class AuthService {
 			// return a hashed user
 			const tokens = await this.generateTokens(user.id, user.email);
 			await this.updateRefreshToken(user.id, tokens.refresh_token);
-			// await this.uploadService.download_avatar(
-			// 	user.id,
-			// 	process.env.DEFAULT_AVATAR,
-			// );
 			return tokens;
 		} catch(error) {
 			if (error instanceof PrismaClientKnownRequestError) {
@@ -98,7 +94,7 @@ export class AuthService {
 	}
 
 	async signout(userId: number): Promise<void> {
-		// delete refresh token (log out)
+		// delete refresh token	aaaq	 K NNKJ (log out)
 		await this.prisma.user.updateMany({
 			where: {
 				id: userId,
@@ -208,9 +204,9 @@ export class AuthService {
 			};
 		}
 
-		async getFortyTwoUserProfile(accessToken: string): Promise<Profile_42> {
-			try {
-				const headers = { Authorization: `Bearer ${accessToken}` };
+	async getFortyTwoUserProfile(accessToken: string): Promise<Profile_42> {
+		try {
+			const headers = { Authorization: `Bearer ${accessToken}` };
 			const url = 'https://api.intra.42.fr/v2/me';
 
 			const response = await fetch(url, { headers });

@@ -32,6 +32,21 @@ export class UserController {
 		return allUsers;
 	}
 
+  @Get('block/users')
+  @UseGuards(JwtGuard)
+  async getAllUsersWithBlocked() {
+    const allUsers = await this.userService.getUsersWithBlocked();
+    return allUsers;
+  }
+
+  @Get('games')
+  @UseGuards(JwtGuard)
+  async getAllUsersWithGames() {
+    const allUsers = await this.userService.getUsersWithGames();
+    return allUsers;
+  }
+
+
 	@Get('/profile/:id')
 	@UseGuards(JwtGuard)
 	async getMe(@GetCurrentUserId() id: string) {
@@ -52,9 +67,9 @@ export class UserController {
 
 	@Get('/friends/:userId')
 	//@UseGuards(JwtGuard)
-	async getFriends(@GetCurrentUserId() userId: string) {
-	const userDto = this.userService.getFriends(parseInt(userId));
-	return userDto;
+	async getFriends(@Param('userId') userId: string) {
+		const userDto = await this.userService.getFriends(parseInt(userId));
+		return userDto;
 	}
 
 	@Post('/update_avatar')
@@ -78,11 +93,23 @@ export class UserController {
 		return (updatedUser);
 	}
 
+  @Post("block")
+  @UseGuards(JwtGuard)
+  async block(@Body() {blockFrom, blockTo}) {
+    const updatedUser = await this.userService.block(blockFrom, blockTo);
+  return (updatedUser);
+  }
+
+  @Post("unblock")
+  @UseGuards(JwtGuard)
+  async unblock(@Body() {blockFrom, unblockTo}) {
+    const updatedUser = await this.userService.unblock(blockFrom, unblockTo);
+  return (updatedUser);
+  }
+
 	@Get('/:id/avatar')
 	@UseGuards(JwtGuard)
 	async getAvatar(@GetCurrentUserId() id: number, @Res() res: Response) {
-		console.log("user--->")
-		console.log(id)
 		try {
 			const user = await this.userService.getUser(id);
 			// >>>> const avatar a mettre dans service
@@ -100,4 +127,8 @@ export class UserController {
 			throw new ForbiddenException('Not Found');
 		}
 	}
+
+
+
+
 }

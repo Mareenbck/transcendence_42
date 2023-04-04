@@ -1,16 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete} from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { CreateChatroom2Dto } from './dto/create-chatroom2.dto';
-import { UpdateChatroom2Dto } from './dto/update-chatroom2.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
+import { CreateChatroomDto } from './dto/create-chatroom2.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Chatroom2Service } from './chatroom2.service';
+import { ChatroomService } from './chatroom2.service';
 
+import { JwtGuard} from 'src/auth/guard';
 @Controller('chatroom2')
 export class Chatroom2Controller {
-  constructor(private readonly prismaService: PrismaService, private chatRoomService: Chatroom2Service) {}
+  constructor(private chatRoomService: ChatroomService) {}
 
   @Post()
-    async create( @Body() newConv: any): Promise<CreateChatroom2Dto> {
+  @UseGuards(JwtGuard)
+    async create( @Body() newConv: any): Promise<CreateChatroomDto> {
       const newChannel = await this.chatRoomService.create(newConv);
       console.log("NEW CHANNEL CONTROLLER")
       console.log(newChannel)
@@ -18,13 +18,15 @@ export class Chatroom2Controller {
   }
 
   @Get()
-    async findAll(): Promise<CreateChatroom2Dto[]> {
-    return this.prismaService.chatroom.findMany();
-  }
-
+  @UseGuards(JwtGuard)
+  async findAll(): Promise<CreateChatroomDto[]> {
+    return this.chatRoomService.findAll();
+  };
+ 
   // @Post(':id/delete')
   // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {
   //   return await this.prismaService.chatroom.deleteChatroom(id);
   // }
+
 }
 

@@ -27,22 +27,22 @@ model User {
 	twoFAsecret		      String?
 	twoFA			          Boolean?	@default(true)
 
-	games               UserOnGame[]
+  blockedTo           User[]       @relation("Blocked")
+  blockedFrom         User[]       @relation("Blocked")
 
   friends             User[]        @relation("Friends")
   friendOf            User[]        @relation("Friends")
   sentFriendships     Friendship[]  @relation("SentFriendships")
   receivedFriendships Friendship[]  @relation("ReceivedFriendships")
 
-  playerOne     Jeu[]  @relation("playerOne")
-  playerTwo     Jeu[]  @relation("playerTwo")
-  winner        Jeu[]  @relation("winner")
+  playerOne     Game[]  @relation("GamePlayerOne")
+  playerTwo     Game[]  @relation("GamePlayerTwo")
+  winner        Game[]  @relation("GameWinner")
 
   chatrooms  ChatroomUsers[]
   dirMessEmited   DirectMessage[] @relation(name: "emited")
   dirMessReceived DirectMessage[] @relation(name: "received")
   crMessSent      ChatroomMessage[]
-
 	@@map("users")
 }
 
@@ -53,42 +53,21 @@ model Friendship {
   requesterId   Int
   receiver      User              @relation("ReceivedFriendships", fields: [receiverId], references: [id])
   receiverId    Int
-
   @@unique([requesterId, receiverId])
 }
 
-model UserOnGame{
-	id			Int			@id @default(autoincrement())
-	user		User		@relation(fields: [userId], references: [id])
-	userId		Int
-
-	score		Int			@default(0)
-	winner		Boolean?
-	asPlayerOne Game? @relation("GamePlayerOne")
-	asPlayerTwo Game? @relation("GamePlayerTwo")
-}
-
 model Game {
-	id			Int			@id @default(autoincrement())
-	createdAt	DateTime	@default(now())
-	finishedAt	DateTime?
-	playerOne				UserOnGame	@relation("GamePlayerOne", fields: [playerOneOnGameId], references: [id])
-	playerOneOnGameId		Int			@unique
-	playerTwo				UserOnGame	@relation("GamePlayerTwo", fields: [playerTwosOnGameId], references: [id])
-	playerTwosOnGameId		Int			@unique
+	id			        Int			@id @default(autoincrement())
+	createdAt	      DateTime	@default(now())
+	playerOne				User	@relation("GamePlayerOne", fields: [playerOneId], references: [id])
+	playerOneId		  Int
+	playerTwo				User	@relation("GamePlayerTwo", fields: [playerTwoId], references: [id])
+	playerTwoId		  Int
+  winner          User    @relation("GameWinner", fields: [winnerId], references: [id])
+  winnerId      Int
+  score1        Int
+  score2        Int
 	@@map("games")
-}
-
-model Jeu {
-  id      Int     @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  playerOne       User  @relation("playerOne", fields: [playerOneId], references: [id])
-  playerOneId   Int     @unique
-  playerTwo       User  @relation("playerTwo", fields: [playerTwoId], references: [id])
-  playerTwoId    Int     @unique
-  winner        User    @relation("winner", fields: [winnerId], references: [id])
-  winnerId     Int
-  @@map("jeux")
 }
 
 enum UserStatus {

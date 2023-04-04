@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import '../../style/Sidebar.css'
+import '../style/Sidebar.css'
 import { Link, useLocation } from "react-router-dom";
-import AuthContext from "../../store/AuthContext";
+import AuthContext from "../store/AuthContext";
+import MyAccountMenu from "./AccountMenu";
 
 
 const Sidebar = (props: any) => {
@@ -9,12 +10,11 @@ const Sidebar = (props: any) => {
     const authCtx = useContext(AuthContext);
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
+    const [username, setUsername] = useState(authCtx.username)
 
     const links = [
         { name: "Play Games", path: "/game/play" },
         { name: "Chat", path: "/chat/message" },
-        { name: "Profile", path: `/users/profile/${authCtx.userId}` },
-        { name: "Settings", path: "/settings" },
         { name: "Scores", path: "/scores" },
         { name: "Show users", path: `/friends` },
       ];
@@ -23,14 +23,22 @@ const Sidebar = (props: any) => {
         setActiveLink(location.pathname);
       }, [location.pathname]);
 
+      useEffect(() => {
+        setUsername(authCtx.username);
+      }, [authCtx.username]);
+
       const handleLinkClick = (path: string) => {
         setActiveLink(path);
       };
 
     return (
         <div className="sidebar">
-            <h4>{props.title}</h4>
-            <button onClick={authCtx.logout}>LogOut</button>
+            <div className="title">
+                <MyAccountMenu authCtx={authCtx} ></MyAccountMenu>
+                <h4>{username}</h4>
+            </div>
+            <br />
+            <br />
             <div className="links">
                 <ul>
                     {links.map((link) => (
@@ -44,6 +52,7 @@ const Sidebar = (props: any) => {
                                     className={activeLink === link.path ? "active" : ""}> {link.name}
                                 </Link>
                             </div>
+                            <br />
                             <br />
                         </li>
                     ))}

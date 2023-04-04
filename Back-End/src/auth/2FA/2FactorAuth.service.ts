@@ -16,7 +16,7 @@ export class TwoFactorAuthService {
 		private readonly configService: ConfigService,
 		private readonly userService: UserService,
 		private prisma: PrismaService
-	) { }
+	) {}
 
 	async generate2FAsecret(email: string) {
 		// Generate a 2FA secret
@@ -68,5 +68,13 @@ export class TwoFactorAuthService {
 		const tokens = await this.authservice.generateTokens(dto.id, dto.email, true);
 		await this.authservice.updateRefreshToken(dto.id, tokens.refresh_token);
 		return tokens;
+	}
+
+	async getIs2FA (dto: TwoFactorDto) {
+		const user = await this.userService.getByEmail(dto.email);
+		if (!user) {
+			throw new UnauthorizedException('Invalid User');
+		}
+		return user.twoFA
 	}
 }
