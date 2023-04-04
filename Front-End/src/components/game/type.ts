@@ -1,7 +1,17 @@
 export interface player{
     socket: any;
-	userId: number;
+	userId: any;
 }
+// export interface profile{
+// 	socketId: any; //socketId: any [];
+// 	userId: any;
+// }
+
+// export interface player{
+// 	profile: profile;
+// 	racket: racket;
+// 	score: number;
+// }
 
 export interface ball {
     x: number;

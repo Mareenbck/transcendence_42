@@ -7,7 +7,6 @@ export interface player{
 	profile: profile;
 	racket: racket;
 	score: number;
-	winner: boolean;
 }
 
 export interface ball {

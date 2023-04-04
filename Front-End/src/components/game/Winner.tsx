@@ -42,7 +42,7 @@ const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ) => {
 				
 				// // Add the avatar
 				// const img = new Image();
-				// img.src = 'gamewinner.winner.ftAvatar';
+				// img.src = gamewinner.winner.profile.userId.avatar;
 				// img.onload = () => {
 				// 	context.drawImage(img, gameinit.table_width/2 + 100, gameinit.table_height / 2);
 				// }

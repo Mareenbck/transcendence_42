@@ -29,13 +29,11 @@ export class Game {
 		profile: {} as profile, 
 		racket: {x: 10, y: (height - racket_height)/2},
 		score: 0,
-		winner: false
 	};
 	private playerR: player = {
 		profile: {} as profile, 
 		racket: {x: width - racket_width - 10, y: (height - racket_height)/2},
 		score: 0,
-		winner: false
 	};
 
 //	private spectatorSockets: any[] = [];
@@ -46,7 +44,7 @@ export class Game {
 	private ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
 	private ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
 	private ball: ball = {x: width/2, y: height/2};
-	private winner: player;
+	private winner: any = '';
 		
 	private server: Server;
 	private prismaService: PrismaService;
@@ -89,7 +87,7 @@ console.log(`init socket ${socket.id}`);
 			ballR: ballR,
 			scoreR: this.playerR.score,
 			scoreL: this.playerL.score, 
-			winner:''
+			winner: this.winner
 		});
 	}
 // function: game logic ...
@@ -153,9 +151,9 @@ console.log('ballSpeed = ', ballSpeed);
 // 		}
 // 	};
 
-	private player_disconect = (player: player) => {
+	private player_disconect = (userId: any) => {
 		this.isrunning = false;
-		this.winner = player;
+		this.winner = userId;
 		this.server.emit('winner', {winner: this.winner, leave: this.leave}); // room
 	}  
 
@@ -246,15 +244,15 @@ console.log("playerR move", message);
 			this.updatePositions();
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
-			if (this.playerL.score >= 2 || this.playerR.score >= 2){ //score MAX - change here
+			if ((this.playerL.score >= 2 || this.playerR.score >= 2)){ //score MAX - change here
 
 				this.isrunning = false;
-				this.winner =  this.playerL.score > this.playerR.score ? this.playerL : this.playerR;
+				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId;
 				this.player_disconect(this.winner);	
 				clearInterval(this.interval);
 				
 				if (!this.isrunning){
-console.log("257 winner", this.winner.profile.userId.userId)
+console.log("257 winner", this.winner)
 // this.gameService.create(data: {
 // 				playerOne: {
 // 					connect: {id: this.playerR.profile.userId.userId}},
@@ -274,12 +272,14 @@ console.log("257 winner", this.winner.profile.userId.userId)
 								playerTwo: {
 									connect: {id: this.playerL.profile.userId.userId}},
 								winner: {
-									connect: { id: this.winner.profile.userId.userId}},
+									connect: { id: this.winner.userId}},
 									score1: this.playerR.score,
 									score2: this.playerL.score,
 							}
 					});
 				}
+				this.playerL.score = 0;
+				this.playerR.score = 0;
 			}
 		}, period);
 console.log('stop game')
