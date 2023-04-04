@@ -78,12 +78,17 @@ enum UserStatus {
 
 model Chatroom {
   id      Int     @id @default(autoincrement())
+  visibility UserChannelVisibility   @default(PUBLIC)
   name    String
-  avatar  String
   users   ChatroomUsers[]
   cr_messages ChatroomMessage[]
 }
 
+enum UserChannelVisibility {
+    PUBLIC
+    PRIVATE
+    PWD_PROTECTED
+}
 
 model ChatroomUsers {
   createdAt DateTime  @default(now())

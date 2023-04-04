@@ -146,5 +146,19 @@
   cursor: default;
 }
 
+.conversation {
+  display: flex;
+  align-items: center;
+}
 
+.conversation-name {
+  flex: 1;
+}
 
+.conversation-icon {
+  margin-right: 200px;
+  /* margin-right: 10px; */
+}
+
+/* .icon-private, .icon-protected, .icon-public {
+} */

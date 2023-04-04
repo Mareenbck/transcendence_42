@@ -25,26 +25,33 @@ export class ConversationReq {
 
  static async postRoom(user: AuthContext, newConv) {
     try {
-      const resp = await fetch(`http://localhost:3000/chatroom2`,
-      {
+      const resp = await fetch(`http://localhost:3000/chatroom2`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(newConv),
       });
-
+  
       if (!resp.ok) {
-        const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
+        const message = `An error has occurred: ${resp.status} - ${resp.statusText}`;
         throw new Error(message);
       }
-      const data = await resp.json();
+      // console.log("RESPONSE = ")
+      // console.log(resp)
+      // const respClone = resp.clone(); // créer une copie de la réponse
+      const data = await resp.json(); // lire le corps de la copie de la réponse
+      console.log("DATA")
+      console.log(data)
       return data;
     } catch (err) {
+      console.log("EST DANS LE ERROR DU CONVERSATION REQ");
       console.log(err);
     }
   };
+
+  
 }
 
 export default ConversationReq;

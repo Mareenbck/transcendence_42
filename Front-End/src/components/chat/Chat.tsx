@@ -11,6 +11,8 @@ import MessageD from "./message/messageD"
 import './Chat.css'
 import React from 'react';
 import PopUp from './PopUpChannel';
+import ChannelVisibility from './ChannelVisibility';
+
 
 function Chat() {
   const socket = useRef();
@@ -20,7 +22,7 @@ function Chat() {
   const [AMessageD, setAMessageD] = useState (null);
   const [AMessageChat, setAMessageChat] = useState (null);
   const [AConversation, setAConversation] = useState (null);
-  const [conversations, setConversations] = useState<ConversationDto[]> ([]);
+  const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState (null);
   const [currentDirect, setCurrentDirect] = useState (null);
   const [messages2, setMessages2] = useState<MessageDto[]> ([]);
@@ -38,6 +40,8 @@ function Chat() {
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
   const [unfromBlock, setUnfromBlock] = useState<number>();
+
+  const [channelName, setchannelName] = useState('');
 
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
@@ -73,8 +77,6 @@ function Chat() {
       });
     });
   }, []);
-
-
 
   useEffect(() => {
     socket.current.emit("addUser", user);
@@ -185,9 +187,6 @@ function Chat() {
       getDirMess(user);
     }
   }, [currentDirect]);
-
-
-
 
 
 ////////////////////////////////////////////////
@@ -394,66 +393,56 @@ function Chat() {
 
 
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
-	 setSelectedFile(event.target.files[0]);
-  };
+  setSelectedFile(event.target.files[0]);
+};
 
-  const handleChannelNameChange = (e: FormEvent) => {
-  if (e.target.value) {
-      setNewConversation(e.target.value);
-    }
-  };
 
-  const createNewConv = async (e: FormEvent) => {
+const handleFormSubmit = (e) => {
     e.preventDefault();
-     if (newConversation)
-    {
-    const newConv = {
-      name: newConversation,
-      avatar: ""
-    };
-
-    socket?.current.emit("sendConv", {
-      author: +id,
-      content: newConv,
-    })
-
-    try {
-      const res = await ConversationReq.postRoom(user, newConv);
-      setConversations([res, ...conversations]);
-      setNewConversation("");
-    } catch(err) {console.log(err)}
-    }
+    setShowPopUp(true);
   };
 
-  const [channels, setChannelName] = useState([]);
-  const [showPopUp, setShowPopUp] = useState(false);
+  const handleCreateChannel = () => {
+    setShowPopUp(true);
+  };
 
-  return (
+const [showPopUp, setShowPopUp] = useState(false);
+
+
+return (
   <>
   {" "}
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
-          <div className="conversationListe">
-            <form onSubmit={createNewConv}>
-                <input type="text" placeholder="New channel name ? " className="chatMessageInput" value={newConversation} onChange={handleChannelNameChange} />
-              <button className="chatSubmitButton" type="submit" onClick={() => setShowPopUp(true)}>Create new channel</button>
-                  {showPopUp ? (
-                    <PopUp
-                  title="Creation d'un nouveau Channel"
-                  message="Choisissez les options de votre channe    l"
-                  onConfirm={() => setShowPopUp(false)}
-              />
-              ) : null}
+            <form onSubmit={handleFormSubmit}>
+              <button onClick={handleCreateChannel}>Create new channel</button>
+              {showPopUp && (
+                  <PopUp
+                  title="Création d'un nouveau channel"
+                  message="Choisissez les options de votre channel"
+                  onCancel={() => setShowPopUp(false)}
+                  onClick={() => setShowPopUp(false)}
+                  onSubmit={{handleFormSubmit}}
+                  
+                  >
+                  </PopUp>
+            )}
             </form>
-            { conversations.map((c) => (
-              <div key={c.name + c.id} onClick= {() => {setCurrentChat(c); setCurrentDirect(null)}} >
-                <Conversation conversation={c}/>
-              </div>
-            ))}
+            {conversations.map((c) => (
+                <div key={c.name + c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
+                    <div className="conversation">
+                      <div className="conversation-name">
+                          <Conversation conversation={c}/>
+                      </div>
+                      <div className="conversation-icon">
+                      <ChannelVisibility conversation={c}/>
+                      </div>
+                    </div>
+                </div>
+                ))}
+            </div>
           </div>
-          </div>
-        </div>
         <div className="chatBox">
           <div className="chatBoxW">
           {

@@ -4,103 +4,135 @@ import { useEffect, useContext, useState, FormEvent } from 'react'
 import "../../style/PopUpChannel.css"
 import "../../pages/Setting.tsx"
 import AuthContext from '../../store/AuthContext';
+import Chat from './Chat';
+import { socket } from '../../service/socket';
+import ConversationReq from "./conversation/conversation.req"
+import { Modal } from '@mui/material';
+
 
 
 function PopUp(props: any) {
 
-    const authCtx = useContext(AuthContext);
-    const [selectedFile, setSelectedFile] = useState('');
-
-
-	const handleSubmit = async (event: FormEvent) => {
-		event.preventDefault();
-		// Vous pouvez envoyer le fichier sélectionné au serveur ici
-		const formData = new FormData();
-		formData.append("file", selectedFile);
-		try {
-			const response = await fetch(`http://localhost:3000/users/upload`, {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${authCtx.token}`,
-				},
-				body: formData,
-			})
-			const data = await response.json();
-			if (!response.ok) {
-				console.log("POST error on ${userId}/username ");
-				return "error";
-			}
-			authCtx.fetchAvatar(data.id);
-			localStorage.setItem("avatar", data.avatar);
-			return "success";
-		} catch (error) {
-			return console.log("error", error);
-		}
-	};
-
-	const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
-		setSelectedFile(event.target.files[0]);
-	};
-
-
+    const authCtx = useContext(AuthContext);    
     const [isPublic, setIsPublic] = useState(true);
-    const [isPrivate, setIsPrivate] = useState(true);
-    return (
-        <div className='popup-overlay'>
-            <div className='global-popup'>
-                <header className='header-popup'>
-                    <h2>{props.title}</h2>
-                </header>
-                <div className='content-button'>
-                    <p>{props.message}</p>
-                    <label className='wrap-circle'>
-                        <input
-                            className='circle'
-                            type='radio'
-                            value='public'
-                            checked={isPublic}
-                            onChange={() => setIsPublic(true)}
-                        />
-                        Public
-                    </label>
-                    <label className='wrap-circle'>
-                        <input
-                            className='circle'
-                            type='radio'
-                            value='private'
-                            checked={!isPublic}
-                            onChange={() => setIsPublic(false)}
-                        />
-                        Private
-                    </label>
-                    <label className='wrap-circle'>
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [isProtected, setIsProtected] = useState(false);
+    const [selectedFile, setSelectedFile] = useState('');
+    const [conversations, setConversations] = useState([]);
+    const [showPopUp, setShowPopUp] = useState(true);
+    const user = useContext(AuthContext);
+    const id = user.userId;
+    const [isDisabled, setIsDisabled] = useState(true);
+    const [channelName, setchannelName] = useState('');
+
+    const handleChannelNameChange = (e: FormEvent) => {
+        const value = e.target.value;
+        setchannelName(value);
+        setIsDisabled(value === "");
+    };
+
+    const createNewChannel = async (e: FormEvent) => {
+        e.preventDefault();
+        if (channelName === "") {
+          return;
+        }
+        const newConv = {
+          name: channelName,
+          isPublic: isPublic,
+          isPrivate: isPrivate,
+          isProtected: isProtected,
+        };
+
+    //     socket?.current.emit("sendMD", {
+    //         author: +id,
+    //         receiver: +currentDirect?.userId,
+    //         content: newConv,
+    // });
+    try {
+        const res = await ConversationReq.postRoom(user, newConv);
+        // setConversations([res, ...conversations]);
+        props.newConv(newConv);
+        } catch (err) { 
+          console.log(err);
+        }
+    };
+
+    const createAndClose = async (e:FormEvent) => {
+        try {
+            await createNewChannel(e);
+            setShowPopUp(false);
+            props.onClick();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        setShowPopUp(false);
+      };
+
+return (
+    <div className='popup-overlay'>
+        <div className='global-popup'>
+            <header className='header-popup'>
+                <h2>{props.title}</h2>
+            </header>
+            <label>
+                New channel name:
+                <input type="text" value={channelName} onChange={handleChannelNameChange} />
+            </label>
+            <div className='content-button'>
+                <p>{props.message}</p>
+              
+                <label className='wrap-circle'>
                     <input
-                    className='circle'
-                    type='radio'
-                    value='protected'
-                    checked={!isPublic && !isPrivate}
-                    onChange={() => {
-                        setIsPublic(false);
-                        setIsPrivate(false);
-                    }}
+                        className='circle'
+                        type='radio'
+                        checked={!isPublic && !isPrivate}
+                        onChange={() => {
+                            setIsPublic(false);
+                            setIsPrivate(false);
+                            setIsProtected(true);
+                        }}
                     />
                     Protected
                 </label>
-                </div>
-                <div className='choose-avatar'>
-                    <p>Chose an avatar for your new channel</p>
-                    <form onSubmit={handleSubmit}>
-                        <input type="file" onChange={handleFileChange} />
-                        <button type='submit'>Upload</button>
-                    </form>
-                </div>
-                <footer className='actions'>
-                    <button onClick={props.onConfirm}>OK</button>
-                </footer>
+                <label className='wrap-circle'>
+                    <input
+                        className='circle'
+                        type='radio'
+                        checked={!isPublic && isPrivate}
+                        onChange={() => {
+                            setIsPublic(false);
+                            setIsPrivate(true);
+                            setIsProtected(false)
+                        }}
+                    />
+                    Private
+                </label>
+                <label className='wrap-circle'>
+                    <input
+                        className='circle'
+                        type='radio'
+                        checked={isPublic}
+                        onChange={() => {
+                            setIsPublic(true);
+                            setIsPrivate(false);
+                            setIsProtected(false);
+                        }} 
+                    />
+                    Public
+                </label>
+                
             </div>
+            <footer className='actions'>
+                <button type='submit' onSubmit={handleFormSubmit} onClick={createAndClose}>OK</button>
+                <button onSubmit={handleFormSubmit} onClick={props.onCancel}>Cancel</button>
+            </footer>
         </div>
-    );
+    </div>
+);
 }
 
 export default PopUp;
-
