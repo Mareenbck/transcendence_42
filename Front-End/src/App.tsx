@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import Signup from './components/auth/Signup'
 import { Route, Routes} from 'react-router-dom';
 import Game from './components/game/Game'
+import OptionGame from './components/game/OptionGame'
 import Chat from './components/chat/Chat'
 import Home from './pages/Home'
 import Profile from './pages/Profile';
@@ -13,7 +14,6 @@ import Login from './components/auth/Login';
 import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';
 import Setting from './pages/Setting';
-// import Scores from './pages/Scores/Scores';
 import Scores from'./components/scores/Scores';
 
 function App() {
@@ -25,6 +25,7 @@ function App() {
 		<Routes>
 			<Route path='/' element={<Home />} />
 			<Route path='/game/play' element={<Game />} />
+			
 			<Route path='/chat/message' element={<Chat />} />
 			<Route path='/friends' element={<Friends />} />
 			<Route path='/auth/signin' element={<Login />} />

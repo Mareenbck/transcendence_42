@@ -26,12 +26,22 @@ function Game() {
         setShowColorModal(false)
     }
 
-    const [backColorGame, setbackColorGame] = useState<string>("green");
-    const changColor = () => {
+    const [ShowCamva, setShowCamva] = useState(true); 
+    const [backColorGame, setbackColorGame] = useState<string>("black");
+    const changColor= (/*backColorGame : string*/) => {
+        
         setbackColorGame("red");
-        setShowColorModal(false)
+       //setbackColorGame(backColorGame);
+        setShowColorModal(false);
+        setShowCamva(false);
     }
-    //**** */
+
+    useEffect(() => {
+
+    }, [backColorGame])
+
+    
+    //**** *******************************************************************/
 
     const [gameinit, setGameInit] = useState<gameInit>(
         {
@@ -156,12 +166,13 @@ console.log("event.code = ", event.code);
     return (
         <div tabIndex={0} onKeyDown={keyDownHandler}>
             
-                <h2 style={{background: backColorGame}}> Game </h2>
+                <h2 > Game </h2>
                 <div>
                      <button onClick={handleColorModal}>Change Color</button>
-                    {ShowColorModal && <ColorModal handelClose={handleClose}  changColor={changColor}/>}
-                    <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />
-                    
+                   
+                    {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+                    {ShowColorModal && <ColorModal handelClose={handleClose}  changColor={changColor/*(backColorGame)*/} />}
+                    {!ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
                 </div>
               
         </div>
