@@ -1,22 +1,28 @@
-import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
-import SideBar from '../SideBar';
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import style from '../../style/Menu.module.css';
+import { Link } from "react-router-dom";
 import '../../style/Friends.css';
-
+import { Container } from '@mui/material';
+import MyAvatar from '../user/Avatar';
+import { ListItem } from '@mui/material';
+import { ListItemText } from '@mui/material';
+import { ListItemAvatar } from '@mui/material';
+import { List } from '@mui/material';
+import { FriendContext } from '../../store/FriendshipContext';
+import Friend from '../../interfaces/IFriendship'
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 
 const Friends = () => {
 	const [friends, setFriends] = useState<any[]>([]);
 	const authCtx = useContext(AuthContext);
+	const friendCtx = useContext(FriendContext);
 
-	// const isLoggedIn = authCtx.isLoggedIn;
 	const currentUserId = authCtx.userId;
 	const onlineFriends = friends.filter(friend => friend.status === 'ONLINE' && friend.id !== parseInt(currentUserId));
 	const offlineFriends = friends.filter(friend => friend.status === 'OFFLINE'&& friend.id !== currentUserId);
 	const playingFriends = friends.filter(friend => friend.status === 'PLAYING'&& friend.id !== currentUserId);
-
 
 	const handleDemand = async (event: FormEvent, receiverId: number) => {
 		event.preventDefault();
@@ -53,47 +59,45 @@ const Friends = () => {
 					}
 				)
 				const data = await response.json();
-				setFriends(data);
+				const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
+					const avatar = await friendCtx.fetchAvatar(friend.id);
+					return { ...friend, avatar };
+				}));
+				setFriends(updatedFriends);
 			}
 			fetchUsers();
 		}, [])
 
 	return (
 		<>
-		<div className= {style.mainPos}>
-			<div className='global'>
-				<SideBar title="Welcome" />
-				<div className="User">
-					<h1 className='h1'>USERS LIST</h1>
-					<div className='line'></div>
-					<h2 className="title">Online Users :</h2>
-					<ul>
-						{onlineFriends.map(friend => (
-							<li key={friend.id} className='friend'>
-								{friend.avatar ? <img className='avatar-img' src={friend.avatar} alt={"avatar"} /> : <img className='avatar-img' src={friend.ftAvatar} alt={"ftAvatar"} />}
-								<span className='friend-username'>{friend.username}</span>
-								<form onSubmit={(event) => handleDemand(event, friend.id)}>
-									<button type="submit" className='add-friend'><i className="fa-solid fa-user-plus"></i></button>
-								</form>
-								<Link to="/chat/message">
-								<i className="fa-solid fa-comments"></i>
-								</Link>
-							</li>
-						))}
-					</ul>
-					<h2 className="title" >Offline Users :</h2>
+		<Container maxWidth="sm">
+			<h2 className="title-users">Online</h2>
+			<List>
+				{onlineFriends.map(user => (
+					<ListItem key={user.id}>
+						<ListItemAvatar>
+							<MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={user.avatar} ftAvatar={user.ftAvatar} id={user.id} />
+						</ListItemAvatar>
+						<Link to={`/users/profile/${user.id}`} className="profile-link">{user.username}</Link>
+						<br />
+						<div onClick={(event: FormEvent) => { handleDemand(event, user.id) }} className='add-friend'>
+							<PersonAddIcon />
+						</div>
+						<Link to="/chat/message" className='add-friend'> <ChatBubbleIcon /></Link>
+					</ListItem>
+				))}
+			</List>
+					<h2 className="title-users" >Offline</h2>
 					<ul>
 						{offlineFriends.map(friend => (
-						<li key={friend.id}><img src={friend.avatar}></img>{friend.username}</li>))}
+							<li key={friend.id}><img src={friend.avatar}></img>{friend.username}</li>))}
 					</ul>
-					<h2 className="title">Playing Users :</h2>
+					<h2 className="title-users">Playing</h2>
 					<ul>
 						{playingFriends.map(friend => (
-						<li key={friend.id}><img src={friend.avatar}></img>{friend.username}</li>))}
+							<li key={friend.id}><img src={friend.avatar}></img>{friend.username}</li>))}
 					</ul>
-				</div>
-			</div>
-		</div>
+			</Container>
 		</>
 	  );
 

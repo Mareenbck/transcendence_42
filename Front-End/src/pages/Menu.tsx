@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useContext } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import AuthContext from "../store/AuthContext";
 import SideBar from '../components/SideBar'
 import style from '../style/Menu.module.css'
+import Friends from "../components/friends/Friends";
+import ButtonToggle from "../components/utils/ButtonToggle";
+import { Drawer } from '@mui/material';
 
 const Menu = () => {
 	const authCtx = useContext(AuthContext);
@@ -37,7 +40,10 @@ const Menu = () => {
 					{isLoggedIn && <p >Chat with your frinds</p>}
 					{isLoggedIn && <p className={style.cardTit}> Join a chatroom or discuss privetly with your frinds</p>}
 				</div>
+				<div >
 
+				<ButtonToggle ></ButtonToggle>
+				</div>
 			</div>
 		 </div>
 		</>
