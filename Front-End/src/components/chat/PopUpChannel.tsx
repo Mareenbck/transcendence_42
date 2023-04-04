@@ -22,6 +22,7 @@ function PopUp(props: any) {
     const id = user.userId;
     const [isDisabled, setIsDisabled] = useState(true);
     const [channelName, setchannelName] = useState('');
+    const [role, setRole] = useState('USER');
 
     const handleChannelNameChange = (e: FormEvent) => {
         const value = e.target.value;
@@ -35,34 +36,33 @@ function PopUp(props: any) {
           return;
         }
         const newConv = {
-          name: channelName,
-          isPublic: isPublic,
-          isPrivate: isPrivate,
-          isProtected: isProtected,
+            name: channelName,
+            isPublic: isPublic,
+            isPrivate: isPrivate,
+            isProtected: isProtected,
+            role: role,  
         };
-
-    //     socket?.current.emit("sendMD", {
-    //         author: +id,
-    //         receiver: +currentDirect?.userId,
-    //         content: newConv,
-    // });
-    try {
-        const res = await ConversationReq.postRoom(user, newConv);
-        // setConversations([res, ...conversations]);
-        props.newConv(newConv);
+        try {
+            const res = await ConversationReq.postRoom(user, newConv);
         } catch (err) { 
-          console.log(err);
+            console.log(err);
         }
     };
-
+    
+    
+    
     const createAndClose = async (e:FormEvent) => {
         try {
             await createNewChannel(e);
             setShowPopUp(false);
+            setRole('ADMIN')
             props.onClick();
         } catch (err) {
             console.log(err);
         }
+        console.log("ROOOOLE")
+        console.log(role)
+
     }
     
     const handleFormSubmit = (e:FormEvent) => {

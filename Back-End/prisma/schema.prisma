@@ -81,6 +81,7 @@ model Chatroom {
   visibility UserChannelVisibility   @default(PUBLIC)
   name    String
   users   ChatroomUsers[]
+  role    UserRoleInChannel @default(USER)
   cr_messages ChatroomMessage[]
 }
 
@@ -88,6 +89,11 @@ enum UserChannelVisibility {
     PUBLIC
     PRIVATE
     PWD_PROTECTED
+}
+
+enum UserRoleInChannel {
+  USER 
+  ADMIN
 }
 
 model ChatroomUsers {

@@ -24,5 +24,6 @@ export class CreateRoomDto
   isPrivate: boolean;
   isProtected: boolean;
   
+  role: string;
 
 }

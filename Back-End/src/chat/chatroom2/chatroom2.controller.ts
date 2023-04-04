@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
 import { CreateChatroomDto } from './dto/create-chatroom2.dto';
-import { BadRequestException, Injectable } from '@nestjs/common';
 import { ChatroomService } from './chatroom2.service';
 
 import { JwtGuard} from 'src/auth/guard';

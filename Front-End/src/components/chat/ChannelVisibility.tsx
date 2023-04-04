@@ -32,7 +32,7 @@ export default function ChannelVisibilityIcon({conversation, channelName}: Props
     if (conversation.visibility === "PRIVATE") {
       icon = (
         <>
-          <LockIcon fontSize="small" />
+          <LockIcon className="channel-icon" fontSize="small" />
           <IconButton onClick={() => setOpenModal(true)}>
             <Settings fontSize="small" />
           </IconButton>
@@ -42,7 +42,7 @@ export default function ChannelVisibilityIcon({conversation, channelName}: Props
     } else if (conversation.visibility === "PWD_PROTECTED") {
       icon = (
         <>
-          <KeyIcon fontSize="small" />
+          <KeyIcon className="channel-icon" fontSize="small" />
           <IconButton onClick={() => setOpenModal(true)}>
             <Settings fontSize="small" />
           </IconButton>
@@ -51,7 +51,7 @@ export default function ChannelVisibilityIcon({conversation, channelName}: Props
     } else {
       icon = (
         <>
-          <PublicIcon fontSize="small" />
+          <PublicIcon className="channel-icon" fontSize="small" />
           <IconButton onClick={() => setOpenModal(true)}>
             <Settings fontSize="small" />
           </IconButton>
