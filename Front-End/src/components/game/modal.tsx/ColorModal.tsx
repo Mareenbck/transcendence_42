@@ -15,8 +15,10 @@ function ColorModal(props: any) {
 				</header>
 				<div className='content'>	
 					<div className='btm-contain'>
-						<button  className = "btn" onClick={props.changColor/*("red")*/}   style={{backgroundColor: "red"}} >Red</button>
-						<button  className = "btn" onClick={props.changColor} style={{backgroundColor: "blue"}}>Blue</button>
+						<button  className = "btn" onClick={props.changColorToRed}   style={{backgroundColor: "red"}} ></button>
+						<button  className = "btn" onClick={props.changColorToBlue} style={{backgroundColor: "blue"}}></button>
+						<button  className = "btn" onClick={props.changColorToGreen} style={{backgroundColor: "green"}}></button>
+						<button  className = "btn" onClick={props.changColorToBlack} style={{backgroundColor: "black"}}></button>
 					</div>
 				</div>
 				<footer className='actions'>
