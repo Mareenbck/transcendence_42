@@ -20,18 +20,17 @@ function Callback42() {
 
 				const data = await response.json();
 				if (response.ok) {
-					const token = data.newtokens.access_token;
-					const userId = data.user.id;
+					// const token = data.newtokens.access_token;
+					// const userId = data.user.id;
 					const username = data.user.username;
 					const avatar = data.user.avatar;
 					const ftAvatar = data.user.ftAvatar;
-					localStorage.setItem('token', token);
-					localStorage.setItem('userId', userId);
+					localStorage.setItem('userId', data.user.id);
 					localStorage.setItem('username', username);
 					localStorage.setItem('avatar', avatar);
 					localStorage.setItem('ftAvatar', ftAvatar);
 					localStorage.setItem('is2FA', data.user.twoFA);
-					const twofa: any = await authCtx.login(token, userId);
+					const twofa: any = await authCtx.login(data.newtokens.access_token, data.user.id, data.newtokens.refresh_token);
 					if (twofa) {
 						window.close();
 						window.opener.location.href = "/auth/2fa";
