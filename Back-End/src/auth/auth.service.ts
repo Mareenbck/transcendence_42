@@ -238,16 +238,22 @@ export class AuthService {
 
 
   async verifySocketToken(token: string) {
-    try {
-      const decoded = this.jwt.verify(token);
-      if (!decoded) {
-        throw new BadRequestException('Invalid access token');
+  //  try {
+ //     const decoded = this.jwt.verify(token);
+   //   if (!decoded)
+      {
+        return ("KO");
+   //     throw new BadRequestException('Invalid access token');
       }
-      return await this.userService.getByEmail(decoded.email);
-      } catch (e) {
-      throw new BadRequestException('Invalid access token');
-    }
+   //   const check2 = await this.userService.getByEmail(decoded.email);
+     // if (!2)
+       // {return ("KO");}
+
+      return ("OK")
+    //  } catch (e) {
+    //  throw new BadRequestException('Invalid access token');
   }
+
 
 }
 

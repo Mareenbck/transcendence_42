@@ -17,6 +17,7 @@ import React from 'react';
 import PopUp from './PopUpChannel';
 import ChannelVisibility from './ChannelVisibility';
 import PopupChallenge from './PopupChallenge';
+import MyAvatar from '../user/Avatar';
 
 
 function Chat() {
@@ -66,7 +67,8 @@ function Chat() {
     })
     
     socket.current.on("getMD", (data)=> {
-      console.log(data);
+      console.log(user);
+ //     console.log(data);
       setAMessageD({
         content: data.content,
         author: data.author,
@@ -314,10 +316,15 @@ function Chat() {
 
   const getAvatar = (userId) => {
     const u = allUsers.find(user => +user?.id === +userId);
-    return (u && u.avatar);
+    console.log(u);
+    if (u && !u.avatar === "")
+      return (u.ftavatar);
+    else
+      return (u.avatar);
   };
 
   const getName = (userId) => {
+    console.log(user);
     const u = allUsers.find(user => +user?.id === +userId);
     return (u.username);
   };
@@ -488,8 +495,8 @@ return (
               <div className="chatBoxTop">
                 { messages2.length ?
                   messages2.map((m) => (
-                    <div key={m.createdAt} ref={scrollRef}>
-                      <Message2 message2={m} avatar={getAvatar(m.authorId)} nameA={getName(m.authorId)} own={m.authorId === +id} />
+                    <div key={m?.createdAt} ref={scrollRef}>
+                      <Message2 message2={m} user={getUser(m?.authorId)} authCtx={user} own={m?.authorId === +id} />
                     </div>
                   )) : <span className="noConversationText2" > No message in this room yet. </span>
                 }
@@ -513,7 +520,7 @@ return (
                 { messagesD.length ?
                     messagesD?.map((m) => (
                       <div key={m.createdAt} ref={scrollRef}>
-                        <MessageD messageD={m} avatar={getAvatar(m.author)} nameA={getName(m.author)} own={m?.author === +id} />
+                        <MessageD messageD={m} user={getUser(m.author)} authCtx={user} own={m?.author === +id} />
                       </div>
                   )) : <span className="noConversationText2" > No message with this friend yet. </span>
                 }
@@ -554,16 +561,11 @@ return (
                     <Link to={`/users/profile/${o?.userId.userId}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                   <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
                     <div className="chatOnlineImgContainer">
-                        <img  className="chatOnlineImg"
-                          src={ getAvatar(o?.userId.userId) ? getAvatar(o?.userId.userId) : "http://localhost:8080/public/images/no-avatar.png"}
-                          alt=""
-                        />
+                     <MyAvatar authCtx={user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
                         <div className="chatOnlineBadge"></div>
                       </div>
                       <span className="chatOnlineName"> {o?.userId.username} </span>
                     </div>
-
-
                     { isHeBlocked(o.userId.userId) ?
                       <button className="chatSubmitButton" onClick={() => {setToBlock(getUser(o.userId.userId))}} >
                         <i className="fa fa-unlock" aria-hidden="true"></i>
@@ -584,10 +586,7 @@ return (
                     <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                     <div className="fname" onClick={()=> {getDirect(o)}} >
                       <div className="chatOnlineImgContainer">
-                        <img  className="chatOnlineImg"
-                          src={ o?.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
-                          alt=""
-                        />
+                        <MyAvatar authCtx={user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>
                       </div>
                       <span className="chatOnlineName"> {o?.username} </span>
                     </div>
