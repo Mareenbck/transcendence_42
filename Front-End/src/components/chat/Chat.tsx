@@ -12,6 +12,7 @@ import './Chat.css'
 import React from 'react';
 import PopUp from './PopUpChannel';
 import ChannelVisibility from './ChannelVisibility';
+import { ListItem } from '@mui/material';
 
 
 function Chat() {
@@ -426,7 +427,9 @@ return (
                 <div key={c.name + c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
                     <div className="conversation">
                       <div className="conversation-name">
+                        <ListItem>
                           <Conversation conversation={c}/>
+                        </ListItem>
                       </div>
                       <div className="conversation-icon">
                       <ChannelVisibility conversation={c} channelName={c.name} channelId={c.id}/>
@@ -436,6 +439,7 @@ return (
                 ))}
             </div>
           </div>
+          <div className="line-chat"></div>
         <div className="chatBox">
           <div className="chatBoxW">
           {
