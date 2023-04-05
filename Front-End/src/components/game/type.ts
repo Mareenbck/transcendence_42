@@ -32,6 +32,8 @@ export interface gameState {
 }
 
 export interface gameInit {
+    height: number,
+    width: number, 
     table_width: number,
     table_height: number,
     racket_width: number,
@@ -56,8 +58,15 @@ export interface star {
     fill: string;
     stroke: string;//the fill and stroke colors to apply
     line: number; //the linewidth of the stroke
+<<<<<<< HEAD
 =======
 export  interface backColorGame{
     backColorGame: string;
 >>>>>>> chenge color
+=======
+}
+
+export interface size {
+    coef: number;
+>>>>>>> baa5c22 (size + game)
 }

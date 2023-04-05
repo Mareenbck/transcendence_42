@@ -20,6 +20,8 @@ export interface racket {
 }
   
 export interface gameInit {
+	height: number;
+	width: number;
 	table_width: number;
 	table_height: number;
 	ballR: number;
@@ -54,12 +56,12 @@ export interface gameInit {
 // }
 
 export const GameParams = {
-	GAME_WIDTH: 800, // 
-	GAME_HEIGHT: 400,
+	GAME_WIDTH: 300, //800,
+	GAME_HEIGHT: 200, //400, 
 	RACKET_SPEED_Y: 5,
-	RACKET_HEIGHT: 120,
-	RACKET_WIDTH: 10,
-	BALL_RADIUS: 15,
+	RACKET_HEIGHT: 80, //120,
+	RACKET_WIDTH: 5, //10,
+	BALL_RADIUS: 10,//15,
 	BALL_DEFAULT_SPEED: 7,
 	PERIOD: 100
 };
