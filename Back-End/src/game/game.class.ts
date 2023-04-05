@@ -80,6 +80,8 @@ console.log("constructor Class.game");
 	public init(socket: Socket){
 console.log(`init socket ${socket.id}`);
 		socket.emit('init-pong', { 
+			height: 300,
+			width: 600,
 			table_width: width,
 			table_height: height,
 			racket_width: racket_width,
@@ -244,11 +246,13 @@ console.log("playerR move", message);
 			this.updatePositions();
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
-			if ((this.playerL.score >= 2 || this.playerR.score >= 2)){ //score MAX - change here
+			if ((this.playerL.score >= 5 || this.playerR.score >= 5) && this.isrunning){ //score MAX - change here
 
 				this.isrunning = false;
 				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId;
 				this.player_disconect(this.winner);	
+				this.ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
+				this.ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
 				clearInterval(this.interval);
 				
 				if (!this.isrunning){
@@ -280,9 +284,11 @@ console.log("257 winner", this.winner)
 				}
 				this.playerL.score = 0;
 				this.playerR.score = 0;
+				this.isrunning = false;
+
 			}
 		}, period);
-console.log('stop game')
+// console.log('stop game')
 	}
 
 }
