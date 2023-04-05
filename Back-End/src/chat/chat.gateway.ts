@@ -54,12 +54,14 @@ constructor(private authService: AuthService){}
       console.log(socket.id);
       console.log('Connected CHAT');
 
-      socket.on("addUser", (userId) => {
+      socket.on("addUserC", (userId) => {
         if (userId.token){
           try {
             this.authService.verifySocketToken(userId.token);
             addUser(userId, socket.id);
-            this.server.emit("getUsers", users);
+            this.server.emit("getUsersC", users);
+                console.log(userId.userId);
+                console.log('Connected CHAT');
           } catch (e) {
             console.log(e);
           }
@@ -131,10 +133,22 @@ constructor(private authService: AuthService){}
         };
       });
 
+      socket.on("InviteGame", ({author, player,}) => {
+        const fromU = getUser(author);
+        const toU = getUser(player);
+        if (toU) {
+          this.server.to(toU.socketId).emit("wasInvited", {
+            from: fromU.userId,
+            to: toU.userId,
+          });
+        };
+      });
+
       socket.on('disconnect', () => {
         console.log(socket.id);
         console.log('Disconnected CHAT');
-        removeUser2(socket.id);
+        removeUser(socket.id);
+     //   removeUser2(socket.id);
         this.server.emit("getUsers", users);
       });
     }

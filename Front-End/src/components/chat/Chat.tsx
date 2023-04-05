@@ -2,6 +2,8 @@ import { useEffect, useContext, useState, useRef, FormEvent } from 'react'
 import { Link } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
 import io, { Socket } from "socket.io-client";
+//import io from "socket.io-client";
+//import { Socket } from '../../service/socket';
 import MessagesInput from "./MessagesInput"
 import Conversation from "./conversation/conversation"
 import ConversationReq from "./conversation/conversation.req"
@@ -14,6 +16,7 @@ import '../../style/Friends.css';
 import React from 'react';
 import PopUp from './PopUpChannel';
 import ChannelVisibility from './ChannelVisibility';
+import PopupChallenge from './PopupChallenge';
 
 
 function Chat() {
@@ -42,8 +45,8 @@ function Chat() {
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
   const [unfromBlock, setUnfromBlock] = useState<number>();
-  const [invite, setInvite] = useState ([]);
-  const [channelName, setchannelName] = useState('');
+  const [invited, setInvited] = useState ();
+  const [channelName, setchannelName] = useState ("");
 
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
@@ -63,6 +66,7 @@ function Chat() {
     })
     
     socket.current.on("getMD", (data)=> {
+      console.log(data);
       setAMessageD({
         content: data.content,
         author: data.author,
@@ -70,6 +74,10 @@ function Chat() {
         createdAt: Date.now(),
       });
     });
+//    return () => {
+//      socket.current.off("getMChat");
+//      socket.current.off("getMD");
+//    }
   }, []);
 
   useEffect(() => {
@@ -82,18 +90,26 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    socket.current.emit("addUser", user);
+    socket.current.emit("addUserC", user);
   },[user])
 
   useEffect(() => {
-    socket.current.on("getUsers", users => {
+    socket.current.on("getUsersC", users => {
       setOnlineUsers(users);
     });
   });
 
-  useEffect(() => {
+ /* useEffect(() => {
     socket.current.on("notAuth", data => {
       window.location.replace('/root');
+    });
+  });
+*/
+
+  useEffect(() => {
+    socket.current.on("wasInvited", data => {
+      console.log(data);
+      setInvited(data.from.username);
     });
   });
 
@@ -324,13 +340,22 @@ function Chat() {
     }
 
   const getDirect = (userX) => {
-    const i = getUser(+id);
-    if (i && (i.blockedFrom.find(u => +u.id === +userX.userId) === undefined ) && (i.blockedFrom.find((i)=> +id === +i) === undefined ))
+    const gUser = getUser(+id);
+    if (gUser && (gUser.blockedFrom.find(u => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u)=> +userX.userId === +u) === undefined ))
     {
       setCurrentDirect(userX);
-      setCurrentChat(null)
+      setCurrentChat(null);
     }
   }
+
+  const inviteGame = (playerId) => {
+    console.log(playerId);
+    socket?.current.emit("InviteGame", {
+      author: +id,
+      player: +playerId,
+    });
+  }
+
 
 ////////////////////////////////////////////////
 // Partie V : handle submit...
@@ -384,8 +409,7 @@ function Chat() {
     } catch(err) {console.log(err)}
   }
 
-// Invite
-  
+
 ////////////////////////////////////////////////
 // Partie VI : Scroll to view
 ////////////////////////////////////////////////
@@ -400,6 +424,9 @@ function Chat() {
   }, [messagesD]);
 
 
+////////////////////////////////////////////////
+// Partie V : EMMA
+////////////////////////////////////////////////
 
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
   setSelectedFile(event.target.files[0]);
@@ -421,6 +448,7 @@ const [showPopUp, setShowPopUp] = useState(false);
 return (
   <>
   {" "}
+
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
@@ -433,7 +461,6 @@ return (
                   onCancel={() => setShowPopUp(false)}
                   onClick={() => setShowPopUp(false)}
                   onSubmit={{handleFormSubmit}}
-                  
                   >
                   </PopUp>
             )}
@@ -454,6 +481,7 @@ return (
           </div>
         <div className="chatBox">
           <div className="chatBoxW">
+  <PopupChallenge triger={invited} setTriger={setInvited}> <h3></h3></PopupChallenge>
           {
             currentChat ?
             <>
@@ -521,16 +549,11 @@ return (
             <div className="chatOnline">
               { onlineUsers ? onlineUsers?.map((o) => (
                 +o?.userId.userId !== +id ?
-                  <div  key={o?.userId.userId} className={amIBlocked(o?.userId.userId)}  >
-                  <button className="chatSubmitButton" onClick={() => {setToInvite(getUser(o.userId.userId))}} >
-
-                    <i className="fa fa-gamepad" aria-hidden="true"  ></i>
-
-                  </button>
-
-                    <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
-                    <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
-                      <div className="chatOnlineImgContainer">
+                <div  key={o?.userId.userId} className={amIBlocked(o?.userId.userId)}  >
+                    <Link to={'/game/play'} onClick={() => inviteGame(o?.userId.userId)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+                    <Link to={`/users/profile/${o?.userId.userId}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
+                  <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
+                    <div className="chatOnlineImgContainer">
                         <img  className="chatOnlineImg"
                           src={ getAvatar(o?.userId.userId) ? getAvatar(o?.userId.userId) : "http://localhost:8080/public/images/no-avatar.png"}
                           alt=""
@@ -539,6 +562,8 @@ return (
                       </div>
                       <span className="chatOnlineName"> {o?.userId.username} </span>
                     </div>
+
+
                     { isHeBlocked(o.userId.userId) ?
                       <button className="chatSubmitButton" onClick={() => {setToBlock(getUser(o.userId.userId))}} >
                         <i className="fa fa-unlock" aria-hidden="true"></i>
@@ -555,10 +580,7 @@ return (
               { otherUsers ? otherUsers?.map((o) => (
                 +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
                   <div  key={o?.id} className={amIBlocked(o?.id)} >
-                  <i className="fa fa-gamepad" aria-hidden="true"  onClick={() => {setInvite(o)}}></i>
-
-
-
+                    <Link to={'/game/play'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
                     <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                     <div className="fname" onClick={()=> {getDirect(o)}} >
                       <div className="chatOnlineImgContainer">
@@ -575,8 +597,7 @@ return (
                       </button>
                      :
                        <button className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
-
-                                                  <i className="fa fa-lock" aria-hidden="true"></i>
+                        <i className="fa fa-lock" aria-hidden="true"></i>
                       </button>
                     }
                   </div>
