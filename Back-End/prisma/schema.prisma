@@ -79,20 +79,25 @@ enum UserStatus {
 }
 
 model UserOnChannel {
-  id     Int              @id @default(autoincrement())
-  role   UserRoleInChannel @default(USER)
-  status UserStatusOnChannel @default(CLEAN)
-  user   User             @relation(fields: [userId], references: [id])
-  userId Int
+  id        Int              @id @default(autoincrement())
+  role      UserRoleInChannel @default(USER)
+  status    UserStatusOnChannel @default(CLEAN)
+  user      User             @relation(fields: [userId], references: [id])
+  channelId Int
+  channel   Chatroom         @relation(fields: [channelId], references: [id])
+  userId    Int
+
+  @@unique([channelId, userId])
+}
+model Chatroom {
+  id           Int              @id @default(autoincrement())
+  visibility   UserChannelVisibility   @default(PUBLIC)
+  name         String
+  users        ChatroomUsers[]
+  participants UserOnChannel[]   
+  cr_messages  ChatroomMessage[]
 }
 
-model Chatroom {
-  id      Int     @id @default(autoincrement())
-  visibility UserChannelVisibility   @default(PUBLIC)
-  name    String
-  users   ChatroomUsers[]
-  cr_messages ChatroomMessage[]
-}
 
 enum UserChannelVisibility {
     PUBLIC

@@ -22,7 +22,6 @@ function PopUp(props: any) {
     const id = user.userId;
     const [isDisabled, setIsDisabled] = useState(true);
     const [channelName, setchannelName] = useState('');
-    const [role, setRole] = useState('USER');
 
     const handleChannelNameChange = (e: FormEvent) => {
         const value = e.target.value;
@@ -40,7 +39,6 @@ function PopUp(props: any) {
             isPublic: isPublic,
             isPrivate: isPrivate,
             isProtected: isProtected,
-            role: role,  
         };
         try {
             const res = await ConversationReq.postRoom(user, newConv);
@@ -55,13 +53,10 @@ function PopUp(props: any) {
         try {
             await createNewChannel(e);
             setShowPopUp(false);
-            setRole('ADMIN')
             props.onClick();
         } catch (err) {
             console.log(err);
         }
-        console.log("ROOOOLE")
-        console.log(role)
 
     }
     

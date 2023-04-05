@@ -38,9 +38,6 @@ export class ConversationReq {
         const message = `An error has occurred: ${resp.status} - ${resp.statusText}`;
         throw new Error(message);
       }
-      // console.log("RESPONSE = ")
-      // console.log(resp)
-      // const respClone = resp.clone(); // créer une copie de la réponse
       const data = await resp.json(); // lire le corps de la copie de la réponse
       console.log("DATA")
       console.log(data)

@@ -11,8 +11,6 @@ export class Chatroom2Controller {
   @UseGuards(JwtGuard)
     async create( @Body() newConv: any): Promise<CreateChatroomDto> {
       const newChannel = await this.chatRoomService.create(newConv);
-      console.log("NEW CHANNEL CONTROLLER")
-      console.log(newChannel)
     return newChannel;
   }
 
