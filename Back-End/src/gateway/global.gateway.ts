@@ -13,6 +13,7 @@ export class GlobalGateway implements OnGatewayConnection {
 
   @WebSocketServer() server: Server;
 
+
   async afterInit(server: Server) {
     server.on('connection', async (socket, request) => {
       socket['request'] = request;
@@ -26,3 +27,5 @@ export class GlobalGateway implements OnGatewayConnection {
     this.globalService.unregisterSocket(socket);
   }
 }
+
+

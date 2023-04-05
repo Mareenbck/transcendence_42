@@ -4,7 +4,7 @@ import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
 import Winner from './Winner'
 import './Game.css'
-import type { gameInit, gameState, gameWinner, player } from './type'
+import type { gameInit, gameState, gameWinner, player} from './type'
 import { socket } from '../../service/socket';
 
 
@@ -13,32 +13,21 @@ function Game() {
     const [users, setOnlineSpectators] = useState<[player]> ();
     const [players, setOnlinePlayers] = useState<[player]> ();
 
-
     const [gameinit, setGameInit] = useState<gameInit>(
         {
-            table_width: 800,
-            table_height: 400,
-            ballR: 15,
-            racket_width: 10,
-            racket_height: 100,
+            width: 600,
+            height: 300,
+            table_width: 300,
+            table_height: 200,
+            ballR: 10,
+            racket_width: 5,
+            racket_height: 80,
             scoreR: 0,
             scoreL: 0
         }
     );
-    // const [gameinit, setGameInit] = useState<gameInit>(
-    //     {
-    //         table_width: window.innerWidth,
-    //         table_height: window.innerHeight,
-    //         ballR: 15,
-    //         racket_width: 10,
-    //         racket_height: 100,
-    //         scoreR: 0,
-    //         scoreL: 0
-    //     }
-    // );
 
-
-    //initialization of the initial parameters of the game (coordinates)
+//initialization of the initial parameters of the game (coordinates)
     const [gamestate, setGameState] = useState<gameState>(
         {
             ball: {x: 400, y: 200},
@@ -55,7 +44,7 @@ function Game() {
             leave: ''
        } 
     );
-
+    
     const initListener = (data: gameInit)=>{
         setGameInit(data);
     }
@@ -89,7 +78,7 @@ console.log(user);
 // console.log('users Front', users)
 ///////////////////////////////////////////////////////
 
-    //get data from the server and redraw canvas
+//get data from the server and redraw canvas
     useEffect(() => {
         socket?.on('init-pong', initListener);
         socket?.on('pong', updateListener);
@@ -102,8 +91,12 @@ console.log(user);
 
         }
     }, [initListener, updateListener, initWinner])
+    
+ //responsive: fnd the ratio between the min value of the picture (server) atd the actual  
 
-	// onKeyDown handler function
+
+
+// onKeyDown handler function
 	const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
 console.log("event.code = ", event.code);
 		if (event.code === "ArrowUp") {

@@ -1,25 +1,49 @@
 import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
-import type {gameInit, gameState, gameWinner} from './type'
+import type {gameInit, gameState, gameWinner, size} from './type'
 
-const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner} ) => {
+const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, size: size} ) => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
     const gamewinner = props.gamewinner;
- 
-    const canvasRef = useRef<HTMLCanvasElement>(null);  
+   
+   
+    const [coeff, setCoeff] = useState(Math.min(
+        window.innerWidth/gameinit.width,
+        window.innerHeight/gameinit.height
+      ));
+    useEffect(() => {
+            const newCoeff = Math.min(
+            window.innerWidth / gameinit.width,
+            window.innerHeight / gameinit.height
+          );
+          setCoeff(newCoeff);
+        // });
     
+        // handleResize(); // call the function once to initialize the coefficient based on the current window size
+    
+        // window.addEventListener("resize", handleResize); // add event listener to handle window resizing
+    
+        // return () => {
+        //   window.removeEventListener("resize", handleResize); // remove event listener when component is unmounted
+        // };
+      }, [window.innerWidth, window.innerHeight]);
+console.log("coeff", coeff)
+    const canvasRef = useRef<HTMLCanvasElement>(null);  
+         
     useEffect(() => {
         if (canvasRef.current){
             const context = canvasRef.current.getContext('2d');
+           
 
             if (context ) {
+                
                 // Draw the table
                 context.beginPath();
                 context.fillStyle = "black";
-                context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
+                context.fillRect(0, 0, gameinit.table_width * coeff, gameinit.table_height*coeff);
                 context.closePath();
-
+console.log("46 coeff", coeff)
                 // center dotted line
                 context.setLineDash([5, 5]);
                 context.beginPath();
@@ -46,33 +70,11 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
                 context.fillText(`${gamestate.scoreL}`, gameinit.table_width/2 - 80, 50);
                 context.fillText(`${gamestate.scoreR }`, gameinit.table_width/2 + 50, 50);
             
-
-                if (gamewinner.leave){
-                    // context.fillStyle = "#FDD9";
-                    // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
-                    // context.closePath();
-
-                    context.font = "40px Verdana";
-                    context.lineWidth = 2;
-                    context.fillText(`${gamewinner.leave}`, 100, gameinit.table_height/2);
-                    context.fillText("scoreL the game" , gameinit.table_width/2 + 100, gameinit.table_height/2);
-                }
-                //if winner
-                // if (gamewinner.winner){
-                //     // context.fillStyle = "#FDD9";
-                //     // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
-                //     // context.closePath();
-
-                //     context.font = "40px Verdana";
-                //     context.lineWidth = 2;
-                //     context.fillText("WINNER:", 100, gameinit.table_height - 100);
-                //     context.fillText(`${gamewinner.winner}`, gameinit.table_width/2 + 100, gameinit.table_height - 100);
-                // }
             }
         }
 
     }, [gameinit, gamestate, gamewinner]);
-     
+
     return (<canvas className='field' ref={canvasRef} width={gameinit.table_width} height={gameinit.table_height} />)
 }
 export default Canvas
