@@ -429,7 +429,7 @@ return (
                           <Conversation conversation={c}/>
                       </div>
                       <div className="conversation-icon">
-                      <ChannelVisibility conversation={c} channelName={c.name}/>
+                      <ChannelVisibility conversation={c} channelName={c.name} channelId={c.id}/>
                       </div>
                     </div>
                 </div>

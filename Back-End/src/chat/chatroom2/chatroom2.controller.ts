@@ -3,16 +3,28 @@ import { CreateChatroomDto } from './dto/create-chatroom2.dto';
 import { ChatroomService } from './chatroom2.service';
 
 import { JwtGuard} from 'src/auth/guard';
-@Controller('chatroom2')
+import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
+@Controller('chatroom2/')
 export class Chatroom2Controller {
   constructor(private chatRoomService: ChatroomService) {}
 
   @Post()
   @UseGuards(JwtGuard)
-    async create( @Body() newConv: any): Promise<CreateChatroomDto> {
-      const newChannel = await this.chatRoomService.create(newConv);
+    async create( @Body() newConv: any, @GetCurrentUserId() userId: string): Promise<CreateChatroomDto> {
+      const newChannel = await this.chatRoomService.create(newConv, parseInt(userId));
     return newChannel;
   }
+
+  @Post('join')
+  // @UseGuards(JwtGuard)
+    async createUserTable( @Body() ids: any) {
+      console.log("CHANNEL ID")
+      console.log(ids)
+      const newUserTable = await this.chatRoomService.createUserTable(ids);
+      console.log("NEW USER TABLE")
+      console.log(newUserTable)
+    return newUserTable;
+    }
 
   @Get()
   @UseGuards(JwtGuard)

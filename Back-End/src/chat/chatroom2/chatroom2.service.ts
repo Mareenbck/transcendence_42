@@ -12,8 +12,8 @@ import { UserOnChannel} from '@prisma/client'
 export class ChatroomService {
   constructor(private prisma: PrismaService){}
 
-    async create(newConv: any) {
-      const { name, isPublic, isPrivate, isProtected, role } = newConv;
+    async create(newConv: any, userId: number) {
+      const { name, isPublic, isPrivate, isProtected } = newConv;
       let visibility: UserChannelVisibility;
       if (isPrivate) {
         visibility = UserChannelVisibility.PRIVATE;
@@ -23,18 +23,42 @@ export class ChatroomService {
         visibility = UserChannelVisibility.PWD_PROTECTED;
       }
 
-  
-      console.log('CREATE CHATROOMDTO');
-      console.log(newConv);
       const newChannel = await this.prisma.chatroom.create({
         data: {
           name: name,
           visibility: visibility,
         },
       });
+      const userOnChannel = await this.prisma.userOnChannel.create({
+        data: {
+          channelId: newChannel.id,
+          userId: userId,
+          role: "ADMIN"
+        }
+      });
+      console.log("USER ON CHANNEL")
+      console.log(userOnChannel)
       console.log("NEW CHANNEL")
       console.log(newChannel)
       return newChannel;
+  }
+
+  async createUserTable(ids: any)
+  {
+    const {userId, channelId} = ids;
+    try {
+      const newTable = await this.prisma.userOnChannel.create({
+        data: {
+          channelId: channelId,
+          userId: userId,
+        }
+      })
+      console.log("NEW TABLE")
+      console.log(newTable);
+      return newTable;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   findAll() {

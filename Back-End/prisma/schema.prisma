@@ -89,6 +89,7 @@ model UserOnChannel {
 
   @@unique([channelId, userId])
 }
+
 model Chatroom {
   id           Int              @id @default(autoincrement())
   visibility   UserChannelVisibility   @default(PUBLIC)
