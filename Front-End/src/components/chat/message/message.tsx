@@ -1,7 +1,7 @@
 import './message.css'
 import {format} from 'timeago.js'
 
-export default function Message2({ message2, own, avatar }) {
+export default function Message2({ message2, own, avatar, nameA }) {
 
  // console.log(message2);
 
@@ -16,7 +16,7 @@ export default function Message2({ message2, own, avatar }) {
          {message2.content}
         </p>
       </div>
-      <div className="messageBottom" > {format(message2.createdAt)}</div>
+      <div className="messageBottom" > {nameA} - {format(message2.createdAt)}</div>
     </div>
 
   );

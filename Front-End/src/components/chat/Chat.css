@@ -106,16 +106,18 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  background-color: teal;
-  color: white;
+   color: white;
   margin-right: 5px;
   margin-left: 5px;
+  /* background-color: teal; */
 }
+
 
 .chatSubmitButton2 {
   border: solid;
   background-color: white;
-  color: teal;
+  /* color: teal; */
+  color: black;
 }
 
 

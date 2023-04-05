@@ -55,9 +55,6 @@ constructor(private authService: AuthService){}
       console.log('Connected CHAT');
 
       socket.on("addUser", (userId) => {
-              console.log(userId.userName);
-       console.log(userId.token);
-       console.log(userId);
         if (userId.token){
           try {
             this.authService.verifySocketToken(userId.token);

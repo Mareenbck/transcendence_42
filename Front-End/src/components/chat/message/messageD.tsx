@@ -1,7 +1,7 @@
 import './message.css'
 import {format} from 'timeago.js'
 
-  export default function MessageD({ messageD, own, avatar }) {
+  export default function MessageD({ messageD, own, avatar, nameA }) {
 //console.log(messageD?.author)
   return (
     <div className= {own ? "message own" : "message"}>
@@ -14,7 +14,7 @@ import {format} from 'timeago.js'
           {messageD.content}
         </p>
       </div>
-      <div className="messageBottom" > {format(messageD.createdAt)}</div>
+      <div className="messageBottom" > {nameA} - {format(messageD.createdAt)}</div>
     </div>
 
   );

@@ -1,4 +1,5 @@
 import { useEffect, useContext, useState, useRef, FormEvent } from 'react'
+import { Link } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
 import io, { Socket } from "socket.io-client";
 import MessagesInput from "./MessagesInput"
@@ -9,6 +10,7 @@ import ChatReq from "./Chat.req"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
 import './Chat.css'
+import '../../style/Friends.css';
 import React from 'react';
 import PopUp from './PopUpChannel';
 import ChannelVisibility from './ChannelVisibility';
@@ -40,7 +42,7 @@ function Chat() {
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
   const [unfromBlock, setUnfromBlock] = useState<number>();
-
+  const [invite, setInvite] = useState ([]);
   const [channelName, setchannelName] = useState('');
 
 ///////////////////////////////////////////////////////////
@@ -213,7 +215,6 @@ function Chat() {
   }, [fromBlock]);
 
   useEffect(() => {
-    console.log(user.userId);
     if (allUsers !== undefined && user.userId && unfromBlock !== user.userId.userId) {
       const i = allUsers.findIndex(userX => +userX.id === +id);
       const j = allUsers.find(userX => +userX.id === +id);
@@ -300,6 +301,11 @@ function Chat() {
     return (u && u.avatar);
   };
 
+  const getName = (userId) => {
+    const u = allUsers.find(user => +user?.id === +userId);
+    return (u.username);
+  };
+
   const getUser = (userId) => {
     return allUsers.find(user => +user?.id === +userId);
   };
@@ -355,7 +361,6 @@ function Chat() {
   
 // Direct message
   const handleSubmitD = async (e: FormEvent)=> {
-
     e.preventDefault();
     const r = currentDirect?.userId ? +currentDirect?.userId : +currentDirect?.id;
     const messageD = {
@@ -379,7 +384,7 @@ function Chat() {
     } catch(err) {console.log(err)}
   }
 
-
+// Invite
   
 ////////////////////////////////////////////////
 // Partie VI : Scroll to view
@@ -456,7 +461,7 @@ return (
                 { messages2.length ?
                   messages2.map((m) => (
                     <div key={m.createdAt} ref={scrollRef}>
-                      <Message2 message2={m} avatar={getAvatar(m.authorId)} own={m.authorId === +id} />
+                      <Message2 message2={m} avatar={getAvatar(m.authorId)} nameA={getName(m.authorId)} own={m.authorId === +id} />
                     </div>
                   )) : <span className="noConversationText2" > No message in this room yet. </span>
                 }
@@ -480,7 +485,7 @@ return (
                 { messagesD.length ?
                     messagesD?.map((m) => (
                       <div key={m.createdAt} ref={scrollRef}>
-                        <MessageD messageD={m} avatar={getAvatar(m.author)} own={m?.author === +id} />
+                        <MessageD messageD={m} avatar={getAvatar(m.author)} nameA={getName(m.author)} own={m?.author === +id} />
                       </div>
                   )) : <span className="noConversationText2" > No message with this friend yet. </span>
                 }
@@ -517,6 +522,13 @@ return (
               { onlineUsers ? onlineUsers?.map((o) => (
                 +o?.userId.userId !== +id ?
                   <div  key={o?.userId.userId} className={amIBlocked(o?.userId.userId)}  >
+                  <button className="chatSubmitButton" onClick={() => {setToInvite(getUser(o.userId.userId))}} >
+
+                    <i className="fa fa-gamepad" aria-hidden="true"  ></i>
+
+                  </button>
+
+                    <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                     <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
                       <div className="chatOnlineImgContainer">
                         <img  className="chatOnlineImg"
@@ -529,11 +541,11 @@ return (
                     </div>
                     { isHeBlocked(o.userId.userId) ?
                       <button className="chatSubmitButton" onClick={() => {setToBlock(getUser(o.userId.userId))}} >
-                          Block
+                        <i className="fa fa-unlock" aria-hidden="true"></i>
                       </button>
                      :
                        <button className="chatSubmitButton2" onClick={() => {setToUnblock(getUser(o.userId.userId))}} >
-                          UnBlock
+                        <i className="fa fa-lock" aria-hidden="true"></i>
                       </button>
                     }
                   </div>
@@ -543,6 +555,11 @@ return (
               { otherUsers ? otherUsers?.map((o) => (
                 +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
                   <div  key={o?.id} className={amIBlocked(o?.id)} >
+                  <i className="fa fa-gamepad" aria-hidden="true"  onClick={() => {setInvite(o)}}></i>
+
+
+
+                    <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                     <div className="fname" onClick={()=> {getDirect(o)}} >
                       <div className="chatOnlineImgContainer">
                         <img  className="chatOnlineImg"
@@ -554,11 +571,12 @@ return (
                     </div>
                     { !o.blockedFrom.find((u)=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i)=>(+user.userId === +i)) ?
                       <button className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
-                          Block
+                          <i className="fa fa-unlock" aria-hidden="true"></i>
                       </button>
                      :
                        <button className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
-                          UnBlock
+
+                                                  <i className="fa fa-lock" aria-hidden="true"></i>
                       </button>
                     }
                   </div>
