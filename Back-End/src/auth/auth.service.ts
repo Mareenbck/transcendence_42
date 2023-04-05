@@ -228,13 +228,14 @@ export class AuthService {
 		}
 	}
 
-		generate_random_password(): string {
-			// generate random password for 42 User
-			const password =
-				Math.random().toString(36).slice(2, 15) +
-				Math.random().toString(36).slice(2, 15);
-			return password;
-		}
+	generate_random_password(): string {
+		// generate random password for 42 User
+		const password =
+			Math.random().toString(36).slice(2, 15) +
+			Math.random().toString(36).slice(2, 15);
+		return password;
+	}
+
 
 }
 

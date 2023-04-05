@@ -13,7 +13,7 @@ const defaultValue = {
 	updateAvatar: (avatarUrl: string) => {},
 	updateUsername: (newUsername: string) => {},
 	fetchAvatar: async (userId: string) => {},
-	login: async (token: string, userId: string) => {},
+	login: async (token: string, userId: string, refreshToken: string) => {},
 	logout: () => { }
 };
 
@@ -21,8 +21,10 @@ export const AuthContext = createContext(defaultValue);
 //controle de la presence du token dans local storage
 const usernameLocalStorage = localStorage.getItem("username");
 const ftAvatarLocalStorage = localStorage.getItem("ftAvatar");
+const RtokenLocalStorage = localStorage.getItem("Rtoken");
 
 export const AuthContextProvider = (props: any) => {
+	const [refreshToken, setRefreshToken] = useState<string | null>(RtokenLocalStorage);
 
 	const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
 	const [userId, setUserId] = useState<string | null>(localStorage.getItem("userId"));
@@ -43,6 +45,13 @@ export const AuthContextProvider = (props: any) => {
 		}
 	}, [])
 
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			refreshHandler();
+		}, 10 * 60 * 1000); // Refresh every 10 minutes
+		return () => clearInterval(intervalId);
+	}, []);
+
 	const updateAvatar = (avatarUrl: string) => {
 		if (avatarUrl) {
 			const timestamp = new Date().getTime();
@@ -59,22 +68,22 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const fetchAvatar = async (userId: string) => {
-		  try {
-			  const response = await fetch(`http://localhost:3000/users/${userId}/avatar`, {
-				  method: 'GET',
-				  headers: {
-					  Authorization: `Bearer ${token}`,
-				  },
-			  });
-			  if (response.ok) {
-				  const blob = await response.blob();
-				  setAvatar(URL.createObjectURL(blob));
-			  }
-			  return "success";
-		  } catch (error) {
-			  return console.log("error", error);
-		  }
-	  }
+		try {
+			const response = await fetch(`http://localhost:3000/users/${userId}/avatar`, {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			if (response.ok) {
+				const blob = await response.blob();
+				setAvatar(URL.createObjectURL(blob));
+			}
+			return "success";
+		} catch (error) {
+			return console.log("error", error);
+		}
+	}
 
 	const fetchHandler = async (token: string, userId: string) => {
 		try {
@@ -94,8 +103,31 @@ export const AuthContextProvider = (props: any) => {
 		}
 	};
 
-	const loginHandler = async (token: string, userId: string) => {
+	const refreshHandler = async () => {
+		try {
+			const response = await fetch('http://localhost:3000/auth/refresh', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ refresh_token: refreshToken }),
+			});
+			const data = await response.json();
+			setToken(data.access_token);
+			setRefreshToken(data.refresh_token);
+			localStorage.setItem('token', data.access_token);
+			localStorage.setItem('Rtoken', data.refresh_token);
+			return "success";
+		} catch (error) {
+			return console.log("error", error);
+		}
+	};
+
+	const loginHandler = async (token: string, userId: string, refreshToken: string) => {
 		setToken(token);
+		setRefreshToken(refreshToken);
+		localStorage.setItem('token', token);
+		localStorage.setItem('refreshToken', refreshToken);
 		const data = await fetchHandler(token, userId);
 		setIs2FA(data.twoFA);
 		return data.twoFA;

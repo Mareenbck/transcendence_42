@@ -1,7 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, BadRequestException, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from "./auth.service";
 import { GetUser } from './decorator';
-import { AuthDto } from './dto/auth.dto';
+import { AuthDto, AuthTokenDto } from './dto/auth.dto';
 import { SigninDto } from './dto/signin.dto';
 import { Response } from 'express';
 import { TwoFaUserDto } from './dto/2fa.dto';
@@ -9,6 +9,8 @@ import { FortyTwoAuthGuard } from './guard/42auth.guard';
 import { TwoFactorAuthService } from './2FA/2FactorAuth.service';
 import { FortyTwoStrategy, Profile_42 } from './strategy/42.strategy';
 import { LocalAuthGuard } from './guard/local-auth.guard';
+import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
+
 
 @Controller('auth')
 export class AuthController {
@@ -59,6 +61,15 @@ export class AuthController {
 		} catch(error) {
 			console.log(error);
 		}
+	}
+
+	@Post('refresh')
+	async refresh(@Body() authTokenDto: AuthTokenDto, @GetCurrentUserId() id: number) {
+		const refreshToken = authTokenDto.refresh_token;
+		if (!refreshToken) {
+			throw new BadRequestException('No refresh token provided');
+		}
+		return await this.authService.refresh_token(id, refreshToken);
 	}
 
 }
