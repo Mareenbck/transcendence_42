@@ -4,10 +4,12 @@ import { useParams } from "react-router-dom";
 import ShowFriends from "../friends/ShowFriends";
 import TitleCard from "./CardTitle";
 import BodyStatsCard from "./BodyStatsCard";
+import MenuCard from "./MenuCard";
 
 const Card = (props: any) => {
 	const [color, setColor] = useState<string>('');
 	const [content, setContent] = useState<any>(null);
+	const [titleStyle, setTitleStyle] = useState<string>('m');
 
 	const styles = {
 		width: props.width,
@@ -31,14 +33,18 @@ const Card = (props: any) => {
 			setContent(<BodyStatsCard icon={props.icon}/>);
 		} else if (props.type === 'showFriends') {
 			setContent(<ShowFriends friendCtx={props.friendCtx} authCtx={props.authCtx}/>);
+		} else if (props.type === 'menu') {
+			setTitleStyle("s");
+			setContent(<MenuCard body={props.body}/>);
 		}
 	}, [props.type])
 
+	const menuCardClass = props.type === 'menu' ? 'menu-card' : '';
 
 	return (
 		<>
-			<div className='card' style={styles}>
-				<TitleCard color={color} title={props.title} type={props.type} friendCtx={props.friendCtx} authCtx={props.authCtx}></TitleCard>
+			<div className={`card ${menuCardClass}`} style={styles}>
+				<TitleCard style={titleStyle} color={color} title={props.title} type={props.type} friendCtx={props.friendCtx} authCtx={props.authCtx}></TitleCard>
 				{content}
 			</div>
 		</>

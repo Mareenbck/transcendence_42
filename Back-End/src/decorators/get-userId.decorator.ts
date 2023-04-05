@@ -7,7 +7,7 @@ export const GetCurrentUserId = createParamDecorator(
 		// Get request from context
 		const request = context.switchToHttp().getRequest();
 		// console.log("REQUEST //////////")
-		// console.log(request.user);
+		// console.log(request);
 		if (data) {
 			return request.user[data];
 		}
