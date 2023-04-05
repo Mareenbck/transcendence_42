@@ -46,10 +46,19 @@
     position: relative;
 }
 
-.card h5 {
+.title-card-m h5 {
     font-style: normal;
     font-weight: 700;
     font-size: 32px;
+    line-height: 24px;
+    align-self: center;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.title-card-s h5 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 23px;
     line-height: 24px;
     align-self: center;
     font-family: 'Noto Sans', sans-serif;
@@ -76,10 +85,19 @@
 	font-size: 28px;
 }
 
-.status {
+.custom-status-m {
 	position: relative;
 	width: 8px;
 	height: 65px;
+    top: 0px;
+    right: 27px;
+	border-radius: 27.3758px;
+}
+
+.custom-status-s {
+	position: relative;
+	width: 7px;
+	height: 30px;
     top: 0px;
     right: 27px;
 	border-radius: 27.3758px;
@@ -89,7 +107,11 @@
 	margin-left: 60px;
 	font-size: 40px;
 }
-.title-card {
+.title-card-m {
+    display: flex;
+}
+
+.title-card-s {
     display: flex;
 }
 

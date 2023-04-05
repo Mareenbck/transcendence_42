@@ -4,6 +4,8 @@ import FriendsDemands from "../friends/FriendsDemands";
 
 const TitleCard = (props: any) => {
 	const [content, setContent] = useState<any>(null);
+	const [statusClass, setStatusClass] = useState<string>('');
+	const [titleClass, setTitleClass] = useState<string>('m');
 
 	useEffect(() => {
 		if (props.type === 'showFriends') {
@@ -11,14 +13,19 @@ const TitleCard = (props: any) => {
 		}
 	}, [props.type]);
 
-	const styles = {
+	const color = {
 		background: props.color,
 	  };
 
+	  useEffect(() => {
+		setStatusClass(`custom-status-${props.style}`);
+		setTitleClass(`title-card-${props.style}`);
+	}, [props.style]);
+
 	return (
 		<>
-		<div className="title-card">
-			<div className="status" style={styles}></div>
+		<div className={titleClass}>
+			<div className={statusClass} style={color}></div>
 			<h5>{props.title}</h5>
 			{content}
 		</div>

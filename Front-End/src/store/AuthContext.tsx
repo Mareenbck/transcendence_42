@@ -104,19 +104,28 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const refreshHandler = async () => {
+		console.log("refreshToken dans context")
+		console.log(refreshToken)
+		console.log("token dans context")
+		console.log(token)
 		try {
 			const response = await fetch('http://localhost:3000/auth/refresh', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
 				},
-				body: JSON.stringify({ refresh_token: refreshToken }),
+				body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
 			});
 			const data = await response.json();
-			setToken(data.access_token);
-			setRefreshToken(data.refresh_token);
-			localStorage.setItem('token', data.access_token);
-			localStorage.setItem('Rtoken', data.refresh_token);
+			console.log("data dans refreshHandler")
+			console.log(data)
+			if (response.ok) {
+				setToken(data.access_token);
+				setRefreshToken(data.refresh_token);
+				localStorage.setItem('token', data.access_token);
+				localStorage.setItem('Rtoken', data.refresh_token);
+			}
 			return "success";
 		} catch (error) {
 			return console.log("error", error);
@@ -127,7 +136,7 @@ export const AuthContextProvider = (props: any) => {
 		setToken(token);
 		setRefreshToken(refreshToken);
 		localStorage.setItem('token', token);
-		localStorage.setItem('refreshToken', refreshToken);
+		localStorage.setItem('Rtoken', refreshToken);
 		const data = await fetchHandler(token, userId);
 		setIs2FA(data.twoFA);
 		return data.twoFA;

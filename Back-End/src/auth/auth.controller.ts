@@ -10,6 +10,7 @@ import { TwoFactorAuthService } from './2FA/2FactorAuth.service';
 import { FortyTwoStrategy, Profile_42 } from './strategy/42.strategy';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
+import { JwtGuard } from './guard';
 
 
 @Controller('auth')
@@ -64,12 +65,15 @@ export class AuthController {
 	}
 
 	@Post('refresh')
-	async refresh(@Body() authTokenDto: AuthTokenDto, @GetCurrentUserId() id: number) {
+	@UseGuards(LocalAuthGuard)
+	async refresh(@Body() authTokenDto: AuthTokenDto, @GetUser() user: any) {
 		const refreshToken = authTokenDto.refresh_token;
+		console.log("refreshToken--->")
+		console.log(refreshToken)
 		if (!refreshToken) {
 			throw new BadRequestException('No refresh token provided');
 		}
-		return await this.authService.refresh_token(id, refreshToken);
+		return await this.authService.refresh_token(user.id, refreshToken);
 	}
 
 }
