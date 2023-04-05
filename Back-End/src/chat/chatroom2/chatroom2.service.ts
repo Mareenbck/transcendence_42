@@ -13,7 +13,6 @@ export class ChatroomService {
     async create(newConv: any) {
       //faut il rajouter une variable role a newConv ? je ne sais pas 
       const { name, isPublic, isPrivate, isProtected, role } = newConv;
-      let humanRole: UserRoleInChannel;
       let visibility: UserChannelVisibility;
       if (isPrivate) {
         visibility = UserChannelVisibility.PRIVATE;
@@ -21,11 +20,7 @@ export class ChatroomService {
         visibility = UserChannelVisibility.PUBLIC;
       } else if (isProtected) {
         visibility = UserChannelVisibility.PWD_PROTECTED;
-      } else if (role == "USER") {
-        humanRole = UserRoleInChannel.USER;
-      } else if (role == "ADMIN") {
-        humanRole = UserRoleInChannel.ADMIN;
-      }
+      } 
 
   
       console.log('CREATE CHATROOMDTO');
@@ -34,7 +29,6 @@ export class ChatroomService {
         data: {
           name: name,
           visibility: visibility,
-          role: humanRole,
         },
       });
       console.log("NEW CHANNEL")
