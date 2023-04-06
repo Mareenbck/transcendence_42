@@ -1,6 +1,6 @@
 # compiled output
 
-.env
+./.env
 node_modules
 uploads
 
