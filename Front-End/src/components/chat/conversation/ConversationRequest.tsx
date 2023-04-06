@@ -38,8 +38,6 @@ export class ConversationReq {
         throw new Error(message);
       }
       const data = await resp.json(); 
-      console.log("DATA IN POSTROOM")
-      console.log(data)
       return data;
     } catch (err) {
       console.log(err);
@@ -62,8 +60,6 @@ export class ConversationReq {
         throw new Error(message);
       }
       const data = await resp.json();
-      console.log("DATA IN JOINTABLE")
-      console.log(data);
     } catch(err) {
       console.log(err)
     }

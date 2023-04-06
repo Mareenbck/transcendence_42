@@ -18,18 +18,14 @@ export class Chatroom2Controller {
   @Post('join')
   // @UseGuards(JwtGuard)
     async createUserTable( @Body() ids: any) {
-      console.log("CHANNEL ID")
-      console.log(ids)
       const newUserTable = await this.chatRoomService.createUserTable(ids);
-      console.log("NEW USER TABLE")
-      console.log(newUserTable)
     return newUserTable;
     }
 
   @Get()
   @UseGuards(JwtGuard)
   async findAll(): Promise<CreateChatroomDto[]> {
-    return this.chatRoomService.findAll();
+    return await this.chatRoomService.findAll();
   };
  
   // @Post(':id/delete')

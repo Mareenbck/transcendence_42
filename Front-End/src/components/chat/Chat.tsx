@@ -2,8 +2,8 @@ import { useEffect, useContext, useState, useRef, FormEvent } from 'react'
 import AuthContext from '../../store/AuthContext';
 import io, { Socket } from "socket.io-client";
 import MessagesInput from "./MessagesInput"
-import Conversation from "./conversation/conversation"
-import ConversationReq from "./conversation/conversation.req"
+import Conversation from "./conversation/Conversation"
+import ConversationReq from "./conversation/ConversationRequest"
 import MessageReq from "./message/message.req"
 import ChatReq from "./Chat.req"
 import Message2 from "./message/message"
@@ -33,16 +33,10 @@ function Chat() {
   const [otherUsers, setOtherUsers] = useState <UserDto[]> ([]);
   const [allUsers, setAllUsers] = useState <UserDto[]> ([]);
   const scrollRef = useRef();
-  const usernameInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState('');
-  const [newConversation, setNewConversation] = useState("");
   const [toBlock, setToBlock] = useState(null);
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
   const [unfromBlock, setUnfromBlock] = useState<number>();
-
-  const [channelName, setchannelName] = useState('');
 
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
@@ -424,15 +418,15 @@ return (
             )}
             </form>
             {conversations.map((c) => (
-                <div key={c.name + c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
+                <div key={c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
                     <div className="conversation">
                       <div className="conversation-name">
                         <ListItem>
-                          <Conversation conversation={c}/>
+                          <Conversation name={c.name}/>
                         </ListItem>
                       </div>
                       <div className="conversation-icon">
-                      <ChannelVisibility conversation={c} channelName={c.name} channelId={c.id}/>
+                      <ChannelVisibility visibility={c.visibility} id={c.id}     />
                       </div>
                     </div>
                 </div>

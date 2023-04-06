@@ -5,7 +5,7 @@ import "../../style/PopUpChannel.css"
 import AuthContext from '../../store/AuthContext';
 import Chat from './Chat';
 import { socket } from '../../service/socket';
-import ConversationReq from "./conversation/conversation.req"
+import ConversationReq from "./conversation/ConversationRequest"
 
 
 
@@ -48,8 +48,6 @@ function PopUp(props: any) {
             console.log(err);
         }
     };
-    
-    
     
     const createAndClose = async (e:FormEvent) => {
         try {

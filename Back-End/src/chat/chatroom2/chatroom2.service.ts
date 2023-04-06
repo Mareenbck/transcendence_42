@@ -1,11 +1,10 @@
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateChatroomDto, CreateRoomDto } from './dto/create-chatroom2.dto';
+import { CreateChatroomDto } from './dto/create-chatroom2.dto';
 import { Prisma, UserChannelVisibility } from '@prisma/client';
 import { UserRoleInChannel} from '@prisma/client'
 import { UserStatusOnChannel } from '@prisma/client'
 import { BadRequestException, Injectable} from '@nestjs/common';
 import { Chatroom } from '@prisma/client';
-import { UpdateChatroomDto } from './dto/update-chatroom2.dto';
 import { UserOnChannel} from '@prisma/client'
 
 @Injectable()
@@ -53,8 +52,6 @@ export class ChatroomService {
           userId: userId,
         }
       })
-      console.log("NEW TABLE")
-      console.log(newTable);
       return newTable;
     } catch (err) {
       console.log(err);
@@ -69,11 +66,11 @@ export class ChatroomService {
     return this.prisma.chatroom.findUnique({where: {id: id}});;
   }
 
-  update(id: number, updateChatroom2Dto: UpdateChatroomDto) {
-    return this.prisma.chatroom.update({
-      where: {id: id},
-      data: updateChatroom2Dto });
-  }
+  // update(id: number, updateChatroom2Dto: UpdateChatroomDto) {
+  //   return this.prisma.chatroom.update({
+  //     where: {id: id},
+  //     data: updateChatroom2Dto });
+  // }
 
   // async deleteChatroom(id: number) {
   //   return await this.prisma.chatroom.delete({ 
