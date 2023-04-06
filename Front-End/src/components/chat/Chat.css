@@ -14,6 +14,15 @@
   border-radius: 10px;
 }
 
+.line-chat {
+  position: absolute;
+  height: 100%;
+  width: 0;
+  left: 416px;
+  top: 81px;
+  border-right: 2px solid #C7B9FF;
+}
+
 .popupChallenge{
   position:fixed;
   top:0;
@@ -183,7 +192,7 @@
 }
 
 .conversation-icon {
-  margin-right: 200px;
+  margin-right: 100px;
   /* margin-right: 10px; */
 }
 

@@ -2,12 +2,10 @@ import React, { useRef } from 'react';
 import { Popup } from 'reactjs-popup';
 import { useEffect, useContext, useState, FormEvent } from 'react'
 import "../../style/PopUpChannel.css"
-import "../../pages/Setting.tsx"
 import AuthContext from '../../store/AuthContext';
 import Chat from './Chat';
 import { socket } from '../../service/socket';
-import ConversationReq from "./conversation/conversation.req"
-import { Modal } from '@mui/material';
+import ConversationReq from "./conversation/ConversationRequest"
 
 
 
@@ -37,26 +35,20 @@ function PopUp(props: any) {
           return;
         }
         const newConv = {
-          name: channelName,
-          isPublic: isPublic,
-          isPrivate: isPrivate,
-          isProtected: isProtected,
+            name: channelName,
+            isPublic: isPublic,
+            isPrivate: isPrivate,
+            isProtected: isProtected,
         };
-
-    //     socket?.current.emit("sendMD", {
-    //         author: +id,
-    //         receiver: +currentDirect?.userId,
-    //         content: newConv,
-    // });
-    try {
-        const res = await ConversationReq.postRoom(user, newConv);
-        // setConversations([res, ...conversations]);
-        props.newConv(newConv);
+        try {
+            const res = await ConversationReq.postRoom(user, newConv);
+            console.log("RES = ")
+            console.log(res)
         } catch (err) { 
-          console.log(err);
+            console.log(err);
         }
     };
-
+    
     const createAndClose = async (e:FormEvent) => {
         try {
             await createNewChannel(e);
@@ -65,12 +57,14 @@ function PopUp(props: any) {
         } catch (err) {
             console.log(err);
         }
+
     }
     
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = (e:FormEvent) => {
         e.preventDefault();
         setShowPopUp(false);
       };
+      
 
 return (
     <div className='popup-overlay'>

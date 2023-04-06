@@ -9,20 +9,6 @@ export class CreateChatroomDto
   @MinLength(3)
   @MaxLength(45)
   name:  string;
-
-}
-
-export class CreateRoomDto
-{
-
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(45)
-  name:  string;
-
-  isPublic: boolean;
-  isPrivate: boolean;
-  isProtected: boolean;
-  
+  visibility: string;
 
 }

@@ -23,7 +23,7 @@ export class ConversationReq {
 
   };
 
- static async postRoom(user: AuthContext, newConv) {
+ static async postRoom(user: AuthContext, newConv: any) {
     try {
       const resp = await fetch(`http://localhost:3000/chatroom2`, {
         method: "POST",
@@ -32,26 +32,39 @@ export class ConversationReq {
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(newConv),
-      });
-  
+      });  
       if (!resp.ok) {
         const message = `An error has occurred: ${resp.status} - ${resp.statusText}`;
         throw new Error(message);
       }
-      // console.log("RESPONSE = ")
-      // console.log(resp)
-      // const respClone = resp.clone(); // créer une copie de la réponse
-      const data = await resp.json(); // lire le corps de la copie de la réponse
-      console.log("DATA")
-      console.log(data)
+      const data = await resp.json(); 
       return data;
     } catch (err) {
-      console.log("EST DANS LE ERROR DU CONVERSATION REQ");
       console.log(err);
     }
   };
 
-  
+  static async joinTable(channelId: number, token: string, userId: number) {
+    try {
+      
+      const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({channelId: channelId, userId: userId}),
+      });
+      if (!resp.ok) {
+        const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
+        throw new Error(message);
+      }
+      const data = await resp.json();
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
 }
 
 export default ConversationReq;

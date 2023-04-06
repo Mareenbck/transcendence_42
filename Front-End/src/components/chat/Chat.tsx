@@ -5,8 +5,8 @@ import io, { Socket } from "socket.io-client";
 //import io from "socket.io-client";
 //import { Socket } from '../../service/socket';
 import MessagesInput from "./MessagesInput"
-import Conversation from "./conversation/conversation"
-import ConversationReq from "./conversation/conversation.req"
+import Conversation from "./conversation/Conversation"
+import ConversationReq from "./conversation/ConversationRequest"
 import MessageReq from "./message/message.req"
 import ChatReq from "./Chat.req"
 import Message2 from "./message/message"
@@ -16,6 +16,7 @@ import '../../style/Friends.css';
 import React from 'react';
 import PopUp from './PopUpChannel';
 import ChannelVisibility from './ChannelVisibility';
+import { ListItem } from '@mui/material';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
 
@@ -38,10 +39,6 @@ function Chat() {
   const [otherUsers, setOtherUsers] = useState <UserDto[]> ([]);
   const [allUsers, setAllUsers] = useState <UserDto[]> ([]);
   const scrollRef = useRef();
-  const usernameInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState('');
-  const [newConversation, setNewConversation] = useState("");
   const [toBlock, setToBlock] = useState(null);
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
@@ -430,11 +427,6 @@ function Chat() {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
   }, [messagesD]);
 
-
-////////////////////////////////////////////////
-// Partie V : EMMA
-////////////////////////////////////////////////
-
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
   setSelectedFile(event.target.files[0]);
 };
@@ -467,25 +459,28 @@ return (
                   message="Choisissez les options de votre channel"
                   onCancel={() => setShowPopUp(false)}
                   onClick={() => setShowPopUp(false)}
-                  onSubmit={{handleFormSubmit}}
+                  onSubmit={{handleFormSubmit}}        
                   >
                   </PopUp>
             )}
             </form>
             {conversations.map((c) => (
-                <div key={c.name + c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
+                <div key={c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
                     <div className="conversation">
                       <div className="conversation-name">
-                          <Conversation conversation={c}/>
+                        <ListItem>
+                          <Conversation name={c.name}/>
+                        </ListItem>
                       </div>
                       <div className="conversation-icon">
-                      <ChannelVisibility conversation={c}/>
+                      <ChannelVisibility visibility={c.visibility} id={c.id}     />
                       </div>
                     </div>
                 </div>
                 ))}
             </div>
           </div>
+          <div className="line-chat"></div>
         <div className="chatBox">
           <div className="chatBoxW">
   <PopupChallenge triger={invited} setTriger={setInvited}> <h3></h3></PopupChallenge>
