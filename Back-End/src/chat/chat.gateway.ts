@@ -6,7 +6,6 @@ import {
 } from '@nestjs/websockets';
 import { AuthService } from 'src/auth/auth.service';
 
-
 let users = [];
 let roomUsers = [];
 

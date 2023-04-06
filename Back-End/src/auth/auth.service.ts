@@ -269,7 +269,7 @@ export class AuthService {
  //     const decoded = this.jwt.verify(token);
    //   if (!decoded)
       {
-        return ("KO");
+        return ("OK");
    //     throw new BadRequestException('Invalid access token');
       }
    //   const check2 = await this.userService.getByEmail(decoded.email);

@@ -4,7 +4,8 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ChatGateway } from './chat/chat.gateway';
-// import { GlobalGateway } from './gateway/global.gateway';
+import { GlobalGateway } from './gateway/global.gateway';
+import { GlobalModule } from './gateway/global.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ChatMessModule } from './chat/chat-mess/chat-mess.module';
 import { DirMessModule } from './chat/dir-mess/dir-mess.module';
@@ -13,6 +14,7 @@ import { GameModule } from './game/game.module';
 // import { GameGateway } from './game/game.gateway';
 import { FriendshipModule } from './friendship/friendship.module';
 import { GameGateway } from './game/game.gateway';
+import { GlobalService } from './gateway/global.service';
 
 @Module({
 	imports: [
@@ -28,12 +30,15 @@ import { GameGateway } from './game/game.gateway';
 		ChatMessModule,
 		DirMessModule,
 		GameModule,
+		GlobalModule,
 
 		// PassportModule.register({ defaultStrategy: '42' }),
 	],
-	providers: [ChatGateway,
-    // GameGateway,
-//    GlobalGateway,
+	providers: [
+		ChatGateway,
+    	GameGateway,
+    	GlobalGateway,
+		GlobalService,
     ],
 	exports: [JwtModule],
 })
