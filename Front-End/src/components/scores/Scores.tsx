@@ -4,7 +4,7 @@ import SideBar from '../SideBar';
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
-import UserChart from '../auth/UserChart'
+import UserChart from './UserChart'
 import ChatReq from "./../chat/Chat.req"
 
 const Scores = () => {
@@ -216,9 +216,22 @@ const Scores = () => {
           </tbody>
         </table>
       </div>
-      </>
-     )
-  }
+     
+     
+
+     
+      <div className="pos">
+                {allUsers.map( (g) => {
+                  return(
+                    <UserChart key={g?.id} userName={g?.username}  h={(getScore(g))}/>
+                  )
+                })
+              }
+
+        </div>
+        </>
+    )
+    }
 
 
 export default Scores;

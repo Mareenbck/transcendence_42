@@ -14,7 +14,11 @@ const UserChart= (props: any) => {
                 <p>{props.userName}</p>
                 <p>{props.h}</p>
             </div>
-            <img  src={props.image}/>
+            <img src={props.image}  style={{width: "70%", 
+                                argin: "0",
+                                padding: "0",
+                                borderRadius: "100%",
+        }}/>
         </div> 
     )
 

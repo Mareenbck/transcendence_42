@@ -6,6 +6,8 @@ import Winner from './Winner'
 import './Game.css'
 import type { gameInit, gameState, gameWinner, player } from './type'
 import { socket } from '../../service/socket';
+import ColorModal from './modal.tsx/ColorModal';
+
 
 
 function Game() {
@@ -13,6 +15,50 @@ function Game() {
     const [users, setOnlineSpectators] = useState<[player]> ();
     const [players, setOnlinePlayers] = useState<[player]> ();
 
+
+    // Pour partis de Modal select Color,
+    
+    const [ShowColorModal, setShowColorModal] = useState(false); 
+    const handleColorModal = () => {
+        setShowColorModal(true)
+    }
+    const handleClose = () => {
+        setShowColorModal(false)
+    }
+
+
+    const [ShowCamva, setShowCamva] = useState(true); 
+    const [backColorGame, setbackColorGame] = useState<string>("black");
+    const changColorToRed= () => {    
+        setbackColorGame("red");
+        setShowColorModal(false);
+        ShowCamva? setShowCamva(false): setShowCamva(true);
+    }
+    
+    const changColorToBlue= () => {    
+        setbackColorGame("blue");
+        setShowColorModal(false);
+        ShowCamva? setShowCamva(false): setShowCamva(true);
+    }
+
+    const changColorToGreen= () => {    
+        setbackColorGame("green");
+        setShowColorModal(false);
+        ShowCamva? setShowCamva(false): setShowCamva(true);
+    }
+
+    const changColorToBlack= () => {    
+        setbackColorGame("black");
+        setShowColorModal(false);
+        ShowCamva? setShowCamva(false): setShowCamva(true);
+    }
+
+    useEffect(() => {
+
+    }, [backColorGame])
+
+    
+    //**** *******************************************************************/
 
     const [gameinit, setGameInit] = useState<gameInit>(
         {
@@ -119,7 +165,19 @@ console.log("event.code = ", event.code);
             <div tabIndex={0} onKeyDown={keyDownHandler}>
                 <h2> Game </h2>
                 <div>
-                    <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} />
+                     <button onClick={handleColorModal}>Change Color</button>
+
+                    { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+                    {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed} 
+                                                                              changColorToBlue={changColorToBlue}
+                                                                              changColorToGreen={changColorToGreen}
+                                                                              changColorToBlack={changColorToBlack}
+                                                                              />}
+                    {!ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+
+                    
+                {/* <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner}   //>*/}
+                    
                 </div>
             </div>
         );
@@ -134,6 +192,20 @@ console.log("event.code = ", event.code);
             </div>
         );
     }
+    /*return (
+        <div tabIndex={0} onKeyDown={keyDownHandler}>
+            
+                <h2 > Game </h2>
+                <div>
+                     <button onClick={handleColorModal}>Change Color</button>
+                   
+                    {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+                    {ShowColorModal && <ColorModal handelClose={handleClose}  changColor={changColor} />}
+                    {!ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+                </div>
+              
+        </div>
+    );*/
 }
 
 export default Game;
