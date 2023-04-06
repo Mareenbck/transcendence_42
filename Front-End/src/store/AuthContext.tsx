@@ -48,7 +48,7 @@ export const AuthContextProvider = (props: any) => {
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			refreshHandler();
-		}, 1 * 60 * 1000); // Refresh every 10 minutes
+		}, 10 * 60 * 1000); // Refresh every 10 minutes
 		return () => clearInterval(intervalId);
 	}, []);
 
