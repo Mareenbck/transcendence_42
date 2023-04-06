@@ -14,6 +14,13 @@ export class CreateChatroomDto
 
 export class ParticipantsOnChannel
 {
-  role: string;
-  status: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(45)
+  name:  string;
+
+  isPublic: boolean;
+  isPrivate: boolean;
+  isProtected: boolean;
 }
