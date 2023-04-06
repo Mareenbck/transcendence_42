@@ -81,6 +81,16 @@ export class AuthService {
 		return tokens;
 	}
 
+	async updateStatus(tokens: AuthTokenDto) {
+		const user = await this.verifyAccessToken(tokens.access_token);
+		if (!user)
+			throw new ForbiddenException('Credentials incorrect');
+		await this.prisma.user.update({
+				where: { id: user.id },
+				data: { status: 'ONLINE' },
+			});
+	}
+
 	async signin_42(profile: Profile_42): Promise<User> {
 		// check if user exists
 		let user = await this.userService.getByEmail(profile.email);
@@ -107,17 +117,19 @@ export class AuthService {
 		return user;
 	}
 
-	async signout(userId: number): Promise<void> {
-		// delete refresh token	aaaq	 K NNKJ (log out)
-		await this.prisma.user.updateMany({
+	async signout(user: any) {
+		const { userId } = user;
+		const delog = await this.prisma.user.updateMany({
 			where: {
 				id: userId,
 				hashedRtoken: { not: null },
 			},
 			data: {
 				hashedRtoken: null,
+				status: 'OFFLINE',
 			},
 		});
+		return delog;
 		//sending status update to the front
 		// this.appGateway.offlineFromService(userId);
 	}

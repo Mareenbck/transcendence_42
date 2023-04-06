@@ -126,6 +126,30 @@ export const AuthContextProvider = (props: any) => {
 		}
 	};
 
+	const fetchLogout = async () => {
+		try {
+			const response = await fetch('http://localhost:3000/auth/logout', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				},
+				// body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
+			});
+			const data = await response.json();
+			if (response.ok) {
+				setToken("");
+				setUserId("");
+				setUsername("");
+				setAvatar("");
+				localStorage.clear();
+			}
+			return "success";
+		} catch (error) {
+			return console.log("error", error);
+		}
+	};
+
 	const loginHandler = async (token: string, userId: string, refreshToken: string) => {
 		setToken(token);
 		setRefreshToken(refreshToken);
@@ -136,12 +160,8 @@ export const AuthContextProvider = (props: any) => {
 		return data.twoFA;
 	};
 
-	const logoutHandler = () => {
-		setToken("");
-		setUserId("");
-		setUsername("");
-		setAvatar("");
-		localStorage.clear();
+	const logoutHandler = async () => {
+		await fetchLogout();
 	};
 	//si presence du token -> logged
 	const userIsLoggedIn = !!token;
