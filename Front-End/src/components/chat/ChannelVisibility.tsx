@@ -16,40 +16,41 @@ export default function ChannelVisibility(props: any) {
 
   const [openModal, setOpenModal] = useState(false);
   const userContext = useContext(AuthContext);
+  const[clicked, setClicked] = useState(false);
   
   
   function getIconByChannelType() {
     let icon;
         
-    if (props.visibility === "PRIVATE") {
+    if (props.visibility === "PRIVATE" && !clicked) {
       icon = (
         <>
+        <div className="visibility-icon">
           <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
           <LockIcon className="channel-icon" fontSize="small" />
-          <IconButton onClick={() => setOpenModal(true)}>
-            <Settings fontSize="small" />
-          </IconButton>
+        </div>
         </>
 
       );
-    } else if (props.visibility === "PWD_PROTECTED") {
+    } else if (props.visibility === "PWD_PROTECTED" && !clicked) {
       icon = (
         <>
+         <div className="visibility-icon">
           <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
           <KeyIcon className="channel-icon" fontSize="small" />
           <IconButton onClick={() => setOpenModal(true)}>
             <Settings fontSize="small" />
           </IconButton>
+        </div>
         </>
       );
-    } else {
+    } else if (props.visibility == "PUBLIC" && !clicked) {
       icon = (
-        <>          
-        <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
-          <PublicIcon className="channel-icon" fontSize="small" />
-          <IconButton onClick={() => setOpenModal(true)}>
-            <Settings fontSize="small" />
-          </IconButton>
+        <>   
+        <div className="visibility-icon">
+          <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
+          <PublicIcon className="channel-icon" fontSize="small" />        
+        </div>       
         </>
       );
     }
@@ -60,9 +61,12 @@ export default function ChannelVisibility(props: any) {
   const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const res = await ConversationReq.joinTable(channelId, userContext.token, parseInt(userContext.userId))
-    console.log("RES")
-    console.log(res)
+    // console.log("RES")
+    // console.log(res)
+    setClicked(true);
   }
+
+
   return (
     <div>
       {getIconByChannelType()}

@@ -452,7 +452,7 @@ return (
         <div className="chatMenu">
           <div className="chatMenuW">
             <form onSubmit={handleFormSubmit}>
-              <button onClick={handleCreateChannel}>Create new channel</button>
+              <button className='create-channel-button' onClick={handleCreateChannel}>Create new channel</button>
               {showPopUp && (
                   <PopUp
                   title="Création d'un nouveau channel"
@@ -468,7 +468,7 @@ return (
                 <div key={c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
                     <div className="conversation">
                       <div className="conversation-name">
-                        <ListItem>
+                        <ListItem className='list-item-channel'>
                           <Conversation name={c.name}/>
                         </ListItem>
                       </div>
