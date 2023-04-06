@@ -65,15 +65,13 @@ export class AuthController {
 	}
 
 	@Post('refresh')
-	@UseGuards(LocalAuthGuard)
-	async refresh(@Body() authTokenDto: AuthTokenDto, @GetUser() user: any) {
+	// @UseGuards(JwtGuard)
+	async refresh(@Body() authTokenDto: AuthTokenDto) {
 		const refreshToken = authTokenDto.refresh_token;
-		console.log("refreshToken--->")
-		console.log(refreshToken)
 		if (!refreshToken) {
 			throw new BadRequestException('No refresh token provided');
 		}
-		return await this.authService.refresh_token(user.id, refreshToken);
+		return await this.authService.refresh_token(refreshToken);
 	}
 
 }

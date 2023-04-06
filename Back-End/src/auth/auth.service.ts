@@ -17,6 +17,20 @@ export interface Profile_42 {
 	ftAvatar: string;
 }
 
+interface DecodedToken {
+	header: {
+	  alg: string,
+	  typ: string
+	},
+	payload: {
+	  sub: string,
+	  email: string,
+	  iat: number,
+	  exp: number
+	},
+	signature: string
+  }
+
 @Injectable()
 export class AuthService {
 	constructor(private userService: UserService, private prisma: PrismaService, private jwt: JwtService, private config: ConfigService) {}
@@ -131,20 +145,21 @@ export class AuthService {
 		};
 	}
 
-	async refresh_token(userId: number, refreshToken: string): Promise<AuthTokenDto> {
-		// Find user by id
-		const user = await this.prisma.user.findUnique({
-			where: {
-				id: userId,
-			},
-		});
+	async refresh_token(refreshToken: string): Promise<AuthTokenDto> {
+		const decodedToken = this.jwt.decode(refreshToken, { complete: true }) as DecodedToken;
+		if (!decodedToken) {
+			throw new BadRequestException('Invalid token');
+		}
+		const userId = decodedToken.payload.sub;
+		const user = await this.userService.getUser(parseInt(userId));
 		// Check if user exists and is logged in
 		if (!user || !user.hashedRtoken)
 			throw new ForbiddenException('Invalid Credentials');
 		// Verify hashed Refresh Token
 		const pwMatches = await argon.verify(user.hashedRtoken, refreshToken);
-		if (!pwMatches)
+		if (!pwMatches) {
 			throw new ForbiddenException('Invalid Credentials');
+		}
 		// Generate new tokens
 		const tokens = await this.generateTokens(user.id, user.email);
 		// Update Refresh Token - if user is logged in and valid

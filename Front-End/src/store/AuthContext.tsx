@@ -48,9 +48,9 @@ export const AuthContextProvider = (props: any) => {
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			refreshHandler();
-		}, 1 * 60 * 1000); // Refresh every 10 minutes
+		}, 10 * 60 * 1000); // Refresh every 10 minutes
 		return () => clearInterval(intervalId);
-	}, []);
+	}, [refreshToken]);
 
 	const updateAvatar = (avatarUrl: string) => {
 		if (avatarUrl) {
@@ -104,22 +104,16 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const refreshHandler = async () => {
-		console.log("refreshToken dans context")
-		console.log(refreshToken)
-		console.log("token dans context")
-		console.log(token)
 		try {
 			const response = await fetch('http://localhost:3000/auth/refresh', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`
+					// Authorization: `Bearer ${token}`
 				},
 				body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
 			});
 			const data = await response.json();
-			console.log("data dans refreshHandler")
-			console.log(data)
 			if (response.ok) {
 				setToken(data.access_token);
 				setRefreshToken(data.refresh_token);
