@@ -88,15 +88,33 @@ const Friends = () => {
 				))}
 			</List>
 					<h2 className="title-users" >Offline</h2>
-					<ul>
-						{offlineFriends.map(friend => (
-							<li key={friend.id}><img src={friend.avatar}></img>{friend.username}</li>))}
-					</ul>
+					{offlineFriends.map(user => (
+					<ListItem key={user.id}>
+						<ListItemAvatar>
+							<MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={user.avatar} ftAvatar={user.ftAvatar} id={user.id} />
+						</ListItemAvatar>
+						<Link to={`/users/profile/${user.id}`} className="profile-link">{user.username}</Link>
+						<br />
+						<div onClick={(event: FormEvent) => { handleDemand(event, user.id) }} className='add-friend'>
+							<PersonAddIcon />
+						</div>
+						<Link to="/chat/message" className='add-friend'> <ChatBubbleIcon /></Link>
+					</ListItem>
+				))}
 					<h2 className="title-users">Playing</h2>
-					<ul>
-						{playingFriends.map(friend => (
-							<li key={friend.id}><img src={friend.avatar}></img>{friend.username}</li>))}
-					</ul>
+					{playingFriends.map(user => (
+					<ListItem key={user.id}>
+						<ListItemAvatar>
+							<MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={user.avatar} ftAvatar={user.ftAvatar} id={user.id} />
+						</ListItemAvatar>
+						<Link to={`/users/profile/${user.id}`} className="profile-link">{user.username}</Link>
+						<br />
+						<div onClick={(event: FormEvent) => { handleDemand(event, user.id) }} className='add-friend'>
+							<PersonAddIcon />
+						</div>
+						<Link to="/chat/message" className='add-friend'> <ChatBubbleIcon /></Link>
+					</ListItem>
+				))}
 			</Container>
 		</>
 	  );
