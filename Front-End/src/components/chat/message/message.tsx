@@ -1,22 +1,17 @@
 import './message.css'
 import {format} from 'timeago.js'
+import MyAvatar from '../../user/Avatar';
 
-export default function Message2({ message2, own, avatar }) {
-
- // console.log(message2);
-
+export default function Message2({ message2, own, user, authCtx }) {
   return (
     <div className= {own ? "message own" : "message"}>
       <div className="messageTop">
-        <img
-          className="messageImg"
-          src={ avatar ? avatar : "http://localhost:8080/public/images/no-avatar.png"}
-          alt="" />
+       <MyAvatar authCtx={authCtx} id={user.id} style="xs" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
         <p className="messageText">
          {message2.content}
         </p>
       </div>
-      <div className="messageBottom" > {format(message2.createdAt)}</div>
+      <div className="messageBottom" > {user.username} - {format(message2.createdAt)}</div>
     </div>
 
   );
