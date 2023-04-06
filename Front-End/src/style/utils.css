@@ -1,0 +1,22 @@
+.volet-container {
+	position: fixed;
+	right: 60px;
+	transform: translate(0, -50%);
+}
+
+.add-friend {
+    color: #699BF7;
+    font-size: 35px;
+	/* width: fit-content; */
+	cursor: pointer;
+	margin-left: 13px;
+    margin-bottom: 7px;
+}
+
+.add-friend:hover {
+    color: #C7B9FF;
+}
+
+.profile-link {
+	color: black
+}

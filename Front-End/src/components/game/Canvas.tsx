@@ -2,11 +2,11 @@ import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
 import type {gameInit, gameState, gameWinner} from './type'
 
-const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner} ): JSX => {
+const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, backColorGame: backColorGame} ): JSX => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
     const gamewinner = props.gamewinner;
- 
+    const backColorGame = props.backColorGame;
     const canvasRef = useRef<HTMLCanvasElement>(null);  
     
     useEffect(() => {
@@ -15,8 +15,11 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
 
             if (context ) {
                 // Draw the table
-                context.fillStyle = "black";
+                context.beginPath();
+                //context.fillStyle = "black";
+                context.fillStyle = backColorGame;
                 context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
+                context.closePath();
 
                 // center dotted line
                 context.setLineDash([5, 5]);
@@ -41,8 +44,8 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
                 //Score
                 context.font = "40px Verdana";
                 context.lineWidth = 2;
-                context.fillText(`${gamestate.left}`, gameinit.table_width/2 - 80, 50);
-                context.fillText(`${gamestate.right }`, gameinit.table_width/2 + 50, 50);
+                context.fillText(`${gamestate.scoreL}`, gameinit.table_width/2 - 80, 50);
+                context.fillText(`${gamestate.scoreR }`, gameinit.table_width/2 + 50, 50);
             
 
                 if (gamewinner.leave){
@@ -53,23 +56,23 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
                     context.font = "40px Verdana";
                     context.lineWidth = 2;
                     context.fillText(`${gamewinner.leave}`, 100, gameinit.table_height/2);
-                    context.fillText("left the game" , gameinit.table_width/2 + 100, gameinit.table_height/2);
+                    context.fillText("scoreL the game" , gameinit.table_width/2 + 100, gameinit.table_height/2);
                 }
                 //if winner
-                if (gamewinner.winner){
-                    // context.fillStyle = "#FDD9";
-                    // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
-                    // context.closePath();
+                // if (gamewinner.winner){
+                //     // context.fillStyle = "#FDD9";
+                //     // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
+                //     // context.closePath();
 
-                    context.font = "40px Verdana";
-                    context.lineWidth = 2;
-                    context.fillText("WINNER:", 100, gameinit.table_height - 100);
-                    context.fillText(`${gamewinner.winner}`, gameinit.table_width/2 + 100, gameinit.table_height - 100);
-                }
+                //     context.font = "40px Verdana";
+                //     context.lineWidth = 2;
+                //     context.fillText("WINNER:", 100, gameinit.table_height - 100);
+                //     context.fillText(`${gamewinner.winner}`, gameinit.table_width/2 + 100, gameinit.table_height - 100);
+                // }
             }
         }
 
-    }, [gamestate, gamewinner]);
+    }, [gameinit, gamestate, gamewinner]);
      
     return (<canvas className='field' ref={canvasRef} width={gameinit.table_width} height={gameinit.table_height} />)
 }

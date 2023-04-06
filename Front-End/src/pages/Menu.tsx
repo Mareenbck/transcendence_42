@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useContext } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import AuthContext from "../store/AuthContext";
 import SideBar from '../components/SideBar'
 import style from '../style/Menu.module.css'
+import '../style/MenuBis.css'
+import Friends from "../components/friends/Friends";
+import ButtonToggle from "../components/utils/ButtonToggle";
+import { Drawer } from '@mui/material';
+import Card from "../components/utils/Card";
 
 const Menu = () => {
 	const authCtx = useContext(AuthContext);
@@ -13,35 +18,21 @@ const Menu = () => {
 
 	return (
 		<>
-		 <div className= {style.mainPos}>
-			{isLoggedIn && <SideBar className={style.position}  title="Welcome"   isLoggedIn = {isLoggedIn} />}
-			<div className={style.position}>
-				{!isLoggedIn && <Navigate to="/" replace={true} />}
-				{isLoggedIn && <h2 >WELCOME</h2>}
-
-				{/*isLoggedIn && <p>Votre username : {authCtx.username} </p>*/}
-				{/*isLoggedIn && <button onClick={authCtx.logout}>LOGOUT </button>*/}
-				{/*<Link to={`/users/profile/${id}`} className='btn'>Profile page</Link>*/}
-				{/*<Link to="/chat/message">Chat</Link>*/}
-
-				<div className={style.card}>
-					{isLoggedIn && <p >Challeng your frinds</p>}
-					{isLoggedIn && <p className={style.cardTit}> chose one of your online firends and play againts them in png match</p>}
+		<div className={style.mainPos}>
+			<SideBar title="Profile" />
+			<div className="container-menu">
+				<h2 >Welcome {authCtx.username}</h2>
+				<div className="card-menu">
+					<Card color='blue' title="Challenge your friend" body="play" type="menu" height="120px" width="725px"></Card>
+					<Card color='red' title="Watch a match" body="watch" type="menu" height="120px" width="725px"></Card>
+					<Card color='green' title="Chat with your friend" body="chat" type="menu" height="120px" width="725px"></Card>
 				</div>
-
-				<div className={style.card}>
-					{isLoggedIn && <p >Watch a match</p>}
-					{isLoggedIn && <p className={style.cardTit}> Join a room and attend a pong match between yours frinds</p>}
-				</div>
-				<div className={style.card}>
-					{isLoggedIn && <p >Chat with your frinds</p>}
-					{isLoggedIn && <p className={style.cardTit}> Join a chatroom or discuss privetly with your frinds</p>}
-				</div>
-
 			</div>
-		 </div>
+			{!isLoggedIn && <Navigate to="/" replace={true} />}
+			</div>
+			<ButtonToggle />
 		</>
-	)
-}
+		)
+	}
 
-export default Menu
+	export default Menu

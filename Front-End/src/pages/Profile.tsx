@@ -5,13 +5,14 @@ import AuthContext from '../store/AuthContext';
 import style from '../style/Menu.module.css'
 import MyProfile from '../components/user/MyProfile';
 import UserProfile from '../components/user/UserProfile';
+import ButtonToggle from '../components/utils/ButtonToggle';
 
 const Profile = (props: any) =>  {
 	const { id } = useParams();
 	const authCtx = useContext(AuthContext);
 	const isMyProfile = parseInt(authCtx.userId) === parseInt(id);
 	const isLoggedIn = authCtx.isLoggedIn;
-
+//m
 	return (
 		<>
 		<div className={style.mainPos}>
@@ -21,6 +22,7 @@ const Profile = (props: any) =>  {
 					): (
 						<UserProfile id={id} ></UserProfile>
 						)}
+				<ButtonToggle ></ButtonToggle>
 				</div>
 			{!isLoggedIn && <Navigate to="/" replace={true} />}
 		</div>

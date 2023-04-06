@@ -1,3 +1,18 @@
+export interface player{
+    socket: any;
+	userId: any;
+}
+// export interface profile{
+// 	socketId: any; //socketId: any [];
+// 	userId: any;
+// }
+
+// export interface player{
+// 	profile: profile;
+// 	racket: racket;
+// 	score: number;
+// }
+
 export interface ball {
     x: number;
     y: number;
@@ -12,8 +27,8 @@ export interface gameState {
     racket1: racket;
     racket2: racket;
     ball: ball;
-    right: number;
-    left: number
+    scoreR: number;
+    scoreL: number
 }
 
 export interface gameInit {
@@ -22,11 +37,27 @@ export interface gameInit {
     racket_width: number,
     racket_height: number,
     ballR: number
-    right: number;
-    left: number
+    scoreR: number;
+    scoreL: number
 }
 
 export interface gameWinner {
-    winner: string;
+    winner: any;
     leave: string;
+}
+
+<<<<<<< HEAD
+export interface star {
+    centerX: number;
+    centerY: number; // the center point of the star
+    points: number; //the number of points on the exterior of the star
+    inner: number;//the radius of the inner points of the star
+    outer: number;//the radius of the outer points of the star
+    fill: string;
+    stroke: string;//the fill and stroke colors to apply
+    line: number; //the linewidth of the stroke
+=======
+export  interface backColorGame{
+    backColorGame: string;
+>>>>>>> chenge color
 }

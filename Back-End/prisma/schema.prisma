@@ -19,7 +19,7 @@ model User {
 	email			          String		  @unique
 	hash			          String
 	username		        String		  @unique
-	status			        UserStatus	@default(ONLINE)
+	status			        UserStatus	@default(OFFLINE)
 	avatar			        String?
 	ftAvatar		        String?
 

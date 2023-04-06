@@ -8,6 +8,7 @@ import style from '../style/Menu.module.css'
 import { TextField } from '@mui/material';
 import Switch2FA from '../components/settings/Switch2FA';
 import ButtonSettings from '../components/settings/ButtonSettings';
+import ButtonToggle from '../components/utils/ButtonToggle';
 
 
 
@@ -124,6 +125,7 @@ const Setting = () => {
 			<div className={style.mainPos}>
 				<SideBar title="Settings" />
 			<div className="contain-set">
+
 				<div className="section">
 					<h3>USERNAME</h3>
 					<p>Your username has to be unique and at most 20 characters long</p>
@@ -150,6 +152,7 @@ const Setting = () => {
 				</div>
 			</div>
 			</div>
+			<ButtonToggle ></ButtonToggle>
 			{!isLoggedIn && <Navigate to="/" replace={true} />}
 		</>
 	)

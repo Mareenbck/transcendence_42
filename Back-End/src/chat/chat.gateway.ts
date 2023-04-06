@@ -4,6 +4,8 @@ import {
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
+import { AuthService } from 'src/auth/auth.service';
+
 
 let users = [];
 let roomUsers = [];
@@ -22,6 +24,18 @@ const getUser = (userId) => {
   return users.find(user => +user.userId.userId === +userId)
 }
 
+const getUserIdBySocket = (socketId) => {
+  return
+}
+
+const removeUser2 = (socketId) => {
+  const user = users.find(user => +user.socketId === +socketId);
+  if (user) {
+    users = users.filter(userX => +userX.userId.userId !== +user.userId.userId);
+    roomUsers = roomUsers.filter( room => +room.socketId !== +socketId);
+  };
+}
+
 const addRoomUser = (roomId, userId, socketId) => {
   roomUsers = roomUsers.filter( room => +room.userId !== +userId);
   roomId && roomUsers.push({roomId, userId, socketId});
@@ -31,17 +45,32 @@ const addRoomUser = (roomId, userId, socketId) => {
 @WebSocketGateway(8001, { cors: 'http://localhost/chat/message' })
 
 export class ChatGateway {
+constructor(private authService: AuthService){}
   @WebSocketServer()
   server;
 
   onModuleInit(){
     this.server.on('connection', (socket) => {
       console.log(socket.id);
-      console.log('Connected');
+      console.log('Connected CHAT');
 
-      socket.on("addUser", (userId) => {
-        addUser(userId, socket.id);
-        this.server.emit("getUsers", users);
+      socket.on("addUserC", (userId) => {
+        if (userId.token){
+          try {
+            this.authService.verifySocketToken(userId.token);
+            addUser(userId, socket.id);
+            this.server.emit("getUsersC", users);
+                console.log(userId.userId);
+                console.log('Connected CHAT');
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        else {
+          this.server.to(socket.socketId).emit("notAuth", {
+            content: "Not Authorised User",
+          });
+        }
       });
 
       socket.on("userRoom", ({roomId, userId}) => {
@@ -104,10 +133,22 @@ export class ChatGateway {
         };
       });
 
+      socket.on("InviteGame", ({author, player,}) => {
+        const fromU = getUser(author);
+        const toU = getUser(player);
+        if (toU) {
+          this.server.to(toU.socketId).emit("wasInvited", {
+            from: fromU.userId,
+            to: toU.userId,
+          });
+        };
+      });
+
       socket.on('disconnect', () => {
         console.log(socket.id);
-        console.log('Disconnected');
+        console.log('Disconnected CHAT');
         removeUser(socket.id);
+     //   removeUser2(socket.id);
         this.server.emit("getUsers", users);
       });
     }

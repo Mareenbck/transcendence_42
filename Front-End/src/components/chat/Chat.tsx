@@ -1,6 +1,9 @@
 import { useEffect, useContext, useState, useRef, FormEvent } from 'react'
+import { Link } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
 import io, { Socket } from "socket.io-client";
+//import io from "socket.io-client";
+//import { Socket } from '../../service/socket';
 import MessagesInput from "./MessagesInput"
 import Conversation from "./conversation/Conversation"
 import ConversationReq from "./conversation/ConversationRequest"
@@ -9,10 +12,13 @@ import ChatReq from "./Chat.req"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
 import './Chat.css'
+import '../../style/Friends.css';
 import React from 'react';
 import PopUp from './PopUpChannel';
 import ChannelVisibility from './ChannelVisibility';
 import { ListItem } from '@mui/material';
+import PopupChallenge from './PopupChallenge';
+import MyAvatar from '../user/Avatar';
 
 
 function Chat() {
@@ -37,6 +43,8 @@ function Chat() {
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
   const [unfromBlock, setUnfromBlock] = useState<number>();
+  const [invited, setInvited] = useState ();
+  const [channelName, setchannelName] = useState ("");
 
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
@@ -44,6 +52,7 @@ function Chat() {
 
   useEffect(() => {
     socket.current = io("ws://localhost:8001")
+//    socket.current.data.fromPage = "chat";
 
     socket.current.on("getMChat", (data)=> {
       setAMessageChat({
@@ -55,6 +64,8 @@ function Chat() {
     })
     
     socket.current.on("getMD", (data)=> {
+      console.log(user);
+ //     console.log(data);
       setAMessageD({
         content: data.content,
         author: data.author,
@@ -62,6 +73,10 @@ function Chat() {
         createdAt: Date.now(),
       });
     });
+//    return () => {
+//      socket.current.off("getMChat");
+//      socket.current.off("getMD");
+//    }
   }, []);
 
   useEffect(() => {
@@ -74,12 +89,26 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    socket.current.emit("addUser", user);
+    socket.current.emit("addUserC", user);
   },[user])
 
   useEffect(() => {
-    socket.current.on("getUsers", users => {
+    socket.current.on("getUsersC", users => {
       setOnlineUsers(users);
+    });
+  });
+
+ /* useEffect(() => {
+    socket.current.on("notAuth", data => {
+      window.location.replace('/root');
+    });
+  });
+*/
+
+  useEffect(() => {
+    socket.current.on("wasInvited", data => {
+      console.log(data);
+      setInvited(data.from.username);
     });
   });
 
@@ -189,7 +218,7 @@ function Chat() {
 ////////////////////////////////////////////////
 
   useEffect(() => {
-    if (allUsers !== undefined && fromBlock && fromBlock !== user.userId.userId) {
+    if (allUsers !== undefined && user.userId && fromBlock && fromBlock !== user.userId.userId) {
       const i = allUsers.findIndex(userX => +userX.id === +id);
       const j = allUsers.find(userX => +userX.id === +id);
       j?.blockedFrom.push(fromBlock);
@@ -201,7 +230,7 @@ function Chat() {
   }, [fromBlock]);
 
   useEffect(() => {
-    if (allUsers !== undefined && unfromBlock !== user.userId.userId) {
+    if (allUsers !== undefined && user.userId && unfromBlock !== user.userId.userId) {
       const i = allUsers.findIndex(userX => +userX.id === +id);
       const j = allUsers.find(userX => +userX.id === +id);
       j.blockedFrom = j.blockedFrom.filter(u => +u.id !== unfromBlock);
@@ -284,7 +313,17 @@ function Chat() {
 
   const getAvatar = (userId) => {
     const u = allUsers.find(user => +user?.id === +userId);
-    return (u && u.avatar);
+    console.log(u);
+    if (u && !u.avatar === "")
+      return (u.ftavatar);
+    else
+      return (u.avatar);
+  };
+
+  const getName = (userId) => {
+    console.log(user);
+    const u = allUsers.find(user => +user?.id === +userId);
+    return (u.username);
   };
 
   const getUser = (userId) => {
@@ -305,13 +344,22 @@ function Chat() {
     }
 
   const getDirect = (userX) => {
-    const i = getUser(+id);
-    if (i && (i.blockedFrom.find(u => +u.id === +userX.userId) === undefined ) && (i.blockedFrom.find((i)=> +id === +i) === undefined ))
+    const gUser = getUser(+id);
+    if (gUser && (gUser.blockedFrom.find(u => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u)=> +userX.userId === +u) === undefined ))
     {
       setCurrentDirect(userX);
-      setCurrentChat(null)
+      setCurrentChat(null);
     }
   }
+
+  const inviteGame = (playerId) => {
+    console.log(playerId);
+    socket?.current.emit("InviteGame", {
+      author: +id,
+      player: +playerId,
+    });
+  }
+
 
 ////////////////////////////////////////////////
 // Partie V : handle submit...
@@ -342,7 +390,6 @@ function Chat() {
   
 // Direct message
   const handleSubmitD = async (e: FormEvent)=> {
-
     e.preventDefault();
     const r = currentDirect?.userId ? +currentDirect?.userId : +currentDirect?.id;
     const messageD = {
@@ -367,7 +414,6 @@ function Chat() {
   }
 
 
-  
 ////////////////////////////////////////////////
 // Partie VI : Scroll to view
 ////////////////////////////////////////////////
@@ -401,6 +447,7 @@ const [showPopUp, setShowPopUp] = useState(false);
 return (
   <>
   {" "}
+
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuW">
@@ -436,14 +483,15 @@ return (
           <div className="line-chat"></div>
         <div className="chatBox">
           <div className="chatBoxW">
+  <PopupChallenge triger={invited} setTriger={setInvited}> <h3></h3></PopupChallenge>
           {
             currentChat ?
             <>
               <div className="chatBoxTop">
                 { messages2.length ?
                   messages2.map((m) => (
-                    <div key={m.createdAt} ref={scrollRef}>
-                      <Message2 message2={m} avatar={getAvatar(m.authorId)} own={m.authorId === +id} />
+                    <div key={m?.createdAt} ref={scrollRef}>
+                      <Message2 message2={m} user={getUser(m?.authorId)} authCtx={user} own={m?.authorId === +id} />
                     </div>
                   )) : <span className="noConversationText2" > No message in this room yet. </span>
                 }
@@ -467,7 +515,7 @@ return (
                 { messagesD.length ?
                     messagesD?.map((m) => (
                       <div key={m.createdAt} ref={scrollRef}>
-                        <MessageD messageD={m} avatar={getAvatar(m.author)} own={m?.author === +id} />
+                        <MessageD messageD={m} user={getUser(m.author)} authCtx={user} own={m?.author === +id} />
                       </div>
                   )) : <span className="noConversationText2" > No message with this friend yet. </span>
                 }
@@ -503,24 +551,23 @@ return (
             <div className="chatOnline">
               { onlineUsers ? onlineUsers?.map((o) => (
                 +o?.userId.userId !== +id ?
-                  <div  key={o?.userId.userId} className={amIBlocked(o?.userId.userId)}  >
-                    <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
-                      <div className="chatOnlineImgContainer">
-                        <img  className="chatOnlineImg"
-                          src={ getAvatar(o?.userId.userId) ? getAvatar(o?.userId.userId) : "http://localhost:8080/public/images/no-avatar.png"}
-                          alt=""
-                        />
+                <div  key={o?.userId.userId} className={amIBlocked(o?.userId.userId)}  >
+                    <Link to={'/game/play'} onClick={() => inviteGame(o?.userId.userId)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+                    <Link to={`/users/profile/${o?.userId.userId}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
+                  <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
+                    <div className="chatOnlineImgContainer">
+                     <MyAvatar authCtx={user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
                         <div className="chatOnlineBadge"></div>
                       </div>
                       <span className="chatOnlineName"> {o?.userId.username} </span>
                     </div>
                     { isHeBlocked(o.userId.userId) ?
                       <button className="chatSubmitButton" onClick={() => {setToBlock(getUser(o.userId.userId))}} >
-                          Block
+                        <i className="fa fa-unlock" aria-hidden="true"></i>
                       </button>
                      :
                        <button className="chatSubmitButton2" onClick={() => {setToUnblock(getUser(o.userId.userId))}} >
-                          UnBlock
+                        <i className="fa fa-lock" aria-hidden="true"></i>
                       </button>
                     }
                   </div>
@@ -530,22 +577,21 @@ return (
               { otherUsers ? otherUsers?.map((o) => (
                 +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
                   <div  key={o?.id} className={amIBlocked(o?.id)} >
+                    <Link to={'/game/play'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+                    <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                     <div className="fname" onClick={()=> {getDirect(o)}} >
                       <div className="chatOnlineImgContainer">
-                        <img  className="chatOnlineImg"
-                          src={ o?.avatar ? o?.avatar : "http://localhost:8080/public/images/no-avatar.png"}
-                          alt=""
-                        />
+                        <MyAvatar authCtx={user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>
                       </div>
                       <span className="chatOnlineName"> {o?.username} </span>
                     </div>
                     { !o.blockedFrom.find((u)=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i)=>(+user.userId === +i)) ?
                       <button className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
-                          Block
+                          <i className="fa fa-unlock" aria-hidden="true"></i>
                       </button>
                      :
                        <button className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
-                          UnBlock
+                        <i className="fa fa-lock" aria-hidden="true"></i>
                       </button>
                     }
                   </div>

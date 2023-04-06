@@ -32,6 +32,8 @@ function Home() {
 		}, 500);
 	};
 
+
+
 	return (
 		<main className='App'>
 		<div className="container">

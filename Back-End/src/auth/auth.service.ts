@@ -17,6 +17,20 @@ export interface Profile_42 {
 	ftAvatar: string;
 }
 
+interface DecodedToken {
+	header: {
+	  alg: string,
+	  typ: string
+	},
+	payload: {
+	  sub: string,
+	  email: string,
+	  iat: number,
+	  exp: number
+	},
+	signature: string
+  }
+
 @Injectable()
 export class AuthService {
 	constructor(private userService: UserService, private prisma: PrismaService, private jwt: JwtService, private config: ConfigService) {}
@@ -67,6 +81,16 @@ export class AuthService {
 		return tokens;
 	}
 
+	async updateStatus(tokens: AuthTokenDto) {
+		const user = await this.verifyAccessToken(tokens.access_token);
+		if (!user)
+			throw new ForbiddenException('Credentials incorrect');
+		await this.prisma.user.update({
+				where: { id: user.id },
+				data: { status: 'ONLINE' },
+			});
+	}
+
 	async signin_42(profile: Profile_42): Promise<User> {
 		// check if user exists
 		let user = await this.userService.getByEmail(profile.email);
@@ -93,17 +117,19 @@ export class AuthService {
 		return user;
 	}
 
-	async signout(userId: number): Promise<void> {
-		// delete refresh token	aaaq	 K NNKJ (log out)
-		await this.prisma.user.updateMany({
+	async signout(user: any) {
+		const { userId } = user;
+		const delog = await this.prisma.user.updateMany({
 			where: {
 				id: userId,
 				hashedRtoken: { not: null },
 			},
 			data: {
 				hashedRtoken: null,
+				status: 'OFFLINE',
 			},
 		});
+		return delog;
 		//sending status update to the front
 		// this.appGateway.offlineFromService(userId);
 	}
@@ -131,20 +157,21 @@ export class AuthService {
 		};
 	}
 
-	async refresh_token(userId: number, refreshToken: string): Promise<AuthTokenDto> {
-		// Find user by id
-		const user = await this.prisma.user.findUnique({
-			where: {
-				id: userId,
-			},
-		});
+	async refresh_token(refreshToken: string): Promise<AuthTokenDto> {
+		const decodedToken = this.jwt.decode(refreshToken, { complete: true }) as DecodedToken;
+		if (!decodedToken) {
+			throw new BadRequestException('Invalid token');
+		}
+		const userId = decodedToken.payload.sub;
+		const user = await this.userService.getUser(parseInt(userId));
 		// Check if user exists and is logged in
 		if (!user || !user.hashedRtoken)
 			throw new ForbiddenException('Invalid Credentials');
 		// Verify hashed Refresh Token
 		const pwMatches = await argon.verify(user.hashedRtoken, refreshToken);
-		if (!pwMatches)
+		if (!pwMatches) {
 			throw new ForbiddenException('Invalid Credentials');
+		}
 		// Generate new tokens
 		const tokens = await this.generateTokens(user.id, user.email);
 		// Update Refresh Token - if user is logged in and valid
@@ -228,13 +255,32 @@ export class AuthService {
 		}
 	}
 
-		generate_random_password(): string {
-			// generate random password for 42 User
-			const password =
-				Math.random().toString(36).slice(2, 15) +
-				Math.random().toString(36).slice(2, 15);
-			return password;
-		}
+	generate_random_password(): string {
+		// generate random password for 42 User
+		const password =
+			Math.random().toString(36).slice(2, 15) +
+			Math.random().toString(36).slice(2, 15);
+		return password;
+	}
+
+
+  async verifySocketToken(token: string) {
+  //  try {
+ //     const decoded = this.jwt.verify(token);
+   //   if (!decoded)
+      {
+        return ("KO");
+   //     throw new BadRequestException('Invalid access token');
+      }
+   //   const check2 = await this.userService.getByEmail(decoded.email);
+     // if (!2)
+       // {return ("KO");}
+
+      return ("OK")
+    //  } catch (e) {
+    //  throw new BadRequestException('Invalid access token');
+  }
+
 
 }
 
