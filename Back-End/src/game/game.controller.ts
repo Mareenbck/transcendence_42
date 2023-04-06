@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards, Body} from '@nestjs/common';
+import { Controller, Get, Post, UseGuards, Param, Body} from '@nestjs/common';
 import { GameService } from './game.service';
 import { JwtGuard} from 'src/auth/guard';
 import { GameDto } from './dto/game.dto';
@@ -27,4 +27,18 @@ export class GameController {
     });
     return game;
   }
+
+  @Get('/allGames/:id')
+  // @UseGuards(JwtGuard)
+  async getAllUserGames(@Param('id') userId: string) {
+    console.log("userId----->")
+    console.log(userId)
+    const allGames = await this.gameService.getUserGames(parseInt(userId));
+    console.log("allGames--->")
+    console.log(allGames)
+
+    return allGames;
+  }
 }
+
+

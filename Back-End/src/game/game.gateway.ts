@@ -1,4 +1,4 @@
-import { 
+import {
   MessageBody,
   WebSocketServer,
   SubscribeMessage,
@@ -14,7 +14,7 @@ import { profile } from './game.interfaces';
 
 //all connected users
 let users: profile [] = [];
-//two players 
+//two players
 let players: profile [] = [];
 
 // const addUser = (userId, socketId) => {
@@ -61,7 +61,7 @@ const removeUser = (socketId) => {
 
 @WebSocketGateway(8001, { cors: 'http://localhost/game/*' })//cors *
 export class GameGateway {
- 
+
   @WebSocketServer() server: Server;
   //  constructor(
   //       private prisma: PrismaService,
@@ -71,7 +71,7 @@ export class GameGateway {
   gameService: GameService;
 
   onModuleInit(){
-    const game = new Game( 
+    const game = new Game(
       this.server,
       //this.websocketsService,
       this.prisma,
@@ -98,7 +98,7 @@ console.log ('56 users = ',users.length);
           );
           players = [];
 console.log ('95 players = ', players.length);
-console.log ('96 users = ',users.length);         
+console.log ('96 users = ',users.length);
         }
       });
 

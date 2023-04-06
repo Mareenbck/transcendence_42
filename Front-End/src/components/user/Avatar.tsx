@@ -47,6 +47,29 @@ const MyAvatar = (props: any) => {
 	const authCtx = props.authCtx;
 	const [style, setStyle] = useState('');
 	const [content, setContent] = useState<any>(null);
+	const [avatar, setAvatar] = useState<any>(props.avatar);
+
+	useEffect(() => {
+		const fetchAvatar = async () => {
+			try {
+			  const response = await fetch(`http://localhost:3000/friendship/${props.id}/avatar`, {
+				method: 'GET',
+			  });
+			  if (response.ok) {
+				if (response.status === 204) {
+				  return null
+				}
+				const blob = await response.blob();
+				setAvatar(URL.createObjectURL(blob));
+			  }
+			} catch (error) {
+			  return console.log("error", error);
+			}
+		  }
+		if (!avatar && !props.ftAvatar) {
+			fetchAvatar()
+		}
+	}, [props.id]);
 
 	useEffect(() => {
 		if (props.style === "m") {
@@ -65,9 +88,9 @@ const MyAvatar = (props: any) => {
 		if (authCtx.userId === props.id) {
 			setContent(authCtx.avatar ? <Avatar className={avatarClass} src={authCtx.avatar} /> : <Avatar className={avatarClass} src={authCtx.ftAvatar} />)
 		} else {
-			setContent(props.avatar ? <Avatar className={avatarClass} src={props.avatar} /> : <Avatar className={avatarClass} src={props.ftAvatar} />)
+			setContent(avatar ? <Avatar className={avatarClass} src={avatar} /> : <Avatar className={avatarClass} src={props.ftAvatar} />)
 		}
-	}, [authCtx.avatar, props.avatar]);
+	}, []);
 
 	return (
 		<>
