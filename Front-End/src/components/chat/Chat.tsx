@@ -76,14 +76,14 @@ function Chat() {
 //    }
   }, []);
 
-  useEffect(() => {
-    socket.current.on("getConv", data => {
-      setAConversation({
-        name: data.content.name,
-        avatar: data.content.avatar,
-      });
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.current.on("getConv", data => {
+  //     setAConversation({
+  //       name: data.content.name,
+  //       avatar: data.content.avatar,
+  //     });
+  //   });
+  // }, []);
 
   useEffect(() => {
     socket.current.emit("addUserC", user);
@@ -144,9 +144,9 @@ function Chat() {
     setMessagesD(prev=>[...prev, AMessageD]);
   },[AMessageD, currentDirect])
 
-  useEffect(() => {
-    AConversation && setConversations(prev=>[AConversation, ...prev]);
-  }, [AConversation]);
+  // useEffect(() => {
+  //   AConversation && setConversations(prev=>[AConversation, ...prev]);
+  // }, [AConversation]);
 
 
 
@@ -165,13 +165,13 @@ function Chat() {
   }, []);
 
 
-  useEffect(() => {
-    async function getAllConv(user: AuthContext) {
-      const response = await ConversationReq.getAll(user);
-      setConversations(response);
-    };
-    getAllConv(user);
-  }, []);
+  // useEffect(() => {
+  //   async function getAllConv(user: AuthContext) {
+  //     const response = await ConversationReq.getAll(user);
+  //     setConversations(response);
+  //   };
+  //   getAllConv(user);
+  // }, []);
 
   useEffect(() => {
     if (currentChat)

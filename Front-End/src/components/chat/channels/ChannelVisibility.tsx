@@ -16,8 +16,41 @@ export default function ChannelVisibility(props: any) {
 
   const [openModal, setOpenModal] = useState(false);
   const userContext = useContext(AuthContext);
+  const [userOnTable, setUserOnTable] = useState([]);
+  const [isAdmin, setIsAdmin] = useState<string>('')
+
+
+  const getRolesUser = async (id: string, channelId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/chatroom2/userTable/${id}/${channelId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userContext.token}`
+          }
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        return (data);
+        // setUserOnTable(data)      
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   
+   
+  useEffect(() => {
+   const getRole =  getRolesUser(userContext.userId, props.id);
+      setIsAdmin(getRole.role); 
+  }, [props.id, userContext.userId])
   
+  console.log('user on table')
+  console.log(userOnTable)
+  
+
   function getIconByChannelType() {
     let icon;
         
@@ -36,7 +69,7 @@ export default function ChannelVisibility(props: any) {
          <div className="visibility-icon">
           <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
           <KeyIcon className="channel-icon" fontSize="small" />
-          <ChannelsSettings openModal={openModal} setOpenModal={setOpenModal} />
+        <ChannelsSettings role={isAdmin}/>
         </div>
         </>
       );

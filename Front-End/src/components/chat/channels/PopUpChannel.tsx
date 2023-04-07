@@ -6,6 +6,7 @@ import AuthContext from '../../../store/AuthContext';
 import Chat from '../../Chat';
 import { socket } from '../../../../service/socket';
 import ConversationReq from "./ConversationRequest"
+import ChannelsSettings from './ChannelsSettings';
 
 
 
@@ -22,6 +23,8 @@ function PopUp(props: any) {
     const id = user.userId;
     const [isDisabled, setIsDisabled] = useState(true);
     const [channelName, setchannelName] = useState('');
+    const [openModal, setOpenModal] = useState(false);
+
 
     const handleChannelNameChange = (e: FormEvent) => {
         const value = e.target.value;
@@ -29,26 +32,6 @@ function PopUp(props: any) {
         setIsDisabled(value === "");
     };
 
-    const getRolesUser = async () => {
-        try {
-        console.log("EST DANS LE FETCH GET")
-          const response = await fetch(
-            `http://localhost:3000/chatroom2/userTable`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${user.token}`
-              }
-            })
-            if (response.ok) {
-              const data = await response.json();
-              return data;
-            }
-        } catch(err) {
-          console.log(err);
-        }
-      };
-        
 
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
@@ -72,13 +55,13 @@ function PopUp(props: any) {
     
     const createAndClose = async (e:FormEvent) => {
         try {
-            const res = await getRolesUser(user.userId);
+            // const res = await getRolesUser(props.status, props.role);
             await createNewChannel(e);
             setShowPopUp(false);
             props.onClick();
-            console.log("RESPONSE DE GET ROLE USER")
-            console.log(res);
-            return res;
+            // console.log("RESPONSE DE GET ROLE USER")
+            // console.log(res);
+            // return res;
         } catch (err) {
             console.log(err);
         }
@@ -90,6 +73,7 @@ function PopUp(props: any) {
         setShowPopUp(false);
       };
       
+
 
 return (
     <div className='popup-overlay'>
@@ -149,6 +133,8 @@ return (
                 <button type='submit' onSubmit={handleFormSubmit} onClick={createAndClose}>OK</button>
                 <button onSubmit={handleFormSubmit} onClick={props.onCancel}>Cancel</button>
             </footer>
+            <ChannelsSettings openModal={openModal} setOpenModal={setOpenModal} role={props.role} />
+
         </div>
     </div>
 );

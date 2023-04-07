@@ -1,8 +1,10 @@
 import React, { FormEvent, useState } from "react";
 import PopUp from "./PopUpChannel";
+import ChannelsSettings from "./ChannelsSettings";
 
 export default function CreateChannelButton(props: any) {
     const [showPopUp, setShowPopUp] = useState(false);
+
 
     const handleFormSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -24,7 +26,9 @@ export default function CreateChannelButton(props: any) {
                 onSubmit={{handleFormSubmit}}        
                 >
                 </PopUp>
+                
             )}
+
       </form>
     );
 }

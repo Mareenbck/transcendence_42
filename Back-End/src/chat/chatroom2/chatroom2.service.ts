@@ -35,10 +35,10 @@ export class ChatroomService {
           role: "ADMIN"
         }
       });
-      console.log("USER ON CHANNEL")
-      console.log(userOnChannel)
-      console.log("NEW CHANNEL")
-      console.log(newChannel)
+      // console.log("USER ON CHANNEL")
+      // console.log(userOnChannel)
+      // console.log("NEW CHANNEL")
+      // console.log(newChannel)
       return newChannel;
   }
 
@@ -66,12 +66,20 @@ export class ChatroomService {
     return this.prisma.chatroom.findUnique({where: {id: id}});;
   }
 
-  async getUserTable(status: string, role: string) {
-    const users = await this.prisma.userOnChannel.findMany();
-    return users.filter(user => user.status === status && user.role === role)
-                .map(user => ({ status: user.status, role: user.role }));
+  async getUserTable(userId: number, channelId: number) {
+    const users = await this.prisma.userOnChannel.findMany( {where: 
+        {
+          AND: [
+
+            {userId:userId},
+            {channelId: channelId},
+          ],
+        }})
+    console.log("USER IN SERVICE")
+    console.log(users)
+    return users;
   }
-  
+
 
   // update(id: number, updateChatroom2Dto: UpdateChatroomDto) {
   //   return this.prisma.chatroom.update({

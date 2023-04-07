@@ -5,6 +5,7 @@ import ChannelVisibility from "./ChannelVisibility";
 import io, { Socket } from "socket.io-client";
 import AuthContext from "../../../store/AuthContext";
 import ConversationReq from "./ConversationRequest"
+import ChannelsSettings from "./ChannelsSettings";
 
 
 
@@ -14,11 +15,15 @@ export default function UpdateChannelsInList(props: any) {
   const [currentDirect, setCurrentDirect] = useState (null);
   const [AConversation, setAConversation] = useState (null);
   const user = useContext(AuthContext);
+  const [openModal, setOpenModal] = useState(false);
+
+
+
 
     useEffect(() => {
       socket.current = io("ws://localhost:8001")
     })
-    
+
     useEffect(() => {
       socket.current.on("getConv", data => {
         setAConversation({
@@ -30,7 +35,7 @@ export default function UpdateChannelsInList(props: any) {
     
     useEffect(() => {
       AConversation && setConversations(prev=>[AConversation, ...prev]);
-      }, [AConversation]);
+      }, []);
       
       
       useEffect(() => {
@@ -48,6 +53,7 @@ export default function UpdateChannelsInList(props: any) {
                 <div className="conversation">
                     <div className="conversation-name">
                         <Conversation name={c.name}/>
+
                     </div>
                     <div className="conversation-icon">
                         <ChannelVisibility visibility={c.visibility} id={c.id}/>
