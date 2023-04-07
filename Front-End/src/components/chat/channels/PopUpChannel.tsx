@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
 import { Popup } from 'reactjs-popup';
 import { useEffect, useContext, useState, FormEvent } from 'react'
-import "../../style/PopUpChannel.css"
-import AuthContext from '../../store/AuthContext';
-import Chat from './Chat';
-import { socket } from '../../service/socket';
-import ConversationReq from "./conversation/ConversationRequest"
+import "../../../style/PopUpChannel.css"
+import AuthContext from '../../../store/AuthContext';
+import Chat from '../../Chat';
+import { socket } from '../../../../service/socket';
+import ConversationReq from "./ConversationRequest"
 
 
 

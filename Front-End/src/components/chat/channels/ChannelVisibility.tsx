@@ -1,5 +1,5 @@
 import React, { FormEvent, useContext, useEffect, useState } from "react";
-import "../../style/ChannelVisibility.css"
+import "../../../style/ChannelVisibility.css"
 import Settings from '@mui/icons-material/Settings';
 import KeyIcon from '@mui/icons-material/Key';
 import PublicIcon from '@mui/icons-material/Public';
@@ -8,8 +8,8 @@ import IconButton from "@mui/material/IconButton";
 import { Modal } from "@mui/material";
 import { Box } from "@mui/material";
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import ConversationReq from "./conversation/ConversationRequest";
-import AuthContext from "../../store/AuthContext";
+import ConversationReq from "./ConversationRequest";
+import AuthContext from "../../../store/AuthContext";
 import PopUp from "./PopUpChannel";
 
 export default function ChannelVisibility(props: any) {
@@ -60,8 +60,8 @@ export default function ChannelVisibility(props: any) {
   const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const res = await ConversationReq.joinTable(channelId, userContext.token, parseInt(userContext.userId))
-    console.log("RES")
-    console.log(res)
+    // console.log("RES")
+    // console.log(res)
   }
 
 

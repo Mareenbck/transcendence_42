@@ -10,7 +10,7 @@ import { ChatMessModule } from './chat/chat-mess/chat-mess.module';
 import { DirMessModule } from './chat/dir-mess/dir-mess.module';
 import { ChatroomModule } from './chat/chatroom2/chatroom2.module';
 import { GameModule } from './game/game.module';
-import { GameGateway } from './game/game.gateway';
+// import { GameGateway } from './game/game.gateway';
 import { FriendshipModule } from './friendship/friendship.module';
 
 @Module({
@@ -31,7 +31,7 @@ import { FriendshipModule } from './friendship/friendship.module';
 		// PassportModule.register({ defaultStrategy: '42' }),
 	],
 	providers: [ChatGateway,
-    GameGateway,
+    // GameGateway,
 //    GlobalGateway,
     ],
 	exports: [JwtModule],
