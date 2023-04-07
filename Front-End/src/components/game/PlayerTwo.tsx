@@ -13,9 +13,11 @@ const PlayerTwo = (props: any) => {
 
 	useEffect(() => {
 		if (isWinner) {
-			setTrophy(<EmojiEventsIcon/>)
+			setTrophy(<EmojiEventsIcon />);
+		} else {
+			setTrophy(<EmojiEventsIcon style={{ opacity: 0 }} />);
 		}
-	}, [props.winner, props.player])
+		}, [props.winner, props.player, isWinner]);
 
 	return (
 		<>

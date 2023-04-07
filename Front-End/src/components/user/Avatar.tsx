@@ -54,7 +54,7 @@ const MyAvatar = (props: any) => {
 	const [avatar, setAvatar] = useState<any>(null);
 
 	useEffect(() => {
-		// if(!isMyProfile) {
+		if(props.id) {
 			const fetchData = async () => {
 				const avat: any = await friendCtx.fetchAvatar(props.id);
 				if (avat) {
@@ -62,7 +62,7 @@ const MyAvatar = (props: any) => {
 				}
 			};
 			fetchData();
-		// }
+		}
 	}, [props.id, isMyProfile])
 
 	useEffect(() => {

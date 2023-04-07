@@ -282,3 +282,10 @@ li {
 	display: flex;
 	align-content: center;
 }
+
+.container-match {
+    display: flex;
+    justify-content: space-between;
+    width: inherit;
+    align-items: center;
+}

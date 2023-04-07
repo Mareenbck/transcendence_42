@@ -4,6 +4,7 @@ import '../../style/Profile.css'
 import { useParams } from "react-router-dom";
 import PlayerOne from "./PlayerOne";
 import PlayerTwo from "./PlayerTwo";
+import { Grid } from '@mui/material';
 
 const MatchHistory = (props: any) => {
 	const [games, setGames] = useState<any[] | null>();
@@ -46,14 +47,20 @@ const MatchHistory = (props: any) => {
 	console.log(games)
 	return (
 		<>
-		{games.map(game => (
+		  {games.map((game) => (
 			<ListItem key={game.id}>
-				<PlayerOne player={game.playerOne} winner={game.winner} score={game.score1}/>
-				{formattedDate(game.createdAt)}
-				<PlayerTwo player={game.playerTwo} winner={game.winner} score={game.score2}/>
-				<br />
+				<div className="container-match">
+
+
+				  <PlayerOne player={game.playerOne} winner={game.winner} score={game.score1} />
+
+				  {formattedDate(game.createdAt)}
+
+				  <PlayerTwo player={game.playerTwo} winner={game.winner} score={game.score2} />
+
+				</div>
 			</ListItem>
-		))}
+		  ))}
 		</>
 	)
 }
