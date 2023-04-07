@@ -6,6 +6,7 @@ import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
 import UserChart from './UserChart'
 import ChatReq from "./../chat/Chat.req"
+import MyAvatar from '../user/Avatar';
 
 const Scores = () => {
   //0 Ajout théo 30/03/23
@@ -204,6 +205,7 @@ const Scores = () => {
               <td>Nbre de parties</td>
               <td>Nombre total de points</td>
               <td>Nombre total de victoires</td>
+              <td> avatar</td> 
             </tr>
           { allUsers.map((g) => (
             <tr key={g?.id} >
@@ -211,6 +213,7 @@ const Scores = () => {
               <td>{getNbGames(g)}</td>
               <td>{getScore(g)}</td>
               <td>{getWinner(g)}</td>
+              <td><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></td>
             </tr>
           ))}
           </tbody>
