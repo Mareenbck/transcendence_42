@@ -10,7 +10,7 @@ import { Box } from "@mui/material";
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import ConversationReq from "./ConversationRequest";
 import AuthContext from "../../../store/AuthContext";
-import PopUp from "./PopUpChannel";
+import ChannelsSettings from "./ChannelsSettings";
 
 export default function ChannelVisibility(props: any) {
 
@@ -37,9 +37,7 @@ export default function ChannelVisibility(props: any) {
          <div className="visibility-icon">
           <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
           <KeyIcon className="channel-icon" fontSize="small" />
-          <IconButton onClick={() => setOpenModal(true)}>
-            <Settings fontSize="small" />
-          </IconButton>
+          <ChannelsSettings openModal={openModal} setOpenModal={setOpenModal}/>
         </div>
         </>
       );

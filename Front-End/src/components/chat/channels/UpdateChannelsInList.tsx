@@ -50,7 +50,7 @@ export default function UpdateChannelsInList(props: any) {
                         <Conversation name={c.name}/>
                     </div>
                     <div className="conversation-icon">
-                    <ChannelVisibility visibility={c.visibility} id={c.id}/>
+                        <ChannelVisibility visibility={c.visibility} id={c.id}/>
                     </div>
                 </div>
             </div>
