@@ -47,23 +47,22 @@ export class Game {
 	private winner: any = '';
 		
 	private server: Server;
-	private prismaService: PrismaService;
+	private prisma: PrismaService;
 	private gameService: GameService;
-
+	
 
 		
 	constructor(
 		server: Server,
 		prismaService: PrismaService,
-		//spectatorSockets: any[]
-		gameService: GameService
+		//gameService: GameService
 	) {
 console.log("constructor Class.game");
 		this.server = server;
-		this.prismaService = prismaService;
-		this.gameService = gameService;
+		this.prisma = prismaService;
+	//	this.gameService = gameService;
 	}
-	prisma = new PrismaClient()
+	// prisma = new PrismaClient()
 
 
 // function: emit game - tacking the changing coordinates of rackets and ball
@@ -156,7 +155,7 @@ console.log('ballSpeed = ', ballSpeed);
 	private player_disconect = (userId: any) => {
 		this.isrunning = false;
 		this.winner = userId;
-		this.server.emit('winner', {winner: this.winner, leave: this.leave}); // room
+		this.server.emit('winner', {winner: this.winner}); // room
 	}  
 
 // function: run game
@@ -165,8 +164,6 @@ console.log('ballSpeed = ', ballSpeed);
 		idPlayerL: profile,
 	): void {
 console.log("run");
-console.log("idPlayerR", idPlayerR);
-console.log("idPlayerL", idPlayerL);
 		this.playerR.profile = idPlayerR;
 		this.playerL.profile = idPlayerL;
 		this.isrunning = true;
@@ -174,6 +171,13 @@ console.log("idPlayerL", idPlayerL);
 		const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
 console.log("socketR", socketR.id);
 console.log("socketL", socketL.id);		
+this.playerL.score = 0;
+this.playerR.score = 0;
+this.ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
+this.ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
+ 
+// this.winner = null;
+// this.server.emit('winner', {winner: this.winner});
 
 
 // move rakets
@@ -242,33 +246,23 @@ console.log("playerR move", message);
 		})
 
 //interval function: update the game at the certain period until the score reaches MAX
-		this.interval = setInterval(() => {
+this.interval = setInterval(() => {
+		//while(this.isrunning){
 			this.updatePositions();
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
-			if ((this.playerL.score >= 5 || this.playerR.score >= 5) && this.isrunning){ //score MAX - change here
+			if ((this.playerL.score >= 2 || this.playerR.score >= 2)){ //score MAX - change here
 
 				this.isrunning = false;
 				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId;
 				this.player_disconect(this.winner);	
-				this.ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
-				this.ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
-				clearInterval(this.interval);
+	clearInterval(this.interval);
 				
 				if (!this.isrunning){
 console.log("257 winner", this.winner)
-// this.gameService.create(data: {
-// 				playerOne: {
-// 					connect: {id: this.playerR.profile.userId.userId}},
-// 				playerTwo: {
-// 					connect: {id: this.playerL.profile.userId.userId}},
-// 				winner: {
-// 					connect: { id: this.winner.profile.userId.userId}},
-// 					score1: this.playerR.score,
-// 					score2: this.playerL.score,
-// 			} );
-					// let promisses = [];
-					// promisses.push(
+
+					let promisses = [];
+					promisses.push(
 						this.prisma.game.create({
 							data: {
 								playerOne: {
@@ -280,16 +274,28 @@ console.log("257 winner", this.winner)
 									score1: this.playerR.score,
 									score2: this.playerL.score,
 							}
-					});
+					}));
+					this.winner = null;
+	
+	console.log ("stop_game");
+					this.server?.emit ('stop_game', "game_stop");
+	
 				}
-				this.playerL.score = 0;
-				this.playerR.score = 0;
-				this.isrunning = false;
-
 			}
-		}, period);
+	}, 100);
 // console.log('stop game')
+		}
 	}
 
-}
+//}
 
+// this.gameService.create(data: {
+// 				playerOne: {
+// 					connect: {id: this.playerR.profile.userId.userId}},
+// 				playerTwo: {
+// 					connect: {id: this.playerL.profile.userId.userId}},
+// 				winner: {
+// 					connect: { id: this.winner.profile.userId.userId}},
+// 					score1: this.playerR.score,
+// 					score2: this.playerL.score,
+// 			} );

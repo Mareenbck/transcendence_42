@@ -10,7 +10,7 @@ import { GameService } from './game.service';
 import { Game } from './game.class';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { profile } from './game.interfaces';
-
+import { PrismaClient } from '@prisma/client';
 
 //all connected users
 let users: profile [] = [];
@@ -33,12 +33,14 @@ let players: profile [] = [];
 //       players[index].socketId.push(socketId)
 //     }
 // console.log(`24 players [] ='${players}'`);
-  const addUser = (userId, socketId) => {
+ 
+
+const addUser = (userId, socketId) => {
     if (players.length < 2) {
       !players.some((user) => +user.userId.userId === +userId.userId) &&
       players.push({userId, socketId})
 console.log('40 players = ', players);
-console.log('41 player[0] = ', players[0]);
+// console.log('41 player[0] = ', players[0]);
 
   } else {
     !users.some((user) => +user.userId.userId === +userId.userId) &&
@@ -61,26 +63,21 @@ const removeUser = (socketId) => {
 
 @WebSocketGateway(8001, { cors: 'http://localhost/game/*' })//cors *
 export class GameGateway {
+  constructor(
+    private readonly prismaService: PrismaService
+	) {}
  
   @WebSocketServer() server: Server;
-  //  constructor(
-  //       private prisma: PrismaService,
-  //       private service: GameService ){}
-
-  prisma: PrismaService; ///constructor?
-  gameService: GameService;
-
+  
   onModuleInit(){
-    const game = new Game( 
+    let game = new Game( 
       this.server,
       //this.websocketsService,
-      this.prisma,
-      //this.achievementsService,
-      this.gameService
-    );
+      this.prismaService 
+      );
 
     this.server.on('connection', (socket: Socket) => {
-console.log('51 Connected socket = ', socket.id);
+console.log('51 Connected socket GAME = ', socket.id);
       if(socket) {game.init(socket);} //game initialization on connection
       socket.on("addUser", (userId) => {
         addUser(userId, socket.id); // add user : array users or array players
@@ -95,20 +92,37 @@ console.log ('56 users = ',users.length);
           //this.games.push(game);
           game.run(
             players[0], players[1], // start game with 2 players
+            
           );
-          players = [];
-console.log ('95 players = ', players.length);
-console.log ('96 users = ',users.length);         
+          this.server.on('stop_game', (message: string) => {
+            console.log(`107 stop_game`);
+                    if (message == 'stop_game'){
+                      players = [];
+                      game = null;
+            console.log(`111 stop_game, players = `, players);
+                    }})
         }
       });
 
-      this.server.sockets.sockets.get(socket.id).on('disconnect', () => {//??
+      
+      this.server.sockets.sockets.get(socket.id).on('disconnect', () => {
 console.log(`78 Disconnected socket.id = ${socket.id}`);
         removeUser(socket.id);
         this.server.emit("getSpectator", users);
       });
+
+      this.server.on('stop_game', (message: string) => {
+console.log(`107 stop_game`);
+        if (message == 'stop_game'){
+          players = [];
+          game = null;
+console.log(`111 stop_game, players = `, message);
+        }
+      });
+     
     });
   }
+
 }
 
 // this.games.splice(this.games.indexOf(game), 1);

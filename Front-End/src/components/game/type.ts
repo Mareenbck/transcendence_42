@@ -45,7 +45,6 @@ export interface gameInit {
 
 export interface gameWinner {
     winner: any;
-    leave: string;
 }
 
 

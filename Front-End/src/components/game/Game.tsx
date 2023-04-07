@@ -4,7 +4,7 @@ import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
 import Winner from './Winner'
 import './Game.css'
-import type { gameInit, gameState, gameWinner, player} from './type'
+import type { gameInit, gameState, gameWinner, player, backColorGame} from './type'
 import { socket } from '../../service/socket';
 import ColorModal from './modal.tsx/ColorModal';
 
@@ -89,9 +89,8 @@ function Game() {
 
     const [gamewinner, setGameWinner] = useState<gameWinner>(
        {
-            winner: '',
-            leave: ''
-       } 
+            winner: '' 
+        } 
     );
     
     const initListener = (data: gameInit)=>{
