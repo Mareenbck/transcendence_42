@@ -16,13 +16,12 @@ export default function ChannelVisibility(props: any) {
 
   const [openModal, setOpenModal] = useState(false);
   const userContext = useContext(AuthContext);
-  const[clicked, setClicked] = useState(false);
   
   
   function getIconByChannelType() {
     let icon;
         
-    if (props.visibility === "PRIVATE" && !clicked) {
+    if (props.visibility === "PRIVATE") {
       icon = (
         <>
         <div className="visibility-icon">
@@ -32,7 +31,7 @@ export default function ChannelVisibility(props: any) {
         </>
 
       );
-    } else if (props.visibility === "PWD_PROTECTED" && !clicked) {
+    } else if (props.visibility === "PWD_PROTECTED") {
       icon = (
         <>
          <div className="visibility-icon">
@@ -44,7 +43,7 @@ export default function ChannelVisibility(props: any) {
         </div>
         </>
       );
-    } else if (props.visibility == "PUBLIC" && !clicked) {
+    } else if (props.visibility == "PUBLIC") {
       icon = (
         <>   
         <div className="visibility-icon">
@@ -61,9 +60,8 @@ export default function ChannelVisibility(props: any) {
   const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const res = await ConversationReq.joinTable(channelId, userContext.token, parseInt(userContext.userId))
-    // console.log("RES")
-    // console.log(res)
-    setClicked(true);
+    console.log("RES")
+    console.log(res)
   }
 
 
