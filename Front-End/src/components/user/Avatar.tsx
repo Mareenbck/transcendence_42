@@ -1,7 +1,9 @@
 import { Button } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import '../../style/Settings.css';
 import Avatar from '@mui/material/Avatar';
+import { FriendContext } from '../../store/FriendshipContext';
+import AuthContext from '../../store/AuthContext';
 
 const customStylesL = `
 	.custom-avatar.avatar-l {
@@ -44,32 +46,24 @@ const customStyleXS = `
 `;
 
 const MyAvatar = (props: any) => {
-	const authCtx = props.authCtx;
+	const authCtx = useContext(AuthContext)
+	const isMyProfile = parseInt(authCtx.userId) === parseInt(props.id);
+	const friendCtx = useContext(FriendContext)
 	const [style, setStyle] = useState('');
 	const [content, setContent] = useState<any>(null);
-	const [avatar, setAvatar] = useState<any>(props.avatar);
+	const [avatar, setAvatar] = useState<any>(null);
 
 	useEffect(() => {
-		const fetchAvatar = async () => {
-			try {
-			  const response = await fetch(`http://localhost:3000/friendship/${props.id}/avatar`, {
-				method: 'GET',
-			  });
-			  if (response.ok) {
-				if (response.status === 204) {
-				  return null
+		// if(!isMyProfile) {
+			const fetchData = async () => {
+				const avat: any = await friendCtx.fetchAvatar(props.id);
+				if (avat) {
+					setAvatar(avat);
 				}
-				const blob = await response.blob();
-				setAvatar(URL.createObjectURL(blob));
-			  }
-			} catch (error) {
-			  return console.log("error", error);
-			}
-		  }
-		if (!avatar && !props.ftAvatar) {
-			fetchAvatar()
-		}
-	}, [props.id]);
+			};
+			fetchData();
+		// }
+	}, [props.id, isMyProfile])
 
 	useEffect(() => {
 		if (props.style === "m") {
@@ -90,7 +84,7 @@ const MyAvatar = (props: any) => {
 		} else {
 			setContent(avatar ? <Avatar className={avatarClass} src={avatar} /> : <Avatar className={avatarClass} src={props.ftAvatar} />)
 		}
-	}, []);
+	}, [authCtx.avatar, avatar]);
 
 	return (
 		<>

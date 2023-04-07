@@ -55,6 +55,9 @@ export class AuthController {
 		try {
 			// Echange le code d'autorisation contre un token
 			const tokens = await this.authService.exchangeCodeForTokens(code);
+			if (!tokens.access_token) {
+				return ;
+			}
 			// Get user profile using the access token
 			const userProfile = await this.authService.getFortyTwoUserProfile(tokens.access_token);
 			// Generate token using user profile

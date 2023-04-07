@@ -31,12 +31,7 @@ export class GameController {
   @Get('/allGames/:id')
   // @UseGuards(JwtGuard)
   async getAllUserGames(@Param('id') userId: string) {
-    console.log("userId----->")
-    console.log(userId)
     const allGames = await this.gameService.getUserGames(parseInt(userId));
-    console.log("allGames--->")
-    console.log(allGames)
-
     return allGames;
   }
 }

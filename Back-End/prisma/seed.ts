@@ -1,124 +1,127 @@
 import { PrismaClient } from '@prisma/client';
-import { add } from 'date-fns';
+
+// Instantiate Prisma Client
 const prisma = new PrismaClient()
 
-async function main() {
-  await prisma.game.deleteMany({}) // never in production
-  await prisma.directMessage.deleteMany({}) // never in production
-  await prisma.chatroomMessage.deleteMany({}) // never in production
-  await prisma.chatroom.deleteMany({}) // never in production
-  await prisma.user.deleteMany({}) // never in production
+export async function main() {
+  console.log('Find users');
+  // Find existing users in the database
+  const mbascuna = await prisma.user.findUnique({ where: { id: 1 } })
+  const emma = await prisma.user.findUnique({ where: { id: 2 } })
+  const lucie = await prisma.user.findUnique({ where: { id: 3 } })
+  const fabien = await prisma.user.findUnique({ where: { id: 4 } })
+  const math = await prisma.user.findUnique({ where: { id: 5 } })
 
-
-
-  const user = await prisma.user.create({
+  console.log('Creating games');
+  // Create games and connect them to existing users
+  const game1 = await prisma.game.create({
     data: {
-      email: 'theo@theo.fr',
-      username: 'Emma Seed',
-       hash: 'ezfe',
-    }
-  })
-  console.log(user)
-
-  const user2 = await prisma.user.create({
-    data: {
-      email: 'MAMA@dde.fr',
-      username: 'Mariya Seed',
-      hash: 'ezfzefzfe',
-    }
-  })
-  console.log(user2)
-
-  const user3 = await prisma.user.create({
-    data: {
-      email: 'Mddvdvdv@dde.fr',
-      username: 'Bob Seed',
-      hash: 'ezfzefzfesdcs',
-    }
-  })
-  console.log(user3)
-
-  const user4 = await prisma.user.create({
-    data: {
-      email: 'Mddvdvdbbv@dde.fr',
-      username: 'Marine Seed',
-      hash: 'ezfzefzfecececc',
-    }
-  })
-  console.log(user4)
-
-  const d1 = add(new Date(), { days: 1})
-  const d2 = add(new Date(), { days: 2})
-  const d3 = add(new Date(), { days: 3})
-  const d4 = add(new Date(), { days: 4})
-  const d5 = add(new Date(), { days: 5})
-
-
- const chatDm1 = await prisma.directMessage.create({
-    data: {
-      createdAt:     d4,
-      content: "Salut U1, ca va ?",
-      userA: {connect: { id: user.id }},
-      userR: {connect: { id: user2.id }}
-    }})
-
- const chatDm2 = await prisma.directMessage.create({
-    data: {
-      createdAt:     d5,
-      content: "Salut U2, bien et toi ?",
-      userA: {connect: { id: user2.id }},
-      userR: {connect: { id: user.id }}
-    }
-  })
-
- const j1 = await prisma.game.create({
-    data: {
-      createdAt:     d5,
-      playerOne: {connect: { id: user.id }},
-      playerTwo:{connect: { id: user2.id }},
-      winner:{connect: { id: user2.id }},
-      score1: 10,
-      score2: 8,
-    }
-  })
- const j2 = await prisma.game.create({
-    data: {
-      createdAt:     d5,
-      playerOne: {connect: { id: user3.id }},
-      playerTwo:{connect: { id: user4.id }},
-      winner:{connect: { id: user4.id }},
+      playerOne: { connect: { id: mbascuna.id } },
+      playerTwo: { connect: { id: emma.id } },
+      winner: { connect: { id: mbascuna.id } },
       score1: 10,
       score2: 2,
-    }
+    },
   })
-  const j3 = await prisma.game.create({
+  const game2 = await prisma.game.create({
     data: {
-      createdAt:     d5,
-      playerOne: {connect: { id: user3.id }},
-      playerTwo:{connect: { id: user4.id }},
-      winner:{connect: { id: user3.id }},
-      score1: 1,
+      playerOne: { connect: { id: emma.id } },
+      playerTwo: { connect: { id: fabien.id } },
+      winner: { connect: { id: fabien.id } },
+      score1: 0,
       score2: 10,
-    }
+    },
   })
-   const j4 = await prisma.game.create({
-    data: {
-      createdAt:     d5,
-      playerOne: {connect: { id: user2.id }},
-      playerTwo:{connect: { id: user4.id }},
-      winner:{connect: { id: user2.id }},
-      score1: 10,
-      score2: 0,
-    }
-  })
-}
 
+  const game3 = await prisma.game.create({
+    data: {
+      playerOne: { connect: { id: lucie.id } },
+      playerTwo: { connect: { id: math.id } },
+      winner: { connect: { id: math.id } },
+      score1: 5,
+      score2: 10,
+    },
+  })
+
+  const game4 = await prisma.game.create({
+    data: {
+      playerOne: { connect: { id: emma.id } },
+      playerTwo: { connect: { id: lucie.id } },
+      winner: { connect: { id: emma.id } },
+      score1: 10,
+      score2: 6,
+    },
+  })
+
+  const game5 = await prisma.game.create({
+    data: {
+      playerOne: { connect: { id: mbascuna.id } },
+      playerTwo: { connect: { id: math.id } },
+      winner: { connect: { id: math.id } },
+      score1: 8,
+      score2: 10,
+    },
+  })
+
+  console.log("Updating users with games")
+  // Update the users with their new game records
+  await prisma.user.update({
+    where: { id: mbascuna.id },
+    data: {
+      playerOne: {
+        connect: [{ id: game1.id }, { id: game5.id }]
+      }
+    }
+  })
+
+  await prisma.user.update({
+    where: { id: emma.id },
+    data: {
+      playerOne: {
+        connect: [{ id: game1.id }, { id: game4.id }]
+      },
+      playerTwo: {
+        connect: [{ id: game2.id }]
+      }
+    }
+  })
+
+  await prisma.user.update({
+    where: { id: lucie.id },
+    data: {
+      playerTwo: {
+        connect: [{ id: game3.id }, { id: game4.id }]
+      }
+    }
+  })
+
+  await prisma.user.update({
+    where: { id: fabien.id },
+    data: {
+      playerTwo: {
+        connect: [{ id: game2.id }]
+      }
+    }
+  })
+
+  await prisma.user.update({
+    where: { id: math.id },
+    data: {
+      playerTwo: {
+        connect: [{ id: game3.id }, { id: game5.id }]
+      }
+    }
+  })
+
+}
+// Call the seed function
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
+
