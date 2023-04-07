@@ -27,7 +27,21 @@ export class Chatroom2Controller {
   async findAll(): Promise<CreateChatroomDto[]> {
     return await this.chatRoomService.findAll();
   };
- 
+  
+  @Get('userTable')
+  // @UseGuards(JwtGuard)
+  async getUserTable(@Body() status: string, role: string) {
+    console.log("EST DANS LE CONTROLLER ");
+    const response = await this.chatRoomService.getUserTable(status, role);
+    console.log("response usertable");
+    console.log(response);
+    return response;
+
+  } 
+
+
+
+
   // @Post(':id/delete')
   // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {
   //   return await this.prismaService.chatroom.deleteChatroom(id);

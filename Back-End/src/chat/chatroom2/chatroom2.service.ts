@@ -66,6 +66,13 @@ export class ChatroomService {
     return this.prisma.chatroom.findUnique({where: {id: id}});;
   }
 
+  async getUserTable(status: string, role: string) {
+    const users = await this.prisma.userOnChannel.findMany();
+    return users.filter(user => user.status === status && user.role === role)
+                .map(user => ({ status: user.status, role: user.role }));
+  }
+  
+
   // update(id: number, updateChatroom2Dto: UpdateChatroomDto) {
   //   return this.prisma.chatroom.update({
   //     where: {id: id},

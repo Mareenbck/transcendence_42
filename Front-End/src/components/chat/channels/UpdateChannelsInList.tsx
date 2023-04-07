@@ -9,38 +9,38 @@ import ConversationReq from "./ConversationRequest"
 
 
 export default function UpdateChannelsInList(props: any) {
-    const [conversations, setConversations] = useState([]);
-    const [currentChat, setCurrentChat] = useState (null);
-    const [currentDirect, setCurrentDirect] = useState (null);
-    const [AConversation, setAConversation] = useState (null);
-    const user = useContext(AuthContext);
+  const [conversations, setConversations] = useState([]);
+  const [currentChat, setCurrentChat] = useState (null);
+  const [currentDirect, setCurrentDirect] = useState (null);
+  const [AConversation, setAConversation] = useState (null);
+  const user = useContext(AuthContext);
 
     useEffect(() => {
-        socket.current = io("ws://localhost:8001")
+      socket.current = io("ws://localhost:8001")
     })
-
+    
     useEffect(() => {
-        socket.current.on("getConv", data => {
-          setAConversation({
-            name: data.content.name,
-            avatar: data.content.avatar,
-          });
+      socket.current.on("getConv", data => {
+        setAConversation({
+          name: data.content.name,
+          avatar: data.content.avatar,
         });
-      }, []);
-
+      });
+    }, []);
+    
     useEffect(() => {
-        AConversation && setConversations(prev=>[AConversation, ...prev]);
+      AConversation && setConversations(prev=>[AConversation, ...prev]);
       }, [AConversation]);
-
-    
-  useEffect(() => {
-    async function getAllConv(user: AuthContext) {
-      const response = await ConversationReq.getAll(user);
-      setConversations(response);
-    };
-    getAllConv(user);
-  }, []);
-    
+      
+      
+      useEffect(() => {
+        async function getAllConv(user: AuthContext) {
+          const response = await ConversationReq.getAll(user);
+          setConversations(response);
+        };
+        getAllConv(user);
+      }, []);
+      
     return (
         <>
         {conversations.map((c) => (

@@ -14,9 +14,6 @@ import MessageD from "./message/messageD"
 import '../../style/Chat.css'
 import '../../style/Friends.css';
 import React from 'react';
-import PopUp from './channels/PopUpChannel';
-import ChannelVisibility from './channels/ChannelVisibility';
-import { ListItem } from '@mui/material';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
 import Channels from './channels/Channels';

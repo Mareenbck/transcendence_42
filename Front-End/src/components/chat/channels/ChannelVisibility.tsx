@@ -29,7 +29,6 @@ export default function ChannelVisibility(props: any) {
           <LockIcon className="channel-icon" fontSize="small" />
         </div>
         </>
-
       );
     } else if (props.visibility === "PWD_PROTECTED") {
       icon = (
@@ -37,7 +36,7 @@ export default function ChannelVisibility(props: any) {
          <div className="visibility-icon">
           <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
           <KeyIcon className="channel-icon" fontSize="small" />
-          <ChannelsSettings openModal={openModal} setOpenModal={setOpenModal}/>
+          <ChannelsSettings openModal={openModal} setOpenModal={setOpenModal} />
         </div>
         </>
       );
@@ -58,8 +57,8 @@ export default function ChannelVisibility(props: any) {
   const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const res = await ConversationReq.joinTable(channelId, userContext.token, parseInt(userContext.userId))
-    // console.log("RES")
-    // console.log(res)
+    console.log("RES")
+    console.log(res)
   }
 
 

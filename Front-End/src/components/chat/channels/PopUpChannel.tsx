@@ -29,6 +29,27 @@ function PopUp(props: any) {
         setIsDisabled(value === "");
     };
 
+    const getRolesUser = async () => {
+        try {
+        console.log("EST DANS LE FETCH GET")
+          const response = await fetch(
+            `http://localhost:3000/chatroom2/userTable`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${user.token}`
+              }
+            })
+            if (response.ok) {
+              const data = await response.json();
+              return data;
+            }
+        } catch(err) {
+          console.log(err);
+        }
+      };
+        
+
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
         if (channelName === "") {
@@ -51,9 +72,13 @@ function PopUp(props: any) {
     
     const createAndClose = async (e:FormEvent) => {
         try {
+            const res = await getRolesUser(user.userId);
             await createNewChannel(e);
             setShowPopUp(false);
             props.onClick();
+            console.log("RESPONSE DE GET ROLE USER")
+            console.log(res);
+            return res;
         } catch (err) {
             console.log(err);
         }
