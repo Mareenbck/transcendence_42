@@ -2,43 +2,43 @@ import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
 import type {gameInit, gameState, gameWinner, size} from './type'
 
-<<<<<<< HEAD
+
 const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, backColorGame: backColorGame} ): JSX => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
     const gamewinner = props.gamewinner;
     const backColorGame = props.backColorGame;
     const canvasRef = useRef<HTMLCanvasElement>(null);  
-=======
-const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, size: size} ) => {
-    const gamestate = props.gamestate;
-    const gameinit = props.gameinit;
-    const gamewinner = props.gamewinner;
+
+// const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, size: size} ) => {
+//     const gamestate = props.gamestate;
+//     const gameinit = props.gameinit;
+//     const gamewinner = props.gamewinner;
    
    
-    const [coeff, setCoeff] = useState(Math.min(
-        window.innerWidth/gameinit.width,
-        window.innerHeight/gameinit.height
-      ));
-    useEffect(() => {
-            const newCoeff = Math.min(
-            window.innerWidth / gameinit.width,
-            window.innerHeight / gameinit.height
-          );
-          setCoeff(newCoeff);
-        // });
->>>>>>> baa5c22 (size + game)
+//     const [coeff, setCoeff] = useState(Math.min(
+//         window.innerWidth/gameinit.width,
+//         window.innerHeight/gameinit.height
+//       ));
+//     useEffect(() => {
+//             const newCoeff = Math.min(
+//             window.innerWidth / gameinit.width,
+//             window.innerHeight / gameinit.height
+//           );
+//           setCoeff(newCoeff);
+//         // });
     
-        // handleResize(); // call the function once to initialize the coefficient based on the current window size
+//         // handleResize(); // call the function once to initialize the coefficient based on the current window size
     
-        // window.addEventListener("resize", handleResize); // add event listener to handle window resizing
+//         // window.addEventListener("resize", handleResize); // add event listener to handle window resizing
     
-        // return () => {
-        //   window.removeEventListener("resize", handleResize); // remove event listener when component is unmounted
-        // };
-      }, [window.innerWidth, window.innerHeight]);
-console.log("coeff", coeff)
-    const canvasRef = useRef<HTMLCanvasElement>(null);  
+//         // return () => {
+//         //   window.removeEventListener("resize", handleResize); // remove event listener when component is unmounted
+//         // };
+//       }, [window.innerWidth, window.innerHeight]);
+
+// console.log("coeff", coeff)
+//     const canvasRef = useRef<HTMLCanvasElement>(null);  
          
     useEffect(() => {
         if (canvasRef.current){
@@ -49,16 +49,11 @@ console.log("coeff", coeff)
                 
                 // Draw the table
                 context.beginPath();
-<<<<<<< HEAD
                 //context.fillStyle = "black";
                 context.fillStyle = backColorGame;
                 context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
-=======
-                context.fillStyle = "black";
-                context.fillRect(0, 0, gameinit.table_width * coeff, gameinit.table_height*coeff);
->>>>>>> baa5c22 (size + game)
                 context.closePath();
-console.log("46 coeff", coeff)
+//console.log("46 coeff", coeff)
                 // center dotted line
                 context.setLineDash([5, 5]);
                 context.beginPath();

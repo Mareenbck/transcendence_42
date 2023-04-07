@@ -15,7 +15,7 @@ function Game() {
     const [users, setOnlineSpectators] = useState<[player]> ();
     const [players, setOnlinePlayers] = useState<[player]> ();
 
-<<<<<<< HEAD
+
 
     // Pour partis de Modal select Color,
     
@@ -59,10 +59,9 @@ function Game() {
     }, [backColorGame])
 
     
-    //**** *******************************************************************/
+//**** *******************************************************************/
 
-=======
->>>>>>> baa5c22 (size + game)
+
     const [gameinit, setGameInit] = useState<gameInit>(
         {
             width: 600,
