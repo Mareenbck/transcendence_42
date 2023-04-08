@@ -1,12 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { AuthService } from '../auth/auth.service';
-import { Socket } from 'socket.io';
-import { parse } from 'cookie';
+import { Global, Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
- 
+import { Server } from "socket.io";
+import UsersSockets from "./socket.class";
+
+@Global()
 @Injectable()
 export class GlobalService {
-  constructor(
+  public server: Server = null;
+  public userSockets: UsersSockets;
+  constructor() {}
+  notifyIfConnected(usernames: string[], eventName: string, eventData: any) {
+      usernames.forEach((username) => {
+          this.userSockets.emitToUser(username, eventName, eventData);
+      });
+  }
+
+  /*  constructor(
     private readonly authenticationService: AuthService,) {}
  
   async getUserFromSocket(socket: Socket) {
@@ -18,4 +27,5 @@ export class GlobalService {
     }
     return user;
   }
+*/
 }
