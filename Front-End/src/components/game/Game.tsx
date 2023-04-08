@@ -69,7 +69,7 @@ function Game() {
 //////////////////////////////////////////////////////////
 
     useEffect(() => {
-console.log(user);
+//console.log(user);
         socket.emit("addUser", user);
     },[user]);
 
@@ -94,7 +94,7 @@ console.log(user);
         socket?.on('init-pong', initListener);
         socket?.on('pong', updateListener);
         socket?.on('winner', initWinner )
-    console.log("winner = ", gamewinner.winner);        
+   // console.log("winner = ", gamewinner.winner);        
         return () => {
             socket?.off('init-pong', initListener);
             socket?.off('pong', updateListener);
@@ -105,7 +105,7 @@ console.log(user);
 
 	// onKeyDown handler function
 	const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-console.log("event.code = ", event.code);
+//console.log("event.code = ", event.code);
 		if (event.code === "ArrowUp") {
 			socket?.emit('move', "up")
 		}

@@ -10,7 +10,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { ChatMessModule } from './chat/chat-mess/chat-mess.module';
 import { DirMessModule } from './chat/dir-mess/dir-mess.module';
 import { ChatroomModule } from './chat/chatroom2/chatroom2.module';
+import { ChatService } from './chat/chat.service';
 import { GameModule } from './game/game.module';
+import { GameService } from './game/game.service';
 import { GameGateway } from './game/game.gateway';
 import { FriendshipModule } from './friendship/friendship.module';
 import { GlobalService } from './gateway/global.service';
@@ -38,6 +40,8 @@ import { GlobalService } from './gateway/global.service';
     	GameGateway,
     	GlobalGateway,
 		GlobalService,
+		GameService,
+		ChatService,
     ],
 	exports: [JwtModule],
 })

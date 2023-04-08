@@ -37,8 +37,8 @@ let players: profile [] = [];
     if (players.length < 2) {
       !players.some((user) => +user.userId.userId === +userId.userId) &&
       players.push({userId, socketId})
-console.log('40 players = ', players);
-console.log('41 player[0] = ', players[0]);
+//console.log('40 players = ', players);
+//console.log('41 player[0] = ', players[0]);
 
   } else {
     !users.some((user) => +user.userId.userId === +userId.userId) &&
@@ -80,12 +80,12 @@ export class GameGateway {
     );
 
     this.server.on('connection', (socket: Socket) => {
-console.log('51 Connected socket = ', socket.id);
+//console.log('51 Connected socket = ', socket.id);
       if(socket) {game.init(socket);} //game initialization on connection
       socket.on("addUser", (userId) => {
         addUser(userId, socket.id); // add user : array users or array players
-console.log ('55 players = ', players.length);
-console.log ('56 users = ',users.length);
+//console.log ('55 players = ', players.length);
+//console.log ('56 users = ',users.length);
 
         // const user = getUser(users);
         // const player = getPlayers(players);
@@ -97,13 +97,13 @@ console.log ('56 users = ',users.length);
             players[0], players[1], // start game with 2 players
           );
           players = [];
-console.log ('95 players = ', players.length);
-console.log ('96 users = ',users.length);         
+//console.log ('95 players = ', players.length);
+//console.log ('96 users = ',users.length);         
         }
       });
 
       this.server.sockets.sockets.get(socket.id).on('disconnect', () => {//??
-console.log(`78 Disconnected socket.id = ${socket.id}`);
+//console.log(`78 Disconnected socket.id = ${socket.id}`);
         removeUser(socket.id);
         this.server.emit("getSpectator", users);
       });

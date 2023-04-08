@@ -78,7 +78,7 @@ console.log("constructor Class.game");
 	}
 // function: initialization of game // during the ferst connection to the game
 	public init(socket: Socket){
-console.log(`init socket ${socket.id}`);
+//console.log(`init socket ${socket.id}`);
 		socket.emit('init-pong', { 
 			table_width: width,
 			table_height: height,
@@ -113,21 +113,21 @@ console.log(`init socket ${socket.id}`);
 	// board reflections
 		if (this.ball.x < ballR) {
 			++this.playerR.score;
-console.log('left loss', this.playerL.score, this.playerR.score);
+//console.log('left loss', this.playerL.score, this.playerR.score);
 			this.ball.x = width / 2 - this.ballSpeedX;
 			this.ball.y = height / 2 - this.ballSpeedX;
 			++ballSpeed;
 			this.ballSpeedX = ballSpeed;
-console.log('ballSpeed = ', ballSpeed);
+//console.log('ballSpeed = ', ballSpeed);
 		} else if (this.ball.x > width - ballR) {
 			this.ballSpeedX = -this.ballSpeedX;
 			++this.playerL.score;
-console.log('right loss', this.playerL.score, this.playerR.score);
+//console.log('right loss', this.playerL.score, this.playerR.score);
 			this.ball.x = width / 2 - this.ballSpeedX;
 			this.ball.y = height / 2 - this.ballSpeedX;
 			++ballSpeed;
 			this.ballSpeedX = -ballSpeed;
-console.log('ballSpeed = ', ballSpeed);
+//console.log('ballSpeed = ', ballSpeed);
 		} else if (this.ball.y < ballR || this.ball.y > height - ballR) {
 			this.ballSpeedY = -this.ballSpeedY;
 		}
@@ -162,21 +162,21 @@ console.log('ballSpeed = ', ballSpeed);
 		idPlayerR: profile,
 		idPlayerL: profile,
 	): void {
-console.log("run");
-console.log("idPlayerR", idPlayerR);
-console.log("idPlayerL", idPlayerL);
+//console.log("run");
+//console.log("idPlayerR", idPlayerR);
+//console.log("idPlayerL", idPlayerL);
 		this.playerR.profile = idPlayerR;
 		this.playerL.profile = idPlayerL;
 		this.isrunning = true;
 		const socketR = this.server.sockets.sockets.get(idPlayerR.socketId);
 		const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
-console.log("socketR", socketR.id);
-console.log("socketL", socketL.id);		
+//console.log("socketR", socketR.id);
+//console.log("socketL", socketL.id);		
 
 
 // move rakets
 		socketR.on ('move', (message: string) => {
-console.log("playerR move", message);
+//console.log("playerR move", message);
 			if (message == 'up') {
 				if (this.playerR.racket.y > 0) {
 					this.playerR.racket.y -= racketSpeedY;
@@ -191,7 +191,7 @@ console.log("playerR move", message);
 		});
 
 		socketL.on ('move', (message: string) => {
-	console.log("playerL move", message);
+//console.log("playerL move", message);
 			if (message == 'up') {
 				if (this.playerL.racket.y > 0) {
 					this.playerL.racket.y -= racketSpeedY;
@@ -252,7 +252,7 @@ console.log("playerR move", message);
 				clearInterval(this.interval);
 				
 				if (!this.isrunning){
-console.log("257 winner", this.winner)
+//console.log("257 winner", this.winner)
 // this.gameService.create(data: {
 // 				playerOne: {
 // 					connect: {id: this.playerR.profile.userId.userId}},
@@ -282,7 +282,7 @@ console.log("257 winner", this.winner)
 				this.playerR.score = 0;
 			}
 		}, period);
-console.log('stop game')
+//console.log('stop game')
 	}
 
 }

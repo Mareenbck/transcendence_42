@@ -10,11 +10,22 @@ import ButtonToggle from "../components/utils/ButtonToggle";
 import { Drawer } from '@mui/material';
 import Card from "../components/utils/Card";
 
+import io from "socket.io-client";
+import { socket } from '../service/socket';
+
+
 const Menu = () => {
 	const authCtx = useContext(AuthContext);
 
 	const isLoggedIn = authCtx.isLoggedIn;
 	const id = authCtx.userId;
+
+	/*
+	socket.io.connect();
+	console.log("menu connect ?")
+	console.log(socket)
+	console.log("-----------------------")
+*/
 
 	return (
 		<>
