@@ -1,9 +1,9 @@
 import { useEffect, useContext, useState, useRef, FormEvent } from 'react'
 import { Link } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
-import io, { Socket } from "socket.io-client";
-//import io from "socket.io-client";
-//import { Socket } from '../../service/socket';
+//import io, { Socket } from "socket.io-client";
+import io from "socket.io-client";
+import useSocket, { socket } from '../../service/socket';
 import MessagesInput from "./MessagesInput"
 import Conversation from "./channels/Conversation"
 import ConversationReq from "./channels/ConversationRequest"
@@ -20,7 +20,7 @@ import Channels from './channels/Channels';
 
 
 function Chat() {
-  const socket = useRef();
+  //const socket = useRef();
   const user = useContext(AuthContext);
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
@@ -43,15 +43,14 @@ function Chat() {
   const [unfromBlock, setUnfromBlock] = useState<number>();
   const [invited, setInvited] = useState ();
 
+  const [sendMessage, addListener] = useSocket()
+
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////
 
   useEffect(() => {
-    socket.current = io("ws://localhost:8001")
-//    socket.current.data.fromPage = "chat";
-
-    socket.current.on("getMChat", (data)=> {
+    addListener("getMChat", (data)=> {
       setAMessageChat({
         authorId: data.authorId,
         chatroomId: data.chatroomId,
@@ -60,9 +59,7 @@ function Chat() {
       });
     })
     
-    socket.current.on("getMD", (data)=> {
-      console.log(user);
- //     console.log(data);
+    addListener("getMD", (data)=> {
       setAMessageD({
         content: data.content,
         author: data.author,
@@ -70,27 +67,26 @@ function Chat() {
         createdAt: Date.now(),
       });
     });
-//    return () => {
-//      socket.current.off("getMChat");
-//      socket.current.off("getMD");
-//    }
   }, []);
 
-  // useEffect(() => {
-  //   socket.current.on("getConv", data => {
-  //     setAConversation({
-  //       name: data.content.name,
-  //       avatar: data.content.avatar,
-  //     });
-  //   });
-  // }, []);
+  useEffect(() => {
+    addListener("getConv", data => {
+      setAConversation({
+        name: data.content.name,
+        avatar: data.content.avatar,
+      });
+    });
+  }, []);
 
   useEffect(() => {
-    socket.current.emit("addUserC", user);
-  },[user])
+    sendMessage("addUserC", user);
+    return () => {
+      sendMessage("removeUserC", user);
+    }
+  },[])
 
   useEffect(() => {
-    socket.current.on("getUsersC", users => {
+    addListener("getUsersC", users => {
       setOnlineUsers(users);
     });
   });
@@ -103,36 +99,34 @@ function Chat() {
 */
 
   useEffect(() => {
-    socket.current.on("wasInvited", data => {
-      console.log(data);
+    addListener("wasInvited", data => {
       setInvited(data.from.username);
     });
   });
 
  useEffect(() => {
-    socket.current.on("wasBlocked", data => {
+    addListener("wasBlocked", data => {
       if (+data.id !== +id)
       { setFromBlock(+data.id);}
     });
   }, []);
 
   useEffect(() => {
-    socket.current.on("wasUnblocked", data => {
+    addListener("wasUnblocked", data => {
       if (+data.id !== +id)
       { setUnfromBlock(+data.id);}
     });
   }, []);
 
   useEffect(() => {
-    socket.current.emit("addUser", user);
+    sendMessage("addUser", user);
   },[user])
 
   useEffect(() => {
-    socket.current.on("getUsers", users => {
+    sendMessage("getUsers", users => {
       setOnlineUsers(users);
     });
   })
-
 
   useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
@@ -180,7 +174,7 @@ function Chat() {
         try {
           const response = await MessageReq.getMess(user, currentChat?.id);
           setMessages2(response);
-          socket?.current.emit("userRoom", {
+          sendMessage("userRoom", {
             userId: user.userId,
             roomId: currentChat.id,
           })
@@ -242,7 +236,7 @@ function Chat() {
   useEffect(() => {
     if (toBlock)
     {
-      socket?.current.emit("toBlock", {
+      sendMessage("toBlock", {
         blockTo: +toBlock.id,
         blockFrom: +id,
       })
@@ -273,7 +267,7 @@ function Chat() {
   useEffect(() => {
     if (toUnblock)
     {
-      socket?.current.emit("toUnblock", {
+      sendMessage("toUnblock", {
         blockTo: +toUnblock.id,
         blockFrom: +id,
       })
@@ -351,7 +345,7 @@ function Chat() {
 
   const inviteGame = (playerId) => {
     console.log(playerId);
-    socket?.current.emit("InviteGame", {
+    sendMessage("InviteGame", {
       author: +id,
       player: +playerId,
     });
@@ -371,7 +365,7 @@ function Chat() {
       chatroomId: currentChat.id,
     };
 
-    socket?.current.emit("sendMChat", {
+    sendMessage("sendMChat", {
       authorId: +id,
       chatroomId: +currentChat?.id,
       content: newMessage2,
@@ -397,7 +391,7 @@ function Chat() {
 
     if (currentDirect?.userId)
     {
-      socket?.current.emit("sendMD", {
+      sendMessage("sendMD", {
         author: +id,
         receiver: +currentDirect?.userId,
         content: newMessageD,
