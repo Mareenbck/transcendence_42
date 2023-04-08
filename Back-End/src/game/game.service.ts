@@ -99,8 +99,21 @@ export class GameService {
                 }
               });
 
-
+	});
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  create({playerOneId, playerTwoId, winnerId, score1, score2}) {
+    return this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
+
+//////////////////////////////////////
+//////////////////////////////////////
+// Les infos sur les sockets et l'accès au serveur Global
+// Plus besoin de gameGateway
+  public server: Server = null;
+  public userSockets: UsersSockets;
+///////////////////////////////////////
+////////////////////////////////////////
+
+
   create({playerOneId, playerTwoId, winnerId, score1, score2}) {
     return this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
   }

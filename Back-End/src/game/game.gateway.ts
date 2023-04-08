@@ -17,6 +17,7 @@ let users: profile [] = [];
 //two players
 let players: profile [] = [];
 
+
 // // const addUser = (userId, socketId) => {
 // //   if (players.length < 2) {
 // // console.log('22 player ', userId);
@@ -63,6 +64,7 @@ let players: profile [] = [];
   //     //this.achievementsService,
   //     this.service
   //   );
+
 
 
 @WebSocketGateway()
@@ -139,6 +141,7 @@ export class GameGateway {
 
 
 
+
 //     this.server.on('connection', (socket: Socket) => {
 // console.log('51 Connected socket = ', socket.id);
 //       if(socket) {
@@ -173,3 +176,4 @@ export class GameGateway {
 // }
 
 // this.games.splice(this.games.indexOf(game), 1);
+

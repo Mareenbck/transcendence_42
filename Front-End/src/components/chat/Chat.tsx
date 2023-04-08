@@ -35,14 +35,13 @@ function Chat() {
   const [newMessageD, setNewMessageD] = useState<DirectMessage> (null);
   const [otherUsers, setOtherUsers] = useState <UserChat[]> ([]);
   const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
-  const scrollRef = useRef();
   const [toBlock, setToBlock] = useState(null);
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
   const [unfromBlock, setUnfromBlock] = useState<number>();
   const [invited, setInvited] = useState<UserChat> ();
   const [sendMessage, addListener] = useSocket()
-
+  const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////

@@ -109,10 +109,17 @@ function Game() {
 
 //////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 //     useEffect(() => {
 // //console.log(user);
 //         socket.emit("addUser", user);
 //     },[user]);
+=======
+    useEffect(() => {
+//console.log(user);
+        socket.emit("addUser", user);
+    },[user]);
+>>>>>>> 6e86ae6 (single socket for all FE WITH TOKEN)
 
     // useEffect(() => {
     //     socket.on("getPlayers", (players: React.SetStateAction<[player] | undefined>) => {

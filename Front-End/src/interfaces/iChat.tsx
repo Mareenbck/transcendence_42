@@ -1,6 +1,4 @@
-import {RoomMessage, DirectMessage, UserChat} from "../interfaces/iChat";
-
-export default interface DirectMessage 
+export interface DirectMessage 
 {
     id: number;
     content  : string;
@@ -9,7 +7,7 @@ export default interface DirectMessage
     createdAt: Date;
 }
 
-export default interface RoomMessage {
+export interface RoomMessage {
     id: number;
     chatroomId: number;
     content:  string;
@@ -17,7 +15,7 @@ export default interface RoomMessage {
     createdAt: Date;
 };
 
-export default interface ChatRoom {
+export interface ChatRoom {
   id: number;
   name:  string;
   isPublic: boolean;
@@ -25,7 +23,7 @@ export default interface ChatRoom {
   isProtected: boolean;
 };
 
-export default interface UserChat {
+export interface UserChat {
 	id: number;
 	username: string;
 	email: string;
@@ -34,4 +32,29 @@ export default interface UserChat {
   blockedTo: UserChat[];
   blockedFrom: UserChat[];
 	dirMessEmited: DirectMessage[];
+};
+
+export interface UserCtx {
+  token: string;
+  userId: string;
+  username: string;
+  isLoggedIn: boolean;
+  avatar: string;
+  ftAvatar: string;
+  is2FA: boolean;
+}
+
+export interface Invite {
+    authorId: number;
+    playerId: number;
+};
+
+export interface UserInRoom {
+  userId: number;
+  roomId: number;
+};
+
+export interface ToBlock {
+  blockTo: number;
+  blockFrom: number;
 };

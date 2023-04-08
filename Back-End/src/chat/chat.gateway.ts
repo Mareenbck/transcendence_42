@@ -55,12 +55,35 @@ constructor(private authService: AuthService){}
 
   onModuleInit(){
     this.server.on('connection', (socket) => {
+<<<<<<< HEAD
 //      console.log(socket.id);
 //      console.log('Connected CHAT BACK END');
 
       socket.on("addUserC", (userId) => {
         addUser(userId, socket.id);
         this.server.emit("getUsersC", users);
+=======
+      console.log(socket.id);
+      console.log('Connected CHAT BACK END');
+
+      socket.on("addUserC", (userId) => {
+//        if (userId.token){
+//          try {
+//            this.authService.verifySocketToken(userId.token);
+            addUser(userId, socket.id);
+            this.server.emit("getUsersC", users);
+                console.log(userId.userId);
+                console.log('ADD USER CHAT PAGE');
+//          } catch (e) {
+//            console.log(e);
+//          }
+//        }
+//        else {
+//          this.server.to(socket.socketId).emit("notAuth", {
+//            content: "Not Authorised User",
+//          });
+//        }
+>>>>>>> 6e86ae6 (single socket for all FE WITH TOKEN)
       });
 
       socket.on("removeUserC", (userId) => {
@@ -151,8 +174,13 @@ constructor(private authService: AuthService){}
       });
 
       socket.on('disconnect', () => {
+<<<<<<< HEAD
    //     console.log(socket.id);
    //     console.log('Disconnected CHAT BACK END');
+=======
+        console.log(socket.id);
+        console.log('Disconnected CHAT BACK END');
+>>>>>>> 6e86ae6 (single socket for all FE WITH TOKEN)
         removeUser(socket.id);
      //   removeUser2(socket.id);
         this.server.emit("getUsers", users);

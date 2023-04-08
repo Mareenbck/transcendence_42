@@ -3,7 +3,11 @@ import {
   MessageBody, OnGatewayConnection,
   SubscribeMessage, OnGatewayInit,
   WebSocketGateway, OnGatewayDisconnect,
+<<<<<<< HEAD
   WebSocketServer, WsException,
+=======
+  WebSocketServer,
+>>>>>>> 6e86ae6 (single socket for all FE WITH TOKEN)
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { GlobalService } from './global.service';
@@ -79,12 +83,14 @@ console.log(socket.handshake.auth.token);
   @SubscribeMessage('addUserChat')
   async chatAddUsers(@MessageBody() userId: string, @ConnectedSocket() socket: Socket,): Promise<void> 
   {     
-    const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+    if (userId.userId !== null) {
+      const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
     if (!user) {
       throw new WsException('Invalid credentials.');
     }
     this.chatService.addUserChat(userId, socket.id)
-  }
+    }
+  } 
 
   @SubscribeMessage('removeUserChat')
   async chatRemoveUsers(@MessageBody() userId: string, @ConnectedSocket() socket: Socket,) 
