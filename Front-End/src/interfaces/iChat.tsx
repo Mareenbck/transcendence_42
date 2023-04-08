@@ -1,4 +1,4 @@
-export interface DirectMessage 
+export default interface DirMess 
 {
     id: number;
     content  : string;

@@ -22,7 +22,6 @@ function App() {
 	const authCtx = useContext(AuthContext);
 	const [isLoggedIn, setLoggedIn] = useState(authCtx.isLoggedIn)
 	const [sendMessage, addListener] = useSocket();
-
 	useEffect(() => {
 		console.log({isLoggedIn})
 		if (isLoggedIn) sendMessage('welcome', 'welcome')

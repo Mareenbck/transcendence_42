@@ -15,6 +15,11 @@ import { UserDto } from 'src/user/dto/user.dto';
 =======
 
 
+//////
+import { Server, Socket } from "socket.io";
+import UsersSockets from "src/gateway/socket.class";
+//////
+
 
 
 >>>>>>> a68fd93 (serveur BE 2/2)
@@ -26,6 +31,8 @@ import UsersSockets from "src/gateway/socket.class";
 @Injectable()
 export class GameService {
   constructor(private prisma: PrismaService, private userService: UserService){}
+  async create({playerOneId, playerTwoId, winnerId, score1, score2}) {
+    return await this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
 
 // Les infos sur les sockets et l'accès au serveur Global
   public server: Server = null;

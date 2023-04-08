@@ -83,6 +83,7 @@ export class GameGateway {
       this.service
     );
 
+
     this.server.on('connection', (socket: Socket) => {
 console.log('51 Connected socket = ', socket.id);
       if(socket) {
