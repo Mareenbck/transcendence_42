@@ -1,11 +1,12 @@
 
 .combPos{
     display: flex;
-    flex-direction: column-reverse;
-    flex: 0;
+   
+    flex-direction:row;
     align-items:center;
     margin-top: auto;
    padding-top: 0;
+   align-self: self-end;
 }
 .cadre{
 
@@ -14,9 +15,9 @@
     padding-left: auto;
     padding-right: auto;
     text-align: center;
-
+    
     border: 3px solid black;
-    margin: 20px;
+    margin: 15px;
     margin-top: 0;
     width: 100px;
     direction:initial;
