@@ -14,19 +14,17 @@ export class ChatService {
     userChat = new Array();
     roomUsers = new Array();
 
-    addUserChat:any = (userId : any, socketId: string) => {
-        this.userChat = this.userChat.filter( user => user.userId.isLoggedIn === true);
-        this.roomUsers = this.roomUsers.filter( room => room.userId.isLoggedIn === true);
+    addUserChat:any = (userId : any, socketId: number) => {
         !this.userChat.some((u) => +u.userId.userId === +userId.userId) &&
         this.userChat.push({userId, socketId})
+        console.log("szasazsazsasasasazsasas");
+        //console.log(this.userChat);
         this.server.sockets.emit('getUsersChat', this.userChat);
     }
 
-    removeUserChat:any = (userId: any) => {
-        this.userChat = this.userChat.filter(user => +user.userId.userId !== +userId.userId);
-        this.roomUsers = this.roomUsers.filter( room => +room.userId.userId !== +userId.userId);
-        this.userChat = this.userChat.filter( user => user.userId.isLoggedIn === true);
-        this.roomUsers = this.roomUsers.filter( room => room.userId.isLoggedIn === true);
+    removeUserChat:any = (userId: number) => {
+        this.userChat = this.userChat.filter(user => +user.userId.userId !== +userId);
+        this.roomUsers = this.roomUsers.filter( room => +room.userId.userId !== +userId);
         this.server.sockets.emit('getUsersChat', this.userChat);
     };
 
@@ -36,23 +34,11 @@ export class ChatService {
         console.log(this.roomUsers);
     };
 
-    removeRoomUser:any = (roomId: number, userId: number, socketId: number) => {
-        this.roomUsers = this.roomUsers.filter( room => +room.userId !== +userId);
-        roomId && this.roomUsers.push({roomId, userId, socketId});
-        console.log(this.roomUsers);
-    };
-
-
-    getUser:any = (userId: number) => {
-        return this.userChat.find(u => +u.userId.userId === +userId);
-    }
-
-    // SENDING MESSAGES
-    sendRoomMessage:any = (authorId: number, chatroomId: number, content: string) => {
+    sendChatMessage:any = (authorId: number, chatroomId: number, content: string) => {
         const roomU = this.roomUsers.filter( room => +room.roomId === +chatroomId);
         if (roomU.length > 1) {
             for(const room of roomU) {
-                this.server.to(room.socketId).emit("getMessageRoom", {
+                this.server.to(room.socketId).emit("getMChat", {
                     authorId,
                     chatroomId,
                     content,
