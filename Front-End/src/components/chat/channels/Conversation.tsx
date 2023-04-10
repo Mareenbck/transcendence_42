@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./Conversation.css"
+import "./../../../style/Conversation.css"
 import React from "react";
 
 export default function Conversation(props: any) {

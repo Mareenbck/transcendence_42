@@ -10,5 +10,10 @@ export class CreateChatroomDto
   @MaxLength(45)
   name:  string;
   visibility: string;
+}
 
+export class ParticipantsOnChannel
+{
+  role: string;
+  status: string;
 }

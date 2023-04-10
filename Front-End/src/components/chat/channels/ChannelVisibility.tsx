@@ -1,5 +1,5 @@
 import React, { FormEvent, useContext, useEffect, useState } from "react";
-import "../../style/ChannelVisibility.css"
+import "../../../style/ChannelVisibility.css"
 import Settings from '@mui/icons-material/Settings';
 import KeyIcon from '@mui/icons-material/Key';
 import PublicIcon from '@mui/icons-material/Public';
@@ -8,48 +8,80 @@ import IconButton from "@mui/material/IconButton";
 import { Modal } from "@mui/material";
 import { Box } from "@mui/material";
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import ConversationReq from "./conversation/ConversationRequest";
-import AuthContext from "../../store/AuthContext";
-import PopUp from "./PopUpChannel";
+import ConversationReq from "./ConversationRequest";
+import AuthContext from "../../../store/AuthContext";
+import ChannelsSettings from "./ChannelsSettings";
 
 export default function ChannelVisibility(props: any) {
 
   const [openModal, setOpenModal] = useState(false);
   const userContext = useContext(AuthContext);
+  const [isAdmin, setIsAdmin] = useState<string | null>('')
+
+
+  const getRolesUser = async (id: string, channelId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/chatroom2/userTable/${id}/${channelId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userContext.token}`
+          }
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.length > 0) {
+          setIsAdmin(data[0].role);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
   
   
+   
+  useEffect(() => {
+   getRolesUser(userContext.userId, props.id);
+      // setIsAdmin(getRole.role); 
+  }, [props.id, userContext.userId])
+    
+
   function getIconByChannelType() {
     let icon;
         
     if (props.visibility === "PRIVATE") {
       icon = (
         <>
+        <div className="visibility-icon">
           <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
           <LockIcon className="channel-icon" fontSize="small" />
-          <IconButton onClick={() => setOpenModal(true)}>
-            <Settings fontSize="small" />
-          </IconButton>
+        </div>
         </>
-
       );
     } else if (props.visibility === "PWD_PROTECTED") {
       icon = (
         <>
+         <div className="visibility-icon">
           <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
           <KeyIcon className="channel-icon" fontSize="small" />
-          <IconButton onClick={() => setOpenModal(true)}>
-            <Settings fontSize="small" />
-          </IconButton>
+          <ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
+        </div>
         </>
       );
-    } else {
+    } else if (props.visibility == "PUBLIC") {
       icon = (
-        <>          
-        <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
-          <PublicIcon className="channel-icon" fontSize="small" />
-          <IconButton onClick={() => setOpenModal(true)}>
-            <Settings fontSize="small" />
-          </IconButton>
+        <>   
+        <div className="visibility-icon">
+          <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
+          <PublicIcon className="channel-icon" fontSize="small" />        
+        </div>       
         </>
       );
     }
@@ -63,6 +95,8 @@ export default function ChannelVisibility(props: any) {
     console.log("RES")
     console.log(res)
   }
+
+
   return (
     <div>
       {getIconByChannelType()}

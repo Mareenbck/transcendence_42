@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState, useRef, FormEvent } from 'react'
 import { Link } from "react-router-dom";
-import './Chat.css'
+import './../../style/Chat.css'
 
 function PopupChallenge(props) {
 

@@ -27,7 +27,16 @@ export class Chatroom2Controller {
   async findAll(): Promise<CreateChatroomDto[]> {
     return await this.chatRoomService.findAll();
   };
- 
+  
+  @Get('userTable/:id/:channelId')
+  async getUserTable(@Param('id') id: string, @Param('channelId') channelId:string) {
+    const response = await this.chatRoomService.getUserTable(parseInt(id), parseInt(channelId));
+    console.log("response usertable");
+    console.log(response);
+    return response;
+  }
+  
+
   // @Post(':id/delete')
   // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {
   //   return await this.prismaService.chatroom.deleteChatroom(id);

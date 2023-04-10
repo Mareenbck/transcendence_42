@@ -1,6 +1,6 @@
 .icon-setting {
     color: grey;
-    margin-left: 10px;
+    margin-left: 3px;
 }
 
 .modal-container {
@@ -23,3 +23,11 @@
     color: #699BF7;
 }
 
+.join-channel {
+    margin: 10px;
+}
+
+.visibility-icon {
+    display: flex;
+    align-items: center; 
+}

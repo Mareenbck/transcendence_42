@@ -35,10 +35,10 @@ export class ChatroomService {
           role: "ADMIN"
         }
       });
-      console.log("USER ON CHANNEL")
-      console.log(userOnChannel)
-      console.log("NEW CHANNEL")
-      console.log(newChannel)
+      // console.log("USER ON CHANNEL")
+      // console.log(userOnChannel)
+      // console.log("NEW CHANNEL")
+      // console.log(newChannel)
       return newChannel;
   }
 
@@ -65,6 +65,21 @@ export class ChatroomService {
   findOne(id: number) {
     return this.prisma.chatroom.findUnique({where: {id: id}});;
   }
+
+  async getUserTable(userId: number, channelId: number) {
+    const users = await this.prisma.userOnChannel.findMany( {where: 
+        {
+          AND: [
+
+            {userId:userId},
+            {channelId: channelId},
+          ],
+        }})
+    console.log("USER IN SERVICE")
+    console.log(users)
+    return users;
+  }
+
 
   // update(id: number, updateChatroom2Dto: UpdateChatroomDto) {
   //   return this.prisma.chatroom.update({

@@ -60,6 +60,8 @@ export class ConversationReq {
         throw new Error(message);
       }
       const data = await resp.json();
+      console.log("DATA IN JOIN")
+      console.log(data);
     } catch(err) {
       console.log(err)
     }
