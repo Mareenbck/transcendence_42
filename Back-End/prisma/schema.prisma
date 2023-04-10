@@ -97,6 +97,7 @@ model Chatroom {
   users        ChatroomUsers[]
   participants UserOnChannel[]   
   cr_messages  ChatroomMessage[]
+  hash         String?
 }
 
 
