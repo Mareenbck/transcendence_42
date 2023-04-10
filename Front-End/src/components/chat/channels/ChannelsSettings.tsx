@@ -9,10 +9,9 @@ export default function ChannelsSettings(props: any) {
     const [openModal, setOpenModal] = useState(false);
 	const [icon, setIcon] = useState<any>();
 
-    // const style = {
-    //     opacity: props.role ? 1 : 0,
-    //   };
     useEffect(() => {
+        // console.log("props.role == ")
+        // console.log(props.role)
 		if (props.role === "ADMIN") {
 			setIcon(<Settings />);
 		} else {
@@ -20,14 +19,12 @@ export default function ChannelsSettings(props: any) {
 		}
 		}, [props.role]);
 
-//console log le props.role
     return (
         <>
             <IconButton onClick={() => setOpenModal(true)}>       
             {icon}         
             </IconButton>        
         </>
-        // <div style={style}>
-        // </div>
     );
+
 }

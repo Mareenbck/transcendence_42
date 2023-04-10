@@ -46,8 +46,8 @@ function PopUp(props: any) {
         };
         try {
             const res = await ConversationReq.postRoom(user, newConv);
-            console.log("RES = ")
-            console.log(res)
+            // console.log("RES = ")
+            // console.log(res)
         } catch (err) { 
             console.log(err);
         }

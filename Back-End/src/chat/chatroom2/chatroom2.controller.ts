@@ -31,8 +31,8 @@ export class Chatroom2Controller {
   @Get('userTable/:id/:channelId')
   async getUserTable(@Param('id') id: string, @Param('channelId') channelId:string) {
     const response = await this.chatRoomService.getUserTable(parseInt(id), parseInt(channelId));
-    // console.log("response usertable");
-    // console.log(response);
+    console.log("response usertable");
+    console.log(response);
     return response;
   }
   

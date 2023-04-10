@@ -16,7 +16,6 @@ export default function ChannelVisibility(props: any) {
 
   const [openModal, setOpenModal] = useState(false);
   const userContext = useContext(AuthContext);
-  const [userOnTable, setUserOnTable] = useState([]);
   const [isAdmin, setIsAdmin] = useState<string>('')
 
 
@@ -33,8 +32,7 @@ export default function ChannelVisibility(props: any) {
       );
       if (response.ok) {
         const data = await response.json();
-        return (data);
-        // setUserOnTable(data)      
+        setIsAdmin(data[0]?.role ?? '')
       }
     } catch (err) {
       console.log(err);
@@ -43,13 +41,10 @@ export default function ChannelVisibility(props: any) {
   
    
   useEffect(() => {
-   const getRole =  getRolesUser(userContext.userId, props.id);
-      setIsAdmin(getRole.role); 
+   getRolesUser(userContext.userId, props.id);
+      // setIsAdmin(getRole.role); 
   }, [props.id, userContext.userId])
-  
-  console.log('user on table')
-  console.log(userOnTable)
-  
+    
 
   function getIconByChannelType() {
     let icon;
