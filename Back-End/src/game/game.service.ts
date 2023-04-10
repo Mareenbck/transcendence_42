@@ -2,6 +2,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Game } from '@prisma/client';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
+import { GameDto } from './dto/game.dto';
+import { TwoFaUserDto } from 'src/auth/dto/2fa.dto';
+import { UserDto } from 'src/user/dto/user.dto';
 
 
 @Injectable()
@@ -35,5 +38,25 @@ export class GameService {
     });
     return games;
   }
+
+  async updateUserXPAndLevel(userId: number, allGames: GameDto[]) {
+    const xpPerWin = 25;
+    const numWins = allGames.filter(game => game.winnerId === userId).length;
+    const newXP = numWins * xpPerWin;
+
+    let newLevel = Math.floor(newXP / 100);
+
+    const moduloXp = newXP % 100;
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        xp: moduloXp,
+        level: newLevel,
+      },
+    });
+
+    return user;
+}
 
 }

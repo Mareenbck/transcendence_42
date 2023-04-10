@@ -29,10 +29,19 @@ export class GameController {
   }
 
   @Get('/allGames/:id')
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   async getAllUserGames(@Param('id') userId: string) {
     const allGames = await this.gameService.getUserGames(parseInt(userId));
+    // await this.gameService.updateUserXPAndLevel(parseInt(userId), allGames);
     return allGames;
+  }
+
+  @Get('/level/:id')
+  @UseGuards(JwtGuard)
+  async getUserLevel(@Param('id') userId: string) {
+    const allGames = await this.gameService.getUserGames(parseInt(userId));
+    const user = await this.gameService.updateUserXPAndLevel(parseInt(userId), allGames);
+    return user;
   }
 }
 

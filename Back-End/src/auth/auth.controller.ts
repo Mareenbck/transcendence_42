@@ -10,7 +10,7 @@ import { TwoFactorAuthService } from './2FA/2FactorAuth.service';
 import { FortyTwoStrategy, Profile_42 } from './strategy/42.strategy';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
-import { JwtGuard } from './guard';
+import { AuthGuard, JwtGuard } from './guard';
 
 
 @Controller('auth')

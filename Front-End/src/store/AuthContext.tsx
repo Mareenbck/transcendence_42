@@ -127,6 +127,7 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const fetchLogout = async () => {
+		localStorage.clear();
 		try {
 			const response = await fetch('http://localhost:3000/auth/logout', {
 				method: 'POST',

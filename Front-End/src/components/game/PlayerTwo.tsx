@@ -13,19 +13,19 @@ const PlayerTwo = (props: any) => {
 
 	useEffect(() => {
 		if (isWinner) {
-			setTrophy(<EmojiEventsIcon />);
+			setTrophy(<EmojiEventsIcon  style={{ fontSize: 35, color: '#f7c738' }}/>);
 		} else {
-			setTrophy(<EmojiEventsIcon style={{ opacity: 0 }} />);
+			setTrophy(<EmojiEventsIcon style={{ fontSize: 35, opacity: 0 }} />);
 		}
 		}, [props.winner, props.player, isWinner]);
 
 	return (
 		<>
+			{/* {props.score} */}
 			<ListItemAvatar>
 				<MyAvatar style="s" alt={"avatar"} avatar={props.player.avatar} ftAvatar={props.player.ftAvatar} id={props.player.id} />
 			</ListItemAvatar>
 			<Link to={`/users/profile/${props.player.id}`} className="profile-link">{props.player.username}</Link>
-			{props.score}
 			{trophy}
 		</>
 	)

@@ -3,7 +3,7 @@
 ./.env
 node_modules
 uploads
-
+./prisma/seedold.ts
 
 
 # Logs

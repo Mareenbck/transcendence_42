@@ -38,6 +38,8 @@ model User {
   playerOne           Game[]        @relation("GamePlayerOne")
   playerTwo           Game[]        @relation("GamePlayerTwo")
   winner              Game[]        @relation("GameWinner")
+  xp                  Int           @default(0)
+  level               Int           @default(1)
 
   chatrooms           ChatroomUsers[]
   dirMessEmited       DirectMessage[] @relation(name: "emited")
