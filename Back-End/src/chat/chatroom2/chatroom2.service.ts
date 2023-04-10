@@ -6,13 +6,15 @@ import { UserStatusOnChannel } from '@prisma/client'
 import { BadRequestException, Injectable} from '@nestjs/common';
 import { Chatroom } from '@prisma/client';
 import { UserOnChannel} from '@prisma/client'
+import * as argon from 'argon2';
+
 
 @Injectable()
 export class ChatroomService {
   constructor(private prisma: PrismaService){}
 
     async create(newConv: any, userId: number) {
-      const { name, isPublic, isPrivate, isProtected } = newConv;
+      const { name, isPublic, isPrivate, isProtected, password } = newConv;
       let visibility: UserChannelVisibility;
       if (isPrivate) {
         visibility = UserChannelVisibility.PRIVATE;
@@ -22,6 +24,12 @@ export class ChatroomService {
         visibility = UserChannelVisibility.PWD_PROTECTED;
       }
 
+      const hash = await argon.hash(password);
+
+      if (visibility === UserChannelVisibility.PWD_PROTECTED) {
+        data['hash'] = password;
+      }
+      
       const newChannel = await this.prisma.chatroom.create({
         data: {
           name: name,
@@ -35,12 +43,9 @@ export class ChatroomService {
           role: "ADMIN"
         }
       });
-      // console.log("USER ON CHANNEL")
-      // console.log(userOnChannel)
-      // console.log("NEW CHANNEL")
-      // console.log(newChannel)
       return newChannel;
   }
+
 
   async createUserTable(ids: any)
   {
@@ -75,21 +80,7 @@ export class ChatroomService {
             {channelId: channelId},
           ],
         }})
-    console.log("USER IN SERVICE")
-    console.log(users)
     return users;
   }
-
-
-  // update(id: number, updateChatroom2Dto: UpdateChatroomDto) {
-  //   return this.prisma.chatroom.update({
-  //     where: {id: id},
-  //     data: updateChatroom2Dto });
-  // }
-
-  // async deleteChatroom(id: number) {
-  //   return await this.prisma.chatroom.delete({ 
-  //     where: { id } });
-  // }
   
 }

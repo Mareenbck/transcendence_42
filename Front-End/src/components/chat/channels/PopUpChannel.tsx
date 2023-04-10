@@ -7,6 +7,8 @@ import Chat from '../../Chat';
 import { socket } from '../../../../service/socket';
 import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from './ChannelsSettings';
+import { TextField } from '@mui/material';
+import ButtonSettings from '../components/settings/ButtonSettings';
 
 
 
@@ -45,8 +47,6 @@ function PopUp(props: any) {
         };
         try {
             const res = await ConversationReq.postRoom(user, newConv);
-            // console.log("RES = ")
-            // console.log(res)
         } catch (err) { 
             console.log(err);
         }
@@ -54,13 +54,9 @@ function PopUp(props: any) {
     
     const createAndClose = async (e:FormEvent) => {
         try {
-            // const res = await getRolesUser(props.status, props.role);
             await createNewChannel(e);
             setShowPopUp(false);
             props.onClick();
-            // console.log("RESPONSE DE GET ROLE USER")
-            // console.log(res);
-            // return res;
         } catch (err) {
             console.log(err);
         }
@@ -72,8 +68,7 @@ function PopUp(props: any) {
         setShowPopUp(false);
       };
       
-
-
+// aller voir le inputRef={usernameInputRef} pour apres 
 return (
     <div className='popup-overlay'>
         <div className='global-popup'>
@@ -100,7 +95,9 @@ return (
                     />
                     Protected
                 </label>
-                <label className='wrap-circle'>
+                <div>Choose a password for your new channel</div>
+                <TextField id="password" className="custom-field" label="password"  variant="filled" placeholder="Type a password..."/>
+               <label className='wrap-circle'>
                     <input
                         className='circle'
                         type='radio'
