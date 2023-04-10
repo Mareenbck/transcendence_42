@@ -1,13 +1,12 @@
 import React, { useRef } from 'react';
 import { Popup } from 'reactjs-popup';
 import { useEffect, useContext, useState, FormEvent } from 'react'
-import "../../style/PopUpChannel.css"
-import "../../pages/Setting.tsx"
-import AuthContext from '../../store/AuthContext';
-import Chat from './Chat';
-import { socket } from '../../service/socket';
-import ConversationReq from "./conversation/conversation.req"
-import { Modal } from '@mui/material';
+import "../../../style/PopUpChannel.css"
+import AuthContext from '../../../store/AuthContext';
+import Chat from '../../Chat';
+import { socket } from '../../../../service/socket';
+import ConversationReq from "./ConversationRequest"
+import ChannelsSettings from './ChannelsSettings';
 
 
 
@@ -18,12 +17,13 @@ function PopUp(props: any) {
     const [isPrivate, setIsPrivate] = useState(false);
     const [isProtected, setIsProtected] = useState(false);
     const [selectedFile, setSelectedFile] = useState('');
-    const [conversations, setConversations] = useState([]);
     const [showPopUp, setShowPopUp] = useState(true);
     const user = useContext(AuthContext);
     const id = user.userId;
     const [isDisabled, setIsDisabled] = useState(true);
     const [channelName, setchannelName] = useState('');
+    const [openModal, setOpenModal] = useState(true);
+
 
     const handleChannelNameChange = (e: FormEvent) => {
         const value = e.target.value;
@@ -31,46 +31,48 @@ function PopUp(props: any) {
         setIsDisabled(value === "");
     };
 
+
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
         if (channelName === "") {
           return;
         }
         const newConv = {
-          name: channelName,
-          isPublic: isPublic,
-          isPrivate: isPrivate,
-          isProtected: isProtected,
+            name: channelName,
+            isPublic: isPublic,
+            isPrivate: isPrivate,
+            isProtected: isProtected,
         };
-
-    //     socket?.current.emit("sendMD", {
-    //         author: +id,
-    //         receiver: +currentDirect?.userId,
-    //         content: newConv,
-    // });
-    try {
-        const res = await ConversationReq.postRoom(user, newConv);
-        // setConversations([res, ...conversations]);
-        props.newConv(newConv);
+        try {
+            const res = await ConversationReq.postRoom(user, newConv);
+            // console.log("RES = ")
+            // console.log(res)
         } catch (err) { 
-          console.log(err);
+            console.log(err);
         }
     };
-
+    
     const createAndClose = async (e:FormEvent) => {
         try {
+            // const res = await getRolesUser(props.status, props.role);
             await createNewChannel(e);
             setShowPopUp(false);
             props.onClick();
+            // console.log("RESPONSE DE GET ROLE USER")
+            // console.log(res);
+            // return res;
         } catch (err) {
             console.log(err);
         }
+
     }
     
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = (e:FormEvent) => {
         e.preventDefault();
         setShowPopUp(false);
       };
+      
+
 
 return (
     <div className='popup-overlay'>
@@ -130,6 +132,8 @@ return (
                 <button type='submit' onSubmit={handleFormSubmit} onClick={createAndClose}>OK</button>
                 <button onSubmit={handleFormSubmit} onClick={props.onCancel}>Cancel</button>
             </footer>
+            <ChannelsSettings openModal={openModal} setOpenModal={setOpenModal} role={props.role} />
+
         </div>
     </div>
 );

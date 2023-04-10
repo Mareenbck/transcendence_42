@@ -32,7 +32,7 @@ import { GameGateway } from './game/game.gateway';
 		// PassportModule.register({ defaultStrategy: '42' }),
 	],
 	providers: [ChatGateway,
-    GameGateway,
+    // GameGateway,
 //    GlobalGateway,
     ],
 	exports: [JwtModule],

@@ -5,19 +5,18 @@ import io, { Socket } from "socket.io-client";
 //import io from "socket.io-client";
 //import { Socket } from '../../service/socket';
 import MessagesInput from "./MessagesInput"
-import Conversation from "./conversation/conversation"
-import ConversationReq from "./conversation/conversation.req"
+import Conversation from "./channels/Conversation"
+import ConversationReq from "./channels/ConversationRequest"
 import MessageReq from "./message/message.req"
 import ChatReq from "./Chat.req"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
-import './Chat.css'
+import '../../style/Chat.css'
 import '../../style/Friends.css';
 import React from 'react';
-import PopUp from './PopUpChannel';
-import ChannelVisibility from './ChannelVisibility';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
+import Channels from './channels/Channels';
 
 
 function Chat() {
@@ -38,16 +37,11 @@ function Chat() {
   const [otherUsers, setOtherUsers] = useState <UserDto[]> ([]);
   const [allUsers, setAllUsers] = useState <UserDto[]> ([]);
   const scrollRef = useRef();
-  const usernameInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState('');
-  const [newConversation, setNewConversation] = useState("");
   const [toBlock, setToBlock] = useState(null);
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
   const [unfromBlock, setUnfromBlock] = useState<number>();
   const [invited, setInvited] = useState ();
-  const [channelName, setchannelName] = useState ("");
 
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
@@ -82,14 +76,14 @@ function Chat() {
 //    }
   }, []);
 
-  useEffect(() => {
-    socket.current.on("getConv", data => {
-      setAConversation({
-        name: data.content.name,
-        avatar: data.content.avatar,
-      });
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.current.on("getConv", data => {
+  //     setAConversation({
+  //       name: data.content.name,
+  //       avatar: data.content.avatar,
+  //     });
+  //   });
+  // }, []);
 
   useEffect(() => {
     socket.current.emit("addUserC", user);
@@ -150,9 +144,9 @@ function Chat() {
     setMessagesD(prev=>[...prev, AMessageD]);
   },[AMessageD, currentDirect])
 
-  useEffect(() => {
-    AConversation && setConversations(prev=>[AConversation, ...prev]);
-  }, [AConversation]);
+  // useEffect(() => {
+  //   AConversation && setConversations(prev=>[AConversation, ...prev]);
+  // }, [AConversation]);
 
 
 
@@ -171,13 +165,13 @@ function Chat() {
   }, []);
 
 
-  useEffect(() => {
-    async function getAllConv(user: AuthContext) {
-      const response = await ConversationReq.getAll(user);
-      setConversations(response);
-    };
-    getAllConv(user);
-  }, []);
+  // useEffect(() => {
+  //   async function getAllConv(user: AuthContext) {
+  //     const response = await ConversationReq.getAll(user);
+  //     setConversations(response);
+  //   };
+  //   getAllConv(user);
+  // }, []);
 
   useEffect(() => {
     if (currentChat)
@@ -430,65 +424,20 @@ function Chat() {
     scrollRef.current?.scrollIntoView({behaviour: "smooth"})
   }, [messagesD]);
 
-
-////////////////////////////////////////////////
-// Partie V : EMMA
-////////////////////////////////////////////////
-
   const handleFileChange = (event: FormEvent<HTMLInputElement>) => {
   setSelectedFile(event.target.files[0]);
 };
-
-
-const handleFormSubmit = (e) => {
-    e.preventDefault();
-    setShowPopUp(true);
-  };
-
-  const handleCreateChannel = () => {
-    setShowPopUp(true);
-  };
-
-const [showPopUp, setShowPopUp] = useState(false);
-
 
 return (
   <>
   {" "}
 
       <div className="messenger">
-        <div className="chatMenu">
-          <div className="chatMenuW">
-            <form onSubmit={handleFormSubmit}>
-              <button onClick={handleCreateChannel}>Create new channel</button>
-              {showPopUp && (
-                  <PopUp
-                  title="Création d'un nouveau channel"
-                  message="Choisissez les options de votre channel"
-                  onCancel={() => setShowPopUp(false)}
-                  onClick={() => setShowPopUp(false)}
-                  onSubmit={{handleFormSubmit}}
-                  >
-                  </PopUp>
-            )}
-            </form>
-            {conversations.map((c) => (
-                <div key={c.name + c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
-                    <div className="conversation">
-                      <div className="conversation-name">
-                          <Conversation conversation={c}/>
-                      </div>
-                      <div className="conversation-icon">
-                      <ChannelVisibility conversation={c}/>
-                      </div>
-                    </div>
-                </div>
-                ))}
-            </div>
-          </div>
+        <div className="chatMenu"><Channels/></div>
+          <div className="line-chat"></div>
         <div className="chatBox">
           <div className="chatBoxW">
-  <PopupChallenge triger={invited} setTriger={setInvited}> <h3></h3></PopupChallenge>
+              <PopupChallenge triger={invited} setTriger={setInvited}> <h3></h3></PopupChallenge>
           {
             currentChat ?
             <>

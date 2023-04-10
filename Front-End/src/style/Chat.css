@@ -14,6 +14,15 @@
   border-radius: 10px;
 }
 
+.line-chat {
+  position: absolute;
+  height: inherit;
+  width: 0;
+  left: 300px;
+  top: 81px;
+  border-right: 5px solid #C7B9FF;
+}
+
 .popupChallenge{
   position:fixed;
   top:0;
@@ -151,13 +160,26 @@
   overflow-y: scroll;
 }
 
-.chatMenuW,
+
 .chatBoxW,
 .chatOnlineW {
   padding: 10px;
   height: 100%;
 }
 
+.chatMenu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.chatMenuW {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
 .noConversationText {
   position: absolute;
   top: 10%;
@@ -183,9 +205,16 @@
 }
 
 .conversation-icon {
-  margin-right: 200px;
+  margin-right: 300px;
   /* margin-right: 10px; */
 }
 
-/* .icon-private, .icon-protected, .icon-public {
-} */
+.list-item-channel {
+  margin-right: 12px;
+}
+
+.create-channel-button {
+  margin-right: 200px;
+  background-color: #E2DBFF;
+  margin-top: 15px;
+}
