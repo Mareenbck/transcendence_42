@@ -3,7 +3,7 @@ import {
   MessageBody, OnGatewayConnection,
   SubscribeMessage, OnGatewayInit,
   WebSocketGateway, OnGatewayDisconnect,
-  WebSocketServer,
+  WebSocketServer, WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { GlobalService } from './global.service';
@@ -13,13 +13,17 @@ import { Logger } from "@nestjs/common";
 import UsersSockets from "./socket.class";
 import { AuthService } from 'src/auth/auth.service';
 import { UserService } from "src/user/user.service";
+import { UserDto } from 'src/user/dto/user.dto';
+import { CreateChatMessDto } from 'src/chat/chat-mess/dto/create-chatMess.dto';
 
-
-@WebSocketGateway({
+@WebSocketGateway(
+8001, { cors: {origin: "http://localhost:8080",}, }
+/*{
   cors: ["*"],
   origin: ["*"],
-  path: "/api/ws/",
-})
+  path: "",
+}*/
+)
 
 export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(GlobalGateway.name);
@@ -41,20 +45,29 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       this.gameService.server = this.server;
       this.chatService.server = this.server;
       this.globalService.userSockets = this.userSockets;
+      this.chatService.userSockets = this.userSockets;
       this.gameService.userSockets = this.userSockets;
       this.logger.verbose("globalGateway Initialized");
   }
 
   async handleConnection(client: Socket) {
     try {
-        const user: any = this.authService.verifyAccessToken(client.handshake.auth.token);
+console.log("Enter Global Soket server");
+console.log(client.handshake.auth.token);
+      const user = await this.authService.verifyAccessToken(client.handshake.auth.token);
+//console.log(user);
+if (!user) {
+  throw new WsException('Invalid credentials.');
+}
         client.data.username = user.username as string;
         client.data.email = user.email as string;
         this.userSockets.addUser(client);
         setTimeout(() => {
             this.server.emit("users-status", this.userSockets.usersStatus);
         }, 1000);
+console.log("Global : Add to authenticated user");
         return this.userSockets.usersStatus;
+    
     } catch (e) {
         if (this.userSockets.removeSocket(client)) {
             this.server.emit("users-status", this.userSockets.usersStatus);
@@ -70,69 +83,42 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     client.disconnect(true);
   }
 
-  /*
-  @SubscribeMessage("game-invite")
-  gameInvite(client: Socket, data: GameInvitePayload) {
-      return this.gameService.gameInvite(client, data);
+  @SubscribeMessage('addUserChat')
+  async chatAddUsers(
+    @MessageBody() userId: any, @ConnectedSocket() socket: Socket,) 
+  { 
+    this.chatService.addUserChat(userId, socket.id)
+    console.log("GLOBAL GATEWAY : Register CHAT");
   }
 
-  @SubscribeMessage("logout")
-  logout(client: Socket) {
-      this.userSockets.removeUser(client);
-  }
-
-  @SubscribeMessage("matchmaking")
-  handleMatchMakingRequest(client: Socket, data: GameInvitePayload) {
-      return this.gameService.handleMatchMakingRequest(client, data);
-  }
-
-  @SubscribeMessage("watch-game")
-  addSpectator(client: Socket, gameId: string) {
-      try {
-          this.gameService.addSpectator(client, gameId);
-          this.server.emit("users-status", this.userSockets.usersStatus);
-      } catch (err) {
-          return err;
-      }
-      return "OK";
-  }
-  @SubscribeMessage("unwatch-game")
-  removeSpectator(client: Socket, gameId: string) {
-      this.gameService.removeSpectator(client, gameId);
-      this.server.emit("users-status", this.userSockets.usersStatus);
-  }
-*/
-
-
-  // EXEMPLES DE MESSAGES Reception et Envoie 
-
-  @SubscribeMessage('send_message')
-  async listenForMessages(
-    @MessageBody() content: string,
-    @ConnectedSocket() socket: Socket,
-  ) 
+  @SubscribeMessage('removeUserChat')
+  async chatRemoveUsers(@MessageBody() userId: number, @ConnectedSocket() socket: Socket,) 
   {
-    console.log("ESSAIE au GLOBAL BE");
- //   const author = await this.globalService.getUserFromSocket(socket);
-  //  const message = await this.globalService.saveMessage(content, author);
-    console.log(this.server.sockets);
-    console.log("SUCCESS GLOBAL BE");
-    const message = {content: "Hello World",};
- 
-    this.server.sockets.emit('receive_message', message);
-    return message;
+    this.chatService.removeUserChat(userId)
+    console.log("GLOBAL GATEWAY : Remove CHAT");
   }
- 
-  @SubscribeMessage('request_all_messages')
-  async requestAllMessages(
-    @ConnectedSocket() socket: Socket,
-  ) 
+
+  @SubscribeMessage('userRoom')
+  async chatUserRoom(@MessageBody() roomId: number, userId: number, @ConnectedSocket() socket: Socket,) 
   {
-//    await this.globalService.getUserFromSocket(socket);
-   // const messages = await this.globalService.getAllMessages();
-    const messages = {
-      content: "hello",};
-    socket.emit('send_all_messages', messages);
+    this.chatService.addRoomUser(roomId, userId, socket.id);
+    console.log("GLOBAL GATEWAY : Add to CHATROOM");
   }
+
+  @SubscribeMessage('sendMChat')
+  async chatSendChatM(@MessageBody()  authorId: number, chatroomId: number, content: string, @ConnectedSocket() socket: Socket,) 
+  {
+    this.chatService.sendChatMessage(authorId, chatroomId, content,)
+    console.log("GLOBAL GATEWAY : Send Message ChatRoom");
+  }
+
+  @SubscribeMessage('sendMD')
+  async chatSendDirectM(@MessageBody() content: string, author: string, receiver: string, @ConnectedSocket() socket: Socket,): Promise<void> 
+  {
+    console.log("qsqdqsdqsdqsd");
+    this.chatService.sendDirectMessage(content, author, receiver,)
+    console.log("GLOBAL GATEWAY : Send Message Direct");
+  }
+
+
 }
-

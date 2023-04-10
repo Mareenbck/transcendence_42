@@ -77,17 +77,25 @@ function Chat() {
       });
     });
   }, []);
-
+/*
   useEffect(() => {
     sendMessage("addUserC", user);
     return () => {
       sendMessage("removeUserC", user);
     }
   },[])
+*/
+  useEffect(() => {
+    sendMessage("addUserChat", user);
+    return () => {
+      sendMessage("removeUserChat", user.userId);
+    }
+  },[])
 
   useEffect(() => {
-    addListener("getUsersC", users => {
+    addListener("getUsersChat", users => {
       setOnlineUsers(users);
+      console.log("received");
     });
   });
 
