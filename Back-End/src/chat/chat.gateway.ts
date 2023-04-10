@@ -54,26 +54,12 @@ constructor(private authService: AuthService){}
 
   onModuleInit(){
     this.server.on('connection', (socket) => {
-      console.log(socket.id);
-      console.log('Connected CHAT BACK END');
-
+//      console.log(socket.id);
+//      console.log('Connected CHAT BACK END');
+/*
       socket.on("addUserC", (userId) => {
-//        if (userId.token){
-//          try {
-//            this.authService.verifySocketToken(userId.token);
-            addUser(userId, socket.id);
-            this.server.emit("getUsersC", users);
-                console.log(userId.userId);
-                console.log('ADD USER CHAT PAGE');
-//          } catch (e) {
-//            console.log(e);
-//          }
-//        }
-//        else {
-//          this.server.to(socket.socketId).emit("notAuth", {
-//            content: "Not Authorised User",
-//          });
-//        }
+        addUser(userId, socket.id);
+        this.server.emit("getUsersC", users);
       });
 
       socket.on("removeUserC", (userId) => {
@@ -120,7 +106,7 @@ constructor(private authService: AuthService){}
           });
         };
       });
-
+*/
       socket.on("sendConv", ({author, content,}) => {
         console.log(content);
         for(const user of users) {
@@ -164,8 +150,8 @@ constructor(private authService: AuthService){}
       });
 
       socket.on('disconnect', () => {
-        console.log(socket.id);
-        console.log('Disconnected CHAT BACK END');
+   //     console.log(socket.id);
+   //     console.log('Disconnected CHAT BACK END');
         removeUser(socket.id);
      //   removeUser2(socket.id);
         this.server.emit("getUsers", users);
