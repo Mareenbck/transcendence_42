@@ -16,7 +16,7 @@ export default function ChannelVisibility(props: any) {
 
   const [openModal, setOpenModal] = useState(false);
   const userContext = useContext(AuthContext);
-  const [isAdmin, setIsAdmin] = useState<string>('')
+  const [isAdmin, setIsAdmin] = useState<string | null>('')
 
 
   const getRolesUser = async (id: string, channelId: string) => {
@@ -32,12 +32,19 @@ export default function ChannelVisibility(props: any) {
       );
       if (response.ok) {
         const data = await response.json();
-        setIsAdmin(data[0]?.role ?? '')
+        if (data && data.length > 0) {
+          setIsAdmin(data[0].role);
+        }
       }
     } catch (err) {
       console.log(err);
     }
   };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+  
   
    
   useEffect(() => {
@@ -64,7 +71,7 @@ export default function ChannelVisibility(props: any) {
          <div className="visibility-icon">
           <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
           <KeyIcon className="channel-icon" fontSize="small" />
-        <ChannelsSettings role={isAdmin}/>
+          <ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
         </div>
         </>
       );

@@ -17,13 +17,12 @@ function PopUp(props: any) {
     const [isPrivate, setIsPrivate] = useState(false);
     const [isProtected, setIsProtected] = useState(false);
     const [selectedFile, setSelectedFile] = useState('');
-    const [conversations, setConversations] = useState([]);
     const [showPopUp, setShowPopUp] = useState(true);
     const user = useContext(AuthContext);
     const id = user.userId;
     const [isDisabled, setIsDisabled] = useState(true);
     const [channelName, setchannelName] = useState('');
-    const [openModal, setOpenModal] = useState(false);
+    const [openModal, setOpenModal] = useState(true);
 
 
     const handleChannelNameChange = (e: FormEvent) => {
