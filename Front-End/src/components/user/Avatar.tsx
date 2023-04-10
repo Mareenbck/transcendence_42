@@ -1,7 +1,9 @@
 import { Button } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import '../../style/Settings.css';
 import Avatar from '@mui/material/Avatar';
+import { FriendContext } from '../../store/FriendshipContext';
+import AuthContext from '../../store/AuthContext';
 
 const customStylesL = `
 	.custom-avatar.avatar-l {
@@ -44,9 +46,24 @@ const customStyleXS = `
 `;
 
 const MyAvatar = (props: any) => {
-	const authCtx = props.authCtx;
+	const authCtx = useContext(AuthContext)
+	const isMyProfile = parseInt(authCtx.userId) === parseInt(props.id);
+	const friendCtx = useContext(FriendContext)
 	const [style, setStyle] = useState('');
 	const [content, setContent] = useState<any>(null);
+	const [avatar, setAvatar] = useState<any>(null);
+
+	useEffect(() => {
+		if(props.id) {
+			const fetchData = async () => {
+				const avat: any = await friendCtx.fetchAvatar(props.id);
+				if (avat) {
+					setAvatar(avat);
+				}
+			};
+			fetchData();
+		}
+	}, [props.id, isMyProfile])
 
 	useEffect(() => {
 		if (props.style === "m") {
@@ -65,9 +82,9 @@ const MyAvatar = (props: any) => {
 		if (authCtx.userId === props.id) {
 			setContent(authCtx.avatar ? <Avatar className={avatarClass} src={authCtx.avatar} /> : <Avatar className={avatarClass} src={authCtx.ftAvatar} />)
 		} else {
-			setContent(props.avatar ? <Avatar className={avatarClass} src={props.avatar} /> : <Avatar className={avatarClass} src={props.ftAvatar} />)
+			setContent(avatar ? <Avatar className={avatarClass} src={avatar} /> : <Avatar className={avatarClass} src={props.ftAvatar} />)
 		}
-	}, [authCtx.avatar, props.avatar]);
+	}, [authCtx.avatar, avatar]);
 
 	return (
 		<>

@@ -10,7 +10,7 @@ import { TwoFactorAuthService } from './2FA/2FactorAuth.service';
 import { FortyTwoStrategy, Profile_42 } from './strategy/42.strategy';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
-import { JwtGuard } from './guard';
+import { AuthGuard, JwtGuard } from './guard';
 
 
 @Controller('auth')
@@ -55,6 +55,9 @@ export class AuthController {
 		try {
 			// Echange le code d'autorisation contre un token
 			const tokens = await this.authService.exchangeCodeForTokens(code);
+			if (!tokens.access_token) {
+				return ;
+			}
 			// Get user profile using the access token
 			const userProfile = await this.authService.getFortyTwoUserProfile(tokens.access_token);
 			// Generate token using user profile

@@ -5,6 +5,7 @@ import ShowFriends from "../friends/ShowFriends";
 import TitleCard from "./CardTitle";
 import BodyStatsCard from "./BodyStatsCard";
 import MenuCard from "./MenuCard";
+import MatchHistory from "../game/MatchHistory";
 
 const Card = (props: any) => {
 	const [color, setColor] = useState<string>('');
@@ -36,6 +37,8 @@ const Card = (props: any) => {
 		} else if (props.type === 'menu') {
 			setTitleStyle("s");
 			setContent(<MenuCard body={props.body}/>);
+		} else if (props.type === 'match') {
+			setContent(<MatchHistory id={props.id} authCtx={props.authCtx}/>);
 		}
 	}, [props.type])
 

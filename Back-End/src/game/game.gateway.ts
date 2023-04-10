@@ -1,21 +1,21 @@
-// import { 
-//   MessageBody,
-//   WebSocketServer,
-//   SubscribeMessage,
-//   WebSocketGateway,
-//   ConnectedSocket
-// } from '@nestjs/websockets';
-// import {Server, Socket} from 'socket.io'
-// import { GameService } from './game.service';
-// import { Game } from './game.class';
-// import { PrismaService } from 'src/prisma/prisma.service';
-// import { profile } from './game.interfaces';
+import {
+  MessageBody,
+  WebSocketServer,
+  SubscribeMessage,
+  WebSocketGateway,
+  ConnectedSocket
+} from '@nestjs/websockets';
+import {Server, Socket} from 'socket.io'
+import { GameService } from './game.service';
+import { Game } from './game.class';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { profile } from './game.interfaces';
 
 
-// //all connected users
-// let users: profile [] = [];
-// //two players 
-// let players: profile [] = [];
+//all connected users
+let users: profile [] = [];
+//two players
+let players: profile [] = [];
 
 // // const addUser = (userId, socketId) => {
 // //   if (players.length < 2) {
@@ -59,25 +59,25 @@
 //   players = players.filter(user => user.socketId !== socketId);
 // }
 
-// @WebSocketGateway(8001, { cors: 'http://localhost/game/*' })//cors *
-// export class GameGateway {
- 
-//   @WebSocketServer() server: Server;
-//   //  constructor(
-//   //       private prisma: PrismaService,
-//   //       private service: GameService ){}
 
+@WebSocketGateway(8001, { cors: 'http://localhost/game/*' })//cors *
+export class GameGateway {
+
+  @WebSocketServer() server: Server;
+  //  constructor(
+  //       private prisma: PrismaService,
+  //       private service: GameService ){}
 //   prisma: PrismaService; ///constructor?
 //   gameService: GameService;
 
-//   onModuleInit(){
-//     const game = new Game( 
-//       this.server,
-//       //this.websocketsService,
-//       this.prisma,
-//       //this.achievementsService,
-//       this.gameService
-//     );
+  // onModuleInit(){
+  //   const game = new Game(
+  //     this.server,
+  //     //this.websocketsService,
+  //     this.prisma,
+  //     //this.achievementsService,
+  //     this.gameService
+  //   );
 
 //     this.server.on('connection', (socket: Socket) => {
 // console.log('51 Connected socket = ', socket.id);
@@ -87,8 +87,8 @@
 // console.log ('55 players = ', players.length);
 // console.log ('56 users = ',users.length);
 
-//         // const user = getUser(users);
-//         // const player = getPlayers(players);
+        // const user = getUser(users);
+        // const player = getPlayers(players);
 //         this.server.emit("getSpectators", users);
 //         this.server.emit("getPlayers", players);
 //         if (players.length == 2 ) {
@@ -98,9 +98,10 @@
 //           );
 //           players = [];
 // console.log ('95 players = ', players.length);
-// console.log ('96 users = ',users.length);         
+// console.log ('96 users = ',users.length);
 //         }
-//       });
+//       };
+//     }
 
 //       this.server.sockets.sockets.get(socket.id).on('disconnect', () => {//??
 // console.log(`78 Disconnected socket.id = ${socket.id}`);
@@ -111,4 +112,5 @@
 //   }
 // }
 
-// // this.games.splice(this.games.indexOf(game), 1);
+// this.games.splice(this.games.indexOf(game), 1);
+}

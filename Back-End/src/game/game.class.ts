@@ -1,6 +1,6 @@
 import {Server, Socket} from 'socket.io'
 import { PrismaService} from '../prisma/prisma.service';
-import { 
+import {
 		profile,
 		player,
 		ball,
@@ -10,7 +10,7 @@ import {
 import { GameService } from './game.service';
 import { PrismaClient } from '@prisma/client';
 
-		
+
 var ballSpeed = GameParams.BALL_DEFAULT_SPEED;
 const width = GameParams.GAME_WIDTH;
 const height = GameParams.GAME_HEIGHT;
@@ -26,12 +26,12 @@ export class Game {
 
 // initialization of players (L - left, R - right)
 	private playerL: player = {
-		profile: {} as profile, 
+		profile: {} as profile,
 		racket: {x: 10, y: (height - racket_height)/2},
 		score: 0,
 	};
 	private playerR: player = {
-		profile: {} as profile, 
+		profile: {} as profile,
 		racket: {x: width - racket_width - 10, y: (height - racket_height)/2},
 		score: 0,
 	};
@@ -45,13 +45,13 @@ export class Game {
 	private ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
 	private ball: ball = {x: width/2, y: height/2};
 	private winner: any = '';
-		
+
 	private server: Server;
 	private prismaService: PrismaService;
 	private gameService: GameService;
 
 
-		
+
 	constructor(
 		server: Server,
 		prismaService: PrismaService,
@@ -74,42 +74,42 @@ console.log("constructor Class.game");
 			racket2: this.playerL.racket,
 			scoreR: this.playerR.score,
 			scoreL: this.playerL.score
-		}); 
+		});
 	}
 // function: initialization of game // during the ferst connection to the game
 	public init(socket: Socket){
 console.log(`init socket ${socket.id}`);
-		socket.emit('init-pong', { 
+		socket.emit('init-pong', {
 			table_width: width,
 			table_height: height,
 			racket_width: racket_width,
 			racket_height: racket_height,
 			ballR: ballR,
 			scoreR: this.playerR.score,
-			scoreL: this.playerL.score, 
+			scoreL: this.playerL.score,
 			winner: this.winner
 		});
 	}
 // function: game logic ...
 	private updatePositions(): void
 	{
-		if (this.ball.y > this.playerL.racket.y 
-			&& this.ball.y < this.playerL.racket.y + racket_height 
+		if (this.ball.y > this.playerL.racket.y
+			&& this.ball.y < this.playerL.racket.y + racket_height
 			&& this.ball.x - ballR < this.playerL.racket.x + racket_width
 			&& this.ballSpeedX < 0) {
 	// left racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
 			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
 		}
-		else if (this.ball.y > this.playerR.racket.y 
-			&& this.ball.y < this.playerR.racket.y + racket_height 
+		else if (this.ball.y > this.playerR.racket.y
+			&& this.ball.y < this.playerR.racket.y + racket_height
 			&& this.ball.x + ballR > this.playerR.racket.x
 			&& this.ballSpeedX > 0) {
 	// right racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
 			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
 		}
-	
+
 	// board reflections
 		if (this.ball.x < ballR) {
 			++this.playerR.score;
@@ -135,7 +135,7 @@ console.log('ballSpeed = ', ballSpeed);
 			this.ball.y += this.ballSpeedY;
 	}
 
-//function: move rackets	
+//function: move rackets
 // 	private player_move = (message: string, player: player) => {
 // console.log("playerR move", message);
 // 		if (message == 'up') {
@@ -155,7 +155,7 @@ console.log('ballSpeed = ', ballSpeed);
 		this.isrunning = false;
 		this.winner = userId;
 		this.server.emit('winner', {winner: this.winner, leave: this.leave}); // room
-	}  
+	}
 
 // function: run game
 	public run(
@@ -169,9 +169,9 @@ console.log("idPlayerL", idPlayerL);
 		this.playerL.profile = idPlayerL;
 		this.isrunning = true;
 		const socketR = this.server.sockets.sockets.get(idPlayerR.socketId);
-		const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
+		const socketL = this.server.sockets.sockets.get(idPlayerL.socketId);
 console.log("socketR", socketR.id);
-console.log("socketL", socketL.id);		
+console.log("socketL", socketL.id);
 
 
 // move rakets
@@ -209,18 +209,18 @@ console.log("playerR move", message);
 
 
 
-	// const socketR = this.server.sockets.sockets.get(idPlayerR.socketId); 
+	// const socketR = this.server.sockets.sockets.get(idPlayerR.socketId);
 	// socketR.on('move', (m:string) => {this.player_move(m, this.playerR)})
 
 	// idPlayerR.socketId.forEach((id) => {
-	// 	const socket = this.server.sockets.sockets.get(id); 
+	// 	const socket = this.server.sockets.sockets.get(id);
 	// 	socket.on('move', (m:string) => {this.player_move(m, this.playerR)})
 	// });
-	// const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
+	// const socketL = this.server.sockets.sockets.get(idPlayerL.socketId);
 	// socketR.on('move', (m:string) => {this.player_move(m, this.playerL)})
 
 	// idPlayerL.socketId.forEach((id) => {
-	// 	const socket = this.server.sockets.sockets.get(id); 
+	// 	const socket = this.server.sockets.sockets.get(id);
 	// 	socket.on('move', (m:string) => {this.player_move(m, this.playerL)});
 	// });
 
@@ -248,9 +248,9 @@ console.log("playerR move", message);
 
 				this.isrunning = false;
 				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId;
-				this.player_disconect(this.winner);	
+				this.player_disconect(this.winner);
 				clearInterval(this.interval);
-				
+
 				if (!this.isrunning){
 console.log("257 winner", this.winner)
 // this.gameService.create(data: {

@@ -12,39 +12,42 @@ datasource db {
 }
 
 model User {
-	id				          Int			    @id @default(autoincrement())
-	id42			          Int			    @default(autoincrement())
-	createdAt		        DateTime    @default(now())
+	id		              Int			      @id @default(autoincrement())
+	id42			          Int			      @default(autoincrement())
+	createdAt		        DateTime      @default(now())
 
-	email			          String		  @unique
+	email			          String		    @unique
 	hash			          String
-	username		        String		  @unique
-	status			        UserStatus	@default(OFFLINE)
+	username		        String		    @unique
+	status			        UserStatus	  @default(OFFLINE)
 	avatar			        String?
 	ftAvatar		        String?
 
 	hashedRtoken	      String?
 	twoFAsecret		      String?
-	twoFA			          Boolean?	@default(true)
+	twoFA			          Boolean?	    @default(true)
 
-  blockedTo           User[]       @relation("Blocked")
-  blockedFrom         User[]       @relation("Blocked")
+  blockedTo           User[]        @relation("Blocked")
+  blockedFrom         User[]        @relation("Blocked")
 
   friends             User[]        @relation("Friends")
   friendOf            User[]        @relation("Friends")
   sentFriendships     Friendship[]  @relation("SentFriendships")
   receivedFriendships Friendship[]  @relation("ReceivedFriendships")
 
-  playerOne     Game[]  @relation("GamePlayerOne")
-  playerTwo     Game[]  @relation("GamePlayerTwo")
-  winner        Game[]  @relation("GameWinner")
+  playerOne           Game[]        @relation("GamePlayerOne")
+  playerTwo           Game[]        @relation("GamePlayerTwo")
+  winner              Game[]        @relation("GameWinner")
+  xp                  Int           @default(0)
+  level               Int           @default(1)
 
-  chatrooms  ChatroomUsers[]
-  dirMessEmited   DirectMessage[] @relation(name: "emited")
-  dirMessReceived DirectMessage[] @relation(name: "received")
-  crMessSent      ChatroomMessage[]
+  chatrooms           ChatroomUsers[]
+  dirMessEmited       DirectMessage[] @relation(name: "emited")
+  dirMessReceived     DirectMessage[] @relation(name: "received")
+  crMessSent          ChatroomMessage[]
 
-  userOnChanel UserOnChannel[] 
+  userOnChanel UserOnChannel[]
+
 	@@map("users")
 }
 
@@ -95,7 +98,7 @@ model Chatroom {
   visibility   UserChannelVisibility   @default(PUBLIC)
   name         String
   users        ChatroomUsers[]
-  participants UserOnChannel[]   
+  participants UserOnChannel[]
   cr_messages  ChatroomMessage[]
 }
 
@@ -107,7 +110,7 @@ enum UserChannelVisibility {
 }
 
 enum UserRoleInChannel {
-  USER 
+  USER
   ADMIN
 }
 

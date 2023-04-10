@@ -12,6 +12,7 @@ import { ChatroomModule } from './chat/chatroom2/chatroom2.module';
 import { GameModule } from './game/game.module';
 // import { GameGateway } from './game/game.gateway';
 import { FriendshipModule } from './friendship/friendship.module';
+import { GameGateway } from './game/game.gateway';
 
 @Module({
 	imports: [
