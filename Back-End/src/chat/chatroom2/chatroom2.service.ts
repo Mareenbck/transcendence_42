@@ -40,6 +40,7 @@ export class ChatroomService {
           hash: hash,
         },
       });
+      // console.log("newChannel----->", newChannel);
       const userOnChannel = await this.prisma.userOnChannel.create({
         data: {
           channelId: newChannel.id,

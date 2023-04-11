@@ -31,3 +31,7 @@
     display: flex;
     align-items: center; 
 }
+
+.pwd-icon {
+    cursor: pointer;
+}

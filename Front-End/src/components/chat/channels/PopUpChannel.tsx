@@ -6,8 +6,7 @@ import AuthContext from '../../../store/AuthContext';
 import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from './ChannelsSettings';
 import { TextField } from '@mui/material';
-import ButtonPassword from './ButtonPassword';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 function PopUp(props: any) {
 
@@ -21,7 +20,7 @@ function PopUp(props: any) {
     const [isDisabled, setIsDisabled] = useState(true);
     const [channelName, setchannelName] = useState('');
     const [openModal, setOpenModal] = useState(true);
-    const pwdInputRef = useRef<HTMLInputElement>(null);
+    const passwordInputRef = useRef<HTMLInputElement>(null);
 
 
     const handleChannelNameChange = (e: FormEvent) => {
@@ -65,16 +64,9 @@ function PopUp(props: any) {
         setShowPopUp(false);
     };
 
-    const handlePassword = async (event: FormEvent) => {
-        event.preventDefault();
-        const password = pwdInputRef.current!.value;
-        if (password === "") {
-            alert("Please enter a valid password");
-            return;
-        }
-        console.log("password ------>", password)
-        return password;   
-    }
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
+
       
 // aller voir le inputRef={usernameInputRef} pour apres IN TEXT FIELDS
 return (
@@ -104,8 +96,16 @@ return (
                     Protected
                 </label>
                 <div>Choose a password for your new channel</div>
-                <TextField id="password" className="custom-field" label="password"  variant="filled" placeholder="Type a password..."/>
-                {/* <ButtonPassword onSubmit={handlePassword} title="Submit"></ButtonPassword> */}
+                <TextField
+                    id="password"
+                    className="custom-field"
+                    label="password"
+                    type={showPassword ? 'text' : 'password'}
+                    variant="filled"
+                    placeholder="Type a password..."
+                    inputRef={passwordInputRef}
+                />
+                <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
                <label className='wrap-circle'>
                     <input
                         className='circle'
