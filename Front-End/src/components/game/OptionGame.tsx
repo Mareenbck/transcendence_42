@@ -26,10 +26,10 @@ function OptionGame () {
         <>
             <div className={style.mainPos}>
 				<SideBar title="Settings" />
-            
-                
+
+
                 <div>
-                    <div className="card">
+                    <div className="card-option">
                          <p >Select your favorite color</p>
                     </div>
                     <div className="posColor">
@@ -41,14 +41,14 @@ function OptionGame () {
                     <br />
                     <br />
                     <div className="btn">
-                     <Link to="/game/play" 
+                     <Link to="/game/play"
                            onClick={ () => handleLinkClick( setActiveLink("/game/play") )  }
                             >Play Games
                      </Link>
                      </div>
-                    
+
                 </div>
-            </div>  
+            </div>
         </>
     );
 }
