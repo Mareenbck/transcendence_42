@@ -1,4 +1,6 @@
-export default interface DirMess 
+import {RoomMessage, DirectMessage, UserChat} from "../interfaces/iChat";
+
+export default interface DirectMessage 
 {
     id: number;
     content  : string;

@@ -66,8 +66,6 @@ function Chat() {
   // }, []);
 
 
-  const [sendMessage, addListener] = useSocket()
-
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////
@@ -104,7 +102,6 @@ function Chat() {
   useEffect(() => {
     addListener("getUsersChat", users => {
       setOnlineUsers(users);
-      console.log("received");
     });
   });
 
@@ -483,7 +480,7 @@ function Chat() {
 // Partie IV : fonctions ...
 ////////////////////////////////////////////////
 
-<<<<<<< HEAD
+
   const getUser  = (userId: number): UserChat => {
     return allUsers.find(user => +user?.id === +userId);
   };
