@@ -5,7 +5,6 @@ import ChannelVisibility from "./ChannelVisibility";
 
 
 export default function ChannelsSettings(props: any) {
-    const [openModal, setOpenModal] = useState(false);
     const [icon, setIcon] = useState<any>();
   
     useEffect(() => {
