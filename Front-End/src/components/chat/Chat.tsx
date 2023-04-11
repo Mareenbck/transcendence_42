@@ -6,7 +6,7 @@ import MessagesInput from "./MessagesInput"
 import Conversation from "./channels/Conversation"
 import ConversationReq from "./channels/ConversationRequest"
 import MessageReq from "./message/message.req"
-import ChatReq from "./Chat.req"
+import Fetch from "../../interfaces/Fetch"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
 import '../../style/Chat.css'
@@ -16,31 +16,31 @@ import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
 import Channels from './channels/Channels';
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
+import {RoomMessage, DirectMessage, UserChat, ChatRoom} from "../interfaces/iChat";
 
 
 function Chat() {
   const user = useContext(AuthContext);
   const id = user.userId;
-  const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
-  const [AMessageD, setAMessageD] = useState (null);
-  const [AMessageChat, setAMessageChat] = useState (null);
+  const [onlineUsers, setOnlineUsers] = useState<UserChat[]> ([]);
+  const [AMessageD, setAMessageD] = useState<DirectMessage> (null);
+  const [AMessageChat, setAMessageChat] = useState<RoomMessage> (null);
   const [AConversation, setAConversation] = useState (null);
   const [conversations, setConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState (null);
-  const [currentDirect, setCurrentDirect] = useState (null);
-  const [messages2, setMessages2] = useState<MessageDto[]> ([]);
-  const [messagesD, setMessagesD] = useState<MessageDDto[]> ([]);
-  const [newMessage2, setNewMessage2] = useState ("");
-  const [newMessageD, setNewMessageD] = useState ("");
-  const [otherUsers, setOtherUsers] = useState <UserDto[]> ([]);
-  const [allUsers, setAllUsers] = useState <UserDto[]> ([]);
+  const [currentChat, setCurrentChat] = useState<ChatRoom> (null);
+  const [currentDirect, setCurrentDirect] = useState<UserChat> (null);
+  const [messages2, setMessages2] = useState<RoomMessage[]> ([]);
+  const [messagesD, setMessagesD] = useState<DirectMessage[]> ([]);
+  const [newMessage2, setNewMessage2] = useState<RoomMessage> (null);
+  const [newMessageD, setNewMessageD] = useState<DirectMessage> (null);
+  const [otherUsers, setOtherUsers] = useState <UserChat[]> ([]);
+  const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
   const scrollRef = useRef();
   const [toBlock, setToBlock] = useState(null);
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
   const [unfromBlock, setUnfromBlock] = useState<number>();
-  const [invited, setInvited] = useState ();
-
+  const [invited, setInvited] = useState<UserChat> ();
   const [sendMessage, addListener] = useSocket()
 
 ///////////////////////////////////////////////////////////
@@ -80,7 +80,6 @@ function Chat() {
   useEffect(() => {
     addListener("getUsersChat", users => {
       setOnlineUsers(users);
-      console.log("received");
     });
   });
 
@@ -130,14 +129,14 @@ function Chat() {
 // Partie II : va chercher les infos de la base de donnée
 ////////////////////////////////////////////////
 
-  async function getAllUsersWithBlocked(user: AuthContext) {
-    const response = await ChatReq.getAllUsersWithBlocked(user);
+  async function getAllUsersWithBlocked(token: string) {
+    const response = await Fetch.fetch(token, "GET", `users\/block\/users`);
     setAllUsers(response);
     setOtherUsers(response.filter(u => !(onlineUsers.some(e => +e.userId.userId === +u.id))));
   };
 
   useEffect(() => {
-    getAllUsersWithBlocked(user);
+    getAllUsersWithBlocked(user.token);
   }, []);
 
 
@@ -152,9 +151,9 @@ function Chat() {
   useEffect(() => {
     if (currentChat)
     {
-      async function getMess(user: AuthContext) {
+      async function getMess() {
         try {
-          const response = await MessageReq.getMess(user, currentChat?.id);
+          const response = await Fetch.fetch(user.token, "GET", `chat-mess\/room`, currentChat?.id);
           setMessages2(response);
           sendMessage("userRoom", {
             userId: user.userId,
@@ -164,24 +163,24 @@ function Chat() {
           console.log(err);
         }
       };
-      getMess(user);
+      getMess();
     }
   }, [currentChat]);
 
   useEffect(() => {
     if (currentDirect)
     {
-      async function getDirMess(user: AuthContext) {
+      async function getDirMess() {
         try {
           if (currentDirect?.userId)
-            { setMessagesD(await MessageReq.getDirMess(user, id, currentDirect?.userId))}
+            { setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.userId))}
           else
-            {setMessagesD(await MessageReq.getDirMess(user, id, currentDirect?.id))};
+            { setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.id))};
         } catch(err) {
           console.log(err);
         }
       };
-      getDirMess(user);
+      getDirMess();
     }
   }, [currentDirect]);
 
@@ -224,10 +223,10 @@ function Chat() {
       })
       async function blockUser() {
         try {
-          const res = await ChatReq.postBlock(user, toBlock.id);
+          const res = await Fetch.postBlock(user.token, toBlock.id, user.userId);
         } catch(err) {console.log(err)}
       };
-      blockUser(toBlock);
+      blockUser();
       if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +toBlock.id)) {
         const i = allUsers.findIndex(userX => +userX.id === +toBlock.id);
         toBlock.blockedFrom.push(+user.userId);
@@ -255,10 +254,10 @@ function Chat() {
       })
       async function unblockUser() {
         try {
-          const res = await ChatReq.postUnblock(user, toUnblock.id);
+          const res = await Fetch.postUnblock(user.token, toUnblock.id, user.userId);
         } catch(err) {console.log(err)}
       };
-      unblockUser(toUnblock);
+      unblockUser();
       if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +toUnblock.id)) {
         const i = allUsers.findIndex(userX => +userX.id === +toUnblock.id);
         toUnblock.blockedFrom = toUnblock.blockedFrom.filter(u => +u.id !== +user.userId);
@@ -284,11 +283,11 @@ function Chat() {
 // Partie IV : fonctions ...
 ////////////////////////////////////////////////
 
-  const getUser = (userId) => {
+  const getUser = (userId: number) => {
     return allUsers.find(user => +user?.id === +userId);
   };
 
-  const amIBlocked = (userXid) : string => {
+  const amIBlocked = (userXid: string | number) : string => {
     if (getUser(+id)?.blockedFrom.find(u => +u.id === +userXid || u === +userXid))
       { return "chatOnlineNotFriend"; }
     else
