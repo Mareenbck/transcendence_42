@@ -33,38 +33,69 @@ let players: profile [] = [];
 // //       !players[index].socketId.some((socket) => +socket === +socketId) &&
 // //       players[index].socketId.push(socketId)
 // //     }
-//  console.log(`24 players [] ='${players}'`);
-//     const addUser = (userId, socketId) => {
-//         if (players.length < 2) {
-//           !players.some((user) => +user.userId.userId === +userId.userId) &&
-//           players.push({userId, socketId})
-//     console.log('40 players = ', players);
-//       } else {
-//         !users.some((user) => +user.userId.userId === +userId.userId) &&
-//         users.push({userId, socketId})
-//       }
-//     }
-    // const addGame = (socketId) => {
-    //   // !players.some((user) => +user.userId.userId === +userId.userId) &&
-    //     players.push({
-    //       socketId,
-    //       userId: undefined
-    //     })
+// // console.log(`24 players [] ='${players}'`);
+    // const addUser = (userId, socketId) => {
+    //     if (players.length < 2) {
+    //       !players.some((user) => +user.userId.userId === +userId.userId) &&
+    //       players.push({userId, socketId})
+    // console.log('40 players = ', players);
+    //   } else {
+    //     !users.some((user) => +user.userId.userId === +userId.userId) &&
+    //     users.push({userId, socketId})
+    //   }
     // }
+    const addGame = (socketId) => {
+      // !players.some((user) => +user.userId.userId === +userId.userId) &&
+        players.push({
+          socketId,
+          userId: undefined
+        })
+    }
+
+// const getUser = (userId) => {
+//   return users.find(user => +user.userId.userId === +userId)
+// }
 
 // const getPlayers = (userId) => {
 //   return players.find(user => +user.userId.userId === +userId)
 // }
 
-  // onModuleInit(){
-  //   const game = new Game(
-  //     this.server,
-  //     //this.websocketsService,
-  //     this.prisma,
-  //     //this.achievementsService,
-  //     this.service
-  //   );
+    const removeUser = (socketId) => {
+      users = users.filter(user => user.socketId !== socketId);
+      players = players.filter(user => user.socketId !== socketId);
+    }
 
+
+@WebSocketGateway(8001, { cors: 'http://localhost/game/*' })//cors *
+export class GameGateway {
+
+  @WebSocketServer() server: Server;
+   constructor(
+        private prisma: PrismaService,
+        private service: GameService ){}
+
+  onModuleInit(){
+    const game = new Game(
+      this.server,
+      //this.websocketsService,
+      this.prisma,
+      //this.achievementsService,
+      this.service
+    );
+
+    this.server.on('connection', (socket: Socket) => {
+console.log('51 Connected socket = ', socket.id);
+      if(socket) {
+        game.init(socket);} //game initialization on connection
+        // socket.on("addUser", (userId) => {
+        // addUser(userId, socket.id); // add user : array users or array players
+        socket.on('play', (message: string) => {
+          if (message == 'play'){
+           // addGame(socket.id);
+  console.log ("94 socket play", socket);
+          }
+  console.log ('55 players = ', players.length);
+  console.log ('56 users = ',users.length);
 
 
 @WebSocketGateway()
@@ -176,4 +207,4 @@ export class GameGateway {
 }
 
 // this.games.splice(this.games.indexOf(game), 1);
-
+    }
