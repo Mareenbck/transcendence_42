@@ -24,15 +24,11 @@ export class ChatroomService {
         visibility = UserChannelVisibility.PWD_PROTECTED;
       }
 
-      // console.log("ici")
       let hash: string = "";
-      // console.log("apres le let: hash")
       if (visibility == UserChannelVisibility.PWD_PROTECTED) {
-        // console.log("dans le if")
         hash = await argon.hash(password ?? '');
-        // console.log("fin de if")
       }
-      // console.log("apres le hash")
+
       const newChannel = await this.prisma.chatroom.create({
         data: {
           name: name,
@@ -86,6 +82,15 @@ export class ChatroomService {
           ],
         }})
     return users;
+  }
+
+  async validatePassword(id: number, pass: string): Promise<any> {
+    const channelId = await this.prisma.chatroom.findUnique({where: {id: id}});
+    const pwdMatch = await argon.verify(channelId.hash, pass);
+    if (pwdMatch){
+      console.log("OKKKK");
+    }
+    return null;
   }
   
 }
