@@ -116,29 +116,7 @@ console.log('51 Connected socket = ', socket.id);
       //}
     });
   }
-        // const user = getUser(users);
-        // const player = getPlayers(players);
-//         this.server.emit("getSpectators", users);
-//         this.server.emit("getPlayers", players);
-//         if (players.length == 2 ) {
-//           //this.games.push(game);
-//           game.run(
-//             players[0], players[1], // start game with 2 players
-//           );
-//           players = [];
-// console.log ('95 players = ', players.length);
-// console.log ('96 users = ',users.length);
-//         }
-//       };
-//     }
-
-//       this.server.sockets.sockets.get(socket.id).on('disconnect', () => {//??
-// console.log(`78 Disconnected socket.id = ${socket.id}`);
-//         removeUser(socket.id);
-//         this.server.emit("getSpectator", users);
-//       });
-//     });
-//   }
 }
 
 // this.games.splice(this.games.indexOf(game), 1);
+
