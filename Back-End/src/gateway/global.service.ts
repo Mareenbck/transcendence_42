@@ -9,23 +9,10 @@ export class GlobalService {
   public server: Server = null;
   public userSockets: UsersSockets;
   constructor() {}
+  
   notifyIfConnected(usernames: string[], eventName: string, eventData: any) {
       usernames.forEach((username) => {
           this.userSockets.emitToUser(username, eventName, eventData);
       });
   }
-
-  /*  constructor(
-    private readonly authenticationService: AuthService,) {}
- 
-  async getUserFromSocket(socket: Socket) {
-    const cookie = socket.handshake.headers.cookie;
-    const { Authentication: authenticationToken } = parse(cookie);
-    const user = await this.authenticationService.verifyAccessToken(authenticationToken);
-    if (!user) {
-      throw new WsException('Invalid credentials.');
-    }
-    return user;
-  }
-*/
 }

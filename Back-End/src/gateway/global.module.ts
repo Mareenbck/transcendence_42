@@ -12,10 +12,9 @@ import { ChatService } from "src/chat/chat.service";
 
 @Global()
 @Module({
-// SEE ???
   imports: [],
   controllers: [GameController],
-  providers: [GlobalService, ChatService, PrismaService, GameService],
+  providers: [GlobalService, ChatService, PrismaService, GameService, UserService],
   exports: [GlobalService],
 })
 export class GlobalModule {}

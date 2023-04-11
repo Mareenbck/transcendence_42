@@ -1,9 +1,7 @@
 import { useEffect, useContext, useState, useRef, FormEvent } from 'react'
 import { Link } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
-//import io, { Socket } from "socket.io-client";
-import io from "socket.io-client";
-import useSocket, { socket } from '../../service/socket';
+import useSocket from '../../service/socket';
 import MessagesInput from "./MessagesInput"
 import Conversation from "./channels/Conversation"
 import ConversationReq from "./channels/ConversationRequest"
@@ -21,7 +19,6 @@ import UpdateChannelsInList from './channels/UpdateChannelsInList';
 
 
 function Chat() {
-  //const socket = useRef();
   const user = useContext(AuthContext);
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
@@ -51,46 +48,34 @@ function Chat() {
 ///////////////////////////////////////////////////////////
 
   useEffect(() => {
-    addListener("getMChat", (data)=> {
-      setAMessageChat({
-        authorId: data.authorId,
-        chatroomId: data.chatroomId,
-        content: data.content,
-        createdAt: Date.now(),
-      });
-    })
+    addListener("getMessageRoom", (data) => setAMessageChat({
+      authorId: data.authorId,
+      chatroomId: data.chatroomId,
+      content: data.content,
+      createdAt: Date.now(),
+    }))
     
-    addListener("getMD", (data)=> {
-      setAMessageD({
-        content: data.content,
-        author: data.author,
-        receiver: data.receiver,
-        createdAt: Date.now(),
-      });
-    });
-  }, []);
+    addListener("getMessageDirect", (data)=> setAMessageD({
+      content: data.content,
+      author: data.author,
+      receiver: data.receiver,
+      createdAt: Date.now(),
+    }));
+  });
 
   useEffect(() => {
     addListener("getConv", data => setAConversation({
-        name: data.content.name,
-        avatar: data.content.avatar,
-      }));
+      name: data.content.name,
+      avatar: data.content.avatar,
+    }));
   });
 
-/*
-  useEffect(() => {
-    sendMessage("addUserC", user);
-    return () => {
-      sendMessage("removeUserC", user);
-    }
-  },[])
-*/
   useEffect(() => {
     sendMessage("addUserChat", user);
     return () => {
-      sendMessage("removeUserChat", user.userId);
+      sendMessage("removeUserChat", user);
     }
-  },[])
+  },[user])
 
   useEffect(() => {
     addListener("getUsersChat", users => {
@@ -99,20 +84,13 @@ function Chat() {
     });
   });
 
- /* useEffect(() => {
-    socket.current.on("notAuth", data => {
-      window.location.replace('/root');
-    });
-  });
-*/
-
   useEffect(() => {
     addListener("wasInvited", data => {
       setInvited(data.from.username);
     });
   });
 
- useEffect(() => {
+  useEffect(() => {
     addListener("wasBlocked", data => {
       if (+data.id !== +id)
       { setFromBlock(+data.id);}
@@ -125,10 +103,6 @@ function Chat() {
       { setUnfromBlock(+data.id);}
     });
   }, []);
-
-  useEffect(() => {
-    sendMessage("addUser", user);
-  },[user])
 
   useEffect(() => {
     sendMessage("getUsers", users => {
@@ -310,21 +284,6 @@ function Chat() {
 // Partie IV : fonctions ...
 ////////////////////////////////////////////////
 
-  const getAvatar = (userId) => {
-    const u = allUsers.find(user => +user?.id === +userId);
-    console.log(u);
-    if (u && !u.avatar === "")
-      return (u.ftavatar);
-    else
-      return (u.avatar);
-  };
-
-  const getName = (userId) => {
-    console.log(user);
-    const u = allUsers.find(user => +user?.id === +userId);
-    return (u.username);
-  };
-
   const getUser = (userId) => {
     return allUsers.find(user => +user?.id === +userId);
   };
@@ -373,7 +332,7 @@ function Chat() {
       chatroomId: currentChat.id,
     };
 
-    sendMessage("sendMChat", {
+    sendMessage("sendMessageRoom", {
       authorId: +id,
       chatroomId: +currentChat?.id,
       content: newMessage2,
@@ -399,7 +358,7 @@ function Chat() {
 
     if (currentDirect?.userId)
     {
-      sendMessage("sendMD", {
+      sendMessage("sendMessageDirect", {
         author: +id,
         receiver: +currentDirect?.userId,
         content: newMessageD,
