@@ -80,8 +80,8 @@ export default function MyAccountMenu(props: any) {
 		anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 		>
 		<MenuItem>
-			<MyAvatar authCtx={props.authCtx} id={props.authCtx.userId} sx={{ width: 34, height: 34 }}/>
-			<Link to={`/users/profile/${props.authCtx.userId}`}>Profile</Link>
+			<MyAvatar authCtx={authCtx} id={authCtx.userId} sx={{ width: 34, height: 34 }}/>
+			<Link to={`/users/profile/${authCtx.userId}`}>Profile</Link>
 		</MenuItem>
 		{/* <MenuItem onClick={handleClose}>
 			<Avatar /> My Friends
