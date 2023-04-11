@@ -55,15 +55,20 @@ const MyAvatar = (props: any) => {
 
 	useEffect(() => {
 		if(props.id) {
-			const fetchData = async () => {
-				const avat: any = await friendCtx.fetchAvatar(props.id);
-				if (avat) {
-					setAvatar(avat);
-				}
-			};
 			fetchData();
 		}
 	}, [props.id, isMyProfile])
+
+	const fetchData = async () => {
+		if (isMyProfile) {
+			await authCtx.fetchAvatar(authCtx.userId);
+		} else {
+			const avat: any = await friendCtx.fetchAvatar(props.id);
+			if (avat) {
+				setAvatar(avat);
+			}
+		}
+	};
 
 	useEffect(() => {
 		if (props.style === "m") {
