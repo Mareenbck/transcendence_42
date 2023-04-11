@@ -3,12 +3,10 @@ import { Popup } from 'reactjs-popup';
 import { useEffect, useContext, useState, FormEvent } from 'react'
 import "../../../style/PopUpChannel.css"
 import AuthContext from '../../../store/AuthContext';
-import Chat from '../../Chat';
-import { socket } from '../../../../service/socket';
 import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from './ChannelsSettings';
-
-
+import { TextField } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 function PopUp(props: any) {
 
@@ -16,13 +14,13 @@ function PopUp(props: any) {
     const [isPublic, setIsPublic] = useState(true);
     const [isPrivate, setIsPrivate] = useState(false);
     const [isProtected, setIsProtected] = useState(false);
-    const [selectedFile, setSelectedFile] = useState('');
     const [showPopUp, setShowPopUp] = useState(true);
     const user = useContext(AuthContext);
     const id = user.userId;
     const [isDisabled, setIsDisabled] = useState(true);
     const [channelName, setchannelName] = useState('');
     const [openModal, setOpenModal] = useState(true);
+    const passwordInputRef = useRef<HTMLInputElement>(null);
 
 
     const handleChannelNameChange = (e: FormEvent) => {
@@ -45,8 +43,6 @@ function PopUp(props: any) {
         };
         try {
             const res = await ConversationReq.postRoom(user, newConv);
-            // console.log("RES = ")
-            // console.log(res)
         } catch (err) { 
             console.log(err);
         }
@@ -54,13 +50,9 @@ function PopUp(props: any) {
     
     const createAndClose = async (e:FormEvent) => {
         try {
-            // const res = await getRolesUser(props.status, props.role);
             await createNewChannel(e);
             setShowPopUp(false);
             props.onClick();
-            // console.log("RESPONSE DE GET ROLE USER")
-            // console.log(res);
-            // return res;
         } catch (err) {
             console.log(err);
         }
@@ -70,10 +62,13 @@ function PopUp(props: any) {
     const handleFormSubmit = (e:FormEvent) => {
         e.preventDefault();
         setShowPopUp(false);
-      };
+    };
+
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
+
       
-
-
+// aller voir le inputRef={usernameInputRef} pour apres IN TEXT FIELDS
 return (
     <div className='popup-overlay'>
         <div className='global-popup'>
@@ -100,7 +95,18 @@ return (
                     />
                     Protected
                 </label>
-                <label className='wrap-circle'>
+                <div>Choose a password for your new channel</div>
+                <TextField
+                    id="password"
+                    className="custom-field"
+                    label="password"
+                    type={showPassword ? 'text' : 'password'}
+                    variant="filled"
+                    placeholder="Type a password..."
+                    inputRef={passwordInputRef}
+                />
+                <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
+               <label className='wrap-circle'>
                     <input
                         className='circle'
                         type='radio'

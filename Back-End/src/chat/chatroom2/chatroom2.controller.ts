@@ -10,7 +10,8 @@ export class Chatroom2Controller {
 
   @Post()
   @UseGuards(JwtGuard)
-    async create( @Body() newConv: any, @GetCurrentUserId() userId: string): Promise<CreateChatroomDto> {
+  async create( @Body() newConv: any, @GetCurrentUserId() userId: string): Promise<CreateChatroomDto> {
+      // console.log("DANS LE CONTROLLER DE CREATE")
       const newChannel = await this.chatRoomService.create(newConv, parseInt(userId));
     return newChannel;
   }
@@ -31,10 +32,14 @@ export class Chatroom2Controller {
   @Get('userTable/:id/:channelId')
   async getUserTable(@Param('id') id: string, @Param('channelId') channelId:string) {
     const response = await this.chatRoomService.getUserTable(parseInt(id), parseInt(channelId));
-    console.log("response usertable");
-    console.log(response);
+    // console.log("response usertable");
+    // console.log(response);
     return response;
   }
+
+  // @Post('/:channelId/password')
+  // // @UseGuards(JwtGuard)
+  // async 
   
 
   // @Post(':id/delete')

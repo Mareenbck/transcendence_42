@@ -17,12 +17,9 @@ export default function UpdateChannelsInList(props: any) {
   const user = useContext(AuthContext);
   const [openModal, setOpenModal] = useState(false);
 
-
-
-
     useEffect(() => {
       socket.current = io("ws://localhost:8001")
-    })
+    }, [])
 
     useEffect(() => {
       socket.current.on("getConv", data => {

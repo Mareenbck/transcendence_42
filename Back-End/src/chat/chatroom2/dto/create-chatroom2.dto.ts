@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, MinLength, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, MinLength, MaxLength, IsOptional } from 'class-validator';
 
 export class CreateChatroomDto
 {
@@ -10,6 +10,10 @@ export class CreateChatroomDto
   @MaxLength(45)
   name:  string;
   visibility: string;
+
+  @IsString()
+	@IsOptional()
+  hash: string;
 }
 
 export class ParticipantsOnChannel
