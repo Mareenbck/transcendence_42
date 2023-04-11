@@ -14,17 +14,15 @@ export class ChatService {
     userChat = new Array();
     roomUsers = new Array();
 
-    addUserChat:any = (userId : any, socketId: number) => {
+    addUserChat:any = (userId : any, socketId: string) => {
         !this.userChat.some((u) => +u.userId.userId === +userId.userId) &&
         this.userChat.push({userId, socketId})
-        console.log("szasazsazsasasasazsasas");
-        //console.log(this.userChat);
         this.server.sockets.emit('getUsersChat', this.userChat);
     }
 
-    removeUserChat:any = (userId: number) => {
-        this.userChat = this.userChat.filter(user => +user.userId.userId !== +userId);
-        this.roomUsers = this.roomUsers.filter( room => +room.userId.userId !== +userId);
+    removeUserChat:any = (userId: any) => {
+        this.userChat = this.userChat.filter(user => +user.userId.userId !== +userId.userId);
+        this.roomUsers = this.roomUsers.filter( room => +room.userId.userId !== +userId.userId);
         this.server.sockets.emit('getUsersChat', this.userChat);
     };
 
@@ -34,11 +32,23 @@ export class ChatService {
         console.log(this.roomUsers);
     };
 
-    sendChatMessage:any = (authorId: number, chatroomId: number, content: string) => {
+    removeRoomUser:any = (roomId: number, userId: number, socketId: number) => {
+        this.roomUsers = this.roomUsers.filter( room => +room.userId !== +userId);
+        roomId && this.roomUsers.push({roomId, userId, socketId});
+        console.log(this.roomUsers);
+    };
+
+
+    getUser:any = (userId: number) => {
+        return this.userChat.find(u => +u.userId.userId === +userId);
+    }
+
+    // SENDING MESSAGES
+    sendRoomMessage:any = (authorId: number, chatroomId: number, content: string) => {
         const roomU = this.roomUsers.filter( room => +room.roomId === +chatroomId);
         if (roomU.length > 1) {
             for(const room of roomU) {
-                this.server.to(room.socketId).emit("getMChat", {
+                this.server.to(room.socketId).emit("getMessageRoom", {
                     authorId,
                     chatroomId,
                     content,
@@ -47,15 +57,10 @@ export class ChatService {
         }
     };
 
-    getSocket:any = (userId: number) => {
-        return this.userChat.find(u => +u.userId === +userId)
-    }
-
-    sendDirectMessage:any = (content: string, author: string, receiver: string, ) => {
-        console.log("in ChatService to send direct");
-        const socketId = this.getSocket(+receiver);
-        if (socketId) {
-            this.server.to(socketId).emit("getMChat", {
+    sendDirectMessage:any = (content: string, author: number, receiver: number, ) => {
+        const user = this.getUser(receiver);
+        if (user) {
+            this.server.to(user.socketId).emit("getMessageDirect", {
                 content,
                 author,
                 receiver,
@@ -63,25 +68,46 @@ export class ChatService {
         }
     };
 
-/*
-        sendPrivateMessageNotification(user: UserWhole, infos_user: SubInfosWithChannelAndUsers, message: Message): void {
-            const friendUsername: string =
-                infos_user.channel.subscribedUsers[0].username === user.username ? infos_user.channel.subscribedUsers[1].username : infos_user.channel.subscribedUsers[0].username;
-            this.userSockets.getUserSockets(friendUsername)?.forEach((sock) => {
-                if (sock?.data.current_channel !== infos_user.channelId) {
-                    sock?.emit("notifmessage", {
-                        username: user.username,
-                        message: message.content,
-                    });
-                }
+    sendConv:any = (author: number, content: string) => {
+        for(const user of this.userChat) {
+            this.server.to(user.socketId).emit('getConv', {
+                content,
             });
         }
+    };
 
-        
-*/
+    chatBlock:any = (blockFrom: number, blockTo: number,) => {
+        const userTo = this.getUser(blockTo);
+        const userFrom = this.getUser(blockFrom);
+        if (userTo) {
+            this.server.to(userTo.socketId).emit('wasBlocked', {
+                id: blockFrom,
+                user: userFrom,
+            });
+        }
+    };
 
+    chatUnblock:any = (blockFrom: number, blockTo: number,) => {
+        const userTo = this.getUser(blockTo);
+        const userFrom = this.getUser(blockFrom);
+        if (userTo) {
+            this.server.to(userTo.socketId).emit('wasUnblocked', {
+                id: blockFrom,
+                user: userFrom,
+            });
+        }
+    };
 
-    
+    chatInvite: any = (author: number, player: number,) => {
+        const fromU = this.getUser(author);
+        const toU = this.getUser(player);
+        if (toU) {
+            this.server.to(toU.socketId).emit('wasInvited', {
+                from: fromU.userId,
+                to: toU.userId,
+            });
+        };
+    };
 }
 
 

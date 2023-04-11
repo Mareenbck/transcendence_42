@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { ChatGateway } from './chat/chat.gateway';
+//import { ChatGateway } from './chat/chat.gateway';
 import { GlobalGateway } from './gateway/global.gateway';
 import { GlobalModule } from './gateway/global.module';
 import { JwtModule } from '@nestjs/jwt';
@@ -36,7 +36,6 @@ import { GlobalService } from './gateway/global.service';
 		// PassportModule.register({ defaultStrategy: '42' }),
 	],
 	providers: [
-		ChatGateway,
     	GameGateway,
     	GlobalGateway,
 		GlobalService,

@@ -17,7 +17,7 @@ let users: profile [] = [];
 //two players
 let players: profile [] = [];
 
-<<<<<<< HEAD
+
 // // const addUser = (userId, socketId) => {
 // //   if (players.length < 2) {
 // // console.log('22 player ', userId);
@@ -112,6 +112,6 @@ export class GameGateway {
 //       });
 //     });
 //   }
-// }
+}
 
 // this.games.splice(this.games.indexOf(game), 1);

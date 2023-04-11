@@ -1,4 +1,5 @@
 
+/*
 import {
   MessageBody,
   WebSocketServer,
@@ -56,7 +57,7 @@ constructor(private authService: AuthService){}
     this.server.on('connection', (socket) => {
 //      console.log(socket.id);
 //      console.log('Connected CHAT BACK END');
-/*
+
       socket.on("addUserC", (userId) => {
         addUser(userId, socket.id);
         this.server.emit("getUsersC", users);
@@ -106,7 +107,7 @@ constructor(private authService: AuthService){}
           });
         };
       });
-*/
+
       socket.on("sendConv", ({author, content,}) => {
         console.log(content);
         for(const user of users) {
@@ -159,3 +160,4 @@ constructor(private authService: AuthService){}
     }
   )};
 }
+*/
