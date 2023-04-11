@@ -46,10 +46,7 @@ constructor(private authService: AuthService){}
     this.server.on('connection', (socket) => {
 //      console.log(socket.id);
 //      console.log('Connected CHAT BACK END');
-<<<<<<< HEAD
-=======
-/*
->>>>>>> 63fafa3 (global BE)
+
       socket.on("addUserC", (userId) => {
         addUser(userId, socket.id);
         this.server.emit("getUsersC", users);

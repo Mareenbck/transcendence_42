@@ -94,20 +94,12 @@ function Chat() {
   //   }));
   // });
 
-/*
   useEffect(() => {
     sendMessage("addUserChat", user as UserCtx);
     return () => {
       sendMessage("removeUserChat", user as UserCtx);
     }
-  },[])
-*/
-  useEffect(() => {
-    sendMessage("addUserChat", user);
-    return () => {
-      sendMessage("removeUserChat", user.userId);
-    }
-  },[])
+  },[user])
 
   useEffect(() => {
     addListener("getUsersChat", users => {
@@ -491,6 +483,7 @@ function Chat() {
 // Partie IV : fonctions ...
 ////////////////////////////////////////////////
 
+<<<<<<< HEAD
   const getUser  = (userId: number): UserChat => {
     return allUsers.find(user => +user?.id === +userId);
   };

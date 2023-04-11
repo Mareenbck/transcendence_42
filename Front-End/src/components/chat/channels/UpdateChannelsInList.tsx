@@ -17,6 +17,18 @@ export default function UpdateChannelsInList(props: any) {
   const [sendMessage, addListener] = useSocket()
 
 
+//    useEffect(() => {
+//      socket.current = io("ws://localhost:8001")
+//    })
+
+    useEffect(() => {
+      addListener("getConv", data => {
+        setAConversation({
+          name: data.content.name,
+          avatar: data.content.avatar,
+        });
+      });
+    }, []);
 
 //    useEffect(() => {
 //      socket.current = io("ws://localhost:8001")
