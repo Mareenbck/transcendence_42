@@ -7,19 +7,21 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 export default function JoinProtectedChannel(props: any) {
-
     const [icon, setIcon] = useState<any>();
 
     useEffect(() => {
-        if (props.role === "USER") {
-            setIcon(<AddBoxIcon style={{ opacity: 0 }} />);
-        } else {
+
+        // if (props.role === "USER") {
+        //     setIcon(<AddBoxIcon style={{ opacity: 0 }} />);
+        // } else {
             setIcon(<AddBoxIcon />);
-        }
-      }, [props.role]);
+        // }
+      }, []);
 
     const handleOpenJoinModal = () => {
+        // if (props.role != "USER") {
             props.onOpenModal();
+        // }
       };
 
     return (
