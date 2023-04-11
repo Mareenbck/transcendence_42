@@ -47,8 +47,8 @@ export class Game {
 	private winner: any = '';
 
 	private server: Server;
-	private prismaService: PrismaService;
-	private gameService: GameService;
+	private prisma: PrismaService;
+	private service: GameService;
 
 
 
@@ -56,14 +56,13 @@ export class Game {
 		server: Server,
 		prismaService: PrismaService,
 		//spectatorSockets: any[]
-		gameService: GameService
+		service: GameService
 	) {
 console.log("constructor Class.game");
 		this.server = server;
-		this.prismaService = prismaService;
-		this.gameService = gameService;
+		this.prisma = prismaService;
+		this.service = service;
 	}
-	prisma = new PrismaClient()
 
 
 // function: emit game - tacking the changing coordinates of rackets and ball

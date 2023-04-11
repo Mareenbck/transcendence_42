@@ -1,8 +1,8 @@
 import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
-import type {gameInit, gameState, gameWinner} from './type'
+import type {gameInit, gameState, gameWinner, backColorGame} from './type'
 
-const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, backColorGame: backColorGame} ): JSX => {
+const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, backColorGame: backColorGame} ) => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
     const gamewinner = props.gamewinner;
@@ -17,7 +17,7 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
                 // Draw the table
                 context.beginPath();
                 //context.fillStyle = "black";
-                context.fillStyle = backColorGame;
+                context.fillStyle = backColorGame.backColorGame;
                 context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
                 context.closePath();
 

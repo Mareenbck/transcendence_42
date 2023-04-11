@@ -4,12 +4,16 @@ import Canvas from './Canvas'
 import './Game.css'
 import '../../style/OptionGame.css'
 import type { gameInit, gameState, gameWinner } from './type'
-import { Socket } from 'socket.io-client';
+//import { Socket } from 'socket.io-client';
 import { socket } from '../../service/socket';
 import ColorModal from './modal.tsx/ColorModal';
 import { Link, useLocation } from "react-router-dom";
 import SideBar from '../SideBar';
 import style from '../../style/Menu.module.css';
+// import { useHistory } from 'react-router-dom';
+
+// const history = useHistory();
+
 
 function OptionGame () {
     const [activeLink, setActiveLink] = useState('');
@@ -19,9 +23,21 @@ function OptionGame () {
         setActiveLink(location.pathname);
       }, [location.pathname]);
 
-    const handleLinkClick = (path: string) => {
-        setActiveLink(path);
-      };
+    // const handleLinkClick = (path: string) => {
+    //     setActiveLink(path);
+    //     // socket?.emit('play', 'play');
+    //   };
+
+//     const handleClick = () => {
+//         socket?.emit('play', 'play');
+// console.log('33 emit play');
+//       };
+
+      function handleClick () {
+console.log('37 emit play game');
+        socket?.current.emit('play', 'play');
+      }
+
     return (
         <>
             <div className={style.mainPos}>
@@ -41,10 +57,13 @@ function OptionGame () {
                     <br />
                     <br />
                     <div className="btn">
-                     <Link to="/game/play" 
+                    <Link to="/game/play" onClick={handleClick}> Play Games  </Link> 
+                         {/* <button onClick={handleClick}>Play Games</button> */}
+                         {/* <Link to="/game/play" 
                            onClick={ () => handleLinkClick( setActiveLink("/game/play") )  }
                             >Play Games
-                     </Link>
+                     </Link> */}
+
                      </div>
                     
                 </div>
