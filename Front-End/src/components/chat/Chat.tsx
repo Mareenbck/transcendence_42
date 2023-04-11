@@ -15,8 +15,12 @@ import React from 'react';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
 import Channels from './channels/Channels';
+<<<<<<< HEAD
 import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
+=======
+import {RoomMessage, DirectMessage, UserChat, ChatRoom} from "../interfaces/iChat";
+>>>>>>> e96fe66 (chat)
 
 
 function Chat() {
