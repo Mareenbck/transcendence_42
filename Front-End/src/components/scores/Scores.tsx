@@ -5,7 +5,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
 import UserChart from './UserChart'
-import ChatReq from "./../chat/Chat.req"
+import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
 
 const Scores = () => {
@@ -16,37 +16,28 @@ const Scores = () => {
 
 
           //aller chercher les games
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const resp = await fetch( "http://localhost:3000/game/",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authCtx.token}`
-          }
-        });
-        if (!resp.ok) {
-          const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
-          throw new Error(message);
-        }
-        const data = await resp.json();
-        setGames(data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchGames();
-  }, [])
-
-            //aller chercher les users
-  async function getAllUsers(authCtx: AuthContext) {
-    const resp = await ChatReq.getAllUsersWithGames(authCtx);
-    setAllUsers(resp);
+  
+  async function fetchGames() {
+    try {
+      setGames(await Fetch.fetch(authCtx.token, "GET", `game`))
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
-    getAllUsers(authCtx);
+    fetchGames();
+  }, []);
+
+            //aller chercher les users
+  async function getAllUsers() {
+    try {
+      setAllUsers(await Fetch.fetch(authCtx.token, "GET", `users/games`));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getAllUsers();
   }, []);
 
               //score/ user
@@ -74,37 +65,6 @@ const Scores = () => {
       return (total);
     }
   }
-
-///////////////////////////////////////////
-//  POUR MARIYA
-
-  const handleNewGame = async (event: FormEvent) => {
-    event.preventDefault();
-    try {
-      const resp = await fetch(`http://localhost:3000/game/newGame`,{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authCtx.token}`,
-        },
-        body: JSON.stringify({
-          playerOneId: 2,
-          playerTwoId: 4,
-          winnerId: 2,
-          score1: 1,
-          score2: 10,
-        }),
-      });
-      if (!resp.ok) {
-        const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
-        throw new Error(message);
-      }
-      const data = await resp.json();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
  
   //allUsers.sort((a:any , b:any) => (a.getScore < b.getScore ? -1 : 1));
   var sorted = [...allUsers];
@@ -201,7 +161,7 @@ const Scores = () => {
                       {  sorted.map( (g) => {
                         return(
                           
-                          <div className="midPos">
+                          <div key={g?.id} className="midPos">
                             <div className='rangAvatar'> 
                             { secend.id == g.id && <MyAvatar authCtx={authCtx } id={secend.id} style="s" avatar={secend.avatar} ftAvatar={secend.ftavatar}/>  }
                             { secend.id == g.id &&  <UserChart key={secend?.id}   userName={secend?.username}  h={(getScore(secend))} />}

@@ -1,11 +1,13 @@
+
+/*
 import {
   MessageBody,
   WebSocketServer,
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
-
 
 let users = [];
 let roomUsers = [];
@@ -48,29 +50,33 @@ export class ChatGateway {
 constructor(private authService: AuthService){}
   @WebSocketServer()
   server;
+ // @WebSocketServer()
+ // public server: Server = null;
 
   onModuleInit(){
     this.server.on('connection', (socket) => {
-      console.log(socket.id);
-      console.log('Connected CHAT');
+//      console.log(socket.id);
+//      console.log('Connected CHAT BACK END');
 
       socket.on("addUserC", (userId) => {
-        if (userId.token){
-          try {
-            this.authService.verifySocketToken(userId.token);
-            addUser(userId, socket.id);
-            this.server.emit("getUsersC", users);
-                console.log(userId.userId);
-                console.log('Connected CHAT');
-          } catch (e) {
-            console.log(e);
-          }
-        }
-        else {
-          this.server.to(socket.socketId).emit("notAuth", {
-            content: "Not Authorised User",
-          });
-        }
+        addUser(userId, socket.id);
+        this.server.emit("getUsersC", users);
+      });
+
+      socket.on("removeUserC", (userId) => {
+        removeUser(userId);
+        console.log(userId.userId);
+        console.log('REMOVE from CHAT PAGE');
+      });
+
+      socket.on("welcome", (str) => {
+        console.log(socket.handshake.auth.token);
+        console.log("---");
+          console.log(str);
+      });
+
+      socket.on("bye", (str) => {
+          console.log(str);
       });
 
       socket.on("userRoom", ({roomId, userId}) => {
@@ -145,8 +151,8 @@ constructor(private authService: AuthService){}
       });
 
       socket.on('disconnect', () => {
-        console.log(socket.id);
-        console.log('Disconnected CHAT');
+   //     console.log(socket.id);
+   //     console.log('Disconnected CHAT BACK END');
         removeUser(socket.id);
      //   removeUser2(socket.id);
         this.server.emit("getUsers", users);
@@ -154,3 +160,4 @@ constructor(private authService: AuthService){}
     }
   )};
 }
+*/

@@ -1,14 +1,12 @@
 import { useEffect, useContext, useState, useRef, FormEvent } from 'react'
 import { Link } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
-import io, { Socket } from "socket.io-client";
-//import io from "socket.io-client";
-//import { Socket } from '../../service/socket';
+import useSocket from '../../service/socket';
 import MessagesInput from "./MessagesInput"
 import Conversation from "./channels/Conversation"
 import ConversationReq from "./channels/ConversationRequest"
 import MessageReq from "./message/message.req"
-import ChatReq from "./Chat.req"
+import Fetch from "../../interfaces/Fetch"
 import Message2 from "./message/message"
 import MessageD from "./message/messageD"
 import '../../style/Chat.css'
@@ -17,122 +15,98 @@ import React from 'react';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
 import Channels from './channels/Channels';
+import {RoomMessage, DirectMessage, UserChat, ChatRoom} from "../interfaces/iChat";
 
 
 function Chat() {
-  const socket = useRef();
   const user = useContext(AuthContext);
   const id = user.userId;
-  const [onlineUsers, setOnlineUsers] = useState<UserDto[]> ([]);
-  const [AMessageD, setAMessageD] = useState (null);
-  const [AMessageChat, setAMessageChat] = useState (null);
+  const [onlineUsers, setOnlineUsers] = useState<UserChat[]> ([]);
+  const [AMessageD, setAMessageD] = useState<DirectMessage> (null);
+  const [AMessageChat, setAMessageChat] = useState<RoomMessage> (null);
   const [AConversation, setAConversation] = useState (null);
   const [conversations, setConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState (null);
-  const [currentDirect, setCurrentDirect] = useState (null);
-  const [messages2, setMessages2] = useState<MessageDto[]> ([]);
-  const [messagesD, setMessagesD] = useState<MessageDDto[]> ([]);
-  const [newMessage2, setNewMessage2] = useState ("");
-  const [newMessageD, setNewMessageD] = useState ("");
-  const [otherUsers, setOtherUsers] = useState <UserDto[]> ([]);
-  const [allUsers, setAllUsers] = useState <UserDto[]> ([]);
+  const [currentChat, setCurrentChat] = useState<ChatRoom> (null);
+  const [currentDirect, setCurrentDirect] = useState<UserChat> (null);
+  const [messages2, setMessages2] = useState<RoomMessage[]> ([]);
+  const [messagesD, setMessagesD] = useState<DirectMessage[]> ([]);
+  const [newMessage2, setNewMessage2] = useState<RoomMessage> (null);
+  const [newMessageD, setNewMessageD] = useState<DirectMessage> (null);
+  const [otherUsers, setOtherUsers] = useState <UserChat[]> ([]);
+  const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
   const scrollRef = useRef();
   const [toBlock, setToBlock] = useState(null);
   const [toUnblock, setToUnblock] = useState(null);
   const [fromBlock, setFromBlock] = useState<number>();
   const [unfromBlock, setUnfromBlock] = useState<number>();
-  const [invited, setInvited] = useState ();
+  const [invited, setInvited] = useState<UserChat> ();
+  const [sendMessage, addListener] = useSocket()
 
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////
 
   useEffect(() => {
-    socket.current = io("ws://localhost:8001")
-//    socket.current.data.fromPage = "chat";
-
-    socket.current.on("getMChat", (data)=> {
-      setAMessageChat({
-        authorId: data.authorId,
-        chatroomId: data.chatroomId,
-        content: data.content,
-        createdAt: Date.now(),
-      });
-    })
+    addListener("getMessageRoom", (data) => setAMessageChat({
+      authorId: data.authorId,
+      chatroomId: data.chatroomId,
+      content: data.content,
+      createdAt: Date.now(),
+    }))
     
-    socket.current.on("getMD", (data)=> {
-      console.log(user);
- //     console.log(data);
-      setAMessageD({
-        content: data.content,
-        author: data.author,
-        receiver: data.receiver,
-        createdAt: Date.now(),
-      });
-    });
-//    return () => {
-//      socket.current.off("getMChat");
-//      socket.current.off("getMD");
-//    }
-  }, []);
-
-  // useEffect(() => {
-  //   socket.current.on("getConv", data => {
-  //     setAConversation({
-  //       name: data.content.name,
-  //       avatar: data.content.avatar,
-  //     });
-  //   });
-  // }, []);
+    addListener("getMessageDirect", (data)=> setAMessageD({
+      content: data.content,
+      author: data.author,
+      receiver: data.receiver,
+      createdAt: Date.now(),
+    }));
+  });
 
   useEffect(() => {
-    socket.current.emit("addUserC", user);
+    addListener("getConv", data => setAConversation({
+      name: data.content.name,
+      avatar: data.content.avatar,
+    }));
+  });
+
+  useEffect(() => {
+    sendMessage("addUserChat", user);
+    return () => {
+      sendMessage("removeUserChat", user);
+    }
   },[user])
 
   useEffect(() => {
-    socket.current.on("getUsersC", users => {
+    addListener("getUsersChat", users => {
       setOnlineUsers(users);
     });
   });
 
- /* useEffect(() => {
-    socket.current.on("notAuth", data => {
-      window.location.replace('/root');
-    });
-  });
-*/
-
   useEffect(() => {
-    socket.current.on("wasInvited", data => {
-      console.log(data);
+    addListener("wasInvited", data => {
       setInvited(data.from.username);
     });
   });
 
- useEffect(() => {
-    socket.current.on("wasBlocked", data => {
+  useEffect(() => {
+    addListener("wasBlocked", data => {
       if (+data.id !== +id)
       { setFromBlock(+data.id);}
     });
   }, []);
 
   useEffect(() => {
-    socket.current.on("wasUnblocked", data => {
+    addListener("wasUnblocked", data => {
       if (+data.id !== +id)
       { setUnfromBlock(+data.id);}
     });
   }, []);
 
   useEffect(() => {
-    socket.current.emit("addUser", user);
-  },[user])
-
-  useEffect(() => {
-    socket.current.on("getUsers", users => {
+    sendMessage("getUsers", users => {
       setOnlineUsers(users);
     });
   })
-
 
   useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
@@ -154,14 +128,14 @@ function Chat() {
 // Partie II : va chercher les infos de la base de donnée
 ////////////////////////////////////////////////
 
-  async function getAllUsersWithBlocked(user: AuthContext) {
-    const response = await ChatReq.getAllUsersWithBlocked(user);
+  async function getAllUsersWithBlocked(token: string) {
+    const response = await Fetch.fetch(token, "GET", `users\/block\/users`);
     setAllUsers(response);
     setOtherUsers(response.filter(u => !(onlineUsers.some(e => +e.userId.userId === +u.id))));
   };
 
   useEffect(() => {
-    getAllUsersWithBlocked(user);
+    getAllUsersWithBlocked(user.token);
   }, []);
 
 
@@ -176,11 +150,11 @@ function Chat() {
   useEffect(() => {
     if (currentChat)
     {
-      async function getMess(user: AuthContext) {
+      async function getMess() {
         try {
-          const response = await MessageReq.getMess(user, currentChat?.id);
+          const response = await Fetch.fetch(user.token, "GET", `chat-mess\/room`, currentChat?.id);
           setMessages2(response);
-          socket?.current.emit("userRoom", {
+          sendMessage("userRoom", {
             userId: user.userId,
             roomId: currentChat.id,
           })
@@ -188,24 +162,24 @@ function Chat() {
           console.log(err);
         }
       };
-      getMess(user);
+      getMess();
     }
   }, [currentChat]);
 
   useEffect(() => {
     if (currentDirect)
     {
-      async function getDirMess(user: AuthContext) {
+      async function getDirMess() {
         try {
           if (currentDirect?.userId)
-            { setMessagesD(await MessageReq.getDirMess(user, id, currentDirect?.userId))}
+            { setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.userId))}
           else
-            {setMessagesD(await MessageReq.getDirMess(user, id, currentDirect?.id))};
+            { setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.id))};
         } catch(err) {
           console.log(err);
         }
       };
-      getDirMess(user);
+      getDirMess();
     }
   }, [currentDirect]);
 
@@ -242,16 +216,16 @@ function Chat() {
   useEffect(() => {
     if (toBlock)
     {
-      socket?.current.emit("toBlock", {
+      sendMessage("toBlock", {
         blockTo: +toBlock.id,
         blockFrom: +id,
       })
       async function blockUser() {
         try {
-          const res = await ChatReq.postBlock(user, toBlock.id);
+          const res = await Fetch.postBlock(user.token, toBlock.id, user.userId);
         } catch(err) {console.log(err)}
       };
-      blockUser(toBlock);
+      blockUser();
       if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +toBlock.id)) {
         const i = allUsers.findIndex(userX => +userX.id === +toBlock.id);
         toBlock.blockedFrom.push(+user.userId);
@@ -273,16 +247,16 @@ function Chat() {
   useEffect(() => {
     if (toUnblock)
     {
-      socket?.current.emit("toUnblock", {
+      sendMessage("toUnblock", {
         blockTo: +toUnblock.id,
         blockFrom: +id,
       })
       async function unblockUser() {
         try {
-          const res = await ChatReq.postUnblock(user, toUnblock.id);
+          const res = await Fetch.postUnblock(user.token, toUnblock.id, user.userId);
         } catch(err) {console.log(err)}
       };
-      unblockUser(toUnblock);
+      unblockUser();
       if (onlineUsers && onlineUsers.find(userX => +userX.userId.userId === +toUnblock.id)) {
         const i = allUsers.findIndex(userX => +userX.id === +toUnblock.id);
         toUnblock.blockedFrom = toUnblock.blockedFrom.filter(u => +u.id !== +user.userId);
@@ -308,26 +282,11 @@ function Chat() {
 // Partie IV : fonctions ...
 ////////////////////////////////////////////////
 
-  const getAvatar = (userId) => {
-    const u = allUsers.find(user => +user?.id === +userId);
-    console.log(u);
-    if (u && !u.avatar === "")
-      return (u.ftavatar);
-    else
-      return (u.avatar);
-  };
-
-  const getName = (userId) => {
-    console.log(user);
-    const u = allUsers.find(user => +user?.id === +userId);
-    return (u.username);
-  };
-
-  const getUser = (userId) => {
+  const getUser = (userId: number) => {
     return allUsers.find(user => +user?.id === +userId);
   };
 
-  const amIBlocked = (userXid) : string => {
+  const amIBlocked = (userXid: string | number) : string => {
     if (getUser(+id)?.blockedFrom.find(u => +u.id === +userXid || u === +userXid))
       { return "chatOnlineNotFriend"; }
     else
@@ -351,7 +310,7 @@ function Chat() {
 
   const inviteGame = (playerId) => {
     console.log(playerId);
-    socket?.current.emit("InviteGame", {
+    sendMessage("InviteGame", {
       author: +id,
       player: +playerId,
     });
@@ -371,7 +330,7 @@ function Chat() {
       chatroomId: currentChat.id,
     };
 
-    socket?.current.emit("sendMChat", {
+    sendMessage("sendMessageRoom", {
       authorId: +id,
       chatroomId: +currentChat?.id,
       content: newMessage2,
@@ -397,7 +356,7 @@ function Chat() {
 
     if (currentDirect?.userId)
     {
-      socket?.current.emit("sendMD", {
+      sendMessage("sendMessageDirect", {
         author: +id,
         receiver: +currentDirect?.userId,
         content: newMessageD,

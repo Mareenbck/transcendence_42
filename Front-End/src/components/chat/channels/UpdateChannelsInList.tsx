@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { socket } from "../../../service/socket";
+import useSocket from '../../../service/socket';
 import Conversation from "./Conversation";
 import ChannelVisibility from "./ChannelVisibility";
-import io, { Socket } from "socket.io-client";
+// import io, { Socket } from "socket.io-client";
 import AuthContext from "../../../store/AuthContext";
 import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from "./ChannelsSettings";
@@ -16,13 +16,15 @@ export default function UpdateChannelsInList(props: any) {
   const [AConversation, setAConversation] = useState (null);
   const user = useContext(AuthContext);
   const [openModal, setOpenModal] = useState(false);
+  const [sendMessage, addListener] = useSocket()
+
+
+//    useEffect(() => {
+//      socket.current = io("ws://localhost:8001")
+//    })
 
     useEffect(() => {
-      socket.current = io("ws://localhost:8001")
-    }, [])
-
-    useEffect(() => {
-      socket.current.on("getConv", data => {
+      addListener("getConv", data => {
         setAConversation({
           name: data.content.name,
           avatar: data.content.avatar,
