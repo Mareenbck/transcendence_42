@@ -129,7 +129,9 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const fetchLogout = async () => {
-		localStorage.clear();
+		console.log("RENTRE DANS LE FETCH LOUGOUT")
+		console.log(token)
+		// localStorage.clear();
 		try {
 			const response = await fetch('http://localhost:3000/auth/logout', {
 				method: 'POST',
@@ -139,6 +141,8 @@ export const AuthContextProvider = (props: any) => {
 				},
 				// body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
 			});
+			console.log("response--->")
+			console.log(response)
 			const data = await response.json();
 			if (response.ok) {
 				setToken("");

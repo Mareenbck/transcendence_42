@@ -42,10 +42,10 @@ console.log('37 emit play game');
         <>
             <div className={style.mainPos}>
 				<SideBar title="Settings" />
-            
-                
+
+
                 <div>
-                    <div className="card">
+                    <div className="card-option">
                          <p >Select your favorite color</p>
                     </div>
                     <div className="posColor">
@@ -65,9 +65,9 @@ console.log('37 emit play game');
                      </Link> */}
 
                      </div>
-                    
+
                 </div>
-            </div>  
+            </div>
         </>
     );
 }
