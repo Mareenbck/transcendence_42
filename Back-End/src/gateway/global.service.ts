@@ -9,17 +9,12 @@ export class GlobalService {
   public server: Server = null;
   public userSockets: UsersSockets;
   constructor() {}
-<<<<<<< HEAD
-  
-=======
->>>>>>> 6e86ae6 (single socket for all FE WITH TOKEN)
+
   notifyIfConnected(usernames: string[], eventName: string, eventData: any) {
       usernames.forEach((username) => {
           this.userSockets.emitToUser(username, eventName, eventData);
       });
-<<<<<<< HEAD
   }
-=======
   }
 
   /*  constructor(
@@ -35,5 +30,3 @@ export class GlobalService {
     return user;
   }
 */
->>>>>>> 6e86ae6 (single socket for all FE WITH TOKEN)
-}

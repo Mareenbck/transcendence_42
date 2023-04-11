@@ -173,7 +173,7 @@ export class GameGateway {
 //       //}
 //     });
 //   }
-// }
+}
 
 // this.games.splice(this.games.indexOf(game), 1);
 

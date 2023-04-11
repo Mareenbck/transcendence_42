@@ -11,6 +11,7 @@ export default class UsersSockets {
     constructor() {
         this.map = new Map();
     }
+
     get users() {
         return this.map;
     }
