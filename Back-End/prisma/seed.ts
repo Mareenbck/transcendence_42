@@ -22,9 +22,9 @@ async function main() {
         },
       })
     ).length;
-    // if (sizeGames == 0) {
-    //   insert_games();
-    // }
+    if (sizeGames == 0) {
+      insert_games();
+    }
     if (sizeAchievements == 0) {
       insert_achievements();
     }

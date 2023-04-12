@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import '../../style/Settings.css';
 import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+
 import MyAvatar from '../user/Avatar';
 
 const customStylesL = `
@@ -53,11 +56,12 @@ const BadgeIcon = (props: any) => {
 		setContent(<Avatar className={iconClass} src={props.src} />)
 	}, [props.style]);
 
-
 	return (
 		<>
 		<style>{style}</style>
-			{content}
+		<Tooltip title={props.description}>
+			<Button sx={{ m: 1 }}>{content}</Button>
+		</Tooltip>
 		</>
 	)
 }

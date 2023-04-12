@@ -141,8 +141,6 @@ export const AuthContextProvider = (props: any) => {
 				},
 				// body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
 			});
-			console.log("response--->")
-			console.log(response)
 			const data = await response.json();
 			if (response.ok) {
 				setToken("");

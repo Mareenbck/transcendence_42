@@ -51,21 +51,17 @@ const MyAvatar = (props: any) => {
 	const friendCtx = useContext(FriendContext)
 	const [style, setStyle] = useState('');
 	const [content, setContent] = useState<any>(null);
-	const [avatar, setAvatar] = useState<any>(props.avatar);
+	const [avatar, setAvatar] = useState<any>();
 
 	useEffect(() => {
 		if(props.id) {
 			const fetchData = async () => {
-			if (isMyProfile) {
-				await authCtx.fetchAvatar(authCtx.userId);
-			} else {
 				const avat: any = await friendCtx.fetchAvatar(props.id);
 				if (avat) {
 					setAvatar(avat);
 				}
-			}
+			};
 			fetchData();
-		};
 		}
 	}, [props.id, isMyProfile])
 
