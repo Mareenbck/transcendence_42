@@ -1,6 +1,6 @@
 export interface DirectMessage 
 {
-  //  id: number;
+    id: number;
     content  : string;
     author    : number;
     receiver  : number;
