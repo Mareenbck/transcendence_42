@@ -10,9 +10,11 @@ import Logout from '@mui/icons-material/Logout';
 import MyAvatar from './user/Avatar';
 import { Link } from "react-router-dom";
 import HomeIcon from '@mui/icons-material/Home';
+import AuthContext from '../store/AuthContext';
 
 
 export default function MyAccountMenu(props: any) {
+	const authCtx = React.useContext(AuthContext);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -21,6 +23,10 @@ export default function MyAccountMenu(props: any) {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	React.useEffect(() => {
+		authCtx.fetchAvatar(authCtx.userId);
+	}, [])
 
 	return (
 	<React.Fragment>
@@ -34,7 +40,7 @@ export default function MyAccountMenu(props: any) {
 			aria-haspopup="true"
 			aria-expanded={open ? 'true' : undefined}
 			>
-			<MyAvatar style='m' authCtx={props.authCtx} id={props.authCtx.userId}/>
+			<MyAvatar style='m' avatar={authCtx.avatar} authCtx={authCtx} id={authCtx.userId}/>
 			</IconButton>
 			</Tooltip>
       {/* </Box> */}
@@ -93,7 +99,7 @@ export default function MyAccountMenu(props: any) {
 			</ListItemIcon>
 			<Link to={`/menu`}>Home</Link>
 		</MenuItem>
-		<MenuItem onClick={props.authCtx.logout}>
+		<MenuItem onClick={authCtx.logout}>
 			<ListItemIcon>
 				<Logout fontSize="small"/>
 			</ListItemIcon>
