@@ -3,6 +3,9 @@
 ./.env
 node_modules
 uploads
+!uploads/avatar-Morange.png
+!uploads/avatar-Wbleu.jpg
+!uploads/avatar-Wred.jpg
 ./prisma/seedold.ts
 
 

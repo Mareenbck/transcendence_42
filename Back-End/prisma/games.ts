@@ -3,19 +3,18 @@ import { prisma } from './seed';
 export async function insert_games() {
 	console.log('Find users');
 	// Find existing users in the database
-	const mbascuna = await prisma.user.findUnique({ where: { id: 1 } })
-	const emma = await prisma.user.findUnique({ where: { id: 2 } })
-	const lucie = await prisma.user.findUnique({ where: { id: 3 } })
-	const fabien = await prisma.user.findUnique({ where: { id: 4 } })
-	const math = await prisma.user.findUnique({ where: { id: 5 } })
+	const emma = await prisma.user.findUnique({ where: { id: 1 } })
+	const lucie = await prisma.user.findUnique({ where: { id: 2 } })
+	const fabien = await prisma.user.findUnique({ where: { id: 3 } })
+	const math = await prisma.user.findUnique({ where: { id: 4 } })
 
 	console.log('Creating games');
 	// Create games and connect them to existing users
 	const game1 = await prisma.game.create({
 	  data: {
-		playerOne: { connect: { id: mbascuna.id } },
-		playerTwo: { connect: { id: emma.id } },
-		winner: { connect: { id: mbascuna.id } },
+		playerOne: { connect: { id: emma.id } },
+		playerTwo: { connect: { id: lucie.id } },
+		winner: { connect: { id: emma.id } },
 		score1: 10,
 		score2: 2,
 	  },
@@ -42,8 +41,8 @@ export async function insert_games() {
 
 	const game4 = await prisma.game.create({
 	  data: {
-		playerOne: { connect: { id: emma.id } },
-		playerTwo: { connect: { id: lucie.id } },
+		playerOne: { connect: { id: lucie.id } },
+		playerTwo: { connect: { id: emma.id } },
 		winner: { connect: { id: emma.id } },
 		score1: 10,
 		score2: 6,
@@ -52,7 +51,7 @@ export async function insert_games() {
 
 	const game5 = await prisma.game.create({
 	  data: {
-		playerOne: { connect: { id: mbascuna.id } },
+		playerOne: { connect: { id: lucie.id } },
 		playerTwo: { connect: { id: math.id } },
 		winner: { connect: { id: math.id } },
 		score1: 8,
@@ -61,24 +60,15 @@ export async function insert_games() {
 	})
 
 	console.log("Updating users with games")
-	// Update the users with their new game records
-	await prisma.user.update({
-	  where: { id: mbascuna.id },
-	  data: {
-		playerOne: {
-		  connect: [{ id: game1.id }, { id: game5.id }]
-		}
-	  }
-	})
 
 	await prisma.user.update({
 	  where: { id: emma.id },
 	  data: {
 		playerOne: {
-		  connect: [{ id: game1.id }, { id: game4.id }]
+		  connect: [{ id: game1.id }, { id: game2.id }]
 		},
 		playerTwo: {
-		  connect: [{ id: game2.id }]
+		  connect: [{ id: game4.id }]
 		}
 	  }
 	})
@@ -86,8 +76,11 @@ export async function insert_games() {
 	await prisma.user.update({
 	  where: { id: lucie.id },
 	  data: {
+		playerOne: {
+			connect: [{ id: game3.id }, { id: game4.id }, { id: game5.id }]
+		  },
 		playerTwo: {
-		  connect: [{ id: game3.id }, { id: game4.id }]
+		  connect: [{ id: game2.id }]
 		}
 	  }
 	})

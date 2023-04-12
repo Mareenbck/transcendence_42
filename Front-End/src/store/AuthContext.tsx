@@ -70,6 +70,9 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const fetchAvatar = async (userId: string) => {
+		if (!userId) {
+			return ;
+		}
 		try {
 			const response = await fetch(`http://localhost:3000/users/${userId}/avatar`, {
 				method: 'GET',
@@ -129,8 +132,6 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const fetchLogout = async () => {
-		console.log("RENTRE DANS LE FETCH LOUGOUT")
-		console.log(token)
 		// localStorage.clear();
 		try {
 			const response = await fetch('http://localhost:3000/auth/logout', {
