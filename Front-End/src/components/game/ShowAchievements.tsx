@@ -61,16 +61,16 @@ const ShowAchievements = (props: any) => {
 
 	return (
 		<>
-		<AvatarGroup>
+		<div className="container-achiev">
 			{achievements.map((achiev) => (
 				<li key={achiev.id}>
 					<div className="name-icon">
 						<h6>{achiev.achievement.name}</h6>
-						<BadgeIcon style="l" src={achiev.achievement.icon} className="badge-icon" description={achiev.achievement.description}/>
+							<BadgeIcon style="l" src={achiev.achievement.icon} className="badge-icon" description={achiev.achievement.description}/>
 					</div>
 				</li>
 			))}
-		</AvatarGroup>
+			</div>
 		<br />
 		</>
 	)

@@ -58,14 +58,9 @@ export class FriendshipService {
 		const receiver = await this.userService.getUser(parseInt(receiverId));
 		await this.userService.addFriendOnTable(requester.id, receiver.id)
 		await this.userService.addFriendOnTable(receiver.id, requester.id)
+		await this.userService.updateAchievement(requester.id, 'Famous')
+		await this.userService.updateAchievement(receiver.id, 'Famous')
 	}
-
-	// async getNewFriendList(request: any) {
-	// 	const { receiverId } = request;
-	// 	const receiver = await this.userService.getUser(parseInt(receiverId));
-	// 	const user = await this.userService.getUserFriendList(receiver.id);
-	// 	return user.friendOf
-	// }
 
 	async showFriends(userId: any){
 		const { id } = userId;
