@@ -432,6 +432,7 @@ return (
           setCurrentChat={setCurrentChat}
           setCurrentDirect={setCurrentDirect}
           /></div>
+
           <div className="line-chat"></div>
         <div className="chatBox">
           <div className="chatBoxW">
@@ -537,7 +538,11 @@ return (
                       </div>
                       <span className="chatOnlineName"> {o?.username} </span>
                     </div>
+<<<<<<< HEAD
                     { !o.blockedFrom.find((u: UserChat)=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i: number)=>(+user.userId === i)) ?
+=======
+                    { !o.blockedFrom.find((u: { id: string | number; })=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i: string | number)=>(+user.userId === +i)) ?
+>>>>>>> 68256d8 (warning fix)
                       <button className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
                           <i className="fa fa-unlock" aria-hidden="true"></i>
                       </button>

@@ -17,6 +17,7 @@ export class ChatService {
     addUserChat:any = (userId : any, socketId: string) => {
         !this.userChat.some((u) => +u.userId.userId === +userId.userId) &&
         this.userChat.push({userId, socketId})
+        console.log(this.userChat.length);
         this.server.sockets.emit('getUsersChat', this.userChat);
     }
 
