@@ -15,6 +15,7 @@ import React from 'react';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
 import Channels from './channels/Channels';
+import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import {RoomMessage, DirectMessage, UserChat, ChatRoom} from "../interfaces/iChat";
 
 
@@ -118,9 +119,9 @@ function Chat() {
     setMessagesD(prev=>[...prev, AMessageD]);
   },[AMessageD, currentDirect])
 
-  // useEffect(() => {
-  //   AConversation && setConversations(prev=>[AConversation, ...prev]);
-  // }, [AConversation]);
+  useEffect(() => {
+    AConversation && setConversations(prev=>[AConversation, ...prev]);
+  }, [AConversation]);
 
 
 
@@ -139,13 +140,13 @@ function Chat() {
   }, []);
 
 
-  // useEffect(() => {
-  //   async function getAllConv(user: AuthContext) {
-  //     const response = await ConversationReq.getAll(user);
-  //     setConversations(response);
-  //   };
-  //   getAllConv(user);
-  // }, []);
+  useEffect(() => {
+    async function getAllConv(user: AuthContext) {
+      const response = await ConversationReq.getAll(user);
+      setConversations(response);
+    };
+    getAllConv(user);
+  }, []);
 
   useEffect(() => {
     if (currentChat)
@@ -392,7 +393,12 @@ return (
   {" "}
 
       <div className="messenger">
-        <div className="chatMenu"><Channels/></div>
+        <div className="chatMenu"><UpdateChannelsInList
+          currentChat={currentChat}
+          currentDirect={currentDirect}
+          setCurrentChat={setCurrentChat}
+          setCurrentDirect={setCurrentDirect}
+          /></div>
           <div className="line-chat"></div>
         <div className="chatBox">
           <div className="chatBoxW">
