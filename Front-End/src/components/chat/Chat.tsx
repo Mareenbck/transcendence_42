@@ -16,11 +16,16 @@ import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
 import Channels from './channels/Channels';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 =======
 import {RoomMessage, DirectMessage, UserChat, ChatRoom} from "../interfaces/iChat";
 >>>>>>> e96fe66 (chat)
+=======
+import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../interfaces/iChat";
+import UpdateChannelsInList from './channels/UpdateChannelsInList';
+>>>>>>> e7aa0dc (typing + fix duplicate)
 
 
 function Chat() {
@@ -129,11 +134,172 @@ function Chat() {
   useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
     setMessages2(prev => {
-      const isDuplicate = prev.some(message => (message.createdAt === AMessageChat.createdAt && message.content === AMessageChat.content));
-      if (!isDuplicate) {
-        return [...prev, AMessageChat];
+      const isDuplicate = prev.som@WebSocketGateway(
+        8001, { cors: {origin: "http://localhost:8080",}, }
+        /*{
+          cors: ["*"],
+          origin: ["*"],
+          path: "",
+        }*/
+        )
+        
+        export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+          private readonly logger = new Logger(GlobalGateway.name);
+          private userSockets: UsersSockets;
+          constructor(
+              private readonly gameService: GameService,
+              private readonly chatService: ChatService,
+              private readonly globalService: GlobalService,
+              private readonly authService: AuthService,
+          ) {
+              this.userSockets = new UsersSockets();
+          }
+      <<<<<<< HEAD
+        
+          @WebSocketServer()
+          server: Server;
+        
+          afterInit() {
+              this.globalService.server = this.server;
+              this.gameService.server = this.server;
+              this.chatService.server = this.server;
+              this.globalService.userSockets = this.userSockets;
+              this.chatService.userSockets = this.userSockets;
+              this.gameService.userSockets = this.userSockets;
+              this.logger.verbose("globalGateway Initialized");
+          }
+        
+          async handleConnection(socket: Socket) {
+            try {
+        console.log("Enter Global Soket server");
+        console.log(socket.handshake.auth.token);
+              const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+              if (!user) {
+                throw new WsException('Invalid credentials.');
+              }
+              socket.data.username = user.username as string;
+              socket.data.email = user.email as string;
+              this.userSockets.addUser(socket);    
+            } catch (e) {
+                this.userSockets.removeSocket(socket)
+                socket.disconnect(true);
+            }
+          }
+        
+          async handleDisconnect(client: Socket) {
+            this.userSockets.removeSocket(client)
+            client.disconnect(true);
+          }
+        
+        
+          ///////////////////////////
+          // Messages for Chat to Chat Service
+          //////////////////////////
+          @SubscribeMessage('addUserChat')
+          async chatAddUsers(@MessageBody() userId: any, @ConnectedSocket() socket: Socket,): Promise<void> 
+          {
+            if (userId.userId !== null) {
+              const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+              if (!user) {
+                throw new WsException('Invalid credentials.');
+              }
+              this.chatService.addUserChat(userId, socket.id)
+            }  
+          }
+        
+          @SubscribeMessage('removeUserChat')
+          async chatRemoveUsers(@MessageBody() userId: string, @ConnectedSocket() socket: Socket,) 
+          { this.chatService.removeUserChat(userId) }
+        
+          @SubscribeMessage('userRoom')
+          async chatUserRoom(@MessageBody() data: {roomId: number, userId: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+          { this.chatService.addRoomUser(data.roomId, data.userId, socket.id);  }
+        
+          @SubscribeMessage('sendMessageRoom')
+          async chatSendChatM(@MessageBody()  data: {authorId: number, chatroomId: number, content: string,}, @ConnectedSocket() socket: Socket,) 
+          { this.chatService.sendRoomMessage(data.authorId, data.chatroomId, data.content,) }
+        
+          @SubscribeMessage('sendMessageDirect')
+          async chatSendDirectM(@MessageBody() data: {content: string, author: string, receiver: string}, @ConnectedSocket() socket: Socket,): Promise<void> 
+          { this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  }
+        
+          @SubscribeMessage('sendConv')
+          async chatSendConversation(@MessageBody() content: string, @ConnectedSocket() socket: Socket,): Promise<void> 
+          { this.chatService.sendConv(content) };
+        
+          @SubscribeMessage('toBlock')
+          async chatBlock(@MessageBody() data: {blockFrom: number, blockTo: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+          { this.chatService.chatBlock(data.blockFrom, data.blockTo,) };
+        
+          @SubscribeMessage('toUnblock')
+          async chatUnblock(@MessageBody() data: {blockFrom: number, blockTo: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+          { this.chatService.chatUnblock(data.blockFrom, data.blockTo,)  };
+        
+          @SubscribeMessage('InviteGame')
+          async chatInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+          { this.chatService.chatInvite(data.author, data.player,) };
+        }
+      =======
+        }
+      
+        async handleDisconnect(client: Socket) {
+          this.userSockets.removeSocket(client)
+          client.disconnect(true);
+        }
+      
+      
+        ///////////////////////////
+        // Messages for Chat to Chat Service
+        //////////////////////////
+        @SubscribeMessage('addUserChat')
+        async chatAddUsers(@MessageBody() userId: any, @ConnectedSocket() socket: Socket,): Promise<void> 
+        {
+          if (userId.userId !== null) {
+            const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+      console.log("qsdqsdqsdqsdqsdqsdqsdqsdqsd");
+      console.log(user.status);
+      console.log(user.username);
+            if (!user) {
+              throw new WsException('Invalid credentials.');
+            }
+            this.chatService.addUserChat(userId, socket.id)
+          }  
+        }
+      
+        @SubscribeMessage('removeUserChat')
+        async chatRemoveUsers(@MessageBody() userId: string, @ConnectedSocket() socket: Socket,) 
+        { this.chatService.removeUserChat(userId) }
+      
+        @SubscribeMessage('userRoom')
+        async chatUserRoom(@MessageBody() data: {roomId: number, userId: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+        { this.chatService.addRoomUser(data.roomId, data.userId, socket.id);  }
+      
+        @SubscribeMessage('sendMessageRoom')
+        async chatSendChatM(@MessageBody()  data: {authorId: number, chatroomId: number, content: string,}, @ConnectedSocket() socket: Socket,) 
+        { this.chatService.sendRoomMessage(data.authorId, data.chatroomId, data.content,) }
+      
+        @SubscribeMessage('sendMessageDirect')
+        async chatSendDirectM(@MessageBody() data: {content: string, author: string, receiver: string}, @ConnectedSocket() socket: Socket,): Promise<void> 
+        { this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  }
+      
+        @SubscribeMessage('sendConv')
+        async chatSendConversation(@MessageBody() content: string, @ConnectedSocket() socket: Socket,): Promise<void> 
+        { this.chatService.sendConv(content) };
+      
+        @SubscribeMessage('toBlock')
+        async chatBlock(@MessageBody() data: {blockFrom: number, blockTo: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+        { this.chatService.chatBlock(data.blockFrom, data.blockTo,) };
+      
+        @SubscribeMessage('toUnblock')
+        async chatUnblock(@MessageBody() data: {blockFrom: number, blockTo: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+        { this.chatService.chatUnblock(data.blockFrom, data.blockTo,)  };
+      
+        @SubscribeMessage('InviteGame')
+        async chatInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+        { this.chatService.chatInvite(data.author, data.player,) };
       }
-      return prev;
+      >>>>>>> e7aa0dc (typing + fix duplicate)
+      
     });
   },[AMessageChat, currentChat])
 
@@ -432,7 +598,6 @@ return (
           setCurrentChat={setCurrentChat}
           setCurrentDirect={setCurrentDirect}
           /></div>
-
           <div className="line-chat"></div>
         <div className="chatBox">
           <div className="chatBoxW">
@@ -539,10 +704,14 @@ return (
                       <span className="chatOnlineName"> {o?.username} </span>
                     </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
                     { !o.blockedFrom.find((u: UserChat)=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i: number)=>(+user.userId === i)) ?
 =======
                     { !o.blockedFrom.find((u: { id: string | number; })=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i: string | number)=>(+user.userId === +i)) ?
 >>>>>>> 68256d8 (warning fix)
+=======
+                    { !o.blockedFrom.find((u: UserChat)=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i: number)=>(+user.userId === i)) ?
+>>>>>>> e7aa0dc (typing + fix duplicate)
                       <button className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
                           <i className="fa fa-unlock" aria-hidden="true"></i>
                       </button>

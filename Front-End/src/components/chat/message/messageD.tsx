@@ -1,6 +1,7 @@
 import './message.css'
 import {format} from 'timeago.js'
 import MyAvatar from '../../user/Avatar';
+import React from 'react';
 
   export default function MessageD({ messageD, own, user, authCtx }) {
 //console.log(messageD?.author)
@@ -12,7 +13,6 @@ import MyAvatar from '../../user/Avatar';
     <div className= {own ? "message own" : "message"}>
       <div className="messageTop">
         <MyAvatar authCtx={authCtx} id={user.id} style="xs" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
-
         <p className="messageText">
           {messageD.content}
         </p>
