@@ -1,6 +1,6 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
-import { BadRequestException, Injectable, ForbiddenException } from '@nestjs/common';
+import { BadRequestException, Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { plainToClass } from 'class-transformer';
 import path = require('path');
@@ -247,6 +247,29 @@ export class UserService {
 			}
 		} catch {
 			throw new ForbiddenException('Not Found');
+		}
+	}
+
+	async updateAchievement(userId: number, achievementName: string) {
+		const achievement = await this.prisma.achievement.findUnique({
+			where: { name: achievementName },
+		});
+		if (!achievement) {
+			throw new NotFoundException('Achievement not found');
+		}
+		const existingUserAchievement = await this.prisma.userAchievement.findFirst({
+			where: {
+			  userId: userId,
+			  achievementId: achievement.id,
+			},
+		});
+		if (!existingUserAchievement) {
+			await this.prisma.userAchievement.create({
+				data: {
+					user: { connect: { id: userId } },
+					achievement: { connect: { id: achievement.id } },
+				},
+			});
 		}
 	}
 
