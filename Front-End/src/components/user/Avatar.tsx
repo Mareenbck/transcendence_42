@@ -51,7 +51,7 @@ const MyAvatar = (props: any) => {
 	const friendCtx = useContext(FriendContext)
 	const [style, setStyle] = useState('');
 	const [content, setContent] = useState<any>(null);
-	const [avatar, setAvatar] = useState<any>(null);
+	const [avatar, setAvatar] = useState<any>();
 
 	useEffect(() => {
 		if(props.id) {

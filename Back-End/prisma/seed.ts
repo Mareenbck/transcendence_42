@@ -1,124 +1,77 @@
 import { PrismaClient } from '@prisma/client';
-import { add } from 'date-fns';
-const prisma = new PrismaClient()
+import { insert_games } from './games';
+import { insert_achievements } from './achievements';
+import { insert_users } from './users';
+import { insert_direct_messages } from './direct_messages';
+import { create_friendship } from './friendships';
+
+// Instantiate Prisma Client
+export const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.game.deleteMany({}) // never in production
-  await prisma.directMessage.deleteMany({}) // never in production
-  await prisma.chatroomMessage.deleteMany({}) // never in production
-  await prisma.chatroom.deleteMany({}) // never in production
-  await prisma.user.deleteMany({}) // never in production
-
-
-
-  const user = await prisma.user.create({
-    data: {
-      email: 'theo@theo.fr',
-      username: 'Emma Seed',
-       hash: 'ezfe',
+  await prisma.$connect();
+    console.log(`Start seeding ...`);
+    const usrsSize: number = (
+      await prisma.user.findMany({
+        select: {
+          id: true,
+        },
+      })
+    ).length;
+    const sizeGames: number = (
+      await prisma.game.findMany({
+        select: {
+          id: true,
+        },
+      })
+    ).length;
+    const sizeAchievements: number = (
+      await prisma.achievement.findMany({
+        select: {
+          id: true,
+        },
+      })
+    ).length;
+    const sizeDM: number = (
+      await prisma.directMessage.findMany({
+        select: {
+          id: true,
+        },
+      })
+    ).length;
+    const sizeFriend: number = (
+      await prisma.friendship.findMany({
+        select: {
+          id: true,
+        },
+      })
+    ).length;
+    if (usrsSize == 0) {
+      await insert_users();
     }
-  })
-  console.log(user)
-
-  const user2 = await prisma.user.create({
-    data: {
-      email: 'MAMA@dde.fr',
-      username: 'Mariya Seed',
-      hash: 'ezfzefzfe',
+    if (sizeAchievements == 0) {
+      await insert_achievements();
     }
-  })
-  console.log(user2)
-
-  const user3 = await prisma.user.create({
-    data: {
-      email: 'Mddvdvdv@dde.fr',
-      username: 'Bob Seed',
-      hash: 'ezfzefzfesdcs',
+    if (sizeGames == 0) {
+      await insert_games();
     }
-  })
-  console.log(user3)
-
-  const user4 = await prisma.user.create({
-    data: {
-      email: 'Mddvdvdbbv@dde.fr',
-      username: 'Marine Seed',
-      hash: 'ezfzefzfecececc',
+    if (sizeDM == 0) {
+      await insert_direct_messages();
     }
-  })
-  console.log(user4)
-
-  const d1 = add(new Date(), { days: 1})
-  const d2 = add(new Date(), { days: 2})
-  const d3 = add(new Date(), { days: 3})
-  const d4 = add(new Date(), { days: 4})
-  const d5 = add(new Date(), { days: 5})
-
-
- const chatDm1 = await prisma.directMessage.create({
-    data: {
-      createdAt:     d4,
-      content: "Salut U1, ca va ?",
-      userA: {connect: { id: user.id }},
-      userR: {connect: { id: user2.id }}
-    }})
-
- const chatDm2 = await prisma.directMessage.create({
-    data: {
-      createdAt:     d5,
-      content: "Salut U2, bien et toi ?",
-      userA: {connect: { id: user2.id }},
-      userR: {connect: { id: user.id }}
+    if (sizeFriend == 0) {
+      await create_friendship();
     }
-  })
-
- const j1 = await prisma.game.create({
-    data: {
-      createdAt:     d5,
-      playerOne: {connect: { id: user.id }},
-      playerTwo:{connect: { id: user2.id }},
-      winner:{connect: { id: user2.id }},
-      score1: 10,
-      score2: 8,
-    }
-  })
- const j2 = await prisma.game.create({
-    data: {
-      createdAt:     d5,
-      playerOne: {connect: { id: user3.id }},
-      playerTwo:{connect: { id: user4.id }},
-      winner:{connect: { id: user4.id }},
-      score1: 10,
-      score2: 2,
-    }
-  })
-  const j3 = await prisma.game.create({
-    data: {
-      createdAt:     d5,
-      playerOne: {connect: { id: user3.id }},
-      playerTwo:{connect: { id: user4.id }},
-      winner:{connect: { id: user3.id }},
-      score1: 1,
-      score2: 10,
-    }
-  })
-   const j4 = await prisma.game.create({
-    data: {
-      createdAt:     d5,
-      playerOne: {connect: { id: user2.id }},
-      playerTwo:{connect: { id: user4.id }},
-      winner:{connect: { id: user2.id }},
-      score1: 10,
-      score2: 0,
-    }
-  })
+    console.log(`Seeding finished.`);
 }
 
+// Call the seed function
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
+

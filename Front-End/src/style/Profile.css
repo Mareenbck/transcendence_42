@@ -46,6 +46,8 @@
     border-radius: 7.46612px;
 	justify-content: space-between;
     position: relative;
+    margin: 20px auto;
+    text-align: left;
 }
 
 .title-card-m h5 {
@@ -261,11 +263,6 @@ li {
 	filter: grayscale(100%);
 }
 
-/* .stats-progress {
-    width: -webkit-fill-available;
-    height: 50px;
-} */
-
 .stats-progress {
     width: -webkit-fill-available;
     height: 50px;
@@ -356,3 +353,28 @@ li {
     text-align: center;
     margin-top: -8px;
   }
+
+ .name-icon h6 {
+    font-weight: 700;
+    font-size: 0.8rem;
+    font-family: 'Noto Sans', sans-serif;
+    line-height: 0;
+    margin-bottom: -5px;
+ }
+
+ .name-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+ }
+
+ .tooltip {
+    margin: 0px;
+ }
+
+ .container-achiev {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+ }

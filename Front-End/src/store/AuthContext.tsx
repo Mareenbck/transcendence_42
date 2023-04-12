@@ -46,10 +46,12 @@ export const AuthContextProvider = (props: any) => {
 	}, [])
 
 	useEffect(() => {
-		const intervalId = setInterval(() => {
-			refreshHandler();
-		}, 10 * 60 * 1000); // Refresh every 10 minutes
-		return () => clearInterval(intervalId);
+		if (userIsLoggedIn) {
+			const intervalId = setInterval(() => {
+				refreshHandler();
+			}, 10 * 60 * 1000); // Refresh every 10 minutes
+			return () => clearInterval(intervalId);
+		}
 	}, [refreshToken]);
 
 	const updateAvatar = (avatarUrl: string) => {
@@ -68,6 +70,9 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const fetchAvatar = async (userId: string) => {
+		if (!userId) {
+			return ;
+		}
 		try {
 			const response = await fetch(`http://localhost:3000/users/${userId}/avatar`, {
 				method: 'GET',
@@ -127,7 +132,7 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const fetchLogout = async () => {
-		localStorage.clear();
+		// localStorage.clear();
 		try {
 			const response = await fetch('http://localhost:3000/auth/logout', {
 				method: 'POST',

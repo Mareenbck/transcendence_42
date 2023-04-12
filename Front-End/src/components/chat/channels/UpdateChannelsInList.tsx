@@ -20,10 +20,6 @@ export default function UpdateChannelsInList(props: any) {
   const [sendMessage, addListener] = useSocket()
 
 
-//    useEffect(() => {
-//      socket.current = io("ws://localhost:8001")
-//    })
-
     useEffect(() => {
       addListener("getConv", data => {
         setAConversation({
@@ -32,12 +28,12 @@ export default function UpdateChannelsInList(props: any) {
         });
       });
     }, []);
-    
+
     useEffect(() => {
       AConversation && setConversations(prev=>[AConversation, ...prev]);
       }, []);
-      
-      
+
+
       useEffect(() => {
         async function getAllConv(user: AuthContext) {
           const response = await ConversationReq.getAll(user);
@@ -45,7 +41,7 @@ export default function UpdateChannelsInList(props: any) {
         };
         getAllConv(user);
       }, []);
-      
+
     return (
         <>
         <CreateChannelButton/>
@@ -54,7 +50,6 @@ export default function UpdateChannelsInList(props: any) {
                 <div className="conversation">
                     <div className="conversation-name">
                         <Conversation name={c.name}/>
-
                     </div>
                     <div className="conversation-icon">
                         <ChannelVisibility visibility={c.visibility} id={c.id}/>

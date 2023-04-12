@@ -7,7 +7,6 @@ import CreateChannelButton from "./CreateChannelBtn";
 import UpdateChannelsInList from "./UpdateChannelsInList";
 
 
-
 export default function Channels(props: any) {
 
     return (
