@@ -24,8 +24,6 @@ export class ChatService {
     }
 
     removeUserChat:any = (userId: any) => {
-console.log("00000000000000000000000");
-console.log(userId);
         this.userChat = this.userChat.filter(user => +user.userId.userId !== +userId.userId);
         this.roomUsers = this.roomUsers.filter( room => +room.userId.userId !== +userId.userId);
         this.userChat = this.userChat.filter( user => user.userId.isLoggedIn === true);
