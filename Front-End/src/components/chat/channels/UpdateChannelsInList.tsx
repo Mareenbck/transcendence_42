@@ -6,16 +6,16 @@ import io, { Socket } from "socket.io-client";
 import AuthContext from "../../../store/AuthContext";
 import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from "./ChannelsSettings";
+import CreateChannelButton from "./CreateChannelBtn";
 
 
 
 export default function UpdateChannelsInList(props: any) {
   const [conversations, setConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState (null);
-  const [currentDirect, setCurrentDirect] = useState (null);
   const [AConversation, setAConversation] = useState (null);
   const user = useContext(AuthContext);
-  const [openModal, setOpenModal] = useState(false);
+
+  const {currentChat, currentDirect, setCurrentDirect, setCurrentChat} = props;
 
     useEffect(() => {
       socket.current = io("ws://localhost:8001")
@@ -45,6 +45,7 @@ export default function UpdateChannelsInList(props: any) {
       
     return (
         <>
+        <CreateChannelButton/>
         {conversations.map((c) => (
             <div key={c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
                 <div className="conversation">
