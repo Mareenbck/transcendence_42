@@ -40,6 +40,7 @@ model User {
   winner              Game[]        @relation("GameWinner")
   xp                  Int           @default(0)
   level               Int           @default(1)
+  achievements        UserAchievement[]
 
   chatrooms           ChatroomUsers[]
   dirMessEmited       DirectMessage[] @relation(name: "emited")
@@ -49,6 +50,29 @@ model User {
   userOnChanel UserOnChannel[]
 
 	@@map("users")
+}
+
+model Achievement {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  icon        String
+  points      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserAchievement[]
+   @@map("achievements")
+}
+
+model UserAchievement {
+  id            Int         @id @default(autoincrement())
+  userId        Int
+  achievementId Int
+  createdAt     DateTime    @default(now())
+
+  user          User        @relation(fields: [userId], references: [id])
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
 }
 
 model Friendship {

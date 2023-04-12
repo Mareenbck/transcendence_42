@@ -69,13 +69,6 @@ const MyAvatar = (props: any) => {
 		}
 	}, [props.id, isMyProfile])
 
-
-// const fetchData = async () => {
-// 	const avat: any = await friendCtx.fetchAvatar(props.id);
-// 	if (avat) {
-// 		setAvatar(avat);
-// 	}
-// };
 	useEffect(() => {
 		if (props.style === "m") {
 			setStyle(customStylesM);

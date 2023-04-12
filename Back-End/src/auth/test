@@ -1,0 +1,74 @@
+async updateStatus(tokens: AuthTokenDto) {
+  const user = await this.verifyAccessToken(tokens.access_token);
+  if (!user) {
+    throw new ForbiddenException('Credentials incorrect');
+  }
+
+  const achievement = await this.prisma.achievement.findUnique({
+    where: { name: 'Welcome' }, // Replace 'name' with the appropriate column name for your Achievement entity
+  });
+
+  if (!achievement) {
+    throw new NotFoundException('Achievement not found');
+  }
+
+  const existingUserAchievement = await this.prisma.userAchievement.findFirst({
+    where: {
+      userId: user.id,
+      achievementId: achievement.id,
+    },
+  });
+
+  if (existingUserAchievement) {
+    // The user already has the achievement, do nothing
+    return;
+  }
+
+  await this.prisma.user.update({
+    where: { id: user.id },
+    data: {
+      status: 'ONLINE',
+      achievements: {
+        connect: { id: achievement.id },
+      },
+    },
+  });
+}
+
+
+model User {
+	id            Int               @id @default(autoincrement())
+	username      String            @unique
+	email         String            @unique
+	hashedPassword String
+	achievements  UserAchievement[]
+
+	@@map("users")
+  }
+
+  model Achievement {
+	id          Int               @id @default(autoincrement())
+	name        String            @unique
+	description String
+	icon        String
+	points      Int
+	createdAt   DateTime          @default(now())
+	updatedAt   DateTime          @updatedAt
+
+	users       UserAchievement[]
+
+	@@map("achievements")
+  }
+
+  model UserAchievement {
+	id            Int               @id @default(autoincrement())
+	createdAt     DateTime          @default(now())
+
+	userId        Int
+	user          User              @relation(fields: [userId], references: [id])
+
+	achievementId Int
+	achievement   Achievement       @relation(fields: [achievementId], references: [id])
+
+	@@map("user_achievements")
+  }

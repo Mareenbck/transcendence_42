@@ -1,4 +1,4 @@
-import { BadRequestException, ExecutionContext, ForbiddenException, Injectable, Res, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, NotFoundException, ExecutionContext, ForbiddenException, Injectable, Res, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { Auth42Dto, AuthDto, AuthTokenDto } from "./dto";
 import * as argon from 'argon2';
@@ -88,7 +88,27 @@ export class AuthService {
 		await this.prisma.user.update({
 				where: { id: user.id },
 				data: { status: 'ONLINE' },
-			});
+		});
+		// const achievement = await this.prisma.achievement.findUnique({
+		// 	where: { name: 'Welcome' },
+		// });
+		// if (!achievement) {
+		// 	throw new NotFoundException('Achievement not found');
+		// }
+		// const existingUserAchievement = await this.prisma.userAchievement.findFirst({
+		// 	where: {
+		// 	  userId: user.id,
+		// 	  achievementId: achievement.id,
+		// 	},
+		// });
+		// if (!existingUserAchievement) {
+		// 	await this.prisma.userAchievement.create({
+		// 		data: {
+		// 			user: { connect: { id: user.id } },
+		// 			achievement: { connect: { id: achievement.id } },
+		// 		},
+		// 	});
+		// }
 	}
 
 	async signin_42(profile: Profile_42): Promise<User> {

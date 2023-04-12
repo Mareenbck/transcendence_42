@@ -1,8 +1,10 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, ForbiddenException } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { plainToClass } from 'class-transformer';
+import path = require('path');
+import { Response } from 'express';
 
 
 @Injectable()
@@ -54,6 +56,23 @@ export class UserService {
 			// return user;
 			const userDTO = plainToClass(UserDto, user);
 			return userDTO;
+		} catch (error) {
+			throw new BadRequestException('getUser error : ' + error);
+		}
+	}
+
+	async getAchievementById(id: number) {
+		if (id === undefined) {
+			throw new BadRequestException('Undefined user ID');
+		}
+		try {
+			const achievement = await this.prisma.achievement.findUniqueOrThrow({
+				where: {
+					id: id,
+				},
+			});
+			// return user;
+			return achievement;
 		} catch (error) {
 			throw new BadRequestException('getUser error : ' + error);
 		}
@@ -197,6 +216,52 @@ export class UserService {
 			console.error(error);
 		}
 	}
+
+	async getUserAchievements(id: number) {
+		if (id === undefined) {
+			throw new BadRequestException('Undefined user ID');
+		}
+		try {
+			const achievements = await this.prisma.userAchievement.findMany({
+				where: { userId: id },
+				include: { achievement: true },
+			  });
+			return achievements;
+		} catch (error) {
+			throw new BadRequestException('getUser error : ' + error);
+		}
+	}
+
+	async getIconAchievement(achievementId: number, res: Response) {
+		try {
+			const achievement = await this.getAchievementById(achievementId);
+			if (achievement.icon) {
+				const fileName = path.basename(achievement.icon)
+				const result = res.sendFile(fileName, { root: process.env.PATH_BADGE_ICON });
+				return result
+			}
+			else {
+				const fileName = process.env.DEFAULT_AVATAR;
+				const result = res.sendFile(fileName, { root: process.env.PATH_DEFAULT_AVATAR });
+				return result
+			}
+		} catch {
+			throw new ForbiddenException('Not Found');
+		}
+	}
+
+	// async getUserAchievements(userId: number) {
+	// 	const user = await this.prisma.user.findUnique({
+	// 	  where: { id: userId },
+	// 	  include: { achievements: true },
+	// 	});
+
+	// 	if (!user) {
+	// 	  throw new NotFoundException('User not found');
+	// 	}
+
+	// 	return user.achievements;
+	//   }
 
   async block(blockFrom: number, blockTo: number) {
     const updateUser = await this.prisma.user.update({
