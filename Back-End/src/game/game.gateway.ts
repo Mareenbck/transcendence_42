@@ -33,56 +33,101 @@ let players: profile [] = [];
 // //       !players[index].socketId.some((socket) => +socket === +socketId) &&
 // //       players[index].socketId.push(socketId)
 // //     }
-// // console.log(`24 players [] ='${players}'`);
-    // const addUser = (userId, socketId) => {
-    //     if (players.length < 2) {
-    //       !players.some((user) => +user.userId.userId === +userId.userId) &&
-    //       players.push({userId, socketId})
-    // console.log('40 players = ', players);
-    //   } else {
-    //     !users.some((user) => +user.userId.userId === +userId.userId) &&
-    //     users.push({userId, socketId})
-    //   }
+//  console.log(`24 players [] ='${players}'`);
+//     const addUser = (userId, socketId) => {
+//         if (players.length < 2) {
+//           !players.some((user) => +user.userId.userId === +userId.userId) &&
+//           players.push({userId, socketId})
+//     console.log('40 players = ', players);
+//       } else {
+//         !users.some((user) => +user.userId.userId === +userId.userId) &&
+//         users.push({userId, socketId})
+//       }
+//     }
+    // const addGame = (socketId) => {
+    //   // !players.some((user) => +user.userId.userId === +userId.userId) &&
+    //     players.push({
+    //       socketId,
+    //       userId: undefined
+    //     })
     // }
-    const addGame = (socketId) => {
-      // !players.some((user) => +user.userId.userId === +userId.userId) &&
-        players.push({
-          socketId,
-          userId: undefined
-        })
-    }
-
-// const getUser = (userId) => {
-//   return users.find(user => +user.userId.userId === +userId)
-// }
 
 // const getPlayers = (userId) => {
 //   return players.find(user => +user.userId.userId === +userId)
 // }
 
-    const removeUser = (socketId) => {
-      users = users.filter(user => user.socketId !== socketId);
-      players = players.filter(user => user.socketId !== socketId);
-    }
+  // onModuleInit(){
+  //   const game = new Game(
+  //     this.server,
+  //     //this.websocketsService,
+  //     this.prisma,
+  //     //this.achievementsService,
+  //     this.service
+  //   );
 
 
-@WebSocketGateway(8001, { cors: 'http://localhost/game/*' })//cors *
+@WebSocketGateway()
 export class GameGateway {
+	constructor(
+		private readonly gameService: GameService) {}
+		
+	@SubscribeMessage('matchmaking')
+	async matchmaking(socket: any, payload: any) {
+		if (!payload || !payload.action) return;
+		switch (payload.action) {
+			case 'join':
+				this.gameService.joinQueue(socket, payload.type);
+				break;
+			case 'cancel':
+				this.gameService.cancelQueue(socket);
+				break;
+			case 'leave':
+				this.gameService.leaveGame(socket);
+				break;
+		}
+	}
 
-  @WebSocketServer() server: Server;
-   constructor(
-        private prisma: PrismaService,
-        private service: GameService ){}
+  @SubscribeMessage('game-input')
+	async gameInput(socket: any, payload: any) {
+		if (!payload || !payload.action || !payload.direction) return;
+		const game = this.gameService.getGameWherePlayerIs(socket.user.id);
+		if (!game) return;
+		game.processInput(socket.user.id, payload);
+	}
 
-  onModuleInit(){
-    const game = new Game(
-      this.server,
-      //this.websocketsService,
-      this.prisma,
-      //this.achievementsService,
-      this.service
-    );
+	@SubscribeMessage('spectate-match')
+	async spectateMatch(socket: any, payload: any) {
+		if (!payload || !payload.id) return;
+		const game = this.gameService.getGameWherePlayerIs(payload.id);
+		if (!game) {
+			this.websocketsService.send(socket, 'spectate-match', {
+				status: 'error',
+				error: 'Game not found',
+			});
+			return;
+		}
+		this.websocketsService.send(socket, 'spectate-match', {
+			status: 'success',
+		});
+		game.addSpectator(socket);
+	}
 
+  @SubscribeMessage('spectate-match-name')
+	async spectateMatchName(socket: any, payload: any) {
+		if (!payload || !payload.name) return;
+		const game = this.gameService.getGameWherePlayerIsByName(payload.name);
+		if (!game) {
+			this.websocketsService.send(socket, 'spectate-match', {
+				status: 'error',
+				error: 'Game not found',
+			});
+			return;
+		}
+		this.websocketsService.send(socket, 'spectate-match', {
+			status: 'success',
+		});
+		game.addSpectator(socket);
+	}
 
     this.server.on('connection', (socket: Socket) => {
 console.log('51 Connected socket = ', socket.id);
