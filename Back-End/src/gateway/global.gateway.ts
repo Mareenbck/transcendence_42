@@ -81,9 +81,6 @@ console.log(socket.handshake.auth.token);
   {
     if (userId.userId !== null) {
       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
-console.log("qsdqsdqsdqsdqsdqsdqsdqsdqsd");
-console.log(user.status);
-console.log(user.username);
       if (!user) {
         throw new WsException('Invalid credentials.');
       }
