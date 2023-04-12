@@ -81,10 +81,12 @@ console.log(socket.handshake.auth.token);
   {
     if (userId.userId !== null) {
       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+console.log("qsdqsdqsdqsdqsdqsdqsdqsdqsd");
+console.log(user.status);
+console.log(user.username);
       if (!user) {
         throw new WsException('Invalid credentials.');
       }
-      console.log(user);
       this.chatService.addUserChat(userId, socket.id)
     }  
   }
@@ -120,8 +122,4 @@ console.log(socket.handshake.auth.token);
   @SubscribeMessage('InviteGame')
   async chatInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
   { this.chatService.chatInvite(data.author, data.player,) };
-
-  @SubscribeMessage('toUnblock')
-  async chatUnblock(@MessageBody() data: {blockFrom: number, blockTo: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
-  { this.chatService.chatUnblock(data.blockFrom, data.blockTo,)  };
 }
