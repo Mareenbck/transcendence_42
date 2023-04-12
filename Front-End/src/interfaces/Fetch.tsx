@@ -1,16 +1,19 @@
-import AuthContext from '../../store/AuthContext';
+import AuthContext from '../store/AuthContext';
 
-export class ChatReq {
+export class Fetch {
 
-  static async getAllUsersWithBlocked(user: AuthContext) {
+  static async fetch(token: string, method: string, endPoint: string, par? :string, par2? :string) {
     try {
-      const resp = await fetch(`http://localhost:3000/users/block/users`,
+      if (par2 !== undefined && par !== undefined)
+        { par = par + '\/' + par2; }
+      if (par !== undefined)
+        { endPoint = endPoint + '\/' + par; }
+      const resp = await fetch(`http://localhost:3000/${endPoint}/`,
       {
-
-        method: "GET",
+        method: method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${token}`
         }
       });
       if (!resp.ok) {
@@ -24,38 +27,16 @@ export class ChatReq {
     }
   };
 
-  static async getAllUsersWithGames(user: AuthContext) {
-    try {
-      const resp = await fetch(`http://localhost:3000/users/games`,
-      {
-
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`
-        }
-      });
-      if (!resp.ok) {
-        const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
-        throw new Error(message);
-      }
-      const data = await resp.json();
-      return data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  static async postBlock(user: AuthContext, userId: number) {
+  static async postBlock(token: string, him: number, me: number) {
     try {
       const resp = await fetch(`http://localhost:3000/users/block`,
       {
         method: "POST",
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({blockFrom: user.userId, blockTo: userId}),
+        body: JSON.stringify({blockFrom: me, blockTo: him}),
       });
 
       if (!resp.ok) {
@@ -69,16 +50,18 @@ export class ChatReq {
     }
   };
 
-  static async postUnblock(user: AuthContext, userId: number) {
+  static async postUnblock(token: string, him: number, me: number) {
     try {
+      console.log(me);
+      console.log(him);
       const resp = await fetch(`http://localhost:3000/users/unblock`,
       {
         method: "POST",
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({blockFrom: user.userId, unblockTo: userId}),
+        body: JSON.stringify({blockFrom: me, unblockTo: him}),
       });
 
       if (!resp.ok) {
@@ -93,5 +76,5 @@ export class ChatReq {
   };
 }
 
-export default ChatReq;
+export default Fetch;
 

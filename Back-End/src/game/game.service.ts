@@ -7,12 +7,29 @@ import { TwoFaUserDto } from 'src/auth/dto/2fa.dto';
 import { UserDto } from 'src/user/dto/user.dto';
 
 
+
+
+//////
+import { Server, Socket } from "socket.io";
+import UsersSockets from "src/gateway/socket.class";
+//////
+
 @Injectable()
 export class GameService {
   constructor(private prisma: PrismaService, private userService: UserService){}
 
-  async create({playerOneId, playerTwoId, winnerId, score1, score2}) {
-    return await this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
+//////////////////////////////////////
+//////////////////////////////////////
+// Les infos sur les sockets et l'accès au serveur Global
+// Plus besoin de gameGateway
+  public server: Server = null;
+  public userSockets: UsersSockets;
+///////////////////////////////////////
+////////////////////////////////////////
+
+
+  create({playerOneId, playerTwoId, winnerId, score1, score2}) {
+    return this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
   }
 
   async getGames() {

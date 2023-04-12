@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Signup from './components/auth/Signup'
 import { Route, Routes} from 'react-router-dom';
 import Game from './components/game/Game'
@@ -15,11 +15,19 @@ import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';
 import Setting from './pages/Setting';
 import Scores from'./components/scores/Scores';
+import useSocket from './service/socket';
 
 function App() {
-	const authCtx = useContext(AuthContext);
 
-	const isLoggedIn = authCtx.isLoggedIn;
+	const authCtx = useContext(AuthContext);
+	const [isLoggedIn, setLoggedIn] = useState(authCtx.isLoggedIn)
+	const [sendMessage, addListener] = useSocket();
+
+	useEffect(() => {
+		console.log({isLoggedIn})
+		if (isLoggedIn) sendMessage('welcome', 'welcome')
+		else sendMessage('bye', 'bye bye!');
+	}, [])
 
 	return (
 		<Routes>

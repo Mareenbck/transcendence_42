@@ -12,9 +12,7 @@ import Card from "../components/utils/Card";
 
 const Menu = () => {
 	const authCtx = useContext(AuthContext);
-
 	const isLoggedIn = authCtx.isLoggedIn;
-	const id = authCtx.userId;
 
 	return (
 		<>
