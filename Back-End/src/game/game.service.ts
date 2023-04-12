@@ -59,9 +59,7 @@ export class GameService {
 	async updateUserXPAndLevel(userId: number, allGames: GameDto[]) {
 		const xpPerWin = 25;
 		const numWins = allGames.filter(game => game.winnerId === userId).length;
-		if (numWins > 0) {
-			await this.userService.updateAchievement(userId, 'Winner');
-		}
+
 		const newXP = numWins * xpPerWin;
 
 		let newLevel = Math.floor(newXP / 100);
@@ -75,7 +73,6 @@ export class GameService {
 				level: newLevel,
 			},
 		});
-
 		return user;
 	}
 

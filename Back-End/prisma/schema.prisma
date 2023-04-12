@@ -73,6 +73,7 @@ model UserAchievement {
 
   user          User        @relation(fields: [userId], references: [id])
   achievement   Achievement @relation(fields: [achievementId], references: [id])
+  @@unique([userId, achievementId])
 }
 
 model Friendship {
