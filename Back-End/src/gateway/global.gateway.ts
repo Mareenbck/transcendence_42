@@ -74,16 +74,19 @@ console.log(socket.handshake.auth.token);
 
 
   ///////////////////////////
-  // MEssages for Chat to Chat Service
+  // Messages for Chat to Chat Service
   //////////////////////////
   @SubscribeMessage('addUserChat')
-  async chatAddUsers(@MessageBody() userId: string, @ConnectedSocket() socket: Socket,): Promise<void> 
-  {     
-    const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
-    if (!user) {
-      throw new WsException('Invalid credentials.');
-    }
-    this.chatService.addUserChat(userId, socket.id)
+  async chatAddUsers(@MessageBody() userId: any, @ConnectedSocket() socket: Socket,): Promise<void> 
+  {
+    if (userId.userId !== null) {
+      const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+      if (!user) {
+        throw new WsException('Invalid credentials.');
+      }
+      console.log(user);
+      this.chatService.addUserChat(userId, socket.id)
+    }  
   }
 
   @SubscribeMessage('removeUserChat')
@@ -117,4 +120,8 @@ console.log(socket.handshake.auth.token);
   @SubscribeMessage('InviteGame')
   async chatInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
   { this.chatService.chatInvite(data.author, data.player,) };
+
+  @SubscribeMessage('toUnblock')
+  async chatUnblock(@MessageBody() data: {blockFrom: number, blockTo: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.chatService.chatUnblock(data.blockFrom, data.blockTo,)  };
 }

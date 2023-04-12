@@ -1,3 +1,6 @@
+
+
+/*
 import { INestApplicationContext } from "@nestjs/common";
 import { IoAdapter } from "@nestjs/platform-socket.io";
 import { Server } from "socket.io";
@@ -21,3 +24,5 @@ export class GlobalSocketAdapter extends IoAdapter {
         return server;
     }
 }
+
+*/

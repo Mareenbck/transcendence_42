@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 
 //////////////////////////
-// A SUPPRIMER QUAND TU SERAS PASS2E SUR USE SOCKET 
+// A SUPPRIMER QUAND TU SERAS PASSEE SUR USE SOCKET 
 /////////////////////////
 export const socket = io( "ws://localhost:8001" );
 //////////////////////////////
@@ -21,7 +21,7 @@ export default function useSocket() {
     if (authCtx.isLoggedIn) {
       return manager.socket('/', { auth: { token: authCtx.token }})
     }
-    return manager.socket('/');
+//    return manager.socket('/');
   }, [authCtx])
 
   const addListener = useMemo<(signal: string, callback: (data: any) => void) => void>

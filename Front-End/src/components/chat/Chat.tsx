@@ -31,8 +31,8 @@ function Chat() {
   const [currentDirect, setCurrentDirect] = useState<UserChat> (null);
   const [messages2, setMessages2] = useState<RoomMessage[]> ([]);
   const [messagesD, setMessagesD] = useState<DirectMessage[]> ([]);
-  const [newMessage2, setNewMessage2] = useState<RoomMessage> (null);
-  const [newMessageD, setNewMessageD] = useState<DirectMessage> (null);
+  const [newMessage2, setNewMessage2] = useState<string> ("");
+  const [newMessageD, setNewMessageD] = useState<string> ("");
   const [otherUsers, setOtherUsers] = useState <UserChat[]> ([]);
   const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
   const scrollRef = useRef();
@@ -66,7 +66,6 @@ function Chat() {
   useEffect(() => {
     addListener("getConv", data => setAConversation({
       name: data.content.name,
-      avatar: data.content.avatar,
     }));
   });
 
@@ -288,29 +287,28 @@ function Chat() {
   };
 
   const amIBlocked = (userXid: string | number) : string => {
-    if (getUser(+id)?.blockedFrom.find(u => +u.id === +userXid || u === +userXid))
+    if (getUser(+id)?.blockedFrom.find((u: number) => +u.id === +userXid || u === +userXid))
       { return "chatOnlineNotFriend"; }
     else
       {return "chatOnlineFriend";}
   };
 
-  const isHeBlocked = (userXid) => {
+  const isHeBlocked = (userXid: number) => {
     const i = getUser(userXid);
-    if (i && i.blockedFrom && !i?.blockedFrom.find((u)=>(+id === +u?.id)) && !i.blockedFrom.find((i)=>(+id === +i)))
+    if (i && i.blockedFrom && !i?.blockedFrom.find((u)=>(+id === +u?.id)) && !i.blockedFrom.find((i: string | number)=>(+id === +i)))
       {return (true);};
     }
 
-  const getDirect = (userX) => {
+  const getDirect = (userX: { userId: string | number; }) => {
     const gUser = getUser(+id);
-    if (gUser && (gUser.blockedFrom.find(u => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u)=> +userX.userId === +u) === undefined ))
+    if (gUser && (gUser.blockedFrom.find((u: { id: string | number; }) => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u: string | number)=> +userX.userId === +u) === undefined ))
     {
       setCurrentDirect(userX);
       setCurrentChat(null);
     }
   }
 
-  const inviteGame = (playerId) => {
-    console.log(playerId);
+  const inviteGame = (playerId: string | number) => {
     sendMessage("InviteGame", {
       author: +id,
       player: +playerId,
@@ -399,6 +397,7 @@ return (
           setCurrentChat={setCurrentChat}
           setCurrentDirect={setCurrentDirect}
           /></div>
+
           <div className="line-chat"></div>
         <div className="chatBox">
           <div className="chatBoxW">
@@ -504,7 +503,7 @@ return (
                       </div>
                       <span className="chatOnlineName"> {o?.username} </span>
                     </div>
-                    { !o.blockedFrom.find((u)=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i)=>(+user.userId === +i)) ?
+                    { !o.blockedFrom.find((u: { id: string | number; })=>(+user.userId === +u?.id)) && !o.blockedFrom.find((i: string | number)=>(+user.userId === +i)) ?
                       <button className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
                           <i className="fa fa-unlock" aria-hidden="true"></i>
                       </button>

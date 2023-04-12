@@ -16,7 +16,7 @@ const Scores = () => {
 
 
           //aller chercher les games
-  
+
   async function fetchGames() {
     try {
       setGames(await Fetch.fetch(authCtx.token, "GET", `game`))

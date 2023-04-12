@@ -9,7 +9,6 @@ import ChannelsSettings from "./ChannelsSettings";
 import CreateChannelButton from "./CreateChannelBtn";
 
 
-
 export default function UpdateChannelsInList(props: any) {
   const [conversations, setConversations] = useState([]);
   const [AConversation, setAConversation] = useState (null);
@@ -20,15 +19,17 @@ export default function UpdateChannelsInList(props: any) {
   const [sendMessage, addListener] = useSocket()
 
 
-    useEffect(() => {
-      addListener("getConv", data => {
-        setAConversation({
-          name: data.content.name,
-          avatar: data.content.avatar,
-        });
-      });
-    }, []);
 
+//    useEffect(() => {
+//      socket.current = io("ws://localhost:8001")
+//    })
+
+  useEffect(() => {
+    addListener("getConv", data => setAConversation({
+      name: data.content.name,
+    }));
+  });
+    
     useEffect(() => {
       AConversation && setConversations(prev=>[AConversation, ...prev]);
       }, []);
