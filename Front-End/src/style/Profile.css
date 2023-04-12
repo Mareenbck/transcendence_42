@@ -372,3 +372,9 @@ li {
  .tooltip {
     margin: 0px;
  }
+
+ .container-achiev {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+ }

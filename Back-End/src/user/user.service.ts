@@ -273,19 +273,6 @@ export class UserService {
 		}
 	}
 
-	// async getUserAchievements(userId: number) {
-	// 	const user = await this.prisma.user.findUnique({
-	// 	  where: { id: userId },
-	// 	  include: { achievements: true },
-	// 	});
-
-	// 	if (!user) {
-	// 	  throw new NotFoundException('User not found');
-	// 	}
-
-	// 	return user.achievements;
-	//   }
-
   async block(blockFrom: number, blockTo: number) {
     const updateUser = await this.prisma.user.update({
       where: {
