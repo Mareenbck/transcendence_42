@@ -67,6 +67,9 @@ function PopUp(props: any) {
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
 
+    // console.log("PASSWORD DANS POP UP")
+    // console.log(passwordInputRef)
+
       
 // aller voir le inputRef={usernameInputRef} pour apres IN TEXT FIELDS
 return (

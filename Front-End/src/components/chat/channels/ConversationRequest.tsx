@@ -38,34 +38,43 @@ export class ConversationReq {
         throw new Error(message);
       }
       const data = await resp.json(); 
+      console.log("DATA DANS POSTROOM", data);
       return data;
     } catch (err) {
       console.log(err);
     }
   };
 
-  static async joinTable(channelId: number, token: string, userId: number) {
-    try {
+  // static async joinTable(channelId: number, token: string, userId: number, hash: string) {
+  //   try {
       
-      const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({channelId: channelId, userId: userId}),
-      });
-      if (!resp.ok) {
-        const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
-        throw new Error(message);
-      }
-      const data = await resp.json();
-      console.log("DATA IN JOIN")
-      console.log(data);
-    } catch(err) {
-      console.log(err)
-    }
-  }
+  //     const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({
+  //         channelId: channelId, 
+  //         userId: userId,
+  //         hash: hash,
+  //       }),
+  //     });
+  //     // console.log("RESPONSE =---->", resp)
+  //     // console.log("CHANNEL ID DANS LE FETCH", channelId)
+  //     // console.log("USERID DANS LE FETCH", userId)
+  //     // console.log("HASH DANS LE FETCH", hash)
+  //     if (!resp.ok) {
+  //       const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
+  //       throw new Error(message);
+  //     }
+  //     const data = await resp.json();
+  //     console.log("DATA IN JOIN")
+  //     console.log(data);
+  //   } catch(err) {
+  //     console.log(err)
+  //   }
+  // }
 
 }
 

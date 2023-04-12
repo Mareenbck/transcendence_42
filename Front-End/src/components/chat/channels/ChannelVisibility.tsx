@@ -21,6 +21,7 @@ export default function ChannelVisibility(props: any) {
   const [isUser, setIsUser] = useState<string | null>('');
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
+
   const getRolesUser = async (id: string, channelId: string) => {
     try {
       const response = await fetch(
@@ -74,7 +75,7 @@ export default function ChannelVisibility(props: any) {
         <>
          <div className="visibility-icon">
           {/* <JoinProtectedChannel onOpenModal={handleOpenJoinModal} onClick={(e: FormEvent) => joinChannel(e, props.channelId)} className="join-channel" fontSize="small" />  */}
-          <JoinProtectedChannel onOpenJoinModal={handleOpenJoinModal} className="join-channel" fontSize="small" />
+          <JoinProtectedChannel onOpenJoinModal={handleOpenJoinModal} className="join-channel" fontSize="small"/>
           <KeyIcon className="channel-icon" fontSize="small" />
           <ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
         </div>
@@ -93,22 +94,51 @@ export default function ChannelVisibility(props: any) {
     
     return icon;
   }
-  
-  const joinChannel = async (e: FormEvent, channelId: number) => {
-    e.preventDefault();
- 
-    const res = await ConversationReq.joinTable(channelId, userContext.token, parseInt(userContext.userId))
-    setOpenJoinModal(false);
-    console.log("RES")
-    console.log(res)
-  }
 
+  
+  const joinChannel = async (e: FormEvent, channelId: number, token: string) => {
+	e.preventDefault();
+	const password = passwordInputRef.current?.value;
+	try {
+		const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
+		  method: "POST",
+		  headers: {
+			"Content-type": "application/json",
+			Authorization: `Bearer ${token}`,
+		  },
+		  body: JSON.stringify({
+			channelId: channelId, 
+			userId: userContext.userId,
+			hash: password,
+		  }),
+		});
+		console.log("RESPONSE =---->", resp)
+		console.log("CHANNEL ID DANS LE FETCH", channelId)
+		console.log("USERID DANS LE FETCH", userContext.userId)
+		console.log("HASH DANS LE FETCH", password)
+		if (!resp.ok) {
+		  const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
+		  throw new Error(message);
+		}
+		const data = await resp.json();
+		console.log("DATA IN JOIN")
+		console.log(data);
+	  } catch(err) {
+		console.log(err)
+	  }
+	setOpenJoinModal(false);
+  }
+  
 
   return (
     <>
     <div>
       <Modal className="modal-container" open={openJoinModal} onClose={() => setOpenJoinModal(false)}>
         <Box className="modal-content">
+        <div className="form-input">
+			<label htmlFor="floatingPassword">Password</label>
+			<input type="password" ref={passwordInputRef} className="form-fields-channel" placeholder="Password" />
+		</div>
           <button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
         </Box>
       </Modal>
