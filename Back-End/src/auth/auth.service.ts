@@ -89,26 +89,7 @@ export class AuthService {
 				where: { id: user.id },
 				data: { status: 'ONLINE' },
 		});
-		const achievement = await this.prisma.achievement.findUnique({
-			where: { name: 'Welcome' },
-		});
-		if (!achievement) {
-			throw new NotFoundException('Achievement not found');
-		}
-		const existingUserAchievement = await this.prisma.userAchievement.findFirst({
-			where: {
-			  userId: user.id,
-			  achievementId: achievement.id,
-			},
-		});
-		if (!existingUserAchievement) {
-			await this.prisma.userAchievement.create({
-				data: {
-					user: { connect: { id: user.id } },
-					achievement: { connect: { id: achievement.id } },
-				},
-			});
-		}
+		await this.userService.updateAchievement(user.id, 'Welcome');
 	}
 
 	async signin_42(profile: Profile_42): Promise<User> {
