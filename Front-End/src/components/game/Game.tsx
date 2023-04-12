@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
+import useSocket from '../../service/socket';
 //import io, { Socket } from "socket.io-client"
 import Canvas from './Canvas'
 import Winner from './Winner'
 import './Game.css'
-import type { gameInit, gameState, gameWinner, player } from './type'
+import type { gameInit, gameState, gameWinner, player, backColorGame } from './type'
 import { socket } from '../../service/socket';
 import ColorModal from './modal.tsx/ColorModal';
 
@@ -12,8 +13,11 @@ import ColorModal from './modal.tsx/ColorModal';
 
 function Game() {
     const user = useContext(AuthContext);
+    const id = user.userId;
     const [users, setOnlineSpectators] = useState<[player]> ();
     const [players, setOnlinePlayers] = useState<[player]> ();
+    const [sendMessage, addListener] = useSocket()
+
 
 
     // Pour partis de Modal select Color,
@@ -59,7 +63,7 @@ function Game() {
 
     
     //**** *******************************************************************/
-
+   //initialization of the initial parameters of the game
     const [gameinit, setGameInit] = useState<gameInit>(
         {
             table_width: 800,
@@ -71,20 +75,9 @@ function Game() {
             scoreL: 0
         }
     );
-    // const [gameinit, setGameInit] = useState<gameInit>(
-    //     {
-    //         table_width: window.innerWidth,
-    //         table_height: window.innerHeight,
-    //         ballR: 15,
-    //         racket_width: 10,
-    //         racket_height: 100,
-    //         scoreR: 0,
-    //         scoreL: 0
-    //     }
-    // );
+   
 
-
-    //initialization of the initial parameters of the game (coordinates)
+    //update the coordinates of the ball and rackets
     const [gamestate, setGameState] = useState<gameState>(
         {
             ball: {x: 400, y: 200},
@@ -97,7 +90,9 @@ function Game() {
 
     const [gamewinner, setGameWinner] = useState<gameWinner>(
        {
-            winner: '',
+            winner: {
+                socket: {} as any,
+                userId: {} as any},
             leave: ''
        } 
     );
@@ -114,22 +109,22 @@ function Game() {
 
 //////////////////////////////////////////////////////////
 
-    useEffect(() => {
-//console.log(user);
-        socket.emit("addUser", user);
-    },[user]);
+//     useEffect(() => {
+// //console.log(user);
+//         socket.emit("addUser", user);
+//     },[user]);
 
-    useEffect(() => {
-        socket.on("getPlayers", (players: React.SetStateAction<[player] | undefined>) => {
-            setOnlinePlayers(players);
-        });
-    })
+    // useEffect(() => {
+    //     socket.on("getPlayers", (players: React.SetStateAction<[player] | undefined>) => {
+    //         setOnlinePlayers(players);
+    //     });
+    // })
 
-    useEffect(() => {
-        socket.on("getSpectators", (users: React.SetStateAction<[player] | undefined>) => {
-            setOnlineSpectators(users);
-        });
-    })
+    // useEffect(() => {
+    //     socket.on("getSpectators", (users: React.SetStateAction<[player] | undefined>) => {
+    //         setOnlineSpectators(users);
+    //     });
+    // })
 
 // console.log('players front', players);
 // console.log('users Front', users)
@@ -137,10 +132,10 @@ function Game() {
 
     //get data from the server and redraw canvas
     useEffect(() => {
-        socket?.on('init-pong', initListener);
-        socket?.on('pong', updateListener);
-        socket?.on('winner', initWinner )
-   // console.log("winner = ", gamewinner.winner);        
+        addListener('init-pong', initListener);
+        addListener('pong', updateListener); 
+        addListener('winner', initWinner); 
+ // console.log("winner = ", gamewinner.winner);        
         return () => {
             socket?.off('init-pong', initListener);
             socket?.off('pong', updateListener);
@@ -149,16 +144,42 @@ function Game() {
         }
     }, [initListener, updateListener, initWinner])
 
+//     useEffect(() => {
+//         socket?.on('init-pong', initListener);
+//         socket?.on('pong', updateListener);
+//         socket?.on('winner', initWinner )
+//    // console.log("winner = ", gamewinner.winner);        
+//         return () => {
+//             socket?.off('init-pong', initListener);
+//             socket?.off('pong', updateListener);
+//             socket?.off('pong', initWinner);
+
+//         }
+//     }, [initListener, updateListener, initWinner])
+
 	// onKeyDown handler function
 	const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
 //console.log("event.code = ", event.code);
-		if (event.code === "ArrowUp") {
-			socket?.emit('move', "up")
+		// if (event.code === "ArrowUp") {
+		// 	socket?.emit('move', "up")
+		// }
+		// if (event.code === "ArrowDown") {
+		// 	socket?.emit('move', "down")
+		// }
+        if (event.code === "ArrowUp") {
+			sendMessage('move', {move: "up"});
+                // author: +id,
+                // roomId: +room?.id,
+                // content: up,})
 		}
 		if (event.code === "ArrowDown") {
-			socket?.emit('move', "down")
+			sendMessage("move", {
+                author: +id,
+                roomId: +room?.id,
+                content: down,})
 		}
-	};
+	};   
+     
 
     if (!gamewinner.winner){
         return (

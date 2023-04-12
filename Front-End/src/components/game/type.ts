@@ -42,7 +42,7 @@ export interface gameInit {
 }
 
 export interface gameWinner {
-    winner: any;
+    winner: player;
     leave: string;
 }
 
