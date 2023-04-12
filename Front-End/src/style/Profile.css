@@ -358,10 +358,17 @@ li {
     font-weight: 700;
     font-size: 0.8rem;
     font-family: 'Noto Sans', sans-serif;
+    line-height: 0;
+    margin-bottom: -5px;
  }
 
  .name-icon {
     display: flex;
     flex-direction: column;
+    align-items: center;
 
+ }
+
+ .tooltip {
+    margin: 0px;
  }

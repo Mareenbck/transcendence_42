@@ -66,7 +66,7 @@ const ShowAchievements = (props: any) => {
 				<li key={achiev.id}>
 					<div className="name-icon">
 						<h6>{achiev.achievement.name}</h6>
-						<BadgeIcon style="l" src={achiev.achievement.icon} className="badge-icon"/>
+						<BadgeIcon style="l" src={achiev.achievement.icon} className="badge-icon" description={achiev.achievement.description}/>
 					</div>
 				</li>
 			))}

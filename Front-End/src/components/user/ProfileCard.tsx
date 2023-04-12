@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import '../../style/Profile.css'
 import { useParams } from "react-router-dom";
 import { FriendContext } from "../../store/FriendshipContext";
+import AuthContext from "../../store/AuthContext";
 
 const ProfileCard = (props: any) => {
-	const authCtx = props.authCtx;
+	const authCtx = useContext(AuthContext);
 	const friendCtx = useContext(FriendContext);
 	// const user = props.user;
 
@@ -26,8 +27,7 @@ const ProfileCard = (props: any) => {
 			};
 			fetchData();
 		// }
-	}, [id, isMyProfile])
-
+	}, [id])
 
 	const getUser = async (id: string) => {
 		try {
@@ -39,8 +39,11 @@ const ProfileCard = (props: any) => {
 				const data = await response.json();
 				setUser(data);
 				setUsername(data.username)
-				setftAvatar(isMyProfile ? authCtx.ftAvatar : data.ftAvatar)
-				// setAvatar(isMyProfile ? authCtx.avatar : data.avatar);
+				setftAvatar((isMyProfile && authCtx.ftAvatar) ? authCtx.ftAvatar : data.ftAvatar)
+				const avat: any = await friendCtx.fetchAvatar(parseInt(id));
+				if (avat) {
+					setAvatar(avat);
+				}
 			} else {
 				console.log("POST error on /friendship/create");
 				return "error";
