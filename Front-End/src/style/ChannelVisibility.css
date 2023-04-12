@@ -35,3 +35,7 @@
 .pwd-icon {
     cursor: pointer;
 }
+
+.form-fields-channel {
+    width: 250px;
+}

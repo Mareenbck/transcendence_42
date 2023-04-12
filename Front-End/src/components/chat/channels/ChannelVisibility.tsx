@@ -21,9 +21,6 @@ export default function ChannelVisibility(props: any) {
   const [isUser, setIsUser] = useState<string | null>('');
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
-
-
-
   const getRolesUser = async (id: string, channelId: string) => {
     try {
       const response = await fetch(
@@ -50,16 +47,15 @@ export default function ChannelVisibility(props: any) {
     setOpenModal(true);
   };
 
-  const handleOpenJoinModal = () => {
+  
+  useEffect(() => {
+    getRolesUser(userContext.userId, props.id);
+  }, [props.id, userContext.userId])
+  
+  const handleOpenJoinModal = (e: FormEvent) => {
     setOpenJoinModal(true);
   };
-   
-  useEffect(() => {
-   getRolesUser(userContext.userId, props.id);
-  }, [props.id, userContext.userId])
 
-
-// onClick={(e: FormEvent) => joinChannel(e, props.id)}
 
   function getIconByChannelType() {
     let icon;
@@ -68,7 +64,7 @@ export default function ChannelVisibility(props: any) {
       icon = (
         <>
         <div className="visibility-icon">
-          <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
+          <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)} className="join-channel" fontSize="small" />
           <LockIcon className="channel-icon" fontSize="small" />
         </div>
         </>
@@ -77,7 +73,8 @@ export default function ChannelVisibility(props: any) {
       icon = (
         <>
          <div className="visibility-icon">
-          <JoinProtectedChannel onOpenModal={handleOpenJoinModal} className="join-channel" fontSize="small" /> 
+          {/* <JoinProtectedChannel onOpenModal={handleOpenJoinModal} onClick={(e: FormEvent) => joinChannel(e, props.channelId)} className="join-channel" fontSize="small" />  */}
+          <JoinProtectedChannel onOpenJoinModal={handleOpenJoinModal} className="join-channel" fontSize="small" />
           <KeyIcon className="channel-icon" fontSize="small" />
           <ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
         </div>
@@ -99,6 +96,7 @@ export default function ChannelVisibility(props: any) {
   
   const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
+ 
     const res = await ConversationReq.joinTable(channelId, userContext.token, parseInt(userContext.userId))
     setOpenJoinModal(false);
     console.log("RES")
@@ -109,24 +107,19 @@ export default function ChannelVisibility(props: any) {
   return (
     <>
     <div>
-      {getIconByChannelType()}
       <Modal className="modal-container" open={openJoinModal} onClose={() => setOpenJoinModal(false)}>
         <Box className="modal-content">
-          <h2>Enter the password to enter in this channel</h2>
-          <div className="form-input">
-						<label htmlFor="floatingPassword">Password</label>
-						<input type="password" ref={passwordInputRef} className="form-fields" placeholder="Password" />
-					</div>
-          <button type="submit" onClick={(e) => joinChannel(e, props.channelId)}>OK</button>
+          <button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
         </Box>
       </Modal>
-      <Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
+      <Modal className="modal-container" open={openModal}  onClose={() => setOpenModal(false)}>
         <Box className="modal-content">
           <h2>Welcome to {props.name} settings</h2>
           <div>Do you want to change the password ?</div>
         </Box>
       </Modal>
       </div>
+      {getIconByChannelType()}
       <div>
     </div>
     </>
