@@ -147,3 +147,9 @@ console.log("-userSockets", this.userSockets);
   { this.gameService.playGame(user, socket) };
   }
 
+
+  @SubscribeMessage('InviteGame')
+async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+{ this.gameService.gameInvite(data.author, socket, data.player) };
+}
+

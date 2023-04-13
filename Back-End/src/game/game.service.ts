@@ -85,6 +85,11 @@ console.log("game.service: message playGame");
 
 	}
 
+	addGames = (gameId, playersR, playersL) => {
+	  //  !this.games.some((user) => +user.userId.userId === +userId.userId) &&
+		//this.games.push({gameId, playersR, playersL})
+	}
+
 //message processing functions
 	gameInvite: any = (author: number, socketAuth: Socket, player: number,) => {
 console.log("game.service: message gameInvite");
