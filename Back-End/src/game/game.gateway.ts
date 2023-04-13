@@ -7,9 +7,11 @@ import {
 } from '@nestjs/websockets';
 import {Server, Socket} from 'socket.io'
 import { GameService } from './game.service';
+import UsersSockets from "src/gateway/socket.class";
 import { Game } from './game.class';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { profile } from './game.interfaces';
+
 
 
 //all connected users
@@ -33,19 +35,17 @@ let players: profile [] = [];
 // //       !players[index].socketId.some((socket) => +socket === +socketId) &&
 // //       players[index].socketId.push(socketId)
 // //     }
-// // console.log(`24 players [] ='${players}'`);
-// //   const addUser = (userId, socketId) => {
-// //     if (players.length < 2) {
-// //       !players.some((user) => +user.userId.userId === +userId.userId) &&
-// //       players.push({userId, socketId})
-// // console.log('40 players = ', players);
-// // console.log('41 player[0] = ', players[0]);
-
-// //   } else {
-// //     !users.some((user) => +user.userId.userId === +userId.userId) &&
-// //     users.push({userId, socketId})
-// //   }
-// // }
+// console.log(`24 players [] ='${players}'`);
+//   const addUser = (userId, socketId) => {
+//     if (players.length < 2) {
+//       !players.some((user) => +user.userId.userId === +userId.userId) &&
+//       players.push({userId, socketId})
+// console.log('40 players = ', players);
+//     } else {
+//       !users.some((user) => +user.userId.userId === +userId.userId) &&
+//       users.push({userId, socketId})
+//     }
+//   }
 
 // const getUser = (userId) => {
 //   return users.find(user => +user.userId.userId === +userId)
@@ -61,15 +61,16 @@ let players: profile [] = [];
 // }
 
 
-@WebSocketGateway(8001, { cors: 'http://localhost/game/*' })//cors *
+@WebSocketGateway()
 export class GameGateway {
 
-  @WebSocketServer() server: Server;
-  //  constructor(
-  //       private prisma: PrismaService,
-  //       private service: GameService ){}
-//   prisma: PrismaService; ///constructor?
-//   gameService: GameService;
+  
+  constructor(
+      private readonly prisma: PrismaService,
+      private readonly service: GameService ){}
+      
+  public server: Server = null;
+  public userSockets: UsersSockets;
 
   // onModuleInit(){
   //   const game = new Game(
@@ -77,33 +78,33 @@ export class GameGateway {
   //     //this.websocketsService,
   //     this.prisma,
   //     //this.achievementsService,
-  //     this.gameService
+  //     this.service
   //   );
 
+    @SubscribeMessage('InviteGame')
+    async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+    { this.service.gameInvite(data.author, socket, data.player) };
 
 //     this.server.on('connection', (socket: Socket) => {
 // console.log('51 Connected socket = ', socket.id);
 //       if(socket) {game.init(socket);} //game initialization on connection
 //       socket.on("addUser", (userId) => {
 //         addUser(userId, socket.id); // add user : array users or array players
+
 // console.log ('55 players = ', players.length);
 // console.log ('56 users = ',users.length);
 
-        // const user = getUser(users);
-        // const player = getPlayers(players);
-//         this.server.emit("getSpectators", users);
-//         this.server.emit("getPlayers", players);
+//         // const user = getUser(users);
+//         // const player = getPlayers(players);
+//         // this.server.emit("getSpectators", users);
+//         // this.server.emit("getPlayers", players);
 //         if (players.length == 2 ) {
 //           //this.games.push(game);
 //           game.run(
 //             players[0], players[1], // start game with 2 players
 //           );
-//           players = [];
-// console.log ('95 players = ', players.length);
-// console.log ('96 users = ',users.length);
 //         }
-//       };
-//     }
+//       });
 
 //       this.server.sockets.sockets.get(socket.id).on('disconnect', () => {//??
 // console.log(`78 Disconnected socket.id = ${socket.id}`);
@@ -111,7 +112,7 @@ export class GameGateway {
 //         this.server.emit("getSpectator", users);
 //       });
 //     });
-//   }
+  // }
 }
 
 // this.games.splice(this.games.indexOf(game), 1);

@@ -65,12 +65,16 @@ console.log(socket.handshake.auth.token);
         this.userSockets.removeSocket(socket)
         socket.disconnect(true);
     }
+console.log("+userSockets", this.userSockets);
   }
 
   async handleDisconnect(client: Socket) {
     this.userSockets.removeSocket(client)
+console.log("-userSockets", this.userSockets);
+
     client.disconnect(true);
   }
+
 
 
   ///////////////////////////
@@ -119,4 +123,10 @@ console.log(socket.handshake.auth.token);
   @SubscribeMessage('InviteGame')
   async chatInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
   { this.chatService.chatInvite(data.author, data.player,) };
+
+
+  @SubscribeMessage('InviteGame')
+async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+{ this.gameService.gameInvite(data.author, socket, data.player) };
 }
+
