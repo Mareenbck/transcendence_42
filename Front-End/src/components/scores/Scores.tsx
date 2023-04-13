@@ -64,11 +64,11 @@ const Scores = () => {
     }
   }
  
-  //allUsers.sort((a:any , b:any) => (a.getScore < b.getScore ? -1 : 1));
+ 
   var sorted = [...allUsers];
-  //console.log('first', sorted);
+  
   sorted.sort((a, b) => (getScore(b) - getScore(a)));
-  //console.log('second',sorted);
+
   
   var firts = sorted[0];
   var secend = sorted[1];
@@ -86,39 +86,9 @@ const Scores = () => {
           
           <section className= "two">
           <form onSubmit={(event) => handleNewGame(event)}>
-          {/* <button type="submit" className='add-friend'><i className="fa-solid fa-user-plus"></i></button>*/}
+         
         </form>
-        { /*
-              <div >
-                <table>
-                  <thead>
-                   <tr>
-                      <th colSpan="2"> The Game List </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Index</td>
-                      <td>Joueur 1</td>
-                      <td>Score</td>
-                      <td>Joueur 2</td>
-                      <td>Score</td>
-                      <td>WINNER</td>
-                    </tr>
-                  { games.map((g) => (
-                    <tr key={g?.id} >
-                      <td>{g?.id}</td>
-                      <td>{g?.playerOne.username}</td>
-                      <td>{g?.score1}</td>
-                      <td>{g?.playerTwo.username}</td>
-                      <td>{g?.score2}</td>
-                      <td>{g?.winner.username}</td>
-                    </tr>
-                  ))}
-                  </tbody>
-                </table>
-              </div>
-                  */ }            
+           
               <div>
                 
                 <table className='table'>
@@ -135,13 +105,7 @@ const Scores = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {/*<tr>
-                      <td>User</td>
-                      <td>Nbre de parties</td>
-                      <td>Nombre total de points</td>
-                      <td>Nombre total de victoires</td>
-                      <td> avatar</td> 
-                  </tr>*/}
+
                   { sorted.map((g) => (
                     <tr key={g?.id} >
                       <td>{g?.username}</td>
@@ -157,26 +121,24 @@ const Scores = () => {
             <div className="pos">
                     
               
-                      {  sorted.map( (g) => {
-                        return(
-                          
-                          <div key={g?.id} className="midPos">
-                            <div className='rangAvatar'> 
-                            { secend.id == g.id && <MyAvatar authCtx={authCtx } id={secend.id} style="s" avatar={secend.avatar} ftAvatar={secend.ftavatar}/>  }
-                            { secend.id == g.id &&  <UserChart key={secend?.id}   userName={secend?.username}  h={(getScore(secend))} />}
+              <div className="midPos">
 
-                            { firts.id == g.id && <MyAvatar authCtx={authCtx } id={firts.id} style="s" avatar={firts.avatar} ftAvatar={firts.ftavatar}/>  }
-                            { firts.id == g.id &&  <UserChart key={firts?.id}   userName={firts?.username}  h={(getScore(firts))}/>}
+                    <div className='rangAvatar'>
+                      <UserChart key={secend?.id}   userName={secend?.username}  h={(getScore(secend))}  color="red"/>
+                      <MyAvatar authCtx={authCtx } id={secend.id} style="s" avatar={secend.avatar} ftAvatar={secend.ftavatar}/>
+                    </div>
 
-                            { third.id == g.id && <MyAvatar authCtx={authCtx } id={third.id} style="s" avatar={third.avatar} ftAvatar={third.ftavatar}/>  }
-                            { third.id == g.id &&  <UserChart key={third?.id}   userName={third?.username}  h={(getScore(third))}/>}
-                             
-                            </div>
-                          </div>
-                          
-                        )
-                      })
-                    }
+                    <div className='rangAvatar'>       
+                      <UserChart key={firts?.id}   userName={firts?.username}  h={(getScore(firts))} color={"green"}/>
+                      <MyAvatar authCtx={authCtx } id={firts.id} style="s" avatar={firts.avatar} ftAvatar={firts.ftavatar}/>
+                    </div>
+
+                    <div className='rangAvatar'> 
+                      <UserChart key={third?.id}   userName={third?.username}  h={(getScore(third))} color={"black"}/>
+                      <MyAvatar authCtx={authCtx } id={third.id} style="s" avatar={third.avatar} ftAvatar={third.ftavatar}/> 
+                    </div>
+
+                </div>
 
             </div>  
                 </section>
