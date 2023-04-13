@@ -27,6 +27,7 @@ export class ChatService {
         this.roomUsers = this.roomUsers.filter( room => +room.userId.userId !== +userId.userId);
         this.userChat = this.userChat.filter( user => user.userId.isLoggedIn === true);
         this.roomUsers = this.roomUsers.filter( room => room.userId.isLoggedIn === true);
+        console.log("rrrrrrrrrrrrrrrrrr");
         this.server.sockets.emit('getUsersChat', this.userChat);
     };
 
@@ -105,10 +106,11 @@ export class ChatService {
     chatInvite: any = (author: number, player: number,) => {
         const fromU = this.getUser(author);
         const toU = this.getUser(player);
+        console.log(fromU);
         if (toU) {
             this.server.to(toU.socketId).emit('wasInvited', {
-                from: fromU.userId,
-                to: toU.userId,
+                from: fromU.userId.userId,
+                to: toU.userId.userId,
             });
         };
     };

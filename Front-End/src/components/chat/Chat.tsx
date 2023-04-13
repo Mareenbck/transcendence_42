@@ -17,7 +17,7 @@ import MyAvatar from '../user/Avatar';
 import Channels from './channels/Channels';
 import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
-
+import MyAccountMenu from "./../AccountMenu";
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -43,18 +43,36 @@ function Chat() {
   const [sendMessage, addListener] = useSocket()
   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 
+// useEffect(() => {
+//     const handleTabClose = event => {
+//       event.preventDefault();
+//       console.log('beforeunload event triggered');
+//       return (event.returnValue =
+//         'Are you sure you want to exit?');
+//     };
+//     window.onbeforeunload, handleTabClose;
+//     return () => {
+//       window.removeEventListener('beforeunload', handleTabClose);
+//     };
+//   }, []);
+
   // useEffect(() => {
-  //   const handleTabClose = event => {
-  //     event.preventDefault();
-  //     console.log('beforeunload event triggered');
-  //     return (event.returnValue =
-  //       'Are you sure you want to exit?');
+  //   const handleTabClose = () => {
+  //     // Déconnecter l'utilisateur
+  //     sendMessage("removeUserChat", user as UserCtx);
+      
+  //     // Afficher un message de confirmation à l'utilisateur
+  //     return "Voulez-vous vraiment quitter la page ?";
   //   };
-  //   window.onforeunload', handleTabClose);
+  
+  //   window.addEventListener("beforeunload", handleTabClose);
+  
   //   return () => {
-  //     window.removeEventListener('beforeunload', handleTabClose);
+  //     window.removeEventListener("beforeunload", handleTabClose);
   //   };
   // }, []);
+
+
 
 
 ///////////////////////////////////////////////////////////
@@ -98,7 +116,7 @@ function Chat() {
 
   useEffect(() => {
     addListener("wasInvited", data => {
-      setInvited(data.from.username);
+      setInvited(getUser(data.from));
     });
   });
 
@@ -218,6 +236,10 @@ function Chat() {
 
   useEffect(() => {
     if (allUsers !== undefined && user.userId && fromBlock && fromBlock !== +user.userId) {
+
+//      console.log(fromBlock); console.log(currentDirect);
+//      if (currentDirect && fromBlock === +currentDirect.id) { setCurrentDirect(null); setMessagesD([])};
+
       const i = allUsers.findIndex(userX => +userX.id === +id);
       const j = allUsers.find(userX => +userX.id === +id);
       j?.blockedFrom.push(fromBlock);
@@ -243,7 +265,7 @@ function Chat() {
 
   useEffect(() => {
     if (toBlock)
-    {
+    { 
       sendMessage("toBlock", {
         blockTo: +toBlock.id,
         blockFrom: +id,
@@ -420,79 +442,58 @@ useEffect(() => {
 return (
   <>
   {" "}
-
   <div className="messenger">
-        <div className="chatMenu"><UpdateChannelsInList
-          currentChat={currentChat}
-          currentDirect={currentDirect}
-          setCurrentChat={setCurrentChat}
-          setCurrentDirect={setCurrentDirect}
-          /></div>
-          <div className="line-chat"></div>
-        <div className="chatBox">
-          <div className="chatBoxW">
-              <PopupChallenge triger={invited} setTriger={setInvited}> <h3></h3></PopupChallenge>
-          {
-            currentChat ?
-            <>
-              <div className="chatBoxTop">
-                { messages2.length ?
-                  messages2.map((m) => (
-                    <div key={m?.createdAt} ref={scrollRef}>
-                      <Message2 message2={m} user={getUser(m?.authorId)} authCtx={user} own={m?.authorId === +id} />
-                    </div>
-                  )) : <span className="noConversationText2" > No message in this room yet. </span>
-                }
-              </div>
-              <div className="chatBoxBottom">
-                <textarea
-                    className="chatMessageInput"
-                    placeholder="write something..."
-                    onChange={(e) => setNewMessage2(e.target.value)}
-                    value={newMessage2}
-                ></textarea>
-                  <button className="chatSubmitButton" onClick={handleSubmit}>
-                    Send
-                  </button>
-              </div>
-            </>
-            :
-            currentDirect ?
-              <>
-              <div className="chatBoxTop">
-                { messagesD.length ?
-                    messagesD?.map((m) => (
-                      <div key={m.createdAt} ref={scrollRef}>
-                        <MessageD messageD={m} user={getUser(m.author)} authCtx={user} own={m?.author === +id} />
-                      </div>
-                  )) : <span className="noConversationText2" > No message with this friend yet. </span>
-                }
-              </div>
-              <div className="chatBoxBottom">
-                <textarea
-                    className="chatMessageInput"
-                    placeholder="write something..."
-                    onChange={(e) => setNewMessageD(e.target.value)}
-                    value={newMessageD}
-                ></textarea>
-                {currentChat ?
-                  <>
-                    <button className="chatSubmitButton" onClick={handleSubmit}>
-                      Send
-                    </button>
-                  </>
-                  :
-                  <>
-                    <button className="chatSubmitButton" onClick={handleSubmitD}>
-                      Send
-                    </button>
-                  </>
-                }
-              </div>
-            </>
-              : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
-          }
+    <div className="chatMenu"><UpdateChannelsInList
+      currentChat={currentChat}
+      currentDirect={currentDirect}
+      setCurrentChat={setCurrentChat}
+      setCurrentDirect={setCurrentDirect}
+    /></div>
+    <div className="chatBox">
+      <div className="chatBoxW">
+        <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
+        <PopupChallenge trigger={invited} setTrigger={setInvited} > <h3></h3></PopupChallenge>
+        { currentChat ?
+          <>
+          <div className="chatBoxTop">
+            { messages2.length ?
+              messages2.map((m) => (
+                <div key={m?.createdAt} ref={scrollRef}>
+                  <Message2 message2={m} user={getUser(m?.authorId)} authCtx={user} own={m?.authorId === +id} />
+                </div>
+              )) : <span className="noConversationText2" > No message in this room yet. </span>
+            }
           </div>
+          <div className="chatBoxBottom">
+            <textarea className="chatMessageInput" placeholder="write something..."
+              onChange={(e) => setNewMessage2(e.target.value)} value={newMessage2}
+            ></textarea>
+            <button className="chatSubmitButton" onClick={handleSubmit}> Send </button>
+          </div>
+          </>
+        : currentDirect ?
+          <>
+          <div className="chatBoxTop">
+            { messagesD.length ?
+              messagesD?.map((m) => (
+                <div key={m.createdAt} ref={scrollRef}>
+                  <MessageD messageD={m} user={getUser(m.author)} authCtx={user} own={m?.author === +id} />
+                </div>
+              )) : <span className="noConversationText2" > No message with this friend yet. </span>
+            }
+          </div>
+              <div className="chatBoxBottom">
+                <textarea className="chatMessageInput" placeholder="write something..."
+                    onChange={(e) => setNewMessageD(e.target.value)} value={newMessageD}
+                ></textarea>
+                { currentChat 
+                ?  <><button className="chatSubmitButton" onClick={handleSubmit}> Send </button></>
+                : <><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></> }
+              </div>
+          </>
+          : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
+        }
+        </div>
         </div>
         <div className="chatOnline">
           <div className="chatOnlineW">
@@ -504,11 +505,11 @@ return (
                     <Link to={`/users/profile/${o?.userId.userId}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                   <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
                     <div className="chatOnlineImgContainer">
-                     <MyAvatar authCtx={user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
-                        <div className="chatOnlineBadge"></div>
-                      </div>
-                      <span className="chatOnlineName"> {o?.userId.username} </span>
+                      <MyAvatar authCtx={user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
+                       <div className="chatOnlineBadge"></div>
                     </div>
+                    <span className="chatOnlineName"> {o?.userId.username} </span>
+                  </div>
                     { isHeBlocked(o.userId.userId) ?
                       <button className="chatSubmitButton" onClick={() => {setToBlock(getUser(o.userId.userId))}} >
                         <i className="fa fa-unlock" aria-hidden="true"></i>
@@ -551,6 +552,7 @@ return (
         </div>
 
       </div>
+ 
     </>
   )
 }

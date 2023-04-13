@@ -162,10 +162,10 @@ const Scores = () => {
                           
                           <div key={g?.id} className="midPos">
                             <div className='rangAvatar'> 
-                            { secend.id == g.id && <MyAvatar authCtx={authCtx } id={secend.id} style="s" avatar={secend.avatar} ftAvatar={secend.ftavatar}/>  }
+                            { secend.id == g.id && <MyAvatar authCtx={authCtx } id={secend.id} style="m" avatar={secend.avatar} ftAvatar={secend.ftavatar}/>  }
                             { secend.id == g.id &&  <UserChart key={secend?.id}   userName={secend?.username}  h={(getScore(secend))} />}
 
-                            { firts.id == g.id && <MyAvatar authCtx={authCtx } id={firts.id} style="s" avatar={firts.avatar} ftAvatar={firts.ftavatar}/>  }
+                            { firts.id == g.id && <MyAvatar authCtx={authCtx } id={firts.id} style="l" avatar={firts.avatar} ftAvatar={firts.ftavatar}/>  }
                             { firts.id == g.id &&  <UserChart key={firts?.id}   userName={firts?.username}  h={(getScore(firts))}/>}
 
                             { third.id == g.id && <MyAvatar authCtx={authCtx } id={third.id} style="s" avatar={third.avatar} ftAvatar={third.ftavatar}/>  }
