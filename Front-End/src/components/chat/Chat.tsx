@@ -73,8 +73,6 @@ function Chat() {
   // }, []);
 
 
-
-
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////
@@ -134,11 +132,11 @@ function Chat() {
     });
   }, []);
 
-  useEffect(() => {
-    sendMessage("getUsers", users => {
-      setOnlineUsers(users);
-    });
-  })
+  // useEffect(() => {
+  //   sendMessage("getUsers", users => {
+  //     setOnlineUsers(users);
+  //   });
+  // })
 
   useEffect(() => {
     AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
@@ -236,10 +234,6 @@ function Chat() {
 
   useEffect(() => {
     if (allUsers !== undefined && user.userId && fromBlock && fromBlock !== +user.userId) {
-
-//      console.log(fromBlock); console.log(currentDirect);
-//      if (currentDirect && fromBlock === +currentDirect.id) { setCurrentDirect(null); setMessagesD([])};
-
       const i = allUsers.findIndex(userX => +userX.id === +id);
       const j = allUsers.find(userX => +userX.id === +id);
       j?.blockedFrom.push(fromBlock);

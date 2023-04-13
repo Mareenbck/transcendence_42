@@ -104,13 +104,11 @@ export class ChatService {
     };
 
     chatInvite: any = (author: number, player: number,) => {
-        const fromU = this.getUser(author);
         const toU = this.getUser(player);
-        console.log(fromU);
         if (toU) {
             this.server.to(toU.socketId).emit('wasInvited', {
-                from: fromU.userId.userId,
-                to: toU.userId.userId,
+                from: author,
+                to: player,
             });
         };
     };
