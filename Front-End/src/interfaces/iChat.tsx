@@ -15,6 +15,16 @@ export interface RoomMessage {
     createdAt: Date;
 };
 
+export interface Game {
+  id: number;
+  playerOneId: UserScore;
+  playerTwoId: UserScore;
+  winnerId: UserScore;
+  score1: number;
+  score2: number;
+  createdAt: Date;
+};
+
 export interface ChatRoom {
   id: number;
   name:  string;
@@ -32,6 +42,17 @@ export interface UserChat {
   blockedTo: UserChat[];
   blockedFrom: UserChat[];
 	dirMessEmited: DirectMessage[];
+};
+
+export interface UserScore {
+	id: number;
+	username: string;
+	email: string;
+	avatar: string;
+	ftAvatar: string;
+  playerOne: UserScore[];
+  playerTwo: UserScore[];
+	winner: UserScore[];
 };
 
 export interface UserCtx {
