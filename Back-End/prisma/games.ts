@@ -43,7 +43,7 @@ export async function insert_games() {
 	  data: {
 		playerOne: { connect: { id: lucie.id } },
 		playerTwo: { connect: { id: emma.id } },
-		winner: { connect: { id: emma.id } },
+		winner: { connect: { id: lucie.id } },
 		score1: 10,
 		score2: 6,
 	  },
@@ -69,8 +69,11 @@ export async function insert_games() {
 		},
 		playerTwo: {
 		  connect: [{ id: game4.id }]
-		}
-	  }
+		},
+		winner: {
+			connect: [{ id: game1.id }]
+	  	}
+	}
 	})
 
 	await prisma.user.update({
@@ -80,8 +83,11 @@ export async function insert_games() {
 			connect: [{ id: game3.id }, { id: game4.id }, { id: game5.id }]
 		  },
 		playerTwo: {
-		  connect: [{ id: game2.id }]
-		}
+		  connect: [{ id: game1.id }]
+		},
+		winner: {
+			connect: [{ id: game4.id }]
+	  	}
 	  }
 	})
 
@@ -90,7 +96,10 @@ export async function insert_games() {
 	  data: {
 		playerTwo: {
 		  connect: [{ id: game2.id }]
-		}
+		},
+		winner: {
+			connect: [{ id: game2.id }]
+	  	}
 	  }
 	})
 
@@ -99,6 +108,9 @@ export async function insert_games() {
 	  data: {
 		playerTwo: {
 		  connect: [{ id: game3.id }, { id: game5.id }]
+		},
+		winner: {
+			connect: [{ id: game3.id }, { id: game5.id }]
 		}
 	  }
 	})

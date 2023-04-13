@@ -7,16 +7,14 @@ import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
+import {UserScore, Game} from "../interfaces/iChat";
 
 const Scores = () => {
-  //0 Ajout théo 30/03/23
-  const [games, setGames] = useState<any[]>([]);
-  const [allUsers, setAllUsers] = useState <UserDto[]> ([]);
+  const [games, setGames] = useState<Game[]>([]);
+  const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
   const authCtx = useContext(AuthContext);
 
-
-          //aller chercher les games
-
+  //aller chercher les games
   async function fetchGames() {
     try {
       setGames(await Fetch.fetch(authCtx.token, "GET",`game`))
@@ -28,7 +26,7 @@ const Scores = () => {
     fetchGames();
   }, []);
 
-            //aller chercher les users
+  //aller chercher les users
   async function getAllUsers() {
     try {
       setAllUsers(await Fetch.fetch(authCtx.token, "GET", `users\/games`));
@@ -40,25 +38,25 @@ const Scores = () => {
     getAllUsers();
   }, []);
 
-              //score/ user
-  const getNbGames = (user) => {
+  //score/ user
+  const getNbGames = (user: UserScore) => {
     if (games) {
       const p1 = games.filter(u => +u.playerOneId === +user.id);
-      const p2 = games.filter(u => +u.playerOneId === +user.id);
-      return (p1.length + p1.length);
+      const p2 = games.filter(u => +u.playerTwoId === +user.id);
+      return (p2.length + p1.length);
     }
   }
 
-  const getWinner = (user) => {
+  const getWinner = (user: UserScore) => {
     if (games) {
       return (games.filter(u => +u.winnerId === +user.id).length);
     }
   }
 
-  const getScore = (user) => {
+  const getScore = (user: UserScore) => {
     if (games) {
       const p1 = games.filter(u => +u.playerOneId === +user.id);
-      const p2 = games.filter(u => +u.playerOneId === +user.id);
+      const p2 = games.filter(u => +u.playerTwoId === +user.id);
       let total:number = 0;
       if (p1.length > 0) {total = p1.reduce((score, game) => score = score + +game.score1, 0)};
       if (p2.length > 0) {total = total + p2.reduce((score, game) => score = score + +game.score2, 0)};
@@ -85,11 +83,12 @@ const Scores = () => {
     
       <section className= "one">  
           <h1>PONDIUM</h1>
+          
           <section className= "two">
           <form onSubmit={(event) => handleNewGame(event)}>
           {/* <button type="submit" className='add-friend'><i className="fa-solid fa-user-plus"></i></button>*/}
         </form>
-        {/* 
+        { /*
               <div >
                 <table>
                   <thead>
@@ -119,7 +118,7 @@ const Scores = () => {
                   </tbody>
                 </table>
               </div>
-          */}            
+                  */ }            
               <div>
                 
                 <table className='table'>
