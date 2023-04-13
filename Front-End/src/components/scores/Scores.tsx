@@ -157,26 +157,24 @@ const Scores = () => {
             <div className="pos">
                     
               
-                      {  sorted.map( (g) => {
-                        return(
-                          
-                          <div key={g?.id} className="midPos">
-                            <div className='rangAvatar'> 
-                            { secend.id == g.id && <MyAvatar authCtx={authCtx } id={secend.id} style="s" avatar={secend.avatar} ftAvatar={secend.ftavatar}/>  }
-                            { secend.id == g.id &&  <UserChart key={secend?.id}   userName={secend?.username}  h={(getScore(secend))} />}
+              <div className="midPos">
 
-                            { firts.id == g.id && <MyAvatar authCtx={authCtx } id={firts.id} style="s" avatar={firts.avatar} ftAvatar={firts.ftavatar}/>  }
-                            { firts.id == g.id &&  <UserChart key={firts?.id}   userName={firts?.username}  h={(getScore(firts))}/>}
+                    <div className='rangAvatar'>
+                      <UserChart key={secend?.id}   userName={secend?.username}  h={(getScore(secend))}  color="red"/>
+                      <MyAvatar authCtx={authCtx } id={secend.id} style="s" avatar={secend.avatar} ftAvatar={secend.ftavatar}/>
+                    </div>
 
-                            { third.id == g.id && <MyAvatar authCtx={authCtx } id={third.id} style="s" avatar={third.avatar} ftAvatar={third.ftavatar}/>  }
-                            { third.id == g.id &&  <UserChart key={third?.id}   userName={third?.username}  h={(getScore(third))}/>}
-                             
-                            </div>
-                          </div>
-                          
-                        )
-                      })
-                    }
+                    <div className='rangAvatar'>       
+                      <UserChart key={firts?.id}   userName={firts?.username}  h={(getScore(firts))} color={"green"}/>
+                      <MyAvatar authCtx={authCtx } id={firts.id} style="s" avatar={firts.avatar} ftAvatar={firts.ftavatar}/>
+                    </div>
+
+                    <div className='rangAvatar'> 
+                      <UserChart key={third?.id}   userName={third?.username}  h={(getScore(third))} color={"black"}/>
+                      <MyAvatar authCtx={authCtx } id={third.id} style="s" avatar={third.avatar} ftAvatar={third.ftavatar}/> 
+                    </div>
+
+                </div>
 
             </div>  
                 </section>

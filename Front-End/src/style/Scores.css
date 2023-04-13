@@ -15,6 +15,7 @@ body{
 }
 
 .one{
+    width: 100%;
    
 
 }
@@ -28,25 +29,27 @@ body{
     
 }
 
-
+.midPos{
+    
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+}
 
 .pos{
     display: flex;
     flex-direction: row;
-    align-self:self-start;
+   
     margin: 30px;
     align-items: end;
 
 }
 
-.midPos{
-    display:inline;
-    margin: 20px;
-}
+
 
 .rangAvatar{
     display: flex;
-    flex-direction: column;
+    flex-direction:column-reverse;
     align-items: center;
     
 }
@@ -93,4 +96,3 @@ th ,td{
  tr:hover{background-color: #d6d5d5;}
 
 tr:nth-child(even) {background-color: #d4dcf7;}
-

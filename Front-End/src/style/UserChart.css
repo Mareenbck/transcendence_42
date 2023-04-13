@@ -4,7 +4,7 @@
    
     flex-direction:row;
     align-items:center;
-    margin-top: auto;
+    margin-top: 0;
    padding-top: 0;
    align-self: self-end;
 }
