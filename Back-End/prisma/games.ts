@@ -70,9 +70,6 @@ export async function insert_games() {
 		playerTwo: {
 		  connect: [{ id: game4.id }]
 		},
-		winner: {
-			connect: [{ id: game1.id }]
-	  	}
 	}
 	})
 
@@ -85,9 +82,6 @@ export async function insert_games() {
 		playerTwo: {
 		  connect: [{ id: game1.id }]
 		},
-		winner: {
-			connect: [{ id: game4.id }]
-	  	}
 	  }
 	})
 
@@ -97,9 +91,6 @@ export async function insert_games() {
 		playerTwo: {
 		  connect: [{ id: game2.id }]
 		},
-		winner: {
-			connect: [{ id: game2.id }]
-	  	}
 	  }
 	})
 
@@ -109,9 +100,6 @@ export async function insert_games() {
 		playerTwo: {
 		  connect: [{ id: game3.id }, { id: game5.id }]
 		},
-		winner: {
-			connect: [{ id: game3.id }, { id: game5.id }]
-		}
 	  }
 	})
 
