@@ -3,7 +3,10 @@ Back-End/dist
 Back-End/.env
 Back-End/node_modules
 Front-End/node_modules
-Back-End/uploads
+Back-End/uploads/*
+!Back-End/uploads/avatar-Morange.png
+!Back-End/uploads/avatar-Wbleu.jpg
+!Back-End/uploads/avatar-Wred.jpg
 node_modules/
 package-lock.json
 package.json
