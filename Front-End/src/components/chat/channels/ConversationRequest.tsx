@@ -20,7 +20,6 @@ export class ConversationReq {
     catch (err) {
       console.log(err);
     }
-
   };
 
  static async postRoom(user: AuthContext, newConv: any) {
@@ -66,7 +65,6 @@ export class ConversationReq {
       console.log(err)
     }
   }
-
 }
 
 export default ConversationReq;

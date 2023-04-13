@@ -16,10 +16,10 @@ const Scores = () => {
 
 
           //aller chercher les games
-  
+
   async function fetchGames() {
     try {
-      setGames(await Fetch.fetch(authCtx.token, "GET", `game`))
+      setGames(await Fetch.fetch({ token: authCtx.token, method: "GET", endPoint: `game` }))
     } catch (err) {
       console.log(err);
     }
@@ -31,7 +31,7 @@ const Scores = () => {
             //aller chercher les users
   async function getAllUsers() {
     try {
-      setAllUsers(await Fetch.fetch(authCtx.token, "GET", `users/games`));
+      setAllUsers(await Fetch.fetch({ token: authCtx.token, method: "GET", endPoint: `users/games` }));
     } catch (err) {
       console.log(err);
     }

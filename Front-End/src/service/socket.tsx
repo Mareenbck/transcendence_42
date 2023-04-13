@@ -21,18 +21,36 @@ export default function useSocket() {
     if (authCtx.isLoggedIn) {
       return manager.socket('/', { auth: { token: authCtx.token }})
     }
-    return manager.socket('/');
+    // return manager.socket('/');
   }, [authCtx])
 
   const addListener = useMemo<(signal: string, callback: (data: any) => void) => void>
   (() => (signal, message) => {
-    socket.on(signal, message);
+    if (socket)
+      { socket.on(signal, message)} ;
   }, [socket])
 
-  const sendMessage = useMemo<(signal: string, message: unknown) => void>
-  (() => (signal, message) => {
-    socket.emit(signal, message);
-  }, [socket])
+  // const sendMessage = useMemo<(signal: string, message: any) => void>
+  // (() => (signal, message) => {
+  //   if (socket) {
+  //   socket.emit(signal, message)};
+  // }, [socket])
+
+  const sendMessage = useMemo<(signal: string, message: any) => void>
+  (() => {
+      return (signal, message) => {
+        if (socket) {
+          socket.emit(signal, message);
+        }
+      };
+    },
+    [socket]
+  );
+  
+
+
+
+
 
   return [sendMessage, addListener];
 } 
