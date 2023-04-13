@@ -53,3 +53,14 @@ function OptionGame () {
     );
 }
 export default OptionGame;
+
+
+//to={'/game/play'} onClick={() => inviteGame(o?.userId.userId)}>
+
+// const inviteGame = (playerId :number ) => {
+//     console.log(playerId);
+//     sendMessage("InviteGame", {
+//       author: +id,
+//       player: +playerId,
+//     } as Invite);
+//   }

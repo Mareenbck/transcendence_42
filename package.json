@@ -7,6 +7,7 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/material": "^5.11.14",
+    "@prisma/client": "^4.12.0",
     "react-modal": "^3.16.1",
     "reactjs-popup": "^2.0.5"
   }
