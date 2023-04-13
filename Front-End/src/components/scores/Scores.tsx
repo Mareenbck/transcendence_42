@@ -64,11 +64,11 @@ const Scores = () => {
     }
   }
  
-  //allUsers.sort((a:any , b:any) => (a.getScore < b.getScore ? -1 : 1));
+ 
   var sorted = [...allUsers];
-  //console.log('first', sorted);
+  
   sorted.sort((a, b) => (getScore(b) - getScore(a)));
-  //console.log('second',sorted);
+
   
   var firts = sorted[0];
   var secend = sorted[1];
@@ -86,39 +86,9 @@ const Scores = () => {
           
           <section className= "two">
           <form onSubmit={(event) => handleNewGame(event)}>
-          {/* <button type="submit" className='add-friend'><i className="fa-solid fa-user-plus"></i></button>*/}
+         
         </form>
-        { /*
-              <div >
-                <table>
-                  <thead>
-                   <tr>
-                      <th colSpan="2"> The Game List </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Index</td>
-                      <td>Joueur 1</td>
-                      <td>Score</td>
-                      <td>Joueur 2</td>
-                      <td>Score</td>
-                      <td>WINNER</td>
-                    </tr>
-                  { games.map((g) => (
-                    <tr key={g?.id} >
-                      <td>{g?.id}</td>
-                      <td>{g?.playerOne.username}</td>
-                      <td>{g?.score1}</td>
-                      <td>{g?.playerTwo.username}</td>
-                      <td>{g?.score2}</td>
-                      <td>{g?.winner.username}</td>
-                    </tr>
-                  ))}
-                  </tbody>
-                </table>
-              </div>
-                  */ }            
+           
               <div>
                 
                 <table className='table'>
@@ -135,13 +105,7 @@ const Scores = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {/*<tr>
-                      <td>User</td>
-                      <td>Nbre de parties</td>
-                      <td>Nombre total de points</td>
-                      <td>Nombre total de victoires</td>
-                      <td> avatar</td> 
-                  </tr>*/}
+
                   { sorted.map((g) => (
                     <tr key={g?.id} >
                       <td>{g?.username}</td>

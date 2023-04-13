@@ -15,7 +15,7 @@ body{
 }
 
 .one{
-    width: 100%;
+    width: calc(100% - 50px);
    
 
 }
@@ -71,7 +71,8 @@ body{
 
 .thead{
     background-color: rgb(238, 236, 148);
-    
+    color: black;
+ 
 }
 
 th{
