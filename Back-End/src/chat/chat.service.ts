@@ -27,7 +27,6 @@ export class ChatService {
         this.roomUsers = this.roomUsers.filter( room => +room.userId.userId !== +userId.userId);
         this.userChat = this.userChat.filter( user => user.userId.isLoggedIn === true);
         this.roomUsers = this.roomUsers.filter( room => room.userId.isLoggedIn === true);
-        console.log("rrrrrrrrrrrrrrrrrr");
         this.server.sockets.emit('getUsersChat', this.userChat);
     };
 
