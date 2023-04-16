@@ -1,13 +1,27 @@
 
 .combPos{
     display: flex;
-   
     flex-direction:row;
     align-items:center;
-    margin-top: 0;
-   padding-top: 0;
-   align-self: self-end;
+    margin: 0;
+   padding: 0;
+   
 }
+
+@media (min-width: 40rem) {
+    .combPos{
+        display: flex;
+       
+        flex-direction:row;
+        align-items:center;
+        margin-top: 0;
+       padding-top: 0;
+       align-self: self-end;
+    }
+   
+
+}
+
 .cadre{
 
     padding: 40px;
@@ -15,17 +29,42 @@
     padding-left: auto;
     padding-right: auto;
     text-align: center;
-    
+    color: black;
+    font-weight:bold;
     border: 3px solid black;
-    margin: 15px;
+    margin: 2px;
     margin-top: 0;
-    width: 100px;
+    width: 20px;
     direction:initial;
     border-radius: 4%;
     margin-bottom: 2;
     background: linear-gradient(0deg, #003ba5, #84c4e9);
-    color: antiquewhite;
-    font: bold;
+    
+   
+
+}
+
+@media (min-width: 40rem) {
+    .cadre{
+
+        padding: 40px;
+        padding-top: 5px;
+        padding-left: auto;
+        padding-right: auto;
+        text-align: center;
+        color: black;
+        font-weight:bold;
+        border: 3px solid black;
+        margin: 40px;
+        margin-top: 0;
+        width: 100px;
+        direction:initial;
+        border-radius: 4%;
+        margin-bottom: 2;
+        background: linear-gradient(0deg, #003ba5, #84c4e9);
+        
+    
+    }
 
 }
 

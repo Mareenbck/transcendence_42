@@ -12,6 +12,7 @@ import {UserScore, Game} from "../interfaces/iChat";
 const Scores = () => {
   const [games, setGames] = useState<Game[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
+  
   const authCtx = useContext(AuthContext);
 
   //aller chercher les games
@@ -66,23 +67,27 @@ const Scores = () => {
  
  
   var sorted = [...allUsers];
-  
+  //console.log("sorted", sorted);
   sorted.sort((a, b) => (getScore(b) - getScore(a)));
-
-  
-  var firts = sorted[0];
-  var secend = sorted[1];
+  let firts = sorted[0];
+  let second = sorted[1];
   var third = sorted[2];
+  
+  function handleNewGame(event: React.FormEvent<HTMLFormElement>): void {
+    throw new Error('Function not implemented.');
+  }
+  
+ // console.log("wqwretyt", firts?.avatar);
     return(
 
     <>
-   
+   <div >
     <section className= "main">
 
       <SideBar title="Scores" />          
     
       <section className= "one">  
-          <h1>PONDIUM</h1>
+          <h1 className='one_podium'>PODIUM</h1>
           
           <section className= "two">
           <form onSubmit={(event) => handleNewGame(event)}>
@@ -93,9 +98,6 @@ const Scores = () => {
                 
                 <table className='table'>
                   <thead className='thead'>
-                   {/* <tr>
-                      <th colSpan="2"> The hall of fame </th>
-                    </tr> */}
                      <tr>
                       <td>User</td>
                       <td>Nbre de parties</td>
@@ -120,32 +122,33 @@ const Scores = () => {
             </div>
             <div className="pos">
                     
-              
+             
               <div className="midPos">
 
                     <div className='rangAvatar'>
-                      <UserChart key={secend?.id}   userName={secend?.username}  h={(getScore(secend))}  color="red"/>
-                      <MyAvatar authCtx={authCtx } id={secend.id} style="s" avatar={secend.avatar} ftAvatar={secend.ftavatar}/>
+                      <UserChart   userName={second?.username}  h={(getScore(second))} />
+                      <MyAvatar authCtx={authCtx } id={second?.id} style="l" avatar={second?.avatar} ftAvatar={second?.ftavatar}/>
                     </div>
 
                     <div className='rangAvatar'>       
-                      <UserChart key={firts?.id}   userName={firts?.username}  h={(getScore(firts))} color={"green"}/>
-                      <MyAvatar authCtx={authCtx } id={firts.id} style="s" avatar={firts.avatar} ftAvatar={firts.ftavatar}/>
+                      <UserChart   userName={firts?.username}  h={(getScore(firts))} />
+                      <MyAvatar authCtx={authCtx } id={firts?.id} style="l" avatar={firts?.avatar} ftAvatar={firts?.ftavatar}/>
                     </div>
 
                     <div className='rangAvatar'> 
-                      <UserChart key={third?.id}   userName={third?.username}  h={(getScore(third))} color={"black"}/>
-                      <MyAvatar authCtx={authCtx } id={third.id} style="s" avatar={third.avatar} ftAvatar={third.ftavatar}/> 
+                      <UserChart   userName={third?.username}  h={(getScore(third))} color={"black"}/>
+                      <MyAvatar authCtx={authCtx } id={third?.id}  style="l" avatar={third?.avatar} ftAvatar={third?.ftavatar}/> 
                     </div>
+                  
+                  </div>
 
-                </div>
 
-            </div>  
+                  </div>  
                 </section>
             </section>
 
           </section>    
-
+          </div>
 
         </>
     )

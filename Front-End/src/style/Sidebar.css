@@ -4,6 +4,7 @@
     align-items: flex-start;
     background-color: #699BF7;
 	width: 360px;
+	height: 100vh;
     /* height: fit-content; */
 }
 

@@ -271,6 +271,9 @@ export class UserService {
 				},
 			});
 		}
+		else {
+			return null
+		}
 	}
 
   async block(blockFrom: number, blockTo: number) {
