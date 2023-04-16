@@ -25,7 +25,9 @@ export default function MyAccountMenu(props: any) {
 	};
 
 	React.useEffect(() => {
-		authCtx.fetchAvatar(authCtx.userId);
+		if (authCtx.avatar) {
+			authCtx.fetchAvatar(authCtx.userId);
+		}
 	}, [])
 
 	return (

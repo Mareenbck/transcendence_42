@@ -54,16 +54,21 @@ const MyAvatar = (props: any) => {
 	const [avatar, setAvatar] = useState<any>();
 
 	useEffect(() => {
-		if(props.id) {
+		if (props.id) {
 			const fetchData = async () => {
-				const avat: any = await friendCtx.fetchAvatar(props.id);
+				let avat: any = null;
+				if (isMyProfile && authCtx.avatar) {
+					avat = await authCtx.fetchAvatar(authCtx.userId);
+				} else {
+					avat = await friendCtx.fetchAvatar(props.id);
+				}
 				if (avat) {
 					setAvatar(avat);
 				}
 			};
 			fetchData();
 		}
-	}, [props.id, isMyProfile])
+	}, [props.id, isMyProfile, authCtx]);
 
 	useEffect(() => {
 		if (props.style === "m") {
