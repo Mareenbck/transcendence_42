@@ -37,7 +37,6 @@ export class AuthController {
 	@UseGuards(JwtGuard)
 	@HttpCode(200)
 	async logout(@GetUser() user: TwoFaUserDto) {
-		console.log("HELLO")
 		const delogUser = await this.authService.signout(user);
 		return delogUser;
 	}
