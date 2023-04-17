@@ -1,13 +1,5 @@
-import React, { FormEvent, useContext, useEffect, useState } from "react";
-import { FriendContext } from "../../store/FriendshipContext";
-import Friend from '../../interfaces/IFriendship'
-import { AvatarGroup } from '@mui/material';
-import MyAvatar from "../user/Avatar";
-import { Button } from '@mui/material';
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../../store/AuthContext";
-import Achievement from "../../interfaces/IAchievements";
-import Avatar from "../user/Avatar";
 import BadgeIcon from "../utils/BadgeIcon";
 import '../../style/Profile.css';
 import { useParams } from "react-router-dom";
@@ -17,10 +9,22 @@ const ShowAchievements = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const { id } = useParams();
 	const [achievements, setAchievements] = useState<any[]>([]);
+	const isMyProfile = id === authCtx.userId;
+	const [style, setStyle] = useState<string>("l");
+	let nameIconClass = '';
 
 	useEffect(() => {
 		fetchUserAchievements();
+		if (isMyProfile) {
+			setStyle("s");
+		}
 	}, [id])
+
+	if (style === "l") {
+		nameIconClass = "name-icon";
+	} else if (style === "s") {
+		nameIconClass = "name-icon-s";
+	}
 
 	const url = `http://localhost:3000/users/${id}/achievements`;
 	const fetchUserAchievements = async () => {
@@ -64,9 +68,9 @@ const ShowAchievements = (props: any) => {
 		<div className="container-achiev">
 			{achievements.map((achiev) => (
 				<li key={achiev.id}>
-					<div className="name-icon">
+					<div className={nameIconClass}>
 						<h6>{achiev.achievement.name}</h6>
-							<BadgeIcon style="l" src={achiev.achievement.icon} className="badge-icon" description={achiev.achievement.description}/>
+						<BadgeIcon style={style} src={achiev.achievement.icon} className="badge-icon" description={achiev.achievement.description}/>
 					</div>
 				</li>
 			))}

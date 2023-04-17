@@ -50,7 +50,9 @@ const Card = (props: any) => {
 	return (
 		<>
 			<div className={`card ${menuCardClass}`} style={styles}>
-				<TitleCard style={titleStyle} color={color} title={props.title} type={props.type} friendCtx={props.friendCtx} authCtx={props.authCtx}></TitleCard>
+			{props.style !== "none" ? (
+				<TitleCard style={titleStyle} color={color} title={props.title} type={props.type} friendCtx={props.friendCtx} authCtx={props.authCtx}></TitleCard>)
+				 : null}
 				{content}
 			</div>
 		</>

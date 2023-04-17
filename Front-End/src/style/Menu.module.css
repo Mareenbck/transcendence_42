@@ -7,15 +7,15 @@
 
 .mainPos
 {
-    float: left;
+    /* float: left; */
     display: flex;
     flex-direction: row;
     top: 0;
     left: 0;
-    width: 100vh;
+    /* width: 100vh; */
     height: 100vh;
     transition: all 0.5s ease;
-   margin-left: initial;
+   /* margin-left: initial; */
 }
 
 

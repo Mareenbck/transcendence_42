@@ -8,7 +8,7 @@ import { FriendContext } from '../../store/FriendshipContext';
 import ProfileCard from './ProfileCard';
 import Card from '../utils/Card';
 
-const MyProfile = () => {
+const MyProfile = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const friendCtx = useContext(FriendContext);
 	const isLoggedIn = authCtx.isLoggedIn;
@@ -18,10 +18,13 @@ const MyProfile = () => {
 			<div className={style.mainPos}>
 				<SideBar title="Profile" />
 				<div className='container-profile'>
-					<ProfileCard authCtx={authCtx} ></ProfileCard>
+					<div className='achievement-card'>
+						<ProfileCard authCtx={authCtx} ></ProfileCard>
+						<Card color='green' title="Achievements" type="achiev" width="140px" height="270px" id={props.id} style="none"></Card>
+					</div>
 					<Card color='blue' title="My Level" icon="level" type="stats" height="270px" width="355px"></Card>
 					<Card color='red' title="My Rank" icon="rank" type="stats" height="270px" width="355px"></Card>
-					<Card color='green' title="My Friends" type="showFriends" width="355px" friendCtx={friendCtx} authCtx={authCtx} height="auto"></Card>
+					<Card color='green' title="My Friends" type="showFriends" width="400px" friendCtx={friendCtx} authCtx={authCtx} height="auto"></Card>
 					<div className='card-wrapper'>
 						<Card color='yellow' title="Match History" type="match" width="100%"></Card>
 					</div>
