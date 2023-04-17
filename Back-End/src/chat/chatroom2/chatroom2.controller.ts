@@ -56,5 +56,26 @@ export class Chatroom2Controller {
   //   return await this.prismaService.chatroom.deleteChatroom(id);
   // }
 
+	@Post('/ask_join')
+	@UseGuards(JwtGuard)
+	async openFriendship(@Body() id: any, @GetCurrentUserId() userId: string) {
+		//creation d une demande d'acces dans database
+		const { channelId } = id;
+		const newDemand = await this.chatRoomService.openDemand(parseInt(userId), channelId);
+		console.log("newDemand--->");
+		console.log(newDemand);
+		return newDemand;
+	}
+
+	@Post('/pending_demand')
+	@UseGuards(JwtGuard)
+	async getReceived(@GetCurrentUserId() userId: string){
+
+		const demands = await this.chatRoomService.getReceivedDemands(parseInt(userId));
+		console.log("received pending demands--->")
+		console.log(demands)
+		return demands;
+	}
+
 }
 

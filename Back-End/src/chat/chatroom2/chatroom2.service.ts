@@ -100,4 +100,34 @@ export class ChatroomService {
 		return true;
 	}
 
+
+	async openDemand(userId: number, channelId: number) {
+		const demand = await this.prisma.channelRequest.create({
+			data: {
+				userId: userId,
+				channelId: channelId,
+			},
+		});
+		return demand
+	}
+
+
+	async getReceivedDemands(userId: number) {
+		try {
+			// const user = await this.userService.getUser(userId);
+			const demands = await this.prisma.channelRequest.findMany({
+			where: {
+				userId: userId,
+			},
+			include: {
+				channel: true,
+			},
+		})
+			return demands;
+		} catch (error) {
+			throw new BadRequestException('getReceivedFriendships error : ' + error);
+		}
+	}
+
+
 }

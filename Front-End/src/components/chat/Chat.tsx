@@ -60,13 +60,13 @@ function Chat() {
   //   const handleTabClose = () => {
   //     // Déconnecter l'utilisateur
   //     sendMessage("removeUserChat", user as UserCtx);
-      
+
   //     // Afficher un message de confirmation à l'utilisateur
   //     return "Voulez-vous vraiment quitter la page ?";
   //   };
-  
+
   //   window.addEventListener("beforeunload", handleTabClose);
-  
+
   //   return () => {
   //     window.removeEventListener("beforeunload", handleTabClose);
   //   };
@@ -84,7 +84,7 @@ function Chat() {
       content: data.content,
       createdAt: Date.now(),
     }))
-    
+
     addListener("getMessageDirect", (data)=> setAMessageD({
       content: data.content,
       author: data.author,
@@ -252,7 +252,7 @@ function Chat() {
 
   useEffect(() => {
     if (toBlock)
-    { 
+    {
       sendMessage("toBlock", {
         blockTo: +toBlock.id,
         blockFrom: +id,
@@ -335,7 +335,7 @@ function Chat() {
   function isHeBlocked(userXid: number): true | undefined {
     const i = getUser(userXid);
     if (i && i.blockedFrom && !i?.blockedFrom.find((u: UserChat) => (+id === +u?.id)) && !i.blockedFrom.find((i: number) => (+id === +i))) {
-       return (true); 
+       return (true);
     };
   }
 
@@ -344,7 +344,7 @@ function Chat() {
     if (gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u: number) => +userX.userId === +u) === undefined ))
     {
       if ((userX.blockedFrom.find((u: UserChat) => +u.id === +id) === undefined) && (userX.blockedFrom.find((u: number) => +u === +id) === undefined))
-      { 
+      {
         console.log(userX);
         setCurrentDirect(userX);
         setCurrentChat(null);
@@ -387,7 +387,7 @@ function Chat() {
     } catch(err) {console.log(err)}
   }
 
-  
+
 // Direct message
   const handleSubmitD = async (e: FormEvent)=> {
     e.preventDefault();
@@ -438,12 +438,14 @@ return (
   <>
   {" "}
   <div className="messenger">
-    <div className="chatMenu"><UpdateChannelsInList
-      currentChat={currentChat}
-      currentDirect={currentDirect}
-      setCurrentChat={setCurrentChat}
-      setCurrentDirect={setCurrentDirect}
-    /></div>
+	<div className="chatMenu">
+		<UpdateChannelsInList
+		currentChat={currentChat}
+		currentDirect={currentDirect}
+		setCurrentChat={setCurrentChat}
+		setCurrentDirect={setCurrentDirect}
+		/>
+	</div>
     <div className="chatBox">
       <div className="chatBoxW">
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
@@ -481,7 +483,7 @@ return (
                 <textarea className="chatMessageInput" placeholder="write something..."
                     onChange={(e) => setNewMessageD(e.target.value)} value={newMessageD}
                 ></textarea>
-                { currentChat 
+                { currentChat
                 ?  <><button className="chatSubmitButton" onClick={handleSubmit}> Send </button></>
                 : <><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></> }
               </div>
@@ -547,7 +549,7 @@ return (
         </div>
 
       </div>
- 
+
     </>
   )
 }
