@@ -18,6 +18,7 @@ import Channels from './channels/Channels';
 import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
+import UsersOnChannel from './channels/UsersOnChannel';
 
 function Chat() {
   const user = useContext(AuthContext);

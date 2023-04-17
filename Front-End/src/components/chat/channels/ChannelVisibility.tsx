@@ -95,7 +95,6 @@ export default function ChannelVisibility(props: any) {
     return icon;
   }
 
-  
   const joinChannel = async (e: FormEvent, channelId: number, token: string) => {
 	e.preventDefault();
 	const password = passwordInputRef.current?.value;
@@ -112,21 +111,15 @@ export default function ChannelVisibility(props: any) {
         hash: password,
 		  }),
 		});
-		console.log("RESPONSE =---->", resp)
-		console.log("CHANNEL ID DANS LE FETCH", channelId)
-		console.log("USERID DANS LE FETCH", userContext.userId)
-		console.log("HASH DANS LE FETCH", password)
 		if (!resp.ok) {
 		  const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
 		  throw new Error(message);
 		}
 		const data = await resp.json();
-		console.log("DATA IN JOIN")
-		console.log(data);
 	  } catch(err) {
 		console.log(err)
 	  }
-	setOpenJoinModal(false);
+	  setOpenJoinModal(false);
   }
   
 

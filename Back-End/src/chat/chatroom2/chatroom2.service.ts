@@ -24,12 +24,10 @@ export class ChatroomService {
         visibility = UserChannelVisibility.PWD_PROTECTED;
       }
 
-      console.log("au dessus du hash")
       let hash: string = "";
       if (visibility == UserChannelVisibility.PWD_PROTECTED) {
         hash = await argon.hash(password ?? '');
       }
-      console.log("hash service --->", hash)
 
       const newChannel = await this.prisma.chatroom.create({
         data: {
@@ -38,7 +36,6 @@ export class ChatroomService {
           hash: hash,
         },
       });
-      // console.log("newChannel----->", newChannel);
       const userOnChannel = await this.prisma.userOnChannel.create({
         data: {
           channelId: newChannel.id,
@@ -71,7 +68,6 @@ export class ChatroomService {
 	async createUserTable(ids: any, hash: string) {
 		const { userId, channelId } = ids;
 		if (hash) {
-			console.log("DANS LE IF DU CREATE USER TABLE")
 			await this.validatePassword(channelId, hash);
 		}
 		try {
@@ -99,5 +95,14 @@ export class ChatroomService {
 		}}
 		return true;
 	}
+
+  async getParticipants(channelId: number) {
+    const channel = await this.prisma.chatroom.findUnique({
+      where: { channelId: channelId },
+    });
+    console.log("CHANNEL IN GET PARTICIPANTS", channel);
+    return channel.participants;
+  }
+  
 
 }

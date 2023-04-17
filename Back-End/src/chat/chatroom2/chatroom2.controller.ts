@@ -5,6 +5,7 @@ import { ChatroomService } from './chatroom2.service';
 import { JwtGuard} from 'src/auth/guard';
 import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
 import { UserService } from 'src/user/user.service';
+
 @Controller('chatroom2/')
 export class Chatroom2Controller {
   constructor(private chatRoomService: ChatroomService,
@@ -13,10 +14,7 @@ export class Chatroom2Controller {
 	@Post()
 	@UseGuards(JwtGuard)
 	async create( @Body() newConv: any, @GetCurrentUserId() userId: string): Promise<CreateChatroomDto> {
-		// console.log("newConv--->")
-		// console.log(newConv)
 		const newChannel = await this.chatRoomService.create(newConv, parseInt(userId));
-
     if (newChannel) {
 			await this.userService.updateAchievement(parseInt(userId), 'Federator')
 		}
@@ -40,16 +38,16 @@ export class Chatroom2Controller {
   @Get('userTable/:id/:channelId')
   async getUserTable(@Param('id') id: string, @Param('channelId') channelId:string) {
     const response = await this.chatRoomService.getUserTable(parseInt(id), parseInt(channelId));
-    // console.log("channelId controller get", channelId)
-    // console.log("response usertable");
-    // console.log(response);
     return response;
   }
 
-  // @Post('/:channelId/password')
-  // // @UseGuards(JwtGuard)
-  // async
-
+  @Get(':channelId/participants')
+  async getParticipants(@Param('channelId') channelId: string) {
+    const participants = await this.chatRoomService.getParticipants(parseInt(channelId))
+    console.log("Participants in controller----->", participants)
+    return participants;
+  }
+  
 
   // @Post(':id/delete')
   // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {
