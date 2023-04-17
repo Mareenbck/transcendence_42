@@ -8,34 +8,32 @@ import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
 export class Chatroom2Controller {
   constructor(private chatRoomService: ChatroomService) {}
 
-  @Post()
-  @UseGuards(JwtGuard)
-  async create( @Body() newConv: any, @GetCurrentUserId() userId: string): Promise<CreateChatroomDto> {
-      // console.log("DANS LE CONTROLLER DE CREATE")
-      const newChannel = await this.chatRoomService.create(newConv, parseInt(userId));
-      // console.log("NEW CHANNEL CONTROLLER ", newChannel.id)
-    return newChannel;
-  }
+	@Post()
+	@UseGuards(JwtGuard)
+	async create( @Body() newConv: any, @GetCurrentUserId() userId: string): Promise<CreateChatroomDto> {
+		console.log("newConv--->")
+		console.log(newConv)
+		const newChannel = await this.chatRoomService.create(newConv, parseInt(userId));
+		// console.log("NEW CHANNEL CONTROLLER ", newChannel.id)
+		console.log("newChannel--->")
+		console.log(newChannel)
+		return newChannel;
+	}
 
-  @Post('join')
-  // @UseGuards(JwtGuard)
-  async createUserTable(@Body() { userId, channelId, hash }: { userId: number, channelId: number, hash?: string }) {
-    console.log("EST DANS LE CONTROLLER JOIN")
-    // console.log("channelID dans controller", channelId)
-    // console.log("hash dans le controller", hash);
-    const newUserTable = await this.chatRoomService.createUserTable({ userId, channelId }, hash);
-    // console.log("NEW USER TABLE", newUserTable)
-    // console.log("password controller", hash)
-    return newUserTable;
-  }
-  
+	@Post('join')
+	// @UseGuards(JwtGuard)
+	async createUserTable(@Body() { userId, channelId, hash }: { userId: number, channelId: number, hash?: string }) {
+		const newUserTable = await this.chatRoomService.createUserTable({ userId, channelId }, hash);
+		return newUserTable;
+	}
+
 
   @Get()
   @UseGuards(JwtGuard)
   async findAll(): Promise<CreateChatroomDto[]> {
     return await this.chatRoomService.findAll();
   };
-  
+
   @Get('userTable/:id/:channelId')
   async getUserTable(@Param('id') id: string, @Param('channelId') channelId:string) {
     const response = await this.chatRoomService.getUserTable(parseInt(id), parseInt(channelId));
@@ -47,8 +45,8 @@ export class Chatroom2Controller {
 
   // @Post('/:channelId/password')
   // // @UseGuards(JwtGuard)
-  // async 
-  
+  // async
+
 
   // @Post(':id/delete')
   // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {

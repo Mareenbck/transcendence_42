@@ -10,7 +10,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 function PopUp(props: any) {
 
-    const authCtx = useContext(AuthContext);    
+    const authCtx = useContext(AuthContext);
     const [isPublic, setIsPublic] = useState(true);
     const [isPrivate, setIsPrivate] = useState(false);
     const [isProtected, setIsProtected] = useState(false);
@@ -32,6 +32,11 @@ function PopUp(props: any) {
 
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
+        console.log("passwordInputRef--->")
+        console.log(passwordInputRef.current!.value)
+        // const password = passwordInputRef.current!.value;
+        // console.log("password--->")
+        // console.log(password)
         if (channelName === "") {
           return;
         }
@@ -40,14 +45,15 @@ function PopUp(props: any) {
             isPublic: isPublic,
             isPrivate: isPrivate,
             isProtected: isProtected,
+            password:  passwordInputRef.current!.value,
         };
         try {
             const res = await ConversationReq.postRoom(user, newConv);
-        } catch (err) { 
+        } catch (err) {
             console.log(err);
         }
     };
-    
+
     const createAndClose = async (e:FormEvent) => {
         try {
             await createNewChannel(e);
@@ -58,7 +64,7 @@ function PopUp(props: any) {
         }
 
     }
-    
+
     const handleFormSubmit = (e:FormEvent) => {
         e.preventDefault();
         setShowPopUp(false);
@@ -70,7 +76,7 @@ function PopUp(props: any) {
     // console.log("PASSWORD DANS POP UP")
     // console.log(passwordInputRef)
 
-      
+
 // aller voir le inputRef={usernameInputRef} pour apres IN TEXT FIELDS
 return (
     <div className='popup-overlay'>
@@ -84,7 +90,7 @@ return (
             </label>
             <div className='content-button'>
                 <p>{props.message}</p>
-              
+
                 <label className='wrap-circle'>
                     <input
                         className='circle'
@@ -131,11 +137,11 @@ return (
                             setIsPublic(true);
                             setIsPrivate(false);
                             setIsProtected(false);
-                        }} 
+                        }}
                     />
                     Public
                 </label>
-                
+
             </div>
             <footer className='actions'>
                 <button type='submit' onSubmit={handleFormSubmit} onClick={createAndClose}>OK</button>

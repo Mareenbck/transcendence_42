@@ -23,31 +23,32 @@ export class ConversationReq {
 
   };
 
- static async postRoom(user: AuthContext, newConv: any) {
-    try {
-      const resp = await fetch(`http://localhost:3000/chatroom2`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(newConv),
-      });  
-      if (!resp.ok) {
-        const message = `An error has occurred: ${resp.status} - ${resp.statusText}`;
-        throw new Error(message);
-      }
-      const data = await resp.json(); 
-      console.log("DATA DANS POSTROOM", data);
-      return data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+	static async postRoom(user: AuthContext, newConv: any) {
+		console.log("newConv--->")
+		console.log(newConv)
+		try {
+			const resp = await fetch(`http://localhost:3000/chatroom2`, {
+				method: "POST",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${user.token}`,
+				},
+				body: JSON.stringify(newConv),
+			});
+			if (!resp.ok) {
+				const message = `An error has occurred: ${resp.status} - ${resp.statusText}`;
+				throw new Error(message);
+			}
+			const data = await resp.json();
+			return data;
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
   // static async joinTable(channelId: number, token: string, userId: number, hash: string) {
   //   try {
-      
+
   //     const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
   //       method: "POST",
   //       headers: {
@@ -55,7 +56,7 @@ export class ConversationReq {
   //         Authorization: `Bearer ${token}`,
   //       },
   //       body: JSON.stringify({
-  //         channelId: channelId, 
+  //         channelId: channelId,
   //         userId: userId,
   //         hash: hash,
   //       }),
