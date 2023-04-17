@@ -77,4 +77,19 @@ export class GameService {
 	}
 
 
+///////////////////////////
+refuseGame: any = (author: UserDto, player: UserDto,) => {
+	console.log("///////// GAME REFUSAL");
+	console.log(player.username);
+	console.log("///////// refuses challenge from");
+	console.log(author.username);	
+};
+
+acceptGame:any = (author: UserDto, player: UserDto,) => {
+	console.log("///////// GAME ACCEPT");
+	console.log(player.username);
+	console.log("///////// accepts challenge from");
+	console.log(author.username);
+};
+
 }

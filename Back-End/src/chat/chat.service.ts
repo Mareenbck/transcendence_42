@@ -2,6 +2,8 @@ import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Server, Socket } from "socket.io";
 import UsersSockets from "src/gateway/socket.class";
+import { UserDto } from "src/user/dto/user.dto";
+import { UserChannelVisibility } from '@prisma/client';
 
 @Injectable()
 export class ChatService {
@@ -72,10 +74,20 @@ export class ChatService {
         }
     };
 
-    sendConv:any = (author: number, content: string) => {
+    sendConv:any = (name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean) => {
+        console.log("qdsqsdqsdqds", name)
+        let visibility: UserChannelVisibility;
+        if (isPrivate) {
+          visibility = UserChannelVisibility.PRIVATE;
+        } else if (isPublic) {
+          visibility = UserChannelVisibility.PUBLIC;
+        } else if (isProtected) {
+          visibility = UserChannelVisibility.PWD_PROTECTED;
+        }
         for(const user of this.userChat) {
             this.server.to(user.socketId).emit('getConv', {
-                content,
+                name: name,
+                visibility: visibility
             });
         }
     };
@@ -102,16 +114,7 @@ export class ChatService {
         }
     };
 
-    chatInvite: any = (author: number, player: number,) => {
-        const toU = this.getUser(player);
-        if (toU) {
-            this.server.to(toU.socketId).emit('wasInvited', {
-                from: author,
-                to: player,
-            });
-        };
+    chatInvite: any = (author: UserDto, player: UserDto,) => {
+        this.userSockets.emitToUser(player.username, 'wasInvited', author);
     };
 }
-
-
-    

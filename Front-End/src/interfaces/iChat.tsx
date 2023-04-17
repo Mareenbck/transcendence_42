@@ -1,6 +1,6 @@
 export interface DirectMessage 
 {
-    id: number;
+  //  id: number;
     content  : string;
     author    : number;
     receiver  : number;
@@ -8,7 +8,7 @@ export interface DirectMessage
 }
 
 export interface RoomMessage {
-    id: number;
+   // id: number;
     chatroomId: number;
     content:  string;
     authorId: number;
@@ -66,8 +66,8 @@ export interface UserCtx {
 }
 
 export interface Invite {
-    authorId: number;
-    playerId: number;
+    author: UserChat;
+    player: UserChat;
 };
 
 export interface UserInRoom {

@@ -15,7 +15,7 @@ import React from 'react';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
 import Channels from './channels/Channels';
-import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../interfaces/iChat";
+import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
 
@@ -23,12 +23,12 @@ function Chat() {
   const user = useContext(AuthContext);
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<UserChat[]> ([]);
-  const [AMessageD, setAMessageD] = useState<DirectMessage> (null);
-  const [AMessageChat, setAMessageChat] = useState<RoomMessage> (null);
+  const [AMessageD, setAMessageD] = useState<DirectMessage | null> (null);
+  const [AMessageChat, setAMessageChat] = useState<RoomMessage | null> (null);
   const [AConversation, setAConversation] = useState (null);
   const [conversations, setConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState<ChatRoom> (null);
-  const [currentDirect, setCurrentDirect] = useState<UserChat | UserCtx> (null);
+  const [currentChat, setCurrentChat] = useState<ChatRoom | null> (null);
+  const [currentDirect, setCurrentDirect] = useState<UserChat | UserCtx | null> (null);
   const [messages2, setMessages2] = useState<RoomMessage[]> ([]);
   const [messagesD, setMessagesD] = useState<DirectMessage[]> ([]);
   const [newMessage2, setNewMessage2] = useState<string> ("");
@@ -43,36 +43,6 @@ function Chat() {
   const [sendMessage, addListener] = useSocket()
   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 
-// useEffect(() => {
-//     const handleTabClose = event => {
-//       event.preventDefault();
-//       console.log('beforeunload event triggered');
-//       return (event.returnValue =
-//         'Are you sure you want to exit?');
-//     };
-//     window.onbeforeunload, handleTabClose;
-//     return () => {
-//       window.removeEventListener('beforeunload', handleTabClose);
-//     };
-//   }, []);
-
-  // useEffect(() => {
-  //   const handleTabClose = () => {
-  //     // Déconnecter l'utilisateur
-  //     sendMessage("removeUserChat", user as UserCtx);
-      
-  //     // Afficher un message de confirmation à l'utilisateur
-  //     return "Voulez-vous vraiment quitter la page ?";
-  //   };
-  
-  //   window.addEventListener("beforeunload", handleTabClose);
-  
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleTabClose);
-  //   };
-  // }, []);
-
-
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////
@@ -82,14 +52,14 @@ function Chat() {
       authorId: data.authorId,
       chatroomId: data.chatroomId,
       content: data.content,
-      createdAt: Date.now(),
+      createdAt: new Date(Date.now()),
     }))
     
     addListener("getMessageDirect", (data)=> setAMessageD({
       content: data.content,
       author: data.author,
       receiver: data.receiver,
-      createdAt: Date.now(),
+      createdAt: new Date(Date.now()),
     }));
   });
 
@@ -114,9 +84,24 @@ function Chat() {
 
   useEffect(() => {
     addListener("wasInvited", data => {
-      setInvited(getUser(data.from));
+      console.log(data);
+      setInvited(data);
     });
   });
+
+  // const acceptGame = (playerU :UserChat , trigger: UserChat) => {
+  //   sendMessage("acceptGame", {
+  //     author: trigger,
+  //     player: playerU,
+  //   } as Invite);
+  // }
+  
+  // const refuseGame = (playerU :UserChat , trigger: UserChat) => {
+  //   sendMessage("refuseGame", {
+  //     author: (trigger),
+  //     player: (playerU),
+  //   } as Invite);
+  // }
 
   useEffect(() => {
     addListener("wasBlocked", data => {
@@ -341,7 +326,7 @@ function Chat() {
 
   const getDirect = (userX: UserChat | UserCtx): void => {
     const gUser = getUser(+id);
-    if (gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u: number) => +userX.userId === +u) === undefined ))
+    if (userX && gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u: number) => +userX.userId === +u) === undefined ))
     {
       if ((userX.blockedFrom.find((u: UserChat) => +u.id === +id) === undefined) && (userX.blockedFrom.find((u: number) => +u === +id) === undefined))
       { 
@@ -355,8 +340,8 @@ function Chat() {
   const inviteGame = (playerId :number ) => {
     console.log(playerId);
     sendMessage("InviteGame", {
-      author: +id,
-      player: +playerId,
+      author: getUser(+id),
+      player: getUser(+playerId),
     } as Invite);
   }
 
@@ -392,10 +377,6 @@ function Chat() {
   const handleSubmitD = async (e: FormEvent)=> {
     e.preventDefault();
     const r = currentDirect?.userId ? +currentDirect?.userId : +currentDirect?.id;
-
-///////// bloquer en cas de blocked.
-
-
     const messageD = {
       author: +id,
       content: newMessageD,
@@ -447,7 +428,7 @@ return (
     <div className="chatBox">
       <div className="chatBoxW">
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
-        <PopupChallenge trigger={invited} setTrigger={setInvited} > <h3></h3></PopupChallenge>
+        <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
         { currentChat ?
           <>
           <div className="chatBoxTop">

@@ -105,8 +105,8 @@ console.log(socket.handshake.auth.token);
   { this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  }
 
   @SubscribeMessage('sendConv')
-  async chatSendConversation(@MessageBody() content: string, @ConnectedSocket() socket: Socket,): Promise<void> 
-  { this.chatService.sendConv(content) };
+  async chatSendConversation(@MessageBody() data: {name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.chatService.sendConv(data.name, data.isPublic, data.isPrivate, data.isProtected) };
 
   @SubscribeMessage('toBlock')
   async chatBlock(@MessageBody() data: {blockFrom: number, blockTo: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
@@ -117,6 +117,14 @@ console.log(socket.handshake.auth.token);
   { this.chatService.chatUnblock(data.blockFrom, data.blockTo,)  };
 
   @SubscribeMessage('InviteGame')
-  async chatInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  async chatInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
   { this.chatService.chatInvite(data.author, data.player,) };
+  
+  @SubscribeMessage('acceptGame')
+  async gameAccept(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.gameService.acceptGame(data.author, data.player,) };
+
+  @SubscribeMessage('refuseGame')
+  async gameRefuse(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.gameService.refuseGame(data.author, data.player,) };
 }
