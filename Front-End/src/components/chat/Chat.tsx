@@ -343,8 +343,12 @@ function Chat() {
     const gUser = getUser(+id);
     if (gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u: number) => +userX.userId === +u) === undefined ))
     {
-      setCurrentDirect(userX);
-      setCurrentChat(null);
+      if ((userX.blockedFrom.find((u: UserChat) => +u.id === +id) === undefined) && (userX.blockedFrom.find((u: number) => +u === +id) === undefined))
+      { 
+        console.log(userX);
+        setCurrentDirect(userX);
+        setCurrentChat(null);
+      }
     }
   }
 
