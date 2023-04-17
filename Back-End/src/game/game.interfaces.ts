@@ -1,6 +1,8 @@
+import { Server, Socket } from "socket.io";
+
 export interface profile{
-	socketId: any; //socketId: any [];
-	userId: any;
+	socket: Socket; // socketId: any //socketId: any [];
+	user: any; //userId: any
 }
 
 export interface player{
@@ -32,7 +34,11 @@ export interface gameInit {
 }
 
 
-
+export interface roomsList{
+	roomN: number;
+	playerR: profile;
+	playerL: profile;
+}
 
 
 // export interface IGameState {

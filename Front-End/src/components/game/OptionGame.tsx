@@ -20,11 +20,11 @@ import { UserChat } from '../../interfaces/iChat'
 function OptionGame () {
     const user = useContext(AuthContext);
     const id = user.userId;
-    const [onlineUsers, setOnlineUsers] = useState<UserChat[]> ([]);
-
     const [activeLink, setActiveLink] = useState('');
+
     const location = useLocation();
     const [sendMessage, addListener] = useSocket()
+    const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
 
     useEffect(() => {
         setActiveLink(location.pathname);
@@ -40,8 +40,8 @@ function OptionGame () {
     const [clicked, setClicked] = useState(false);
   
     const handleClick = () => {
-      sendMessage("playGame", user as any);
-console.log('playGame sendMessage');
+      sendMessage("playGame", user);
+console.log('playGame sendMessage', user);
       setClicked(true);
     };
 

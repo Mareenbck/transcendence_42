@@ -24,7 +24,7 @@ const ballR = GameParams.BALL_RADIUS;
 let period = GameParams.PERIOD
 
 
-export class Game {
+export class Games {
 
 
 // initialization of players (L - left, R - right)
@@ -52,7 +52,7 @@ export class Game {
 	private server: Server;
 	private room: string;
 	private prismaService: PrismaService;
-	private gameService: GameService;
+	// private gameService: GameService;
 
 
 
@@ -61,13 +61,13 @@ export class Game {
 		room: string,
 		prismaService: PrismaService,
 		//spectatorSockets: any[]
-		gameService: GameService
+		// gameService: GameService
 	) {
 console.log("constructor Class.game");
 		this.server = server;
 		// this.room = room;
 		this.prismaService = prismaService;
-		this.gameService = gameService;
+		// this.gameService = gameService;
 	}
 	prisma = new PrismaClient()
 
@@ -176,9 +176,11 @@ console.log("constructor Class.game");
 		this.playerR.profile = idPlayerR;
 		this.playerL.profile = idPlayerL;
 		this.isrunning = true;
-		const socketR = this.server.sockets.sockets.get(idPlayerR.socketId);
 
-		const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
+		// const socketR = this.server.sockets.sockets.get(idPlayerR.socketId);
+		// const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
+		const socketR = this.playerR.profile.socket;
+		const socketL = this.playerL.profile.socket;; 	
 //console.log("socketR", socketR.id);
 //console.log("socketL", socketL.id);		
 
@@ -236,14 +238,14 @@ console.log("constructor Class.game");
 //handling disconection
 		socketR?.on('disconect', () => {
 	console.log("playerR disconect");
-			this.player_disconect(this.playerL.profile.userId);
+			this.player_disconect(this.playerL.profile.user.userId);
 			clearInterval(this.interval);
 			this.isrunning = false;
 		})
 
 		socketL?.on('disconect', () => {
 	console.log("playerL disconect");
-			this.player_disconect(this.playerR.profile.userId);
+			this.player_disconect(this.playerR.profile.user.userId);
 			clearInterval(this.interval);
 			this.isrunning = false;
 		})
@@ -256,7 +258,7 @@ console.log("constructor Class.game");
 			if ((this.playerL.score >= 2 || this.playerR.score >= 2)){ //score MAX - change here
 
 				this.isrunning = false;
-				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.profile.userId : this.playerR.profile.userId;
+				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.profile.user : this.playerR.profile.user;
 				this.player_disconect(this.winner);
 				clearInterval(this.interval);
 
@@ -277,9 +279,9 @@ console.log("constructor Class.game");
 						this.prisma.game.create({
 							data: {
 								playerOne: {
-									connect: {id: this.playerR.profile.userId.userId}},
+									connect: {id: this.playerR.profile.user.userId}},
 								playerTwo: {
-									connect: {id: this.playerL.profile.userId.userId}},
+									connect: {id: this.playerL.profile.user.userId}},
 								winner: {
 									connect: { id: this.winner.userId}},
 									score1: this.playerR.score,
