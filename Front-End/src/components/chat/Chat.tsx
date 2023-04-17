@@ -43,36 +43,6 @@ function Chat() {
   const [sendMessage, addListener] = useSocket()
   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 
-// useEffect(() => {
-//     const handleTabClose = event => {
-//       event.preventDefault();
-//       console.log('beforeunload event triggered');
-//       return (event.returnValue =
-//         'Are you sure you want to exit?');
-//     };
-//     window.onbeforeunload, handleTabClose;
-//     return () => {
-//       window.removeEventListener('beforeunload', handleTabClose);
-//     };
-//   }, []);
-
-  // useEffect(() => {
-  //   const handleTabClose = () => {
-  //     // Déconnecter l'utilisateur
-  //     sendMessage("removeUserChat", user as UserCtx);
-      
-  //     // Afficher un message de confirmation à l'utilisateur
-  //     return "Voulez-vous vraiment quitter la page ?";
-  //   };
-  
-  //   window.addEventListener("beforeunload", handleTabClose);
-  
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleTabClose);
-  //   };
-  // }, []);
-
-
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////
@@ -114,23 +84,24 @@ function Chat() {
 
   useEffect(() => {
     addListener("wasInvited", data => {
-      setInvited(data.author);
+      console.log(data);
+      setInvited(data);
     });
   });
 
-  const acceptGame = (playerU :UserChat , trigger: UserChat) => {
-    sendMessage("acceptGame", {
-      author: trigger,
-      player: playerU,
-    } as Invite);
-  }
+  // const acceptGame = (playerU :UserChat , trigger: UserChat) => {
+  //   sendMessage("acceptGame", {
+  //     author: trigger,
+  //     player: playerU,
+  //   } as Invite);
+  // }
   
-  const refuseGame = (playerU :UserChat , trigger: UserChat) => {
-    sendMessage("refuseGame", {
-      author: (trigger),
-      player: (playerU),
-    } as Invite);
-  }
+  // const refuseGame = (playerU :UserChat , trigger: UserChat) => {
+  //   sendMessage("refuseGame", {
+  //     author: (trigger),
+  //     player: (playerU),
+  //   } as Invite);
+  // }
 
   useEffect(() => {
     addListener("wasBlocked", data => {
@@ -457,7 +428,7 @@ return (
     <div className="chatBox">
       <div className="chatBoxW">
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
-        <PopupChallenge trigger={invited} setTrigger={setInvited} player={(getUser(+id))} > <h3></h3></PopupChallenge>
+        <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
         { currentChat ?
           <>
           <div className="chatBoxTop">

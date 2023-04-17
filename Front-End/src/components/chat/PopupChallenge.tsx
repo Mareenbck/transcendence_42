@@ -4,12 +4,10 @@ import './../../style/Chat.css'
 import MyAvatar from '../user/Avatar';
 import { Invite, UserChat } from '../../interfaces/iChat';
 import React from 'react';
-import useSocket from '../../service/socket';
 
 interface PopupChallengeProps {
   trigger: UserChat;
   player: UserChat;
-  onClose: () => void;
   sendMessage: (signal: string, message: any) => void;
   setTrigger: (value: UserChat | null) => void;
   children: React.ReactNode;

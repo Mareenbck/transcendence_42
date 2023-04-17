@@ -7,9 +7,9 @@ import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from './ChannelsSettings';
 import { TextField } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import useSocket from '../../../service/socket';
 
 function PopUp(props: any) {
-
     const authCtx = useContext(AuthContext);
     const [isPublic, setIsPublic] = useState(true);
     const [isPrivate, setIsPrivate] = useState(false);
@@ -21,7 +21,7 @@ function PopUp(props: any) {
     const [channelName, setchannelName] = useState('');
     const [openModal, setOpenModal] = useState(true);
     const passwordInputRef = useRef<HTMLInputElement>(null);
-
+    const [sendMessage, addListener] = useSocket()
 
     const handleChannelNameChange = (e: FormEvent) => {
         const value = e.target.value;
@@ -46,6 +46,12 @@ function PopUp(props: any) {
             isProtected: isProtected,
             password:  passwordInputRef.current!.value,
         };
+        sendMessage("sendConv", {
+            name: channelName,
+            isPublic: isPublic,
+            isPrivate: isPrivate,
+            isProtected: isProtected,
+        } as any)
         try {
             const res = await ConversationReq.postRoom(user, newConv);
         } catch (err) {
