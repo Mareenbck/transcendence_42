@@ -3,7 +3,7 @@ import { CreateChatroomDto } from './dto/create-chatroom2.dto';
 import { Prisma, UserChannelVisibility } from '@prisma/client';
 import { UserRoleInChannel} from '@prisma/client'
 import { UserStatusOnChannel } from '@prisma/client'
-import { BadRequestException, Injectable} from '@nestjs/common';
+import { BadRequestException, Injectable, ForbiddenException} from '@nestjs/common';
 import { Chatroom } from '@prisma/client';
 import { UserOnChannel} from '@prisma/client'
 import * as argon from 'argon2';
@@ -24,10 +24,12 @@ export class ChatroomService {
         visibility = UserChannelVisibility.PWD_PROTECTED;
       }
 
+      console.log("au dessus du hash")
       let hash: string = "";
       if (visibility == UserChannelVisibility.PWD_PROTECTED) {
         hash = await argon.hash(password ?? '');
       }
+      console.log("hash service --->", hash)
 
       const newChannel = await this.prisma.chatroom.create({
         data: {
@@ -47,23 +49,6 @@ export class ChatroomService {
       return newChannel;
   }
 
-
-  async createUserTable(ids: any)
-  {
-    const {userId, channelId} = ids;
-    try {
-      const newTable = await this.prisma.userOnChannel.create({
-        data: {
-          channelId: channelId,
-          userId: userId,
-        }
-      })
-      return newTable;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   findAll() {
     return this.prisma.chatroom.findMany();
   }
@@ -73,24 +58,46 @@ export class ChatroomService {
   }
 
   async getUserTable(userId: number, channelId: number) {
-    const users = await this.prisma.userOnChannel.findMany( {where: 
-        {
-          AND: [
-
-            {userId:userId},
-            {channelId: channelId},
-          ],
-        }})
-    return users;
-  }
-
-  async validatePassword(id: number, pass: string): Promise<any> {
-    const channelId = await this.prisma.chatroom.findUnique({where: {id: id}});
-    const pwdMatch = await argon.verify(channelId.hash, pass);
-    if (pwdMatch){
-      console.log("OKKKK");
+    const users = await this.prisma.userOnChannel.findMany( {where:
+      {
+        AND: [
+          {userId:userId},
+          {channelId: channelId},
+        ],
+      }})
+      return users;
     }
-    return null;
-  }
-  
+
+	async createUserTable(ids: any, hash: string) {
+		const { userId, channelId } = ids;
+		if (hash) {
+			console.log("DANS LE IF DU CREATE USER TABLE")
+			await this.validatePassword(channelId, hash);
+		}
+		try {
+			const newTable = await this.prisma.userOnChannel.create({
+				data: {
+					channelId: channelId,
+					userId: userId,
+				},
+			});
+			return newTable;
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
+	async validatePassword(id: number, hash: string): Promise<boolean> {
+		const channel = await this.prisma.chatroom.findUnique({ where: { id: id } });
+		if (channel.visibility === UserChannelVisibility.PWD_PROTECTED) {
+			if (!hash) {
+				throw new ForbiddenException(`Password is required`);
+			}
+		const isPasswordMatch = await argon.verify(channel.hash, hash);
+		if (!isPasswordMatch) {
+			throw new ForbiddenException(`Invalid password`);
+		}}
+		return true;
+	}
+
 }

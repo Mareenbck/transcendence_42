@@ -19,9 +19,7 @@ export default function JoinProtectedChannel(props: any) {
       }, []);
 
     const handleOpenJoinModal = () => {
-        // if (props.role != "USER") {
-            props.onOpenModal();
-        // }
+            props.onOpenJoinModal();
       };
 
     return (

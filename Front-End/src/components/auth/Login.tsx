@@ -41,6 +41,7 @@ function AuthForm() {
 		// event.preventDefault();
 		const email = emailInputRef.current!.value;
 		const password = passwordInputRef.current!.value;
+		console.log("PASSWORD INPUT REF DANS SIGNIN",passwordInputRef)
 		const usernameLocalStorage = localStorage.getItem("username");
 		if (email.trim().length === 0 || password.trim().length === 0) {
 			setError({
