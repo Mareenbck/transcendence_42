@@ -60,3 +60,8 @@ export interface star {
 export  interface backColorGame{
     backColorGame: string;
 }
+
+export interface Invite{
+    author: player;
+	invite: player;
+}
