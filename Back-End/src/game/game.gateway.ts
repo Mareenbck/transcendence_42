@@ -1,23 +1,23 @@
-import {
-  MessageBody,
-  WebSocketServer,
-  SubscribeMessage,
-  WebSocketGateway,
-  ConnectedSocket
-} from '@nestjs/websockets';
-import {Server, Socket} from 'socket.io'
-import { GameService } from './game.service';
-import UsersSockets from "src/gateway/socket.class";
-import { Game } from './game.class';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { profile } from './game.interfaces';
+// import {
+//   MessageBody,
+//   WebSocketServer,
+//   SubscribeMessage,
+//   WebSocketGateway,
+//   ConnectedSocket
+// } from '@nestjs/websockets';
+// import {Server, Socket} from 'socket.io'
+// import { GameService } from './game.service';
+// import UsersSockets from "src/gateway/socket.class";
+// import { Game } from './game.class';
+// import { PrismaService } from 'src/prisma/prisma.service';
+// import { profile } from './game.interfaces';
 
 
 
-//all connected users
-let users: profile [] = [];
-//two players
-let players: profile [] = [];
+// //all connected users
+// let users: profile [] = [];
+// //two players
+// let players: profile [] = [];
 
 
 // // const addUser = (userId, socketId) => {
@@ -61,18 +61,18 @@ let players: profile [] = [];
 // }
 
 
-@WebSocketGateway()
-export class GameGateway {
+// @WebSocketGateway()
+// export class GameGateway {
 
   
-  constructor(
-      private readonly prisma: PrismaService,
-      private readonly service: GameService ){}
+//   constructor(
+//       private readonly prisma: PrismaService,
+//       private readonly service: GameService ){}
       
-  public server: Server = null;
-  public userSockets: UsersSockets;
+//   public server: Server = null;
+//   public userSockets: UsersSockets;
 
-  // onModuleInit(){
+//   // onModuleInit(){
   //   const game = new Game(
   //     this.server,
   //     //this.websocketsService,
@@ -81,11 +81,11 @@ export class GameGateway {
   //     this.service
   //   );
 
-    @SubscribeMessage('InviteGame')
-    async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
-    { this.service.gameInvite(data.author, socket, data.player) };
+//     @SubscribeMessage('InviteGame')
+//     async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+//     { this.service.gameInvite(data.author, socket, data.player) };
 
-//     this.server.on('connection', (socket: Socket) => {
+// //     this.server.on('connection', (socket: Socket) => {
 // console.log('51 Connected socket = ', socket.id);
 //       if(socket) {game.init(socket);} //game initialization on connection
 //       socket.on("addUser", (userId) => {
