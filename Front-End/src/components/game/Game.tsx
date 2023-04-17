@@ -5,8 +5,10 @@ import Canvas from './Canvas'
 import Winner from './Winner'
 import './Game.css'
 import type { gameInit, gameState, gameWinner, player } from './type'
-import { socket } from '../../service/socket';
+//import { socket } from '../../service/socket';
 import ColorModal from './modal.tsx/ColorModal';
+import useSocket from '../../service/socket';
+
 
 
 
@@ -14,6 +16,7 @@ function Game() {
     const user = useContext(AuthContext);
     const [users, setOnlineSpectators] = useState<[player]> ();
     const [players, setOnlinePlayers] = useState<[player]> ();
+    const [sendMessage, addListener] = useSocket()
 
 
     // Pour partis de Modal select Color,
@@ -120,7 +123,7 @@ function Game() {
 //     },[user]);
 
     useEffect(() => {
-        socket.on("getPlayers", (players: React.SetStateAction<[player] | undefined>) => {
+        addListener("getPlayers", (players: React.SetStateAction<[player] | undefined>) => {
             setOnlinePlayers(players);
         });
     })
@@ -130,27 +133,53 @@ function Game() {
 ///////////////////////////////////////////////////////
 
     //get data from the server and redraw canvas
-    useEffect(() => {
-        socket?.on('init-pong', initListener);
-        socket?.on('pong', updateListener);
-        socket?.on('winner', initWinner )
-   // console.log("winner = ", gamewinner.winner);        
-        return () => {
-            socket?.off('init-pong', initListener);
-            socket?.off('pong', updateListener);
-            socket?.off('pong', initWinner);
+//     useEffect(() => {
+//         socket?.on('init-pong', initListener);
+//         socket?.on('pong', updateListener);
+//         socket?.on('winner', initWinner )
+//    // console.log("winner = ", gamewinner.winner);        
+//         return () => {
+//             socket?.off('init-pong', initListener);
+//             socket?.off('pong', updateListener);
+//             socket?.off('pong', initWinner);
 
-        }
+//         }
+//     }, [initListener, updateListener, initWinner])
+
+//get data from the server and redraw canvas
+    useEffect(() => {
+        addListener('init-pong', initListener);
+        addListener('pong', updateListener);
+        addListener('winner', initWinner )
+   // console.log("winner = ", gamewinner.winner);        
+        // return () => {
+        //     socket?.off('init-pong', initListener);
+        //     socket?.off('pong', updateListener);
+        //     socket?.off('pong', initWinner);
+
+        // }
     }, [initListener, updateListener, initWinner])
 
+
 	// onKeyDown handler function
-	const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+	// const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
 //console.log("event.code = ", event.code);
+	// 	if (event.code === "ArrowUp") {
+	// 		socket?.emit('move', "up")
+	// 	}
+	// 	if (event.code === "ArrowDown") {
+	// 		socket?.emit('move', "down")
+	// 	}
+	// };
+
+    // onKeyDown handler function
+	const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+console.log("event.code = ", event.code);
 		if (event.code === "ArrowUp") {
-			socket?.emit('move', "up")
+			sendMessage('move', "up" as any)
 		}
 		if (event.code === "ArrowDown") {
-			socket?.emit('move', "down")
+			sendMessage('move', "down" as any)
 		}
 	};
 

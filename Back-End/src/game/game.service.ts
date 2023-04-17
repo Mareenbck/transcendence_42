@@ -10,11 +10,10 @@ import UsersSockets from "src/gateway/socket.class";
 import {
 	profile,
 	player,
-	ball,
-	gameInit,
-	GameParams
- } from './game.interfaces';
+	roomsList
+	} from './game.interfaces';
 import { join } from '@prisma/client/runtime';
+import { Games } from './game.class';
 
 
 @Injectable()
@@ -38,49 +37,49 @@ export class GameService {
 //all connected spectateurs
 	spectateurs: profile [] = []; // roomUsers = new Array();
 //roomsGames
-	roomGameList: number [] = [];
+	roomGamesList: roomsList [] = [];
 
 	getPlayer:any = (userId: number) => {
-        return this.players.find(u => +u.userId.userId === +userId);
+        return this.players.find(u => +u.user.userId.userId === +userId);
     }
 
-	addPlayer = (userId, socketId) => {
-	    !this.players.some((user) => +user.userId.userId === +userId.userId) &&
-		this.players.push({userId, socketId})
+	addPlayer = (user: any, socket: Socket) => {
+console.log("game.service: add players _ xxxxx", user)
+
+	    !this.players.some((u) => +u.user.userId === +user.userId) &&
+		this.players.push({user, socket})
 console.log("game.service: add players", this.players)
 	};
 
 	addNewRoom = (playerR: profile, playerL: profile): string => {
-	   let n = 0;
-	   while (this.roomGameList.includes(n)){
-		n++;
-	   }
-	   const room = `room ${n}`;
-	   this.server.createRoom(room);
-	   const socketR = this.server.sockets.sockets.get(playerR.socketId);
-	   socketR.join(room);
-	   const socketL = this.server.sockets.sockets.get(playerL.socketId);
-	   socketL.join(room);
-	   return room;
+		let roomN = 0;
+		while (this.roomGamesList.includes(this.roomGamesList[0], roomN)){
+			roomN++;
+	    }
+		const room = `room ${roomN}`;
+	//    this.server.createRoom(room); 
+		playerR.socket.join(room);
+		playerL.socket.join(room);
+		this.roomGamesList.push({roomN, playerR, playerL});
+		return room;
 	}
 
+
 	playGame: any = (user: any, socket: Socket) => {
-console.log("game.service: message playGame");
+console.log("game.service: message playGame", user);
 // 	let username = this.userSockets.getUserBySocket(socket.id);
 // console.log("game.service: username connected", username);
 		// if (!username){
 		// 	return ;
 		// }
-		this.addPlayer(user.id, socket.id);
+		this.addPlayer(user, socket);
 		if (this.players.length == 2){
 			let roomName = this.addNewRoom(this.players[0], this.players[1]);
-			let game = new Game (this.server, roomName, this.prisma, this );
-			const playerR = this.server.sockets.sockets.get(this.players[0].socketId);
-			game.init(playerR);
-			const playerL = this.server.sockets.sockets.get(this.players[1].socketId);
-			game.init(playerL);
-			this.players = [];
-			game.run();
+			let game = new Games (this.server, roomName, this.prisma);
+			game.init(this.players[0].socket);
+			game.init(this.players[1].socket);
+		//	this.players = [];
+			game.run(this.players[0], this.players[1]);
 		}
 
 	}
@@ -91,16 +90,16 @@ console.log("game.service: message playGame");
 	}
 
 //message processing functions
-	gameInvite: any = (author: number, socketAuth: Socket, player: number,) => {
-console.log("game.service: message gameInvite");
-		this.addPlayer(author, socketAuth.id);
-		// this.addGame(this.gameId, this.playerR, this.playerL);
-		// let auth = this.getPlayer(author);
-		// let plr = this.getPlayer(player);
-		// if (auth && plr) {
+// 	gameInvite: any = (author: number, socketAuth: Socket, player: number,) => {
+// console.log("game.service: message gameInvite");
+// 		this.addPlayer(author, socketAuth.id);
+// 		// this.addGame(this.gameId, this.playerR, this.playerL);
+// 		// let auth = this.getPlayer(author);
+// 		// let plr = this.getPlayer(player);
+// 		// if (auth && plr) {
 			
-		// 	};
-	};
+// 		// 	};
+// 	};
 
 //adding and removing from players and observers to(from) array
 
