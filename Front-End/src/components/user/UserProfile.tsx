@@ -28,7 +28,7 @@ const UserProfile = (props: any) => {
 				const data = await response.json();
 				setUser(data);
 			} else {
-				console.log("POST error on /friendship/create");
+				console.log("POST error on /friendship/id");
 				return "error";
 			}
 		} catch (error) {
@@ -44,10 +44,10 @@ const UserProfile = (props: any) => {
 					<ProfileCard authCtx={authCtx} user={user} id={props.id}></ProfileCard>
 					<Card color='blue' title="My Level" icon="level" type="stats" height="270px" width="355px"></Card>
 					<Card color='red' title="My Rank" icon="rank" type="stats" height="270px" width="355px"></Card>
-					{/* <Card color='green' title="My Friends" type="showFriends" width="355px" friendCtx={friendCtx} authCtx={authCtx} height="auto"></Card> */}
 					<div className='card-wrapper'>
 						<Card color='yellow' title="Match History" type="match" width="100%" id={props.id} authCtx={authCtx}></Card>
 					</div>
+					<Card color='green' title="Achievements" type="achiev" width="355px" id={props.id} authCtx={authCtx}></Card>
 				</div>
 				{!isLoggedIn && <Navigate to="/" replace={true} />}
 			</div>

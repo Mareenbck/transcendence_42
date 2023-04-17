@@ -1,4 +1,4 @@
-import { BadRequestException, ExecutionContext, ForbiddenException, Injectable, Res, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, NotFoundException, ExecutionContext, ForbiddenException, Injectable, Res, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { Auth42Dto, AuthDto, AuthTokenDto } from "./dto";
 import * as argon from 'argon2';
@@ -64,10 +64,8 @@ export class AuthService {
 
 	async validateUser(email: string, pass: string): Promise<any> {
 		const user = await this.userService.getByEmail(email);
-		console.log("user.hash")
-		console.log(user.hash)
-		console.log("pass")
-		console.log(pass)
+		if (!user)
+			throw new ForbiddenException('Credentials incorrect');
 		const pwMatches = await argon.verify(user.hash, pass);
 		if (pwMatches) {
 			return user;
@@ -92,7 +90,8 @@ export class AuthService {
 		await this.prisma.user.update({
 				where: { id: user.id },
 				data: { status: 'ONLINE' },
-			});
+		});
+		await this.userService.updateAchievement(user.id, 'Welcome');
 	}
 
 	async signin_42(profile: Profile_42): Promise<User> {

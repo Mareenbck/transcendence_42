@@ -5,7 +5,6 @@ import '../../style/Friends.css';
 import { Container } from '@mui/material';
 import MyAvatar from '../user/Avatar';
 import { ListItem } from '@mui/material';
-import { ListItemText } from '@mui/material';
 import { ListItemAvatar } from '@mui/material';
 import { List } from '@mui/material';
 import { FriendContext } from '../../store/FriendshipContext';

@@ -2,10 +2,12 @@ import { Controller, Get, Post, UseGuards, Param, Body} from '@nestjs/common';
 import { GameService } from './game.service';
 import { JwtGuard} from 'src/auth/guard';
 import { GameDto } from './dto/game.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('game')
 export class GameController {
-  constructor(private gameService: GameService) {}
+  constructor(private gameService: GameService,
+              private readonly userService: UserService) {}
 
   @Get()
   @UseGuards(JwtGuard)
@@ -28,21 +30,29 @@ export class GameController {
     return game;
   }
 
-  @Get('/allGames/:id')
-  @UseGuards(JwtGuard)
-  async getAllUserGames(@Param('id') userId: string) {
-    const allGames = await this.gameService.getUserGames(parseInt(userId));
-    // await this.gameService.updateUserXPAndLevel(parseInt(userId), allGames);
-    return allGames;
-  }
+	@Get('/allGames/:id')
+	@UseGuards(JwtGuard)
+	async getAllUserGames(@Param('id') userId: string) {
+		const allGames = await this.gameService.getUserGames(parseInt(userId));
+		if (allGames.length > 0) {
+			await this.userService.updateAchievement(parseInt(userId), 'Rookie')
+		}
+		return allGames;
+	}
 
-  @Get('/level/:id')
-  @UseGuards(JwtGuard)
-  async getUserLevel(@Param('id') userId: string) {
-    const allGames = await this.gameService.getUserGames(parseInt(userId));
-    const user = await this.gameService.updateUserXPAndLevel(parseInt(userId), allGames);
-    return user;
-  }
+	@Get('/level/:id')
+	@UseGuards(JwtGuard)
+	async getUserLevel(@Param('id') userId: string) {
+		const allGames = await this.gameService.getUserGames(parseInt(userId));
+		const userWins = allGames.filter((game) => {
+			return game.winnerId === parseInt(userId);
+		});
+		if (userWins.length > 0) {
+			await this.userService.updateAchievement(parseInt(userId), 'Winner');
+		}
+		const user = await this.gameService.updateUserXPAndLevel(parseInt(userId), allGames);
+		return user;
+	}
 }
 
 

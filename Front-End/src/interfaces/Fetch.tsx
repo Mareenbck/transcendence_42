@@ -2,7 +2,7 @@ import AuthContext from '../store/AuthContext';
 
 export class Fetch {
 
-  static async fetch(token: string, method: string, endPoint: string, par? :string, par2? :string) {
+  static async fetch(token: string, method: string, endPoint: string, par? : string | number, par2? :string | number) {
     try {
       if (par2 !== undefined && par !== undefined)
         { par = par + '\/' + par2; }
@@ -52,8 +52,6 @@ export class Fetch {
 
   static async postUnblock(token: string, him: number, me: number) {
     try {
-      console.log(me);
-      console.log(him);
       const resp = await fetch(`http://localhost:3000/users/unblock`,
       {
         method: "POST",

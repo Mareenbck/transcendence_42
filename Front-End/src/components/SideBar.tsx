@@ -34,7 +34,7 @@ const Sidebar = (props: any) => {
     return (
         <div className="sidebar">
             <div className="title">
-                <MyAccountMenu authCtx={authCtx} ></MyAccountMenu>
+                <MyAccountMenu authCtx={authCtx}></MyAccountMenu>
                 <h4>{username}</h4>
             </div>
             <br />

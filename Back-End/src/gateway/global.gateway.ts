@@ -74,16 +74,18 @@ console.log(socket.handshake.auth.token);
 
 
   ///////////////////////////
-  // MEssages for Chat to Chat Service
+  // Messages for Chat to Chat Service
   //////////////////////////
   @SubscribeMessage('addUserChat')
-  async chatAddUsers(@MessageBody() userId: string, @ConnectedSocket() socket: Socket,): Promise<void> 
-  {     
-    const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
-    if (!user) {
-      throw new WsException('Invalid credentials.');
-    }
-    this.chatService.addUserChat(userId, socket.id)
+  async chatAddUsers(@MessageBody() userId: any, @ConnectedSocket() socket: Socket,): Promise<void> 
+  {
+    if (userId.userId !== null) {
+      const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+      if (!user) {
+        throw new WsException('Invalid credentials.');
+      }
+      this.chatService.addUserChat(userId, socket.id)
+    }  
   }
 
   @SubscribeMessage('removeUserChat')

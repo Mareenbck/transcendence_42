@@ -51,19 +51,24 @@ const MyAvatar = (props: any) => {
 	const friendCtx = useContext(FriendContext)
 	const [style, setStyle] = useState('');
 	const [content, setContent] = useState<any>(null);
-	const [avatar, setAvatar] = useState<any>(null);
+	const [avatar, setAvatar] = useState<any>();
 
 	useEffect(() => {
-		if(props.id) {
+		if (props.id) {
 			const fetchData = async () => {
-				const avat: any = await friendCtx.fetchAvatar(props.id);
+				let avat: any = null;
+				if (isMyProfile && authCtx.avatar && !avatar) {
+					avat = await authCtx.fetchAvatar(authCtx.userId);
+				} else {
+					avat = await friendCtx.fetchAvatar(props.id);
+				}
 				if (avat) {
 					setAvatar(avat);
 				}
 			};
 			fetchData();
 		}
-	}, [props.id, isMyProfile])
+	}, [props.id, authCtx]);
 
 	useEffect(() => {
 		if (props.style === "m") {
@@ -80,7 +85,7 @@ const MyAvatar = (props: any) => {
 	useEffect(() => {
 		const avatarClass = `custom-avatar avatar-${props.style}`;
 		if (authCtx.userId === props.id) {
-			setContent(authCtx.avatar ? <Avatar className={avatarClass} src={authCtx.avatar} /> : <Avatar className={avatarClass} src={authCtx.ftAvatar} />)
+			setContent(avatar ? <Avatar className={avatarClass} src={avatar} /> : <Avatar className={avatarClass} src={authCtx.ftAvatar} />)
 		} else {
 			setContent(avatar ? <Avatar className={avatarClass} src={avatar} /> : <Avatar className={avatarClass} src={props.ftAvatar} />)
 		}

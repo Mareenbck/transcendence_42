@@ -6,6 +6,7 @@ import TitleCard from "./CardTitle";
 import BodyStatsCard from "./BodyStatsCard";
 import MenuCard from "./MenuCard";
 import MatchHistory from "../game/MatchHistory";
+import ShowAchievements from "../game/ShowAchievements";
 
 const Card = (props: any) => {
 	const [color, setColor] = useState<string>('');
@@ -39,6 +40,8 @@ const Card = (props: any) => {
 			setContent(<MenuCard body={props.body}/>);
 		} else if (props.type === 'match') {
 			setContent(<MatchHistory id={props.id} authCtx={props.authCtx}/>);
+		} else if (props.type === 'achiev') {
+			setContent(<ShowAchievements id={props.id}/>)
 		}
 	}, [props.type])
 
@@ -47,7 +50,9 @@ const Card = (props: any) => {
 	return (
 		<>
 			<div className={`card ${menuCardClass}`} style={styles}>
-				<TitleCard style={titleStyle} color={color} title={props.title} type={props.type} friendCtx={props.friendCtx} authCtx={props.authCtx}></TitleCard>
+			{props.style !== "none" ? (
+				<TitleCard style={titleStyle} color={color} title={props.title} type={props.type} friendCtx={props.friendCtx} authCtx={props.authCtx}></TitleCard>)
+				 : null}
 				{content}
 			</div>
 		</>

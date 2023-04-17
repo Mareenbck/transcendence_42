@@ -33,7 +33,7 @@ export class AuthController {
 		return tokens;
 	}
 
-	@Post('logout')
+	@Post('/logout')
 	@UseGuards(JwtGuard)
 	@HttpCode(200)
 	async logout(@GetUser() user: TwoFaUserDto) {

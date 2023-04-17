@@ -32,8 +32,6 @@ export class FriendshipController {
 	async showFriends(@Body() userId: number){
 		const friends = await this.friendshipService.showFriends(userId);
 		return friends.friendOf
-		//si status est validee => enregistre les amis de chacun dans la DB
-		//return la liste des amis accepte du user
 	}
 
 	@Post('update')

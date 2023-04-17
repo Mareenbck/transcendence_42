@@ -1,4 +1,3 @@
-/* GLOBAL MODULES */
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 // @GetCurrentUser decorator - used to get current user

@@ -128,6 +128,19 @@ export class UserController {
 		}
 	}
 
+	@Get('/:id/achievements')
+	@UseGuards(JwtGuard)
+	async getAchievements(@Param('id') userId: string) {
+		const achievements = await this.userService.getUserAchievements(parseInt(userId));
+		return achievements;
+	}
+
+	@Get('/:id/icon')
+	async getIcon(@Param('id') id: string, @Res() res: Response) {
+		const icon = await this.userService.getIconAchievement(parseInt(id), res);
+		return icon;
+	}
+
 
 
 

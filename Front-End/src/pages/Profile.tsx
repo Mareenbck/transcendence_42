@@ -18,7 +18,7 @@ const Profile = (props: any) =>  {
 		<div className={style.mainPos}>
 				<div>
 					{isMyProfile ? (
-						<MyProfile></MyProfile>
+						<MyProfile id={id}></MyProfile>
 					): (
 						<UserProfile id={id} ></UserProfile>
 						)}

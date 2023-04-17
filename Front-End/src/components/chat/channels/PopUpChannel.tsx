@@ -29,7 +29,6 @@ function PopUp(props: any) {
         setIsDisabled(value === "");
     };
 
-
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
         console.log("passwordInputRef--->")

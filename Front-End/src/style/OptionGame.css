@@ -1,5 +1,5 @@
 * {
-    
+
 	font-family: 'Noto Sans', sans-serif;
 }
 
@@ -14,9 +14,8 @@ body{
     border-radius: 4px;
 }
 
-.card
+.card-option
 {
-    
     padding: 10px;
     padding-bottom: 0;
     margin: 20px auto;
@@ -31,5 +30,5 @@ body{
 	padding: 0.6em 1.2em;
 	cursor: pointer;
 	transition: border-color 0.25s;
-   
+
 }

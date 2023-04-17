@@ -4,9 +4,11 @@ import { ChatroomService } from './chatroom2.service';
 
 import { JwtGuard} from 'src/auth/guard';
 import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
+import { UserService } from 'src/user/user.service';
 @Controller('chatroom2/')
 export class Chatroom2Controller {
-  constructor(private chatRoomService: ChatroomService) {}
+  constructor(private chatRoomService: ChatroomService,
+				private readonly userService: UserService) {}
 
 	@Post()
 	@UseGuards(JwtGuard)
@@ -14,9 +16,10 @@ export class Chatroom2Controller {
 		// console.log("newConv--->")
 		// console.log(newConv)
 		const newChannel = await this.chatRoomService.create(newConv, parseInt(userId));
-		// console.log("NEW CHANNEL CONTROLLER ", newChannel.id)
-		// console.log("newChannel--->")
-		// console.log(newChannel)
+
+    if (newChannel) {
+			await this.userService.updateAchievement(parseInt(userId), 'Federator')
+		}
 		return newChannel;
 	}
 
