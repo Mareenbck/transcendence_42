@@ -38,7 +38,11 @@ export class GameService {
 //all connected spectateurs
 	spectateurs: profile [] = []; // roomUsers = new Array();
 //roomsGames
+<<<<<<< HEAD
 	roomGameList: number [] = [];
+=======
+	games: profile [] = [];
+>>>>>>> 46dec7e57b67329e54942ca6bbb0e91da28c9fe4
 
 	getPlayer:any = (userId: number) => {
         return this.players.find(u => +u.userId.userId === +userId);
