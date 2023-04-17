@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Server, Socket } from "socket.io";
 import UsersSockets from "src/gateway/socket.class";
+import { UserDto } from "src/user/dto/user.dto";
 
 @Injectable()
 export class ChatService {
@@ -102,16 +103,7 @@ export class ChatService {
         }
     };
 
-    chatInvite: any = (author: number, player: number,) => {
-        const toU = this.getUser(player);
-        if (toU) {
-            this.server.to(toU.socketId).emit('wasInvited', {
-                from: author,
-                to: player,
-            });
-        };
+    chatInvite: any = (author: UserDto, player: UserDto,) => {
+        this.userSockets.emitToUser(player.username, 'wasInvited', author);
     };
 }
-
-
-    

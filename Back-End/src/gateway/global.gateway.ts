@@ -117,6 +117,6 @@ console.log(socket.handshake.auth.token);
   { this.chatService.chatUnblock(data.blockFrom, data.blockTo,)  };
 
   @SubscribeMessage('InviteGame')
-  async chatInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  async chatInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
   { this.chatService.chatInvite(data.author, data.player,) };
 }

@@ -1,3 +1,4 @@
+
 import { useEffect, useContext, useState, useRef, FormEvent, RefObject } from 'react'
 import { Link } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
@@ -15,7 +16,7 @@ import React from 'react';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
 import Channels from './channels/Channels';
-import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../../interfaces/iChat";
+import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
 
@@ -23,12 +24,12 @@ function Chat() {
   const user = useContext(AuthContext);
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<UserChat[]> ([]);
-  const [AMessageD, setAMessageD] = useState<DirectMessage | null> (null);
-  const [AMessageChat, setAMessageChat] = useState<RoomMessage | null> (null);
+  const [AMessageD, setAMessageD] = useState<DirectMessage> (null);
+  const [AMessageChat, setAMessageChat] = useState<RoomMessage> (null);
   const [AConversation, setAConversation] = useState (null);
   const [conversations, setConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState<ChatRoom | null> (null);
-  const [currentDirect, setCurrentDirect] = useState<UserChat | UserCtx | null> (null);
+  const [currentChat, setCurrentChat] = useState<ChatRoom> (null);
+  const [currentDirect, setCurrentDirect] = useState<UserChat | UserCtx> (null);
   const [messages2, setMessages2] = useState<RoomMessage[]> ([]);
   const [messagesD, setMessagesD] = useState<DirectMessage[]> ([]);
   const [newMessage2, setNewMessage2] = useState<string> ("");
@@ -82,14 +83,14 @@ function Chat() {
       authorId: data.authorId,
       chatroomId: data.chatroomId,
       content: data.content,
-      createdAt: new Date(Date.now()),
+      createdAt: Date.now(),
     }))
     
     addListener("getMessageDirect", (data)=> setAMessageD({
       content: data.content,
       author: data.author,
       receiver: data.receiver,
-      createdAt: new Date(Date.now()),
+      createdAt: Date.now(),
     }));
   });
 
@@ -114,23 +115,9 @@ function Chat() {
 
   useEffect(() => {
     addListener("wasInvited", data => {
-      setInvited(data.author);
+      setInvited(getUser(data.from));
     });
   });
-
-  const acceptGame = (playerU :UserChat , trigger: UserChat) => {
-    sendMessage("acceptGame", {
-      author: trigger,
-      player: playerU,
-    } as Invite);
-  }
-  
-  const refuseGame = (playerU :UserChat , trigger: UserChat) => {
-    sendMessage("refuseGame", {
-      author: (trigger),
-      player: (playerU),
-    } as Invite);
-  }
 
   useEffect(() => {
     addListener("wasBlocked", data => {
@@ -355,7 +342,7 @@ function Chat() {
 
   const getDirect = (userX: UserChat | UserCtx): void => {
     const gUser = getUser(+id);
-    if (userX && gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u: number) => +userX.userId === +u) === undefined ))
+    if (gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u: number) => +userX.userId === +u) === undefined ))
     {
       if ((userX.blockedFrom.find((u: UserChat) => +u.id === +id) === undefined) && (userX.blockedFrom.find((u: number) => +u === +id) === undefined))
       { 
@@ -369,8 +356,8 @@ function Chat() {
   const inviteGame = (playerId :number ) => {
     console.log(playerId);
     sendMessage("InviteGame", {
-      author: getUser(+id),
-      player: getUser(+playerId),
+      author: +id,
+      player: +playerId,
     } as Invite);
   }
 
@@ -406,6 +393,10 @@ function Chat() {
   const handleSubmitD = async (e: FormEvent)=> {
     e.preventDefault();
     const r = currentDirect?.userId ? +currentDirect?.userId : +currentDirect?.id;
+
+///////// bloquer en cas de blocked.
+
+
     const messageD = {
       author: +id,
       content: newMessageD,
@@ -457,7 +448,7 @@ return (
     <div className="chatBox">
       <div className="chatBoxW">
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
-        <PopupChallenge trigger={invited} setTrigger={setInvited} player={(getUser(+id))} > <h3></h3></PopupChallenge>
+        <PopupChallenge trigger={invited} setTrigger={setInvited} > <h3></h3></PopupChallenge>
         { currentChat ?
           <>
           <div className="chatBoxTop">
@@ -562,3 +553,18 @@ return (
   )
 }
 export default Chat;
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+transcendence_42/Chat.tsx at theo37 · Mareenbck/transcendence_42 · GitHub

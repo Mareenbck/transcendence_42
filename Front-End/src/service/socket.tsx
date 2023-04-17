@@ -47,10 +47,5 @@ export default function useSocket() {
     [socket]
   );
   
-
-
-
-
-
   return [sendMessage, addListener];
 } 
