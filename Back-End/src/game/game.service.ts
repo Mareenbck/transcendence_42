@@ -14,6 +14,7 @@ import {
 	gameInit,
 	GameParams
  } from './game.interfaces';
+import { join } from '@prisma/client/runtime';
 
 
 @Injectable()
@@ -37,7 +38,7 @@ export class GameService {
 //all connected spectateurs
 	spectateurs: profile [] = []; // roomUsers = new Array();
 //roomsGames
-	games: profile [] = [];
+	roomGameList: number [] = [];
 
 	getPlayer:any = (userId: number) => {
         return this.players.find(u => +u.userId.userId === +userId);
@@ -47,11 +48,41 @@ export class GameService {
 	    !this.players.some((user) => +user.userId.userId === +userId.userId) &&
 		this.players.push({userId, socketId})
 console.log("game.service: add players", this.players)
+	};
+
+	addNewRoom = (playerR: profile, playerL: profile): string => {
+	   let n = 0;
+	   while (this.roomGameList.includes(n)){
+		n++;
+	   }
+	   const room = `room ${n}`;
+	   this.server.createRoom(room);
+	   const socketR = this.server.sockets.sockets.get(playerR.socketId);
+	   socketR.join(room);
+	   const socketL = this.server.sockets.sockets.get(playerL.socketId);
+	   socketL.join(room);
+	   return room;
 	}
 
-	addGames = (gameId, playersR, playersL) => {
-	  //  !this.games.some((user) => +user.userId.userId === +userId.userId) &&
-		//this.games.push({gameId, playersR, playersL})
+	playGame: any = (user: any, socket: Socket) => {
+console.log("game.service: message playGame");
+// 	let username = this.userSockets.getUserBySocket(socket.id);
+// console.log("game.service: username connected", username);
+		// if (!username){
+		// 	return ;
+		// }
+		this.addPlayer(user.id, socket.id);
+		if (this.players.length == 2){
+			let roomName = this.addNewRoom(this.players[0], this.players[1]);
+			let game = new Game (this.server, roomName, this.prisma, this );
+			const playerR = this.server.sockets.sockets.get(this.players[0].socketId);
+			game.init(playerR);
+			const playerL = this.server.sockets.sockets.get(this.players[1].socketId);
+			game.init(playerL);
+			this.players = [];
+			game.run();
+		}
+
 	}
 
 //message processing functions

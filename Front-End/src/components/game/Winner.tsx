@@ -1,6 +1,8 @@
 import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
 import type {gameInit, gameState, gameWinner} from './type'
+import MyAvatar from '../user/Avatar';
+
 
 
 const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ) => {

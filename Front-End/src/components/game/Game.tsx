@@ -114,10 +114,10 @@ function Game() {
 
 //////////////////////////////////////////////////////////
 
-    useEffect(() => {
-//console.log(user);
-        socket.emit("addUser", user);
-    },[user]);
+//     useEffect(() => {
+// //console.log(user);
+//         socket.emit("addUser", user);
+//     },[user]);
 
     useEffect(() => {
         socket.on("getPlayers", (players: React.SetStateAction<[player] | undefined>) => {
@@ -125,13 +125,7 @@ function Game() {
         });
     })
 
-    useEffect(() => {
-        socket.on("getSpectators", (users: React.SetStateAction<[player] | undefined>) => {
-            setOnlineSpectators(users);
-        });
-    })
-
-// console.log('players front', players);
+   // console.log('players front', players);
 // console.log('users Front', users)
 ///////////////////////////////////////////////////////
 

@@ -1,4 +1,5 @@
 import {Server, Socket} from 'socket.io'
+
 import { PrismaService} from '../prisma/prisma.service';
 import {
 		profile,
@@ -9,6 +10,8 @@ import {
 	 } from './game.interfaces';
 import { GameService } from './game.service';
 import { PrismaClient } from '@prisma/client';
+//import { Room } from 'socket.io-adapter';
+
 
 
 var ballSpeed = GameParams.BALL_DEFAULT_SPEED;
@@ -47,6 +50,7 @@ export class Game {
 	private winner: any = '';
 
 	private server: Server;
+	private room: string;
 	private prismaService: PrismaService;
 	private gameService: GameService;
 
@@ -54,12 +58,14 @@ export class Game {
 
 	constructor(
 		server: Server,
+		room: string,
 		prismaService: PrismaService,
 		//spectatorSockets: any[]
 		gameService: GameService
 	) {
 console.log("constructor Class.game");
 		this.server = server;
+		// this.room = room;
 		this.prismaService = prismaService;
 		this.gameService = gameService;
 	}
@@ -68,7 +74,7 @@ console.log("constructor Class.game");
 
 // function: emit game - tacking the changing coordinates of rackets and ball
 	private emit2all(){
-		this.server.emit('pong', { // !!! sens for each room
+		this.server.to(this.room).emit('pong', { // !!! sens for each room
 			ball: this.ball,
 			racket1: this.playerR.racket,
 			racket2: this.playerL.racket,

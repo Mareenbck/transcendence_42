@@ -44,4 +44,13 @@ export default class UsersSockets {
     getUserSockets(username: string): SocketMap | undefined {
         return this.map.get(username);
     }
+
+    getUserBySocket(socketId: string): string | undefined {
+        for (const [key, socketMap] of this.map.entries()) {
+            if (socketMap.has(socketId)) {
+              return key;
+            }
+          }
+          return undefined;  
+    }
 }

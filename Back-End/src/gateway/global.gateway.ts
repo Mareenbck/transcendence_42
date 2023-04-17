@@ -125,8 +125,17 @@ console.log("-userSockets", this.userSockets);
   { this.chatService.chatInvite(data.author, data.player,) };
 
 
+///////////////////////////
+// Messages for Game: Invite et random
+//////////////////////////
+
   @SubscribeMessage('InviteGame')
-async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
-{ this.gameService.gameInvite(data.author, socket, data.player) };
-}
+  async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.gameService.gameInvite(data.author, socket, data.player) };
+  
+
+  @SubscribeMessage('PlayGame')
+  async playGame(@MessageBody() data: {message: any}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.gameService.playGame(user, socket) };
+  }
 
