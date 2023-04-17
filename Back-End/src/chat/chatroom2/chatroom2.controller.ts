@@ -21,11 +21,9 @@ export class Chatroom2Controller {
   // @UseGuards(JwtGuard)
   async createUserTable(@Body() { userId, channelId, hash }: { userId: number, channelId: number, hash?: string }) {
     console.log("EST DANS LE CONTROLLER JOIN")
-    // console.log("channelID dans controller", channelId)
-    // console.log("hash dans le controller", hash);
+    console.log("hash dans le controller", hash);
     const newUserTable = await this.chatRoomService.createUserTable({ userId, channelId }, hash);
-    // console.log("NEW USER TABLE", newUserTable)
-    // console.log("password controller", hash)
+    console.log("NEW USER TABLE", newUserTable)
     return newUserTable;
   }
   

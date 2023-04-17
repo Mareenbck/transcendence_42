@@ -107,9 +107,9 @@ export default function ChannelVisibility(props: any) {
 			Authorization: `Bearer ${token}`,
 		  },
 		  body: JSON.stringify({
-			channelId: channelId, 
-			userId: userContext.userId,
-			hash: password,
+        channelId: channelId, 
+        userId: userContext.userId,
+        hash: password,
 		  }),
 		});
 		console.log("RESPONSE =---->", resp)

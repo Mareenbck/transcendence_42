@@ -24,6 +24,7 @@ export class ChatroomService {
         visibility = UserChannelVisibility.PWD_PROTECTED;
       }
 
+      console.log("au dessus du hash")
       let hash: string = "";
       if (visibility == UserChannelVisibility.PWD_PROTECTED) {
         hash = await argon.hash(password ?? '');
@@ -48,9 +49,6 @@ export class ChatroomService {
       return newChannel;
   }
 
-
-  
-  
   findAll() {
     return this.prisma.chatroom.findMany();
   }
@@ -67,16 +65,13 @@ export class ChatroomService {
           {channelId: channelId},
         ],
       }})
-      // console.log('CHANNEL ID DANS GET USER TABLE', channelId)
       return users;
     }
     
     async createUserTable(ids: any, hash: string) {
       const { userId, channelId } = ids;
-      console.log("CHANNEL ID")
       console.log(channelId)
       if (hash) {
-        console.log("DANS LE IF DU CREATE USER TABLE")
         await this.validatePassword(channelId, hash);
       }
     
@@ -95,18 +90,15 @@ export class ChatroomService {
 
   async validatePassword(id: number, hash: string): Promise<boolean> {
     const channel = await this.prisma.chatroom.findUnique({ where: { id: id } });
-    console.log("CHANNEL DANS VALIDATE PASSWORD", channel)
-    console.log("arrive dans validate password")
     if (channel.visibility === UserChannelVisibility.PWD_PROTECTED) {
       if (!hash) {
         throw new ForbiddenException(`Password is required`);
       }
-      
       console.log("PASSWORD", hash)
       const isPasswordMatch = await argon.verify(channel.hash, hash);
       console.log("IS PASSWD MATCH", isPasswordMatch)
   
-      if (!isPasswordMatch) {
+      if (isPasswordMatch) {
         throw new ForbiddenException(`Invalid password`);
       }
     }
