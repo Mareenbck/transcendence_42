@@ -28,7 +28,7 @@ function Chat() {
   const [AConversation, setAConversation] = useState (null);
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState<ChatRoom> (null);
-  const [currentDirect, setCurrentDirect] = useState<UserChat> (null);
+  const [currentDirect, setCurrentDirect] = useState<UserChat | UserCtx> (null);
   const [messages2, setMessages2] = useState<RoomMessage[]> ([]);
   const [messagesD, setMessagesD] = useState<DirectMessage[]> ([]);
   const [newMessage2, setNewMessage2] = useState<string> ("");
@@ -160,12 +160,9 @@ function Chat() {
     });
   },[AMessageD, currentDirect])
 
-
-  
   // useEffect(() => {
   //   AConversation && setConversations(prev=>[AConversation, ...prev]);
   // }, [AConversation]);
-
 
 
 ////////////////////////////////////////////////
@@ -177,54 +174,48 @@ function Chat() {
     setAllUsers(response);
     setOtherUsers(response.filter((u: {id: string;})  => !(onlineUsers.some(e => +e.userId.userId === +u.id))));
   };
-
   useEffect(() => {
     getAllUsersWithBlocked(user.token);
   }, []);
 
+  // async function getAllConv() {
+  //   const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
+  //   setConversations(response);
+  // };
+  // useEffect(() => {
+  //   getAllConv();
+  // }, []);
 
-  useEffect(() => {
-    async function getAllConv() {
-      const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
-      setConversations(response);
-    };
-    getAllConv();
-  }, []);
-
+  async function getMess() {
+    try {
+      const response = await Fetch.fetch(user.token, "GET", `chat-mess\/room`, currentChat?.id);
+      setMessages2(response);
+      sendMessage("userRoom", {
+        userId: user.userId,
+        roomId: currentChat.id,
+      } as UserInRoom)
+    } catch(err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     if (currentChat)
-    {
-      async function getMess() {
-        try {
-          const response = await Fetch.fetch(user.token, "GET", `chat-mess\/room`, currentChat?.id);
-          setMessages2(response);
-          sendMessage("userRoom", {
-            userId: user.userId,
-            roomId: currentChat.id,
-          } as UserInRoom)
-        } catch(err) {
-          console.log(err);
-        }
-      };
-      getMess();
-    }
+    { getMess(); }
   }, [currentChat]);
 
+  async function getDirMess() {
+    try {
+      if (currentDirect?.userId)
+        { setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.userId))}
+      else
+        { setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.id))};
+    } catch(err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     if (currentDirect)
-    {
-      async function getDirMess() {
-        try {
-          if (currentDirect?.userId)
-            { setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.userId))}
-          else
-            { setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.id))};
-        } catch(err) {
-          console.log(err);
-        }
-      };
-      getDirMess();
-    }
+    { getDirMess(); }
   }, [currentDirect]);
 
 
@@ -240,6 +231,8 @@ function Chat() {
       const NewAll = allUsers;
       NewAll.splice(i, 1, j);
       setAllUsers([...NewAll]);
+      if (+currentDirect.id === fromBlock || +currentDirect.userId === fromBlock)
+        {setCurrentDirect(null); console.log(currentDirect);}
       setFromBlock(null);
     };
   }, [fromBlock]);
@@ -350,8 +343,12 @@ function Chat() {
     const gUser = getUser(+id);
     if (gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +userX.userId) === undefined ) && (gUser.blockedFrom.find((u: number) => +userX.userId === +u) === undefined ))
     {
-      setCurrentDirect(userX);
-      setCurrentChat(null);
+      if ((userX.blockedFrom.find((u: UserChat) => +u.id === +id) === undefined) && (userX.blockedFrom.find((u: number) => +u === +id) === undefined))
+      { 
+        console.log(userX);
+        setCurrentDirect(userX);
+        setCurrentChat(null);
+      }
     }
   }
 
@@ -395,6 +392,10 @@ function Chat() {
   const handleSubmitD = async (e: FormEvent)=> {
     e.preventDefault();
     const r = currentDirect?.userId ? +currentDirect?.userId : +currentDirect?.id;
+
+///////// bloquer en cas de blocked.
+
+
     const messageD = {
       author: +id,
       content: newMessageD,

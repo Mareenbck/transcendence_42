@@ -12,7 +12,6 @@ interface PopupChallengeProps {
 }
 
 function PopupChallenge(props: PopupChallengeProps) {
-  console.log(props.trigger);
   return (props.trigger) ? (
     <div className="popupChallenge">
       <div className="popupChallenge-inner">
