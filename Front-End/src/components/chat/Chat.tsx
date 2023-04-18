@@ -387,6 +387,7 @@ return (
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
         { currentChat ?
           <>
+          <div>chat in {currentChat.name} </div>  
           <div className="chatBoxTop">
             { messages2.length ?
               messages2.map((m) => (
@@ -405,6 +406,7 @@ return (
           </>
         : currentDirect ?
           <>
+          <div>chat with {currentDirect.username} </div>  
           <div className="chatBoxTop">
             { messagesD.length ?
               messagesD?.map((m) => (
