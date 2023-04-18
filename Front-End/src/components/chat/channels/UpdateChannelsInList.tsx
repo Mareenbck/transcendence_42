@@ -48,7 +48,7 @@ export default function UpdateChannelsInList(props: any) {
         <div className="conversationListe">
         <CreateChannelButton/>
         {conversations.map((c) => (
-            <div key={c.name} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
+            <div key={c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
                 <div className="conversation">
                     <div className="conversation-name">
                         <Conversation name={c.name}/>
