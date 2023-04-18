@@ -1,22 +1,21 @@
 
 .combPos{
-    display: flex;
-    flex-direction:row;
-    align-items:center;
-    margin: 0;
-   padding: 0;
-   
-}
-
-@media (min-width: 40rem) {
-    .combPos{
         display: flex;
-       
         flex-direction:row;
         align-items:center;
         margin-top: 0;
        padding-top: 0;
        align-self: self-end;
+   
+}
+
+@media (max-width: 1700px) {
+    .combPos{
+        display: flex;
+        flex-direction:column;
+        align-items:center;
+        margin: 0;
+       padding: 0;
     }
    
 
@@ -31,10 +30,10 @@
     text-align: center;
     color: black;
     font-weight:bold;
-    border: 3px solid black;
-    margin: 2px;
+    border: 6px solid black;
+    margin: 50px;
     margin-top: 0;
-    width: 20px;
+    width: 100px;
     direction:initial;
     border-radius: 4%;
     margin-bottom: 2;
@@ -44,7 +43,7 @@
 
 }
 
-@media (min-width: 40rem) {
+@media (max-width: 1700px){
     .cadre{
 
         padding: 40px;
@@ -55,13 +54,15 @@
         color: black;
         font-weight:bold;
         border: 3px solid black;
-        margin: 40px;
+        margin: 2px;
         margin-top: 0;
-        width: 100px;
+        width: 20px;
         direction:initial;
         border-radius: 4%;
         margin-bottom: 2;
         background: linear-gradient(0deg, #003ba5, #84c4e9);
+
+
         
     
     }
