@@ -1,6 +1,6 @@
 
 * {
-    box-sizing: border-box; 
+    /*box-sizing: border-box; */
 	font-family: 'Noto Sans', sans-serif;
 }
 
@@ -12,6 +12,7 @@ body{
 .main{
     display: flex;
     flex-direction: row;
+    height: 100vh;
 }
 
 .one{
@@ -38,7 +39,7 @@ body{
 }
 
 
-/*@media (max-width: 768px) {
+@media (max-width: 1700px) {
     .two{
        
 
@@ -48,17 +49,18 @@ body{
         padding-top: 80px;
         width: 50%;
         margin: 10;
+        padding: 0;
     }
    
 
-}*/
+}
 
 .midPos{
     
         display: flex;
         flex-direction: row;
         margin: 20px;
-    
+        
     
 }
 
@@ -67,6 +69,7 @@ body{
         display: flex;
        flex-direction: row;
        margin: 20px;
+       
     }
     
 }
@@ -102,13 +105,14 @@ body{
 
 
 
-@media (max-width: 1700px) {
+@media (max-width: 1850px) {
     .table{
 
         border: 3px solid #699BF7;
         width: 100%;
-        align-self:calc(150% - 100px);
-        
+        align-self:center;
+        /*margin-left: 100px;*/
+        margin-top: 5px;
        
         
     }
