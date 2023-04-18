@@ -17,7 +17,7 @@ export default function Conversation(props: any) {
       <div className="conversation" onClick={handleClick}>
         <div className="conversationName">{props.name}</div>
       </div>
-      {showParticipants && <UsersOnChannel channelId={props.id} channelName={props.name} />}
+      {showParticipants && <UsersOnChannel channelId={props.id} channelName={props.name} username={props.username}/>}
     </>
   );
 

@@ -42,7 +42,6 @@ model User {
   level               Int           @default(1)
   achievements        UserAchievement[]
 
-  chatrooms           ChatroomUsers[]
   dirMessEmited       DirectMessage[] @relation(name: "emited")
   dirMessReceived     DirectMessage[] @relation(name: "received")
   crMessSent          ChatroomMessage[]
@@ -122,7 +121,6 @@ model Chatroom {
   id           Int              @id @default(autoincrement())
   visibility   UserChannelVisibility   @default(PUBLIC)
   name         String
-  users        ChatroomUsers[]
   participants UserOnChannel[]
   cr_messages  ChatroomMessage[]
   hash         String?
@@ -146,15 +144,6 @@ enum UserStatusOnChannel {
   BAN
 }
 
-model ChatroomUsers {
-  createdAt DateTime  @default(now())
-  id          Int     @id @default(autoincrement())
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id])
-  chatroomId  Int
-  chatroom    Chatroom @relation(fields: [chatroomId], references: [id])
-  @@unique([userId, chatroomId])
-}
 
 model ChatroomMessage {
   id      Int     @id @default(autoincrement())

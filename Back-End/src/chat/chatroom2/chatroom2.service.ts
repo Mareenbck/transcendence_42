@@ -97,12 +97,14 @@ export class ChatroomService {
 	}
 
   async getParticipants(channelId: number) {
-    const channel = await this.prisma.chatroom.findUnique({
-      where: { channelId: channelId },
+    console.log("ENTRE DANS LE SERVICE")
+    const channel = await this.prisma.userOnChannel.findMany({  
+      where: { channelId },
+      include: { user: true },
     });
-    console.log("CHANNEL IN GET PARTICIPANTS", channel);
-    return channel.participants;
+      console.log("CHANNEL IN GET PARTICIPANTS", channel);
+      return channel;
   }
-  
+    
 
 }

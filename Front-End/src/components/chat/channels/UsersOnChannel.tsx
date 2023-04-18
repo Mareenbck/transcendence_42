@@ -1,53 +1,54 @@
 import { useEffect, useContext, useState, useRef, FormEvent, RefObject } from 'react'
 import React from 'react';
 import AuthContext from '../../../store/AuthContext';
-import { useParams } from "react-router-dom";
 
 
 export default function UsersOnChannel(props: any) {
 
     const authCtx = useContext(AuthContext);
-    const { id } = useParams();
     const [participants, setParticipants] = useState([]);
 
-
-    useEffect(() =>  {
-        showParticipants();
-    }, [id])
-
-    const url = `http://localhost:3000/chatroom2/${id}/participants`;
-    const showParticipants = async () => {
+    
+    const showParticipants = async (channelId: string) => {
         try {
             const response = await fetch(
-                url,
-                {
+                `http://localhost:3000/chatroom2/${channelId}/participants`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${authCtx.token}`
                     }
                 }
-            )
-            if (response.ok) {
-                const data = await response.json();
-                console.log("data ------>", data);
-                setParticipants(data);
+                )
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("data ------>", data);
+                    setParticipants(data);
+                }
+            } catch(err) {
+                console.log(err)
             }
-        } catch(err) {
-            console.log(err)
         }
-    }
+        
+        
+        useEffect(() =>  {
+            showParticipants(props.channelId);
+        }, [props.channelId])
 
-    return (
-        <>
-        <h2>Participants List</h2>
-        <div className='participants-list'>
+
+        return (
+            <>
+              <div>
+                <h2>Participants:</h2>
                 <ul>
-                    {participants.map(participant => (
-                        <li key={participant.id}>{participant.name}</li>
-                    ))}
+                  {participants.map((p) => (
+                    <li key={p.id}>
+                      {p.name} ({p.role})
+                    </li>
+                  ))}
                 </ul>
-        </div>
-       </>
-    );
+              </div>
+            </>
+          );
+          
 }
