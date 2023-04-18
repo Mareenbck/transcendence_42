@@ -12,15 +12,12 @@ export class Chatroom2Controller {
 
 	@Post()
 	@UseGuards(JwtGuard)
-	async create( @Body() newConv: any, @GetCurrentUserId() userId: string): Promise<CreateChatroomDto> {
-		// console.log("newConv--->")
-		// console.log(newConv)
+	async create( @Body() newConv: any, @GetCurrentUserId() userId: string): Promise<number> {
 		const newChannel = await this.chatRoomService.create(newConv, parseInt(userId));
-
     if (newChannel) {
 			await this.userService.updateAchievement(parseInt(userId), 'Federator')
 		}
-		return newChannel;
+		return newChannel.id;
 	}
 
 	@Post('join')
@@ -29,7 +26,6 @@ export class Chatroom2Controller {
 		const newUserTable = await this.chatRoomService.createUserTable({ userId, channelId }, hash);
 		return newUserTable;
 	}
-
 
   @Get()
   @UseGuards(JwtGuard)

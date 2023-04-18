@@ -7,10 +7,11 @@ import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from "./ChannelsSettings";
 import CreateChannelButton from "./CreateChannelBtn";
 import Fetch from "../../../interfaces/Fetch"
+import { ChatRoom } from "../../../interfaces/iChat";
 
 export default function UpdateChannelsInList(props: any) {
-  const [conversations, setConversations] = useState([]);
-  const [AConversation, setAConversation] = useState (null);
+  const [conversations, setConversations] = useState<ChatRoom[]>([]);
+  const [AConversation, setAConversation] = useState<ChatRoom | null>(null);
   const user = useContext(AuthContext);
 
   const {currentChat, currentDirect, setCurrentDirect, setCurrentChat} = props;
@@ -20,6 +21,7 @@ export default function UpdateChannelsInList(props: any) {
 
   useEffect(() => {
     addListener("getConv", data => setAConversation({
+      id: data.channelId,
       name: data.name,
       visibility: data.visibility,
     }));

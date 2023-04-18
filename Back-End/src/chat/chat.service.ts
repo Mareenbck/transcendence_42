@@ -29,10 +29,8 @@ export class ChatService {
     };
 
     addRoomUser:any = (roomId: number, userId: number, socketId: number) => {
-        console.log("before ", this.roomUsers);
         this.roomUsers = this.roomUsers.filter( room => +room.userId !== +userId);
         roomId && this.roomUsers.push({roomId, userId, socketId});
-        console.log("after", this.roomUsers);
     };
 
     getUser:any = (userId: number) => {
@@ -65,7 +63,7 @@ export class ChatService {
         }
     };
 
-    sendConv:any = (name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean) => {
+    sendConv:any = (channelId: number, name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean) => {
         console.log("qdsqsdqsdqds", name)
         let visibility: UserChannelVisibility;
         if (isPrivate) {
@@ -77,6 +75,7 @@ export class ChatService {
         }
         for(const user of this.userChat) {
             this.server.to(user.socketId).emit('getConv', {
+                channelId: channelId,
                 name: name,
                 visibility: visibility
             });

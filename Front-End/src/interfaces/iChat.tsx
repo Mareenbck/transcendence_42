@@ -28,9 +28,7 @@ export interface Game {
 export interface ChatRoom {
   id: number;
   name:  string;
-  isPublic: boolean;
-  isPrivate: boolean;
-  isProtected: boolean;
+  visibility: string;
 };
 
 export interface UserChat {
