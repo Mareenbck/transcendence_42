@@ -36,9 +36,8 @@ function PopUp(props: any) {
         // const password = passwordInputRef.current!.value;
         // console.log("password--->")
         // console.log(password)
-        if (channelName === "") {
-          return;
-        }
+        let idConv: number | undefined = undefined;
+        if (channelName === "") { return; }
         const newConv = {
             name: channelName,
             isPublic: isPublic,
@@ -46,16 +45,18 @@ function PopUp(props: any) {
             isProtected: isProtected,
             password:  passwordInputRef.current!.value,
         };
-        sendMessage("sendConv", {
-            name: channelName,
-            isPublic: isPublic,
-            isPrivate: isPrivate,
-            isProtected: isProtected,
-        } as any)
         try {
-            const res = await ConversationReq.postRoom(user, newConv);
-        } catch (err) {
-            console.log(err);
+            idConv = await ConversationReq.postRoom(user, newConv);
+        } catch (err) {  console.log(err)}
+        if (idConv !== undefined)
+        { 
+            sendMessage("sendConv", {
+                channelId: idConv,
+                name: channelName,
+                isPublic: isPublic,
+                isPrivate: isPrivate,
+                isProtected: isProtected,
+            } as any)
         }
     };
 
@@ -64,12 +65,8 @@ function PopUp(props: any) {
             await createNewChannel(e);
             setShowPopUp(false);
             props.onClick();
-        } catch (err) {
-            console.log(err);
-        }
-
+        } catch (err) { console.log(err);}
     }
-
     const handleFormSubmit = (e:FormEvent) => {
         e.preventDefault();
         setShowPopUp(false);

@@ -105,8 +105,8 @@ console.log(socket.handshake.auth.token);
   { this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  }
 
   @SubscribeMessage('sendConv')
-  async chatSendConversation(@MessageBody() data: {name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean}, @ConnectedSocket() socket: Socket,): Promise<void> 
-  { this.chatService.sendConv(data.name, data.isPublic, data.isPrivate, data.isProtected) };
+  async chatSendConversation(@MessageBody() data: {channelId: number, name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.chatService.sendConv(data.channelId, data.name, data.isPublic, data.isPrivate, data.isProtected) };
 
   @SubscribeMessage('toBlock')
   async chatBlock(@MessageBody() data: {blockFrom: number, blockTo: number}, @ConnectedSocket() socket: Socket,): Promise<void> 

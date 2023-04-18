@@ -28,9 +28,7 @@ export interface Game {
 export interface ChatRoom {
   id: number;
   name:  string;
-  isPublic: boolean;
-  isPrivate: boolean;
-  isProtected: boolean;
+  visibility: string;
 };
 
 export interface UserChat {
@@ -63,6 +61,11 @@ export interface UserCtx {
   avatar: string;
   ftAvatar: string;
   is2FA: boolean;
+}
+
+export interface OnlineU {
+  socketId: string;
+  userId: UserCtx; 
 }
 
 export interface Invite {
