@@ -6,8 +6,8 @@ import { Invite, UserChat } from '../../interfaces/iChat';
 import React from 'react';
 
 interface PopupChallengeProps {
-  trigger: UserChat;
-  player: UserChat;
+  trigger: UserChat | null;
+  player: UserChat | null;
   sendMessage: (signal: string, message: any) => void;
   setTrigger: (value: UserChat | null) => void;
   children: React.ReactNode;

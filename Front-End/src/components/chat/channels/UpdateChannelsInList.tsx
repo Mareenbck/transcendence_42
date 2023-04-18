@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef, RefObject } from "react";
 import useSocket from '../../../service/socket';
 import Conversation from "./Conversation";
 import ChannelVisibility from "./ChannelVisibility";
@@ -16,6 +16,7 @@ export default function UpdateChannelsInList(props: any) {
   const {currentChat, currentDirect, setCurrentDirect, setCurrentChat} = props;
   const [openModal, setOpenModal] = useState(false);
   const [sendMessage, addListener] = useSocket()
+  const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 
   useEffect(() => {
     addListener("getConv", data => setAConversation({
@@ -36,8 +37,13 @@ export default function UpdateChannelsInList(props: any) {
     getAllConv();
   }, []); 
 
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({behavior: "smooth"})
+  }, [conversations]);
+
     return (
         <>
+        <div className="conversationListe">
         <CreateChannelButton/>
         {conversations.map((c) => (
             <div key={c.name} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
@@ -51,6 +57,7 @@ export default function UpdateChannelsInList(props: any) {
                 </div>
             </div>
             ))}
+        </div>
         </>
     );
 }

@@ -65,6 +65,11 @@ export interface UserCtx {
   is2FA: boolean;
 }
 
+export interface OnlineU {
+  socketId: string;
+  userId: UserCtx; 
+}
+
 export interface Invite {
     author: UserChat;
     player: UserChat;
