@@ -7,11 +7,13 @@ import { BadRequestException, Injectable, ForbiddenException} from '@nestjs/comm
 import { Chatroom } from '@prisma/client';
 import { UserOnChannel} from '@prisma/client'
 import * as argon from 'argon2';
+import { UserService } from 'src/user/user.service';
 
 
 @Injectable()
 export class ChatroomService {
-  constructor(private prisma: PrismaService){}
+	constructor(private prisma: PrismaService,
+				private userService: UserService) { }
 
     async create(newConv: any, userId: number) {
       const { name, isPublic, isPrivate, isProtected, password } = newConv;
@@ -119,7 +121,6 @@ export class ChatroomService {
 
 	async getReceivedInvitations(userId: number) {
 		try {
-			// const user = await this.userService.getUser(userId);
 			const demands = await this.prisma.chatroomInvitations.findMany({
 			where: {
 				receiverId: userId,
@@ -134,35 +135,33 @@ export class ChatroomService {
 		}
 	}
 
-
-	async updateFriendship(id: any) {
-		const { demandId, response } = id
-		const friendhip = await this.prisma.friendship.update({
+	async updateInvitation(invitation: any) {
+		const { invitId, response } = invitation
+		const updated_invitation = await this.prisma.chatroomInvitations.update({
 			where: {
-				id: parseInt(demandId),
+				id: parseInt(invitId),
 			},
 			data: {
 				status: response,
 			},
 		});
-		return friendhip;
+		return updated_invitation;
 	}
 
-
-	async addFriend(request: any) {
-		const { requesterId, receiverId } = request;
-		const requester = await this.userService.getUser(parseInt(requesterId));
-		const receiver = await this.userService.getUser(parseInt(receiverId));
-		await this.userService.addFriendOnTable(requester.id, receiver.id)
-		await this.userService.addFriendOnTable(receiver.id, requester.id)
-		await this.userService.updateAchievement(requester.id, 'Famous')
-		await this.userService.updateAchievement(receiver.id, 'Famous')
+	async addChatroom(request: any) {
+		const { receiverId, chatroomId } = request;
+		const newTable = await this.prisma.userOnChannel.create({
+			data: {
+				channelId: chatroomId,
+				userId: receiverId,
+			},
+		});
+		return newTable;
 	}
 
-
-	async deleteRefusedFriendship() {
-		await this.prisma.friendship.deleteMany({
-			where: { status: 'REFUSED' },
+	async deleteRefusedInvitations() {
+		await this.prisma.chatroomInvitations.deleteMany({
+			where: { status: 'REJECTED' },
 		});
 	}
 

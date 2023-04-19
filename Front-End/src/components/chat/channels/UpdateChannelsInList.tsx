@@ -39,8 +39,6 @@ export default function UpdateChannelsInList(props: any) {
 					c.visibility === 'PUBLIC' || c.visibility === 'PWD_PROTECTED' ||
 					(c.visibility === 'PRIVATE' && c.participants.some(p => p.userId === user.userId))
 				);
-				console.log("filteredConversations dans le fetch")
-				console.log(filteredConversations)
 				setConversations(filteredConversations);
 			}
 		};

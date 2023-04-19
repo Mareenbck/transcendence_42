@@ -59,19 +59,19 @@ const ChannelInvitations = (props: any) => {
 	// }
 
 
-	const updateDemand = async (demandId: number, res: string) => {
+	const updateDemand = async (invitId: number, res: string) => {
 		try {
-			const response = await fetch(`http://localhost:3000/friendship/update`, {
+			const response = await fetch(`http://localhost:3000/chatroom2/invit_update`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${authCtx.token}`,
 				},
-				body: JSON.stringify({ demandId: demandId, response: res }),
+				body: JSON.stringify({ invitId: invitId, response: res }),
 			});
 			await response.json();
 			if (!response.ok) {
-				console.log("POST error on /friendship/validate");
+				console.log("POST error on /chatroom/update");
 				return "error";
 			}
 		} catch (error) {
@@ -107,7 +107,7 @@ const ChannelInvitations = (props: any) => {
 							onClose={handleCloseSnackbar}
 							message="Invitation Accepted"
 						/>
-						<div onClick={(event: FormEvent) => { handleUpdate(event, invit.id, 'REFUSED') }} className='deny'>
+						<div onClick={(event: FormEvent) => { handleUpdate(event, invit.id, 'REJECTED') }} className='deny'>
 							<HighlightOffIcon />
 						</div>
 					</li>

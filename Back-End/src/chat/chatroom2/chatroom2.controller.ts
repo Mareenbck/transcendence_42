@@ -62,31 +62,28 @@ export class Chatroom2Controller {
 		//creation d une demande d'acces dans database
 		const { channelId, invitedId } = ids;
 		const newDemand = await this.chatRoomService.openInvitations(parseInt(userId), channelId, invitedId);
-		console.log("newDemand--->");
-		console.log(newDemand);
 		return newDemand;
 	}
 
 	@Get('/pending_invitations')
 	@UseGuards(JwtGuard)
 	async getReceived(@GetCurrentUserId() userId: string){
-
 		const demands = await this.chatRoomService.getReceivedInvitations(parseInt(userId));
-		console.log("received pending demands--->")
-		console.log(demands)
 		return demands;
 	}
 
-	@Post('/update')
+	@Post('/invit_update')
 	@UseGuards(JwtGuard)
-	async updateDemand(@Body() demand: any) {
-		const result = await this.friendshipService.updateFriendship(demand);
+	async updateDemand(@Body() invitation: any) {
+		const result = await this.chatRoomService.updateInvitation(invitation);
 		if (result.status === 'ACCEPTED') {
-			await this.friendshipService.addFriend(result);
+			await this.chatRoomService.addChatroom(result);
 		}
-		else if (result.status === 'REFUSED') {
-			await this.friendshipService.deleteRefusedFriendship();
+		else if (result.status === 'REJECTED') {
+			await this.chatRoomService.deleteRefusedInvitations();
 		}
+		console.log("result--->")
+		console.log(result)
 		return result;
 	}
 
