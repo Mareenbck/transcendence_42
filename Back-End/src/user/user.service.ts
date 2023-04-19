@@ -36,12 +36,34 @@ export class UserService {
 		return allUsers;
 	}
 
-  async getUsersWithGames() {
-   const allUsers = await this.prisma.user.findMany({
-      include: { playerOne: true, playerTwo: true, winner: true }
-    });
-    return allUsers;
-  }
+	async getUsersWithGames() {
+   		const allUsers = await this.prisma.user.findMany({
+      		include: { playerOne: true, playerTwo: true, winner: true }
+    	});
+    	return allUsers;
+  	}
+
+	async getUsersWithMessages(id) {
+		const allUsersWithMessages = await this.prisma.user.findMany({
+		  	include: {
+				dirMessEmited: {
+			  		where: { receiver: id }
+			},
+				dirMessReceived: {
+			  		where: { author: id }
+			},
+				blockedFrom: true,
+				blockedTo: true
+		  	},
+		  	where: {
+				OR: [
+			  	{ dirMessEmited: { some: { receiver: id } } },
+			  	{ dirMessReceived: { some: { author: id } } }
+				]
+		  	}
+		});
+		return allUsersWithMessages;
+	}
 
 	async getUser(id: number) {
 		if (id === undefined) {

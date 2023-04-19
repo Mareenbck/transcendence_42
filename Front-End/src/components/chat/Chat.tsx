@@ -17,7 +17,7 @@ import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
 import NavbarChannel from './channels/NavbarChannel';
 import UserChart from '../scores/UserChart';
-
+import UsersWithDirectMessage from './message/usersWithMessages';
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -40,41 +40,6 @@ function Chat() {
   const [invited, setInvited] = useState<UserChat | null> (null);
   const [sendMessage, addListener] = useSocket()
   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
-
-
-// useEffect(() => {
-//     const handleTabClose = event => {
-//       event.preventDefault();
-//       console.log('beforeunload event triggered');
-//       return (event.returnValue =
-//         'Are you sure you want to exit?');
-//     };
-//     window.onbeforeunload, handleTabClose;
-//     return () => {
-//       window.removeEventListener('beforeunload', handleTabClose);
-//     };
-//   }, []);
-
-  // useEffect(() => {
-  //   const handleTabClose = () => {
-  //     // Déconnecter l'utilisateur
-  //     sendMessage("removeUserChat", user as UserCtx);
-
-  //     // Afficher un message de confirmation à l'utilisateur
-  //     return "Voulez-vous vraiment quitter la page ?";
-  //   };
-
-  //   window.addEventListener("beforeunload", handleTabClose);
-
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleTabClose);
-  //   };
-  // }, []);
-
-
-///////////////////////////////////////////////////////////
-// Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
-///////////////////////////////////////////////////////////
 
   useEffect(() => {
     addListener("getMessageRoom", (data) => setAMessageChat({
@@ -146,6 +111,7 @@ function Chat() {
       return prev;
     });
   },[AMessageD, currentDirect])
+
 
 ////////////////////////////////////////////////
 // Partie II : va chercher les infos de la base de donnée
@@ -404,25 +370,37 @@ useEffect(() => {
   scrollRef.current?.scrollIntoView({behavior: "smooth"})
 }, [messagesD]);
 
+
+{/* <div className="chatMenu"><UsersWithDirectMessage
+currentChat={currentChat}
+currentDirect={currentDirect}
+setCurrentChat={setCurrentChat}
+setCurrentDirect={setCurrentDirect}
+/></div>
+ */}
+
+// <NavbarChannel chatroom={currentChat} />
+
 return (
   <>
   {" "}
+
+
   <div className="messenger">
-	<div className="chatMenu">
-		<UpdateChannelsInList
-		currentChat={currentChat}
-		currentDirect={currentDirect}
-		setCurrentChat={setCurrentChat}
-		setCurrentDirect={setCurrentDirect}
-		/>
-	</div>
+    <div className="chatMenu"><UpdateChannelsInList
+      currentChat={currentChat}
+      currentDirect={currentDirect}
+      setCurrentChat={setCurrentChat}
+      setCurrentDirect={setCurrentDirect}
+    /></div>
+
     <div className="chatBox">
       <div className="chatBoxW">
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
         { currentChat ?
           <>
-		  <NavbarChannel chatroom={currentChat} />
+		  
           <div>chat in {currentChat.name} </div>  
           <div className="chatBoxTop">
             { messages2.length ?
