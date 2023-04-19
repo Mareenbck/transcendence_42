@@ -112,7 +112,7 @@ function Chat() {
     });
   },[AMessageD, currentDirect])
 
-  
+
 ////////////////////////////////////////////////
 // Partie II : va chercher les infos de la base de donnée
 ////////////////////////////////////////////////
@@ -370,18 +370,26 @@ useEffect(() => {
   scrollRef.current?.scrollIntoView({behavior: "smooth"})
 }, [messagesD]);
 
+
 {/* <div className="chatMenu"><UsersWithDirectMessage
 currentChat={currentChat}
 currentDirect={currentDirect}
 setCurrentChat={setCurrentChat}
 setCurrentDirect={setCurrentDirect}
-/></div> */}
+/></div>
+ */}
+
 
 return (
   <>
   {" "}
 
+
   <div className="messenger">
+
+
+
+
     <div className="chatMenu"><UpdateChannelsInList
       currentChat={currentChat}
       currentDirect={currentDirect}

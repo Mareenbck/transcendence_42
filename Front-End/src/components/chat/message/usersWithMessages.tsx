@@ -40,7 +40,7 @@ export default function UsersWithDirectMessage(props: any) {
   const inviteGame = (playerId :number ) => {
     console.log(playerId);
     sendMessage("InviteGame", {
-      author: getUser(+id),
+      author: getUser(+user.userId),
       player: getUser(+playerId),
     } as any);
   }
@@ -67,16 +67,15 @@ export default function UsersWithDirectMessage(props: any) {
   }, [usersWith]);
 
   // set direct message if not blocked
-  const getDirect = (userX: any): void => {
-    const gUser = getUser(+user.userId);
-    const dUser = userX.userId ? getUser(userX.userId) : userX;
-    if (dUser && gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +dUser.id) === undefined ))
+  const getDirect = (userX: UserChat): void => {
+    if (userX && (userX.blockedTo.find((u: UserChat) => +u.id === +userX.id) === undefined ))
     {
-      if (dUser.blockedFrom.find((u: UserChat) => +u.id === +user.userId) === undefined)
+      if (userX.blockedFrom.find((u: UserChat) => +u.id === +user.userId) === undefined)
       { 
-        setCurrentDirect(dUser);
+        setCurrentDirect(userX);
         setCurrentChat(null);
       }
+      console.log("dsdzsdsds  2", currentDirect);
     }
   }
 
