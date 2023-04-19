@@ -7,9 +7,9 @@ import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from './ChannelsSettings';
 import { TextField } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import useSocket from '../../../service/socket';
 
 function PopUp(props: any) {
-
     const authCtx = useContext(AuthContext);
     const [isPublic, setIsPublic] = useState(true);
     const [isPrivate, setIsPrivate] = useState(false);
@@ -21,7 +21,7 @@ function PopUp(props: any) {
     const [channelName, setchannelName] = useState('');
     const [openModal, setOpenModal] = useState(true);
     const passwordInputRef = useRef<HTMLInputElement>(null);
-
+    const [sendMessage, addListener] = useSocket()
 
     const handleChannelNameChange = (e: FormEvent) => {
         const value = e.target.value;
@@ -36,9 +36,8 @@ function PopUp(props: any) {
         // const password = passwordInputRef.current!.value;
         // console.log("password--->")
         // console.log(password)
-        if (channelName === "") {
-          return;
-        }
+        let idConv: number | undefined = undefined;
+        if (channelName === "") { return; }
         const newConv = {
             name: channelName,
             isPublic: isPublic,
@@ -47,9 +46,17 @@ function PopUp(props: any) {
             password:  passwordInputRef.current!.value,
         };
         try {
-            const res = await ConversationReq.postRoom(user, newConv);
-        } catch (err) {
-            console.log(err);
+            idConv = await ConversationReq.postRoom(user, newConv);
+        } catch (err) {  console.log(err)}
+        if (idConv !== undefined)
+        { 
+            sendMessage("sendConv", {
+                channelId: idConv,
+                name: channelName,
+                isPublic: isPublic,
+                isPrivate: isPrivate,
+                isProtected: isProtected,
+            } as any)
         }
     };
 
@@ -58,12 +65,8 @@ function PopUp(props: any) {
             await createNewChannel(e);
             setShowPopUp(false);
             props.onClick();
-        } catch (err) {
-            console.log(err);
-        }
-
+        } catch (err) { console.log(err);}
     }
-
     const handleFormSubmit = (e:FormEvent) => {
         e.preventDefault();
         setShowPopUp(false);

@@ -7,11 +7,13 @@ import { BadRequestException, Injectable, ForbiddenException} from '@nestjs/comm
 import { Chatroom } from '@prisma/client';
 import { UserOnChannel} from '@prisma/client'
 import * as argon from 'argon2';
+import { UserService } from 'src/user/user.service';
 
 
 @Injectable()
 export class ChatroomService {
-  constructor(private prisma: PrismaService){}
+	constructor(private prisma: PrismaService,
+				private userService: UserService) { }
 
     async create(newConv: any, userId: number) {
       const { name, isPublic, isPrivate, isProtected, password } = newConv;
@@ -46,9 +48,13 @@ export class ChatroomService {
       return newChannel;
   }
 
-  findAll() {
-    return this.prisma.chatroom.findMany();
-  }
+	findAll() {
+		return this.prisma.chatroom.findMany({
+			include: {
+				participants: true,
+			},
+		});
+	}
 
   findOne(id: number) {
     return this.prisma.chatroom.findUnique({where: {id: id}});;
@@ -106,5 +112,65 @@ export class ChatroomService {
       return channel;
   }
     
+
+	async openInvitations(senderId: number, channelId: number, receiverId: number) {
+		const demand = await this.prisma.chatroomInvitations.create({
+			data: {
+				senderId: senderId,
+				chatroomId: channelId,
+				receiverId: receiverId,
+			},
+		});
+		return demand
+	}
+
+
+	async getReceivedInvitations(userId: number) {
+		try {
+			const demands = await this.prisma.chatroomInvitations.findMany({
+			where: {
+				receiverId: userId,
+			},
+			include: {
+				chatroom: true,
+			},
+		})
+			return demands;
+		} catch (error) {
+			throw new BadRequestException('getReceivedInvitations error : ' + error);
+		}
+	}
+
+	async updateInvitation(invitation: any) {
+		const { invitId, response } = invitation
+		const updated_invitation = await this.prisma.chatroomInvitations.update({
+			where: {
+				id: parseInt(invitId),
+			},
+			data: {
+				status: response,
+			},
+		});
+		return updated_invitation;
+	}
+
+	async addChatroom(request: any) {
+		const { receiverId, chatroomId } = request;
+		const newTable = await this.prisma.userOnChannel.create({
+			data: {
+				channelId: chatroomId,
+				userId: receiverId,
+			},
+		});
+		return newTable;
+	}
+
+	async deleteRefusedInvitations() {
+		await this.prisma.chatroomInvitations.deleteMany({
+			where: { status: 'REJECTED' },
+		});
+	}
+
+
 
 }

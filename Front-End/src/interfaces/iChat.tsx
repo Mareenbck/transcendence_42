@@ -1,6 +1,6 @@
 export interface DirectMessage 
 {
-    id: number;
+  //  id: number;
     content  : string;
     author    : number;
     receiver  : number;
@@ -8,7 +8,7 @@ export interface DirectMessage
 }
 
 export interface RoomMessage {
-    id: number;
+   // id: number;
     chatroomId: number;
     content:  string;
     authorId: number;
@@ -28,9 +28,7 @@ export interface Game {
 export interface ChatRoom {
   id: number;
   name:  string;
-  isPublic: boolean;
-  isPrivate: boolean;
-  isProtected: boolean;
+  visibility: string;
 };
 
 export interface UserChat {
@@ -65,9 +63,14 @@ export interface UserCtx {
   is2FA: boolean;
 }
 
+export interface OnlineU {
+  socketId: string;
+  userId: UserCtx; 
+}
+
 export interface Invite {
-    authorId: number;
-    playerId: number;
+    author: UserChat;
+    player: UserChat;
 };
 
 export interface UserInRoom {

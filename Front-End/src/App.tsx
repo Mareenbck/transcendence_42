@@ -8,27 +8,15 @@ import Chat from './components/chat/Chat'
 import Home from './pages/Home'
 import Profile from './pages/Profile';
 import Callback42 from './components/auth/Callback42';
-import AuthContext from './store/AuthContext';
 import Friends from './components/friends/Friends';
 import Login from './components/auth/Login';
 import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';
 import Setting from './pages/Setting';
 import Scores from'./components/scores/Scores';
-import useSocket from './service/socket';
+
 
 function App() {
-
-	const authCtx = useContext(AuthContext);
-	const [isLoggedIn, setLoggedIn] = useState(authCtx.isLoggedIn)
-	const [sendMessage, addListener] = useSocket();
-
-	useEffect(() => {
-		console.log({isLoggedIn})
-		if (isLoggedIn) sendMessage('welcome', 'welcome')
-		else sendMessage('bye', 'bye bye!');
-	}, [])
-
 	return (
 		<Routes>
 			<Route path='/' element={<Home />} />
