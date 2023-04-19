@@ -2,6 +2,13 @@ export interface player{
     socket: any;
 	userId: any;
 }
+
+export interface gamesList{
+    roomN: number;
+	playerR: any;
+	playerL: any;
+}
+
 // export interface profile{
 // 	socketId: any; //socketId: any [];
 // 	userId: any;

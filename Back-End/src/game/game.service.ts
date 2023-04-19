@@ -8,7 +8,6 @@ import { UserDto } from 'src/user/dto/user.dto';
 import { Server, Socket } from "socket.io";
 import UsersSockets from "src/gateway/socket.class";
 import {
-	profile,
 	player,
 	roomsList
 	} from './game.interfaces';
@@ -22,64 +21,61 @@ export class GameService {
 	public server: Server = null;
 	public userSockets: UsersSockets;
 
-	private playerR: player;
-	private playerL: player;
+	private playerR: any;
+	private playerL: any;
 	private gameId: number = 0;
 
+//all connected users
+	players: any[] = []; //userChat = new Array();
+//all connected spectateurs
+	spectateurs: any [] = []; // roomUsers = new Array();
+//roomsGames
+	private gameMap = new  Map<number, Game>();
+	private resultArray: roomsList[]= [];
+	
   	constructor(private readonly prisma: PrismaService, 
 			    private readonly userService: UserService){}
 
-
-
-
-//all connected users
-	players: profile[] = []; //userChat = new Array();
-//all connected spectateurs
-	spectateurs: profile [] = []; // roomUsers = new Array();
-//roomsGames
-	roomGamesList: roomsList [] = [];
-
-	getPlayer:any = (userId: number) => {
-        return this.players.find(u => +u.user.userId.userId === +userId);
+	getPlayer:any = (username: string) => {
+        return this.players.find(u => +u.user.username === +username);
     }
 
-	addPlayer = (user: any, socket: Socket) => {
-console.log("game.service: add players _ xxxxx", user)
-
+	addPlayer = (user: any) => {
 	    !this.players.some((u) => +u.user.userId === +user.userId) &&
-		this.players.push({user, socket})
-console.log("game.service: add players", this.players)
+		this.players.push({user})
 	};
 
-	addNewRoom = (playerR: profile, playerL: profile): string => {
+	addNewRoom = (playerR: any, playerL: any): void => {
 		let roomN = 0;
-		while (this.roomGamesList.includes(this.roomGamesList[0], roomN)){
+		while (this.gameMap.has(roomN)){
 			roomN++;
 	    }
 		const room = `room ${roomN}`;
 	//    this.server.createRoom(room); 
-		playerR.socket.join(room);
-		playerL.socket.join(room);
-		this.roomGamesList.push({roomN, playerR, playerL});
-		return room;
+		this.userSockets.joinToRoom(playerR.user.username, room);
+		this.userSockets.joinToRoom(playerL.user.username, room);
+		let game = new Games (this.server, roomN, this.prisma, 	this.userSockets);
+		game.init(playerR);
+		game.init(playerL);
+		this.gameMap[roomN] = game;
+		game.initMoveEvent(playerR, playerL);
+		const resultArray: roomsList[]= [];
+		resultArray.push({roomN, playerR, playerL});
+	 	this.server.emit("gameRooms", resultArray);
+		this.players = [];
+		game.run();
+
 	}
 
-
-	playGame: any = (user: any, socket: Socket) => {
-console.log("game.service: message playGame", user);
-// 	let username = this.userSockets.getUserBySocket(socket.id);
-// console.log("game.service: username connected", username);
+	playGame: any = (user: any) => {
 		// if (!username){
 		// 	return ;
 		// }
-		this.addPlayer(user, socket);
+		this.addPlayer(user);
 		if (this.players.length == 2){
-			let roomName = this.addNewRoom(this.players[0], this.players[1]);
-			let game = new Games (this.server, roomName, this.prisma);
-			game.init(this.players[0].socket);
-			game.init(this.players[1].socket);
-		//	this.players = [];
-			game.run(this.players[0], this.players[1]);
+	console.log("76_game.service: plauers", this.players);
+
+			this.addNewRoom(this.players[0], this.players[1]);
 		}
 
 	}

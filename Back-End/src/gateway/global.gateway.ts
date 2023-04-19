@@ -53,7 +53,6 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   async handleConnection(socket: Socket) {
     try {
 console.log("Enter Global Soket server");
-console.log(socket.handshake.auth.token);
       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
       if (!user) {
         throw new WsException('Invalid credentials.');
@@ -65,13 +64,10 @@ console.log(socket.handshake.auth.token);
         this.userSockets.removeSocket(socket)
         socket.disconnect(true);
     }
-console.log("+userSockets", this.userSockets);
   }
 
   async handleDisconnect(client: Socket) {
     this.userSockets.removeSocket(client)
-console.log("-userSockets", this.userSockets);
-
     client.disconnect(true);
   }
 
@@ -145,12 +141,5 @@ console.log("-userSockets", this.userSockets);
   @SubscribeMessage('playGame')
   async playGame(@MessageBody() data: {user: any}, @ConnectedSocket() socket: Socket,): Promise<void> 
   {
-    this.gameService.playGame(data, socket) };
+    this.gameService.playGame(data) };
   }
-
-
-  @SubscribeMessage('InviteGame')
-async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
-{ this.gameService.gameInvite(data.author, socket, data.player) };
-}
-

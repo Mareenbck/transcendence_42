@@ -2,17 +2,12 @@ import {Server, Socket} from 'socket.io'
 
 import { PrismaService} from '../prisma/prisma.service';
 import {
-		profile,
 		player,
 		ball,
 		gameInit,
 		GameParams
 	 } from './game.interfaces';
-import { GameService } from './game.service';
-import { PrismaClient } from '@prisma/client';
-//import { Room } from 'socket.io-adapter';
-
-
+import UsersSockets from 'src/gateway/socket.class';
 
 var ballSpeed = GameParams.BALL_DEFAULT_SPEED;
 const width = GameParams.GAME_WIDTH;
@@ -26,20 +21,18 @@ let period = GameParams.PERIOD
 
 export class Games {
 
-
 // initialization of players (L - left, R - right)
 	private playerL: player = {
-		profile: {} as profile,
+		user: {} as any,
 		racket: {x: 10, y: (height - racket_height)/2},
 		score: 0,
 	};
 	private playerR: player = {
-		profile: {} as profile,
+		user: {} as any,
 		racket: {x: width - racket_width - 10, y: (height - racket_height)/2},
 		score: 0,
 	};
 
-//	private spectatorSockets: any[] = [];
 	private isrunning: boolean = false; // define the interval property
 	private interval: NodeJS.Timeout; // define the interval property
 	private leave: boolean = false;
@@ -50,31 +43,29 @@ export class Games {
 	private winner: any = '';
 
 	private server: Server;
-	private room: string;
+	private room: number;
 	private prismaService: PrismaService;
-	// private gameService: GameService;
 
-
+	public userSockets: UsersSockets;
 
 	constructor(
 		server: Server,
-		room: string,
+		room: number,
 		prismaService: PrismaService,
 		//spectatorSockets: any[]
-		// gameService: GameService
+		userSockets: UsersSockets,
 	) {
 console.log("constructor Class.game");
 		this.server = server;
-		// this.room = room;
+		this.room = room;
 		this.prismaService = prismaService;
-		// this.gameService = gameService;
+		this.userSockets = userSockets;
 	}
-	prisma = new PrismaClient()
-
 
 // function: emit game - tacking the changing coordinates of rackets and ball
-	private emit2all(){
-		this.server.to(this.room).emit('pong', { // !!! sens for each room
+	private emit2all(room: number){
+		this.server.to(`room${room}`).emit('pong',
+		{ // !!! sens for each room
 			ball: this.ball,
 			racket1: this.playerR.racket,
 			racket2: this.playerL.racket,
@@ -82,12 +73,11 @@ console.log("constructor Class.game");
 			scoreL: this.playerL.score
 		});
 	}
+
 // function: initialization of game // during the ferst connection to the game
-	public init(socket: Socket){
-
-//console.log(`init socket ${socket.id}`);
-		socket.emit('init-pong', { 
-
+	public init(user: any){
+console.log("game.class: init", user);
+		this.userSockets.emitToUser(user.username, 'init-pong', { 
 			table_width: width,
 			table_height: height,
 			racket_width: racket_width,
@@ -95,9 +85,10 @@ console.log("constructor Class.game");
 			ballR: ballR,
 			scoreR: this.playerR.score,
 			scoreL: this.playerL.score,
-			winner: this.winner
+		//	winner: this.winner
 		});
 	}
+
 // function: game logic ...
 	private updatePositions(): void
 	{
@@ -159,142 +150,108 @@ console.log("constructor Class.game");
 // 		}
 // 	};
 
-	private player_disconect = (userId: any) => {
-		this.isrunning = false;
-		this.winner = userId;
-		this.server.emit('winner', {winner: this.winner, leave: this.leave}); // room
-	}
-
-// function: run game
-	public run(
-		idPlayerR: profile,
-		idPlayerL: profile,
+// move rakets event
+	public initMoveEvent(
+		idPlayerR: any,
+		idPlayerL: any,
 	): void {
-//console.log("run");
-//console.log("idPlayerR", idPlayerR);
-//console.log("idPlayerL", idPlayerL);
-		this.playerR.profile = idPlayerR;
-		this.playerL.profile = idPlayerL;
+		this.playerR.user = idPlayerR;
+		this.playerL.user = idPlayerL;
 		this.isrunning = true;
 
 		// const socketR = this.server.sockets.sockets.get(idPlayerR.socketId);
 		// const socketL = this.server.sockets.sockets.get(idPlayerL.socketId); 
-		const socketR = this.playerR.profile.socket;
-		const socketL = this.playerL.profile.socket;; 	
-//console.log("socketR", socketR.id);
-//console.log("socketL", socketL.id);		
-
-
-// move rakets
-		socketR.on ('move', (message: string) => {
-//console.log("playerR move", message);
+		this.userSockets.onFromUser(idPlayerR.user.username,'move', (message: string) => {
+	console.log("game_class_playerR socket message", message);
+	let socket =  this.userSockets.getUserSockets(idPlayerR.user.username)[0];
 			if (message == 'up') {
 				if (this.playerR.racket.y > 0) {
 					this.playerR.racket.y -= racketSpeedY;
 				}
-				this.emit2all();
+				this.emit2all(this.room);
 			} else if (message == 'down') {
 				if (this.playerR.racket.y < height - racket_height) {
 					this.playerR.racket.y += racketSpeedY;
 				}
-				this.emit2all();
+				this.emit2all(this.room);
 			}
 		});
-
-		socketL.on ('move', (message: string) => {
-//console.log("playerL move", message);
+		  
+		this.userSockets.onFromUser(idPlayerL.user.username,'move', (message: string) => {
+console.log("game_class_playerL socket message", message);	
 			if (message == 'up') {
 				if (this.playerL.racket.y > 0) {
 					this.playerL.racket.y -= racketSpeedY;
 				}
-				this.emit2all();
+				this.emit2all(this.room);
 			} else if (message == 'down') {
 				if (this.playerL.racket.y < height - racket_height) {
 					this.playerL.racket.y += racketSpeedY;
 				}
-				this.emit2all();
+				this.emit2all(this.room);
 			}
 		});
 
+	}
+// //handling disconection
+// 		socketR?.on('disconect', () => {
+// 	console.log("playerR disconect");
+// 			this.player_disconect(this.playerL.profile.user.userId);
+// 			clearInterval(this.interval);
+// 			this.isrunning = false;
+// 		})
 
+// 		socketL?.on('disconect', () => {
+// 	console.log("playerL disconect");
+// 			this.player_disconect(this.playerR.profile.user.userId);
+// 			clearInterval(this.interval);
+// 			this.isrunning = false;
+// 		})
+	private player_disconect = (user: any) => {
+		this.isrunning = false;
+		this.winner = user;
+		this.server.emit('winner', {winner: this.winner, leave: this.leave});
+	}
 
-
-
-	// const socketR = this.server.sockets.sockets.get(idPlayerR.socketId);
-	// socketR.on('move', (m:string) => {this.player_move(m, this.playerR)})
-
-	// idPlayerR.socketId.forEach((id) => {
-	// 	const socket = this.server.sockets.sockets.get(id);
-	// 	socket.on('move', (m:string) => {this.player_move(m, this.playerR)})
-	// });
-	// const socketL = this.server.sockets.sockets.get(idPlayerL.socketId);
-	// socketR.on('move', (m:string) => {this.player_move(m, this.playerL)})
-
-	// idPlayerL.socketId.forEach((id) => {
-	// 	const socket = this.server.sockets.sockets.get(id);
-	// 	socket.on('move', (m:string) => {this.player_move(m, this.playerL)});
-	// });
-
-//handling disconection
-		socketR?.on('disconect', () => {
-	console.log("playerR disconect");
-			this.player_disconect(this.playerL.profile.user.userId);
-			clearInterval(this.interval);
-			this.isrunning = false;
-		})
-
-		socketL?.on('disconect', () => {
-	console.log("playerL disconect");
-			this.player_disconect(this.playerR.profile.user.userId);
-			clearInterval(this.interval);
-			this.isrunning = false;
-		})
-
-//interval function: update the game at the certain period until the score reaches MAX
+// function: run game
+	public run(): void {
+console.log("game.class.run");
+	//interval function: update the game at the certain period until the score reaches MAX
 		this.interval = setInterval(() => {
 			this.updatePositions();
 			// Emit the updated positions of the ball and the rocket to all connected clients
-			this.emit2all();
+			this.emit2all(this.room);
+console.log("position ball x y", this.ball.x, this.ball.y);
+console.log("position requet", this.playerR.racket, this.playerL.racket);
+console.log("position score", this.playerR.score, this.playerL.score);
+
 			if ((this.playerL.score >= 2 || this.playerR.score >= 2)){ //score MAX - change here
 
 				this.isrunning = false;
-				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.profile.user : this.playerR.profile.user;
+				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
 				this.player_disconect(this.winner);
 				clearInterval(this.interval);
 
 				if (!this.isrunning){
-//console.log("257 winner", this.winner)
-// this.gameService.create(data: {
-// 				playerOne: {
-// 					connect: {id: this.playerR.profile.userId.userId}},
-// 				playerTwo: {
-// 					connect: {id: this.playerL.profile.userId.userId}},
-// 				winner: {
-// 					connect: { id: this.winner.profile.userId.userId}},
-// 					score1: this.playerR.score,
-// 					score2: this.playerL.score,
-// 			} );
-					// let promisses = [];
-					// promisses.push(
-						this.prisma.game.create({
-							data: {
-								playerOne: {
-									connect: {id: this.playerR.profile.user.userId}},
-								playerTwo: {
-									connect: {id: this.playerL.profile.user.userId}},
-								winner: {
-									connect: { id: this.winner.userId}},
-									score1: this.playerR.score,
-									score2: this.playerL.score,
-							}
+				// let promisses = [];
+				// promisses.push(
+					this.prismaService.game.create({
+						data: {
+							playerOne: {
+								connect: {id: this.playerR.user.userId}},
+							playerTwo: {
+								connect: {id: this.playerL.user.userId}},
+							winner: {
+								connect: { id: this.winner.userId}},
+								score1: this.playerR.score,
+								score2: this.playerL.score,
+						}
 					});
 				}
 				this.playerL.score = 0;
 				this.playerR.score = 0;
 			}
 		}, period);
-//console.log('stop game')
 	}
-
 }
 

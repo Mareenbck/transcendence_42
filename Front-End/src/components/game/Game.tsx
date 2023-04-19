@@ -4,7 +4,7 @@ import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
 import Winner from './Winner'
 import './Game.css'
-import type { gameInit, gameState, gameWinner, player } from './type'
+import type { gameInit, gameState, gameWinner, player, gamesList } from './type'
 //import { socket } from '../../service/socket';
 import ColorModal from './modal.tsx/ColorModal';
 import useSocket from '../../service/socket';
@@ -14,8 +14,8 @@ import useSocket from '../../service/socket';
 
 function Game() {
     const user = useContext(AuthContext);
-    const [users, setOnlineSpectators] = useState<[player]> ();
-    const [players, setOnlinePlayers] = useState<[player]> ();
+//    const [users, setOnlineSpectators] = useState<[player]> ();
+    const [games, setOnlinePlayers] = useState<[gamesList]> ();
     const [sendMessage, addListener] = useSocket()
 
 
@@ -67,9 +67,9 @@ function Game() {
         {
             table_width: 800,
             table_height: 400,
-            ballR: 15,
             racket_width: 10,
             racket_height: 100,
+            ballR: 15,
             scoreR: 0,
             scoreL: 0
         }
@@ -123,12 +123,12 @@ function Game() {
 //     },[user]);
 
     useEffect(() => {
-        addListener("getPlayers", (players: React.SetStateAction<[player] | undefined>) => {
-            setOnlinePlayers(players);
+        addListener("gameRooms", (players: React.SetStateAction<[gamesList] | undefined>) => {
+           setOnlinePlayers(games);
         });
     })
 
-   // console.log('players front', players);
+console.log('players front', games);
 // console.log('users Front', users)
 ///////////////////////////////////////////////////////
 
@@ -151,7 +151,7 @@ function Game() {
         addListener('init-pong', initListener);
         addListener('pong', updateListener);
         addListener('winner', initWinner )
-   // console.log("winner = ", gamewinner.winner);        
+   console.log("pong", gameinit);        
         // return () => {
         //     socket?.off('init-pong', initListener);
         //     socket?.off('pong', updateListener);

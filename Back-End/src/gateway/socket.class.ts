@@ -38,7 +38,20 @@ export default class UsersSockets {
     }
     
     emitToUser(username: string, event: string, data: any | undefined = undefined) {
+console.log("emitToUser by sockets");
         this.getUserSockets(username)?.forEach((socket: Socket) => socket.emit(event, data));
+    }
+
+    // emitToRoom(username: string, event: string, room: string, data: any | undefined = undefined) {
+    //     this.getUserSockets(username)?.forEach((socket: Socket) => socket.to(room).emit(event, data));
+    // }
+
+    onFromUser(username: string, event: string, data: any | undefined = undefined) {
+        this.getUserSockets(username)?.forEach((socket: Socket) => socket.on(event, data));
+    }
+
+    joinToRoom(username: string, room: string, data: any | undefined = undefined) {
+        this.getUserSockets(username)?.forEach((socket: Socket) => socket.join(room));
     }
 
     getUserSockets(username: string): SocketMap | undefined {
