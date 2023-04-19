@@ -45,19 +45,19 @@ export default function UsersOnChannel(props: any) {
         return (
             <>
                 <h2 className='participants-modal'>Participants of {props.channelName}:</h2>
-                <h4>Admins:  </h4>
-                <ul>
+                <h4 className='name-participants'>Admins:  </h4>
+                <ul className='ul-participants'>
                     {admins.map((p) => (
-                    <li className='name-participants' key={p.id}>
+                    <li className='username-participants' key={p.id}>
                         <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
                         {p.user.username} <i className="fa-sharp fa-solid fa-crown"></i>
                     </li>
                     ))}
                 </ul>
-                <h3>Users:</h3>
-                <ul>
+                <h4 className='name-participants'>Users:</h4>
+                <ul className='ul-participants'>
                     {users.map((p) => (
-                    <li className='name-participants' key={p.id}>
+                    <li className='username-participants' key={p.id}>
                         <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
                         {p.user.username}
                     </li>

@@ -31,6 +31,9 @@ export default function Conversation(props: any) {
         )}
       >
         <div className="modal-participants">
+        <button className="close-btn" onClick={handleClose}>
+          <i className="fa fa-times"></i>
+        </button>
           <ul>
             <UsersOnChannel channelName={props.name} channelId={props.id} />
           </ul>

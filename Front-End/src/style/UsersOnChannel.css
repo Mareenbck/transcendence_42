@@ -16,21 +16,51 @@
     border-radius: 20px;
     border: black 2px solid;
     margin-right: 60px;
+    width: 25%;
 }
 
 .participants-modal{
 	font-family: 'Noto Sans', sans-serif;
     padding-top: 10px;
+    margin-bottom: 50px;
+    margin-top: 30px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 35px;
+    line-height: 24px;
 }
 
 .name-participants {
     display: flex;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 24px;
+    align-self: center;
+    font-family: 'Noto Sans', sans-serif;
 }
 
 .fa-crown {
     margin-left: 1.5rem;
     color: #FFC700;
     font-size: 1.2rem;
+}
+
+.username-participants{
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    align-self: center;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.ul-participants {
+    padding-inline-start: 0px;
 }
