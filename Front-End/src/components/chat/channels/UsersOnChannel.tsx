@@ -35,7 +35,7 @@ export default function UsersOnChannel(props: any) {
             showParticipants(props.channelId);
         }, [props.channelId])
 
-
+        console.log("participants -----> ", participants)
         return (
             <>
               <div>
@@ -43,7 +43,7 @@ export default function UsersOnChannel(props: any) {
                 <ul>
                   {participants.map((p) => (
                     <li key={p.id}>
-                      {p.name} ({p.role})
+                      {p.user.username} ({p.role})
                     </li>
                   ))}
                 </ul>
