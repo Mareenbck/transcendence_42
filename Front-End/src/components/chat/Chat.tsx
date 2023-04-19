@@ -18,6 +18,7 @@ import Channels from './channels/Channels';
 import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite} from "../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
+import NavbarChannel from './channels/NavbarChannel';
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -452,6 +453,7 @@ return (
         <PopupChallenge trigger={invited} setTrigger={setInvited} > <h3></h3></PopupChallenge>
         { currentChat ?
           <>
+		  <NavbarChannel chatroom={currentChat} />
           <div className="chatBoxTop">
             { messages2.length ?
               messages2.map((m) => (

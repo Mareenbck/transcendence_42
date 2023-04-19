@@ -53,9 +53,9 @@ export function PrivateChannel(props: any) {
 	return (
 		<>
 		<div className="visibility-icon">
-			<AddBoxIcon onClick={(e: FormEvent) => askToJoinChannel(e, props.id)} className="join-channel" fontSize="small" />
+			{/* <AddBoxIcon onClick={(e: FormEvent) => askToJoinChannel(e, props.id)} className="join-channel" fontSize="small" /> */}
 			<LockIcon className="channel-icon" fontSize="small" />
-			{demandList}
+			{/* {demandList} */}
 		</div>
 		</>
 	);

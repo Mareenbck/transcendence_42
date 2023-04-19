@@ -29,7 +29,7 @@ export default function UpdateChannelsInList(props: any) {
       name: data.content.name,
     }));
   });
-    
+
     useEffect(() => {
       AConversation && setConversations(prev=>[AConversation, ...prev]);
       }, []);
@@ -58,6 +58,7 @@ export default function UpdateChannelsInList(props: any) {
                 </div>
             </div>
             ))}
+			{/* <ChannelInvitations /> */}
         </>
     );
 }

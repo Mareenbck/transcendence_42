@@ -49,9 +49,13 @@ export class ChatroomService {
       return newChannel;
   }
 
-  findAll() {
-    return this.prisma.chatroom.findMany();
-  }
+	findAll() {
+		return this.prisma.chatroom.findMany({
+			include: {
+				participants: true,
+			},
+		});
+	}
 
   findOne(id: number) {
     return this.prisma.chatroom.findUnique({where: {id: id}});;
@@ -101,33 +105,33 @@ export class ChatroomService {
 	}
 
 
-	async openDemand(userId: number, channelId: number) {
-		const demand = await this.prisma.channelRequest.create({
-			data: {
-				userId: userId,
-				channelId: channelId,
-			},
-		});
-		return demand
-	}
+	// async openDemand(userId: number, channelId: number) {
+	// 	const demand = await this.prisma.channelRequest.create({
+	// 		data: {
+	// 			userId: userId,
+	// 			channelId: channelId,
+	// 		},
+	// 	});
+	// 	return demand
+	// }
 
 
-	async getReceivedDemands(userId: number) {
-		try {
-			// const user = await this.userService.getUser(userId);
-			const demands = await this.prisma.channelRequest.findMany({
-			where: {
-				userId: userId,
-			},
-			include: {
-				channel: true,
-			},
-		})
-			return demands;
-		} catch (error) {
-			throw new BadRequestException('getReceivedFriendships error : ' + error);
-		}
-	}
+	// async getReceivedDemands(userId: number) {
+	// 	try {
+	// 		// const user = await this.userService.getUser(userId);
+	// 		const demands = await this.prisma.channelRequest.findMany({
+	// 		where: {
+	// 			userId: userId,
+	// 		},
+	// 		include: {
+	// 			channel: true,
+	// 		},
+	// 	})
+	// 		return demands;
+	// 	} catch (error) {
+	// 		throw new BadRequestException('getReceivedFriendships error : ' + error);
+	// 	}
+	// }
 
 
 }
