@@ -117,22 +117,55 @@ export class ChatroomService {
 	}
 
 
-	// async getReceivedDemands(userId: number) {
-	// 	try {
-	// 		// const user = await this.userService.getUser(userId);
-	// 		const demands = await this.prisma.channelRequest.findMany({
-	// 		where: {
-	// 			userId: userId,
-	// 		},
-	// 		include: {
-	// 			channel: true,
-	// 		},
-	// 	})
-	// 		return demands;
-	// 	} catch (error) {
-	// 		throw new BadRequestException('getReceivedFriendships error : ' + error);
-	// 	}
-	// }
+	async getReceivedInvitations(userId: number) {
+		try {
+			// const user = await this.userService.getUser(userId);
+			const demands = await this.prisma.chatroomInvitations.findMany({
+			where: {
+				receiverId: userId,
+			},
+			include: {
+				chatroom: true,
+			},
+		})
+			return demands;
+		} catch (error) {
+			throw new BadRequestException('getReceivedInvitations error : ' + error);
+		}
+	}
+
+
+	async updateFriendship(id: any) {
+		const { demandId, response } = id
+		const friendhip = await this.prisma.friendship.update({
+			where: {
+				id: parseInt(demandId),
+			},
+			data: {
+				status: response,
+			},
+		});
+		return friendhip;
+	}
+
+
+	async addFriend(request: any) {
+		const { requesterId, receiverId } = request;
+		const requester = await this.userService.getUser(parseInt(requesterId));
+		const receiver = await this.userService.getUser(parseInt(receiverId));
+		await this.userService.addFriendOnTable(requester.id, receiver.id)
+		await this.userService.addFriendOnTable(receiver.id, requester.id)
+		await this.userService.updateAchievement(requester.id, 'Famous')
+		await this.userService.updateAchievement(receiver.id, 'Famous')
+	}
+
+
+	async deleteRefusedFriendship() {
+		await this.prisma.friendship.deleteMany({
+			where: { status: 'REFUSED' },
+		});
+	}
+
 
 
 }

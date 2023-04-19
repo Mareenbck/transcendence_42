@@ -67,15 +67,28 @@ export class Chatroom2Controller {
 		return newDemand;
 	}
 
-	// @Post('/pending_demand')
-	// @UseGuards(JwtGuard)
-	// async getReceived(@GetCurrentUserId() userId: string){
+	@Get('/pending_invitations')
+	@UseGuards(JwtGuard)
+	async getReceived(@GetCurrentUserId() userId: string){
 
-	// 	const demands = await this.chatRoomService.getReceivedDemands(parseInt(userId));
-	// 	console.log("received pending demands--->")
-	// 	console.log(demands)
-	// 	return demands;
-	// }
+		const demands = await this.chatRoomService.getReceivedInvitations(parseInt(userId));
+		console.log("received pending demands--->")
+		console.log(demands)
+		return demands;
+	}
+
+	@Post('/update')
+	@UseGuards(JwtGuard)
+	async updateDemand(@Body() demand: any) {
+		const result = await this.friendshipService.updateFriendship(demand);
+		if (result.status === 'ACCEPTED') {
+			await this.friendshipService.addFriend(result);
+		}
+		else if (result.status === 'REFUSED') {
+			await this.friendshipService.deleteRefusedFriendship();
+		}
+		return result;
+	}
 
 }
 

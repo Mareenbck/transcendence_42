@@ -11,7 +11,7 @@ import ConversationReq from "./ConversationRequest";
 import AuthContext from "../../../store/AuthContext";
 import ChannelsSettings from "./ChannelsSettings";
 import JoinProtectedChannel from "./JoinProtectedChannel";
-import AccessChannelDemands from "./AccessChannelDemands";
+import AccessChannelDemands from "./ChannelInvitations";
 
 export function PrivateChannel(props: any) {
 
