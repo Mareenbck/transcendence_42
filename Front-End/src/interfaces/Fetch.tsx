@@ -8,7 +8,7 @@ export class Fetch {
         { par = par + '\/' + par2; }
       if (par !== undefined)
         { endPoint = endPoint + '\/' + par; }
-      const resp = await fetch(`http://localhost:3000/${endPoint}/`,
+      const resp = await fetch(`http://localhost:3000/${endPoint}`,
       {
         method: method,
         headers: {
