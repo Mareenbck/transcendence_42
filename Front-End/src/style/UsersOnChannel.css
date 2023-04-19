@@ -11,12 +11,26 @@
     z-index: 1000;
     padding: 10px;
     flex: 3;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     height: 100%;
-    
+    border-radius: 20px;
+    border: black 2px solid;
+    margin-right: 60px;
 }
 
 .participants-modal{
 	font-family: 'Noto Sans', sans-serif;
     padding-top: 10px;
+}
+
+.name-participants {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.fa-crown {
+    margin-left: 1.5rem;
+    color: #FFC700;
+    font-size: 1.2rem;
 }

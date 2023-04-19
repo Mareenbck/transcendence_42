@@ -2,8 +2,8 @@ import { useEffect, useContext, useState, useRef, FormEvent, RefObject } from 'r
 import React from 'react';
 import AuthContext from '../../../store/AuthContext';
 import '../../../style/UsersOnChannel.css'
-import { Modal } from "@mui/material";
-
+import { FaCrown } from "react-icons/fa";
+import MyAvatar from '../../user/Avatar';
 
 
 export default function UsersOnChannel(props: any) {
@@ -38,16 +38,30 @@ export default function UsersOnChannel(props: any) {
             showParticipants(props.channelId);
         }, [props.channelId])
 
+        const admins = participants.filter((p) => p.role === 'ADMIN');
+        const users = participants.filter((p) => p.role === 'USER');
+
         // console.log("participants -----> ", participants)
         return (
             <>
                 <h2 className='participants-modal'>Participants of {props.channelName}:</h2>
+                <h4>Admins:  </h4>
                 <ul>
-                  {participants.map((p) => (
-                    <li key={p.id}>
-                      {p.user.username} ({p.role})
+                    {admins.map((p) => (
+                    <li className='name-participants' key={p.id}>
+                        <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                        {p.user.username} <i className="fa-sharp fa-solid fa-crown"></i>
                     </li>
-                  ))}
+                    ))}
+                </ul>
+                <h3>Users:</h3>
+                <ul>
+                    {users.map((p) => (
+                    <li className='name-participants' key={p.id}>
+                        <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                        {p.user.username}
+                    </li>
+                    ))}
                 </ul>
             </>
           );
