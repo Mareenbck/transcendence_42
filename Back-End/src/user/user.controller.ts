@@ -1,4 +1,4 @@
-import { Body, Controller, ForbiddenException, Get, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors ,BadRequestException} from '@nestjs/common';
 import { AuthGuard, FortyTwoAuthGuard, JwtGuard, LocalAuthGuard } from 'src/auth/guard';
 import { UserService } from './user.service';
 import { GetCurrentUserId } from '../decorators/get-userId.decorator';
@@ -8,7 +8,6 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import path = require('path');
 import { Response } from 'express';
-
 import { v4 as uuidv4 } from 'uuid';
 
 export const storage = {
@@ -46,6 +45,13 @@ export class UserController {
     return allUsers;
   }
 
+  @Get('userWith/:id')
+  @UseGuards(JwtGuard)
+  async getWithDirectMessages(@Param('id') id: number) {
+    if (id === undefined || isNaN(id))
+    {   throw new BadRequestException('Undefined user ID'); }
+    return this.userService.getUsersWithMessages(+id);
+   };
 
 	@Get('/profile/:id')
 	@UseGuards(JwtGuard)
