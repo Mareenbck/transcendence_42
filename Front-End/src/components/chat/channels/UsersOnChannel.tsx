@@ -1,6 +1,9 @@
 import { useEffect, useContext, useState, useRef, FormEvent, RefObject } from 'react'
 import React from 'react';
 import AuthContext from '../../../store/AuthContext';
+import '../../../style/UsersOnChannel.css'
+import { Modal } from "@mui/material";
+
 
 
 export default function UsersOnChannel(props: any) {
@@ -22,7 +25,7 @@ export default function UsersOnChannel(props: any) {
                 )
                 if (response.ok) {
                     const data = await response.json();
-                    console.log("data ------>", data);
+                    // console.log("data ------>", data);
                     setParticipants(data);
                 }
             } catch(err) {
@@ -35,11 +38,10 @@ export default function UsersOnChannel(props: any) {
             showParticipants(props.channelId);
         }, [props.channelId])
 
-        console.log("participants -----> ", participants)
+        // console.log("participants -----> ", participants)
         return (
             <>
-              <div>
-                <h2>Participants:</h2>
+                <h2 className='participants-modal'>Participants of {props.channelName}:</h2>
                 <ul>
                   {participants.map((p) => (
                     <li key={p.id}>
@@ -47,7 +49,6 @@ export default function UsersOnChannel(props: any) {
                     </li>
                   ))}
                 </ul>
-              </div>
             </>
           );
           

@@ -2,23 +2,41 @@ import { useEffect, useState } from "react";
 import "./../../../style/Conversation.css"
 import React from "react";
 import UsersOnChannel from "./UsersOnChannel";
+import { Modal } from "@mui/material";
+import { Button } from "@mui/material";
+import '../../../style/UsersOnChannel.css'
+
 
 export default function Conversation(props: any) {
-
- 
   const [showParticipants, setShowParticipants] = useState(false);
 
-  const handleClick = () => {
+  const handleOpen = () => {
     setShowParticipants(true);
+  };
+
+  const handleClose = () => {
+    setShowParticipants(false);
   };
 
   return (
     <>
-      <div className="conversation" onClick={handleClick}>
-        <div className="conversationName">{props.name}</div>
+      <div className="conversation">
+        <div className="conversationName" onClick={handleOpen}>{props.name}</div>
       </div>
-      {showParticipants && <UsersOnChannel channelId={props.id} channelName={props.name} username={props.username}/>}
+          <Modal
+        open={showParticipants}
+        onClose={handleClose}
+        BackdropComponent={(props) => (
+          <div style={{ backgroundColor: 'transparent', ...props.style }} />
+        )}
+      >
+        <div className="modal-participants">
+          <ul>
+            <UsersOnChannel channelName={props.name} channelId={props.id} />
+          </ul>
+        </div>
+      </Modal>
     </>
   );
-
 }
+

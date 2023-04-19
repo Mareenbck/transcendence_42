@@ -1,0 +1,22 @@
+/* .participants-list {
+    display: flex;
+} */
+
+.modal-participants {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #C7B9FF;
+    z-index: 1000;
+    padding: 10px;
+    flex: 3;
+    overflow-y: scroll;
+    height: 100%;
+    
+}
+
+.participants-modal{
+	font-family: 'Noto Sans', sans-serif;
+    padding-top: 10px;
+}
