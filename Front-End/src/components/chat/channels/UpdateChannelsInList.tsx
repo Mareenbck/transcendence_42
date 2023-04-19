@@ -56,7 +56,7 @@ export default function UpdateChannelsInList(props: any) {
 				<div key={c.id} onClick={() => { setCurrentChat(c) }}>
 					<div className="conversation">
 						<div className="conversation-name">
-							<Conversation name={c.name} />
+							<Conversation name={c.name} id={c.id}/>
 						</div>
 						<div className="conversation-icon">
 							<ChannelVisibility visibility={c.visibility} id={c.id} />
