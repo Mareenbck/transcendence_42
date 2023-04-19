@@ -1,65 +1,73 @@
-import React, { useContext, useEffect, useState, useRef, RefObject } from "react";
+import React, { RefObject, useContext, useEffect, useRef, useState } from "react";
 import useSocket from '../../../service/socket';
 import Conversation from "./Conversation";
 import ChannelVisibility from "./ChannelVisibility";
+// import io, { Socket } from "socket.io-client";
 import AuthContext from "../../../store/AuthContext";
 import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from "./ChannelsSettings";
 import CreateChannelButton from "./CreateChannelBtn";
-import Fetch from "../../../interfaces/Fetch"
-import { ChatRoom } from "../../../interfaces/iChat";
+import ChannelInvitations from "./ChannelInvitations";
+import Fetch from "../../../interfaces/Fetch";
+
 
 export default function UpdateChannelsInList(props: any) {
-  const [conversations, setConversations] = useState<ChatRoom[]>([]);
-  const [AConversation, setAConversation] = useState<ChatRoom | null>(null);
-  const user = useContext(AuthContext);
+	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
+	const [conversations, setConversations] = useState([]);
+	const [AConversation, setAConversation] = useState(null);
+	const user = useContext(AuthContext);
 
-  const {currentChat, currentDirect, setCurrentDirect, setCurrentChat} = props;
-  const [openModal, setOpenModal] = useState(false);
-  const [sendMessage, addListener] = useSocket()
-  const scrollRef: RefObject<HTMLDivElement> = useRef(null);
+	const { currentChat, currentDirect, setCurrentDirect, setCurrentChat } = props;
+	const [openModal, setOpenModal] = useState(false);
+	const [sendMessage, addListener] = useSocket()
 
-  useEffect(() => {
-    addListener("getConv", data => setAConversation({
-      id: data.channelId,
-      name: data.name,
-      visibility: data.visibility,
-    }));
-  });
-    
-  useEffect(() => {
-    AConversation && setConversations(prev=>[AConversation, ...prev]);
-    }, [AConversation]);
+	useEffect(() => {
+		addListener("getConv", data => setAConversation({
+			id: data.channelId,
+			name: data.name,
+			visibility: data.visibility,
+		}));
+	});
 
-  async function getAllConv() {
-    const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
-    setConversations(response);
-  };
-  useEffect(() => {
-    getAllConv();
-  }, []); 
+	useEffect(() => {
+		AConversation && setConversations(prev => [AConversation, ...prev]);
+	}, [AConversation]);
 
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({behavior: "smooth"})
-  }, [conversations]);
+	useEffect(() => {
+		async function getAllConv(user: AuthContext) {
+			if (user) {
+				const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
+				const filteredConversations = response.filter(c =>
+					c.visibility === 'PUBLIC' || c.visibility === 'PWD_PROTECTED' ||
+					(c.visibility === 'PRIVATE' && c.participants.some(p => p.userId === user.userId))
+				);
+				setConversations(filteredConversations);
+			}
+		};
+		getAllConv(user);
+	}, [user]);
 
-    return (
-        <>
-        <div className="conversationListe">
-        <CreateChannelButton/>
-        {conversations.map((c) => (
-            <div key={c.id} onClick={() => {setCurrentChat(c); setCurrentDirect(null)}}>
-                <div className="conversation">
-                    <div className="conversation-name">
-                        <Conversation name={c.name}/>
-                    </div>
-                    <div className="conversation-icon">
-                        <ChannelVisibility visibility={c.visibility} id={c.id}/>
-                    </div>
-                </div>
-            </div>
-            ))}
-        </div>
-        </>
-    );
+	useEffect(() => {
+		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+	}, [conversations]);
+
+	return (
+		<>
+			<CreateChannelButton />
+			{conversations.map((c) => (
+				<div key={c.id} onClick={() => { setCurrentChat(c); setCurrentDirect(null) }}>
+					<div className="conversation">
+						<div className="conversation-name">
+							<Conversation name={c.name} />
+						</div>
+						<div className="conversation-icon">
+							<ChannelVisibility visibility={c.visibility} id={c.id} />
+						</div>
+					</div>
+				</div>
+			))}
+			<ChannelInvitations />
+		</>
+	);
 }
+

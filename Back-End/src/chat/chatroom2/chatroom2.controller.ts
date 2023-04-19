@@ -14,7 +14,7 @@ export class Chatroom2Controller {
 	@UseGuards(JwtGuard)
 	async create( @Body() newConv: any, @GetCurrentUserId() userId: string): Promise<number> {
 		const newChannel = await this.chatRoomService.create(newConv, parseInt(userId));
-    if (newChannel) {
+		if (newChannel) {
 			await this.userService.updateAchievement(parseInt(userId), 'Federator')
 		}
 		return newChannel.id;
@@ -51,6 +51,37 @@ export class Chatroom2Controller {
   // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {
   //   return await this.prismaService.chatroom.deleteChatroom(id);
   // }
+
+	@Post('/invite_channel')
+	@UseGuards(JwtGuard)
+	async openFriendship(@Body() ids: any, @GetCurrentUserId() userId: string) {
+		//creation d une demande d'acces dans database
+		const { channelId, invitedId } = ids;
+		const newDemand = await this.chatRoomService.openInvitations(parseInt(userId), channelId, invitedId);
+		return newDemand;
+	}
+
+	@Get('/pending_invitations')
+	@UseGuards(JwtGuard)
+	async getReceived(@GetCurrentUserId() userId: string){
+		const demands = await this.chatRoomService.getReceivedInvitations(parseInt(userId));
+		return demands;
+	}
+
+	@Post('/invit_update')
+	@UseGuards(JwtGuard)
+	async updateDemand(@Body() invitation: any) {
+		const result = await this.chatRoomService.updateInvitation(invitation);
+		if (result.status === 'ACCEPTED') {
+			await this.chatRoomService.addChatroom(result);
+		}
+		else if (result.status === 'REJECTED') {
+			await this.chatRoomService.deleteRefusedInvitations();
+		}
+		console.log("result--->")
+		console.log(result)
+		return result;
+	}
 
 }
 

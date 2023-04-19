@@ -11,6 +11,7 @@ import ConversationReq from "./ConversationRequest";
 import AuthContext from "../../../store/AuthContext";
 import ChannelsSettings from "./ChannelsSettings";
 import JoinProtectedChannel from "./JoinProtectedChannel";
+import PrivateChannel from "./PrivateChannel";
 
 export default function ChannelVisibility(props: any) {
 
@@ -48,12 +49,12 @@ export default function ChannelVisibility(props: any) {
     setOpenModal(true);
   };
 
-  
+
   useEffect(() => {
     if (props.id)
       {getRolesUser(userContext.userId, props.id)};
   }, [props.id, userContext.userId])
-  
+
   const handleOpenJoinModal = (e: FormEvent) => {
     setOpenJoinModal(true);
   };
@@ -61,16 +62,9 @@ export default function ChannelVisibility(props: any) {
 
   function getIconByChannelType() {
     let icon;
-        
+
     if (props.visibility === "PRIVATE") {
-      icon = (
-        <>
-        <div className="visibility-icon">
-          <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)} className="join-channel" fontSize="small" />
-          <LockIcon className="channel-icon" fontSize="small" />
-        </div>
-        </>
-      );
+      icon = <PrivateChannel id={props.id} role={isAdmin} />;
     } else if (props.visibility === "PWD_PROTECTED") {
       icon = (
         <>
@@ -84,20 +78,20 @@ export default function ChannelVisibility(props: any) {
       );
     } else if (props.visibility == "PUBLIC") {
       icon = (
-        <>   
+        <>
         <div className="visibility-icon">
           <AddBoxIcon onClick={(e: FormEvent) => joinChannel(e, props.id)}className="join-channel" fontSize="small" />
-          <PublicIcon className="channel-icon" fontSize="small" />        
-        </div>       
+          <PublicIcon className="channel-icon" fontSize="small" />
+        </div>
         </>
       );
     }
-    
+
     return icon;
   }
 
-  
-  const joinChannel = async (e: FormEvent, channelId: number, token: string) => {
+
+  const joinChannel = async (e: FormEvent, channelId: number) => {
 	e.preventDefault();
 	const password = passwordInputRef.current?.value;
 	try {
@@ -105,31 +99,25 @@ export default function ChannelVisibility(props: any) {
 		  method: "POST",
 		  headers: {
 			"Content-type": "application/json",
-			Authorization: `Bearer ${token}`,
+			Authorization: `Bearer ${userContext.token}`,
 		  },
 		  body: JSON.stringify({
-        channelId: channelId, 
+        channelId: channelId,
         userId: userContext.userId,
         hash: password,
 		  }),
 		});
-		console.log("RESPONSE =---->", resp)
-		console.log("CHANNEL ID DANS LE FETCH", channelId)
-		console.log("USERID DANS LE FETCH", userContext.userId)
-		console.log("HASH DANS LE FETCH", password)
 		if (!resp.ok) {
 		  const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
 		  throw new Error(message);
 		}
 		const data = await resp.json();
-		console.log("DATA IN JOIN")
-		console.log(data);
 	  } catch(err) {
 		console.log(err)
 	  }
 	setOpenJoinModal(false);
   }
-  
+
 
   return (
     <>

@@ -12,78 +12,79 @@ datasource db {
 }
 
 model User {
-	id		              Int			      @id @default(autoincrement())
-	id42			          Int			      @default(autoincrement())
-	createdAt		        DateTime      @default(now())
+	id					Int						@id @default(autoincrement())
+	id42				Int						@default(autoincrement())
+	createdAt			DateTime				@default(now())
 
-	email			          String		    @unique
-	hash			          String
-	username		        String		    @unique
-	status			        UserStatus	  @default(OFFLINE)
-	avatar			        String?
-	ftAvatar		        String?
+	email				String					@unique
+	hash				String
+	username			String					@unique
+	status				UserStatus				@default(OFFLINE)
+	avatar				String?
+	ftAvatar			String?
 
-	hashedRtoken	      String?
-	twoFAsecret		      String?
-	twoFA			          Boolean?	    @default(true)
+	hashedRtoken		String?
+	twoFAsecret			String?
+	twoFA				Boolean?				@default(true)
 
   blockedTo           User[]        @relation("Blocked")
   blockedFrom         User[]        @relation("Blocked")
 
-  friends             User[]        @relation("Friends")
-  friendOf            User[]        @relation("Friends")
-  sentFriendships     Friendship[]  @relation("SentFriendships")
-  receivedFriendships Friendship[]  @relation("ReceivedFriendships")
+	friends				User[]					@relation("Friends")
+	friendOf			User[]					@relation("Friends")
+	sentFriendships		Friendship[]			@relation("SentFriendships")
+	receivedFriendships	Friendship[]			@relation("ReceivedFriendships")
 
-  playerOne           Game[]        @relation("GamePlayerOne")
-  playerTwo           Game[]        @relation("GamePlayerTwo")
-  winner              Game[]        @relation("GameWinner")
-  xp                  Int           @default(0)
-  level               Int           @default(1)
-  achievements        UserAchievement[]
+	playerOne			Game[]					@relation("GamePlayerOne")
+	playerTwo			Game[]					@relation("GamePlayerTwo")
+	winner				Game[]					@relation("GameWinner")
+	xp					Int						@default(0)
+	level				Int						@default(1)
+	achievements		UserAchievement[]
 
-  chatrooms           ChatroomUsers[]
   dirMessEmited       DirectMessage[] @relation(name: "emited")
   dirMessReceived     DirectMessage[] @relation(name: "received")
   crMessSent          ChatroomMessage[]
 
-  userOnChanel UserOnChannel[]
+	userOnChanel		UserOnChannel[]
+	sentInvitations		ChatroomInvitations[]	@relation("SentInvitations")
+	receivedInvitations	ChatroomInvitations[]	@relation("ReceidedInvitations")
 
 	@@map("users")
 }
 
 model Achievement {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  description String
-  icon        String
-  points      Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+	id			Int			@id @default(autoincrement())
+	name		String		@unique
+	description	String
+	icon		String
+	points		Int
+	createdAt	DateTime	@default(now())
+	updatedAt	DateTime	@updatedAt
 
-  users       UserAchievement[]
-   @@map("achievements")
+	users		UserAchievement[]
+	@@map("achievements")
 }
 
 model UserAchievement {
-  id            Int         @id @default(autoincrement())
-  userId        Int
-  achievementId Int
-  createdAt     DateTime    @default(now())
+	id				Int			@id @default(autoincrement())
+	userId			Int
+	achievementId	Int
+	createdAt		DateTime	@default(now())
 
-  user          User        @relation(fields: [userId], references: [id])
-  achievement   Achievement @relation(fields: [achievementId], references: [id])
-  @@unique([userId, achievementId])
+	user			User		@relation(fields: [userId], references: [id])
+	achievement		Achievement	@relation(fields: [achievementId], references: [id])
+	@@unique([userId, achievementId])
 }
 
 model Friendship {
-  id            Int               @id @default(autoincrement())
-  status        FriendshipStatus  @default(PENDING)
-  requester     User              @relation("SentFriendships", fields: [requesterId], references: [id])
-  requesterId   Int
-  receiver      User              @relation("ReceivedFriendships", fields: [receiverId], references: [id])
-  receiverId    Int
-  @@unique([requesterId, receiverId])
+	id				Int					@id @default(autoincrement())
+	status			FriendshipStatus	@default(PENDING)
+	requester		User				@relation("SentFriendships", fields: [requesterId], references: [id])
+	requesterId		Int
+	receiver		User				@relation("ReceivedFriendships", fields: [receiverId], references: [id])
+	receiverId		Int
+	@@unique([requesterId, receiverId])
 }
 
 model Game {
@@ -107,53 +108,42 @@ enum UserStatus {
 }
 
 model UserOnChannel {
-  id        Int              @id @default(autoincrement())
-  role      UserRoleInChannel @default(USER)
-  status    UserStatusOnChannel @default(CLEAN)
-  user      User             @relation(fields: [userId], references: [id])
-  channelId Int
-  channel   Chatroom         @relation(fields: [channelId], references: [id])
-  userId    Int
+	id			Int					@id @default(autoincrement())
+	role		UserRoleInChannel	@default(USER)
+	status		UserStatusOnChannel	@default(CLEAN)
+	user		User				@relation(fields: [userId], references: [id])
+	channelId	Int
+	channel		Chatroom			@relation(fields: [channelId], references: [id])
+	userId		Int
 
-  @@unique([channelId, userId])
+	@@unique([channelId, userId])
 }
 
 model Chatroom {
-  id           Int              @id @default(autoincrement())
-  visibility   UserChannelVisibility   @default(PUBLIC)
-  name         String
-  users        ChatroomUsers[]
-  participants UserOnChannel[]
-  cr_messages  ChatroomMessage[]
-  hash         String?
+	id				Int						@id @default(autoincrement())
+	visibility		UserChannelVisibility	@default(PUBLIC)
+	name			String
+	participants	UserOnChannel[]
+	cr_messages		ChatroomMessage[]
+	hash			String?
+	invitations		ChatroomInvitations[]
 }
 
-
 enum UserChannelVisibility {
-    PUBLIC
-    PRIVATE
-    PWD_PROTECTED
+	PUBLIC
+	PRIVATE
+	PWD_PROTECTED
 }
 
 enum UserRoleInChannel {
-  USER
-  ADMIN
+	USER
+	ADMIN
 }
 
 enum UserStatusOnChannel {
-  CLEAN
-  MUTE
-  BAN
-}
-
-model ChatroomUsers {
-  createdAt DateTime  @default(now())
-  id          Int     @id @default(autoincrement())
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id])
-  chatroomId  Int
-  chatroom    Chatroom @relation(fields: [chatroomId], references: [id])
-  @@unique([userId, chatroomId])
+	CLEAN
+	MUTE
+	BAN
 }
 
 model ChatroomMessage {
@@ -180,4 +170,23 @@ enum FriendshipStatus {
 	ACCEPTED
 	PENDING
 	REFUSED
+}
+
+model ChatroomInvitations {
+	id			Int					@id @default(autoincrement())
+	status		InvitationsStatus	@default(PENDING)
+	chatroomId	Int
+	chatroom	Chatroom			@relation(fields: [chatroomId], references: [id])
+	senderId	Int
+	sender		User				@relation(name: "SentInvitations", fields: [senderId], references: [id])
+	receiverId	Int
+	receiver	User				@relation(name: "ReceidedInvitations", fields: [receiverId], references: [id])
+	createdAt	DateTime			@default(now())
+	@@unique([chatroomId, senderId, receiverId])
+}
+
+enum InvitationsStatus {
+	PENDING
+	ACCEPTED
+	REJECTED
 }

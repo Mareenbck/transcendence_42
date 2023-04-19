@@ -15,7 +15,9 @@ import Channels from './channels/Channels';
 import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
+import NavbarChannel from './channels/NavbarChannel';
 import UserChart from '../scores/UserChart';
+
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -39,6 +41,37 @@ function Chat() {
   const [sendMessage, addListener] = useSocket()
   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 
+
+// useEffect(() => {
+//     const handleTabClose = event => {
+//       event.preventDefault();
+//       console.log('beforeunload event triggered');
+//       return (event.returnValue =
+//         'Are you sure you want to exit?');
+//     };
+//     window.onbeforeunload, handleTabClose;
+//     return () => {
+//       window.removeEventListener('beforeunload', handleTabClose);
+//     };
+//   }, []);
+
+  // useEffect(() => {
+  //   const handleTabClose = () => {
+  //     // Déconnecter l'utilisateur
+  //     sendMessage("removeUserChat", user as UserCtx);
+
+  //     // Afficher un message de confirmation à l'utilisateur
+  //     return "Voulez-vous vraiment quitter la page ?";
+  //   };
+
+  //   window.addEventListener("beforeunload", handleTabClose);
+
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleTabClose);
+  //   };
+  // }, []);
+
+
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////
@@ -50,7 +83,7 @@ function Chat() {
       content: data.content,
       createdAt: new Date(Date.now()),
     }))
-    
+
     addListener("getMessageDirect", (data)=> setAMessageD({
       content: data.content,
       author: data.author,
@@ -193,7 +226,7 @@ function Chat() {
 
   useEffect(() => {
     if (toBlock)
-    { 
+    {
       sendMessage("toBlock", {
         blockTo: +toBlock.id,
         blockFrom: +id,
@@ -375,18 +408,21 @@ return (
   <>
   {" "}
   <div className="messenger">
-    <div className="chatMenu"><UpdateChannelsInList
-      currentChat={currentChat}
-      currentDirect={currentDirect}
-      setCurrentChat={setCurrentChat}
-      setCurrentDirect={setCurrentDirect}
-    /></div>
+	<div className="chatMenu">
+		<UpdateChannelsInList
+		currentChat={currentChat}
+		currentDirect={currentDirect}
+		setCurrentChat={setCurrentChat}
+		setCurrentDirect={setCurrentDirect}
+		/>
+	</div>
     <div className="chatBox">
       <div className="chatBoxW">
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
         { currentChat ?
           <>
+		  <NavbarChannel chatroom={currentChat} />
           <div>chat in {currentChat.name} </div>  
           <div className="chatBoxTop">
             { messages2.length ?
@@ -420,7 +456,7 @@ return (
                 <textarea className="chatMessageInput" placeholder="write something..."
                     onChange={(e) => setNewMessageD(e.target.value)} value={newMessageD}
                 ></textarea>
-                { currentChat 
+                { currentChat
                 ?  <><button className="chatSubmitButton" onClick={handleSubmit}> Send </button></>
                 : <><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></> }
               </div>
@@ -486,7 +522,7 @@ return (
         </div>
 
       </div>
- 
+
     </>
   )
 }
