@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { RefObject, useContext, useEffect, useRef, useState } from "react";
 import useSocket from '../../../service/socket';
 import Conversation from "./Conversation";
 import ChannelVisibility from "./ChannelVisibility";
@@ -8,9 +8,11 @@ import ConversationReq from "./ConversationRequest"
 import ChannelsSettings from "./ChannelsSettings";
 import CreateChannelButton from "./CreateChannelBtn";
 import ChannelInvitations from "./ChannelInvitations";
+import Fetch from "../../../interfaces/Fetch";
 
 
 export default function UpdateChannelsInList(props: any) {
+	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [conversations, setConversations] = useState([]);
 	const [AConversation, setAConversation] = useState(null);
 	const user = useContext(AuthContext);
@@ -20,12 +22,12 @@ export default function UpdateChannelsInList(props: any) {
 	const [sendMessage, addListener] = useSocket()
 
 	useEffect(() => {
-		addListener("getConv", data => {
-			setAConversation({
-				name: data.content.name,
-			});
-		});
-	}, []);
+		addListener("getConv", data => setAConversation({
+			id: data.channelId,
+			name: data.name,
+			visibility: data.visibility,
+		}));
+	});
 
 	useEffect(() => {
 		AConversation && setConversations(prev => [AConversation, ...prev]);
@@ -34,7 +36,7 @@ export default function UpdateChannelsInList(props: any) {
 	useEffect(() => {
 		async function getAllConv(user: AuthContext) {
 			if (user) {
-				const response = await ConversationReq.getAll(user);
+				const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
 				const filteredConversations = response.filter(c =>
 					c.visibility === 'PUBLIC' || c.visibility === 'PWD_PROTECTED' ||
 					(c.visibility === 'PRIVATE' && c.participants.some(p => p.userId === user.userId))
@@ -44,6 +46,10 @@ export default function UpdateChannelsInList(props: any) {
 		};
 		getAllConv(user);
 	}, [user]);
+
+	useEffect(() => {
+		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+	}, [conversations]);
 
 	return (
 		<>

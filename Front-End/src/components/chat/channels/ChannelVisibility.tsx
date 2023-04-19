@@ -51,7 +51,8 @@ export default function ChannelVisibility(props: any) {
 
 
   useEffect(() => {
-    getRolesUser(userContext.userId, props.id);
+    if (props.id)
+      {getRolesUser(userContext.userId, props.id)};
   }, [props.id, userContext.userId])
 
   const handleOpenJoinModal = (e: FormEvent) => {
