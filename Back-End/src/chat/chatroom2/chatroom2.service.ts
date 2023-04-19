@@ -105,15 +105,16 @@ export class ChatroomService {
 	}
 
 
-	// async openDemand(userId: number, channelId: number) {
-	// 	const demand = await this.prisma.channelRequest.create({
-	// 		data: {
-	// 			userId: userId,
-	// 			channelId: channelId,
-	// 		},
-	// 	});
-	// 	return demand
-	// }
+	async openInvitations(senderId: number, channelId: number, receiverId: number) {
+		const demand = await this.prisma.chatroomInvitations.create({
+			data: {
+				senderId: senderId,
+				chatroomId: channelId,
+				receiverId: receiverId,
+			},
+		});
+		return demand
+	}
 
 
 	// async getReceivedDemands(userId: number) {
