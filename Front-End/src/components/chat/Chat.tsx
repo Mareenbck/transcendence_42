@@ -18,7 +18,10 @@ import { Tabs } from '@mui/material';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import MailIcon from '@mui/icons-material/Mail';
 import CurrentChannel from './channels/CurrentChannel';
-
+import UsersOnChannel from './channels/UsersOnChannel';
+import NavbarChannel from './channels/NavbarChannel';
+import UserChart from '../scores/UserChart';
+import UsersWithDirectMessage from './message/usersWithMessages';
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -96,6 +99,7 @@ function Chat() {
       return prev;
     });
   },[AMessageD, currentDirect])
+
 
 ////////////////////////////////////////////////
 // Partie II : va chercher les infos de la base de donnée
@@ -308,10 +312,25 @@ useEffect(() => {
   scrollRef.current?.scrollIntoView({behavior: "smooth"})
 }, [messagesD]);
 
+
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
+
+
+{/* <div className="chatMenu"><UsersWithDirectMessage
+currentChat={currentChat}
+currentDirect={currentDirect}
+setCurrentChat={setCurrentChat}
+setCurrentDirect={setCurrentDirect}
+/></div>
+ */}
+
+// <NavbarChannel chatroom={currentChat} />
+
 return (
   <>
   {" "}
+
+
   <div className="messenger">
 	<div className="chatMenu">
 		<Tabs

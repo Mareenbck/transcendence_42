@@ -90,8 +90,7 @@ export default function ChannelVisibility(props: any) {
     return icon;
   }
 
-
-  const joinChannel = async (e: FormEvent, channelId: number) => {
+  const joinChannel = async (e: FormEvent, channelId: number, token: string) => {
 	e.preventDefault();
 	const password = passwordInputRef.current?.value;
 	try {
@@ -115,7 +114,7 @@ export default function ChannelVisibility(props: any) {
 	  } catch(err) {
 		console.log(err)
 	  }
-	setOpenJoinModal(false);
+	  setOpenJoinModal(false);
   }
 
 
