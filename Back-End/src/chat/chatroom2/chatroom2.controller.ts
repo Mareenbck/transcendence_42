@@ -5,6 +5,9 @@ import { ChatroomService } from './chatroom2.service';
 import { JwtGuard} from 'src/auth/guard';
 import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
 import { UserService } from 'src/user/user.service';
+import { BadRequestException, Injectable, ForbiddenException} from '@nestjs/common';
+
+
 @Controller('chatroom2/')
 export class Chatroom2Controller {
   constructor(private chatRoomService: ChatroomService,
@@ -36,16 +39,16 @@ export class Chatroom2Controller {
   @Get('userTable/:id/:channelId')
   async getUserTable(@Param('id') id: string, @Param('channelId') channelId:string) {
     const response = await this.chatRoomService.getUserTable(parseInt(id), parseInt(channelId));
-    // console.log("channelId controller get", channelId)
-    // console.log("response usertable");
-    // console.log(response);
     return response;
+  };
+
+  @Get(':channelId/participants')
+  @UseGuards(JwtGuard)
+  async getParticipants(@Param('channelId') channelId: string) {
+    const participants = await this.chatRoomService.getParticipants(parseInt(channelId));
+    console.log("Participants in controller----->", participants)
+    return participants;
   }
-
-  // @Post('/:channelId/password')
-  // // @UseGuards(JwtGuard)
-  // async
-
 
   // @Post(':id/delete')
   // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {

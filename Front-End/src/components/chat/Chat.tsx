@@ -15,6 +15,7 @@ import Channels from './channels/Channels';
 import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
+import UsersOnChannel from './channels/UsersOnChannel';
 import NavbarChannel from './channels/NavbarChannel';
 import UserChart from '../scores/UserChart';
 import UsersWithDirectMessage from './message/usersWithMessages';
