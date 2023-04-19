@@ -4,8 +4,6 @@ import Conversation from "./Conversation";
 import ChannelVisibility from "./ChannelVisibility";
 // import io, { Socket } from "socket.io-client";
 import AuthContext from "../../../store/AuthContext";
-import ConversationReq from "./ConversationRequest"
-import ChannelsSettings from "./ChannelsSettings";
 import CreateChannelButton from "./CreateChannelBtn";
 import ChannelInvitations from "./ChannelInvitations";
 import Fetch from "../../../interfaces/Fetch";
@@ -17,8 +15,8 @@ export default function UpdateChannelsInList(props: any) {
 	const [AConversation, setAConversation] = useState(null);
 	const user = useContext(AuthContext);
 
-	const { currentChat, currentDirect, setCurrentDirect, setCurrentChat } = props;
-	const [openModal, setOpenModal] = useState(false);
+	const { currentChat, setCurrentChat } = props;
+	// const [openModal, setOpenModal] = useState(false);
 	const [sendMessage, addListener] = useSocket()
 
 	useEffect(() => {
@@ -55,7 +53,7 @@ export default function UpdateChannelsInList(props: any) {
 		<>
 			<CreateChannelButton />
 			{conversations.map((c) => (
-				<div key={c.id} onClick={() => { setCurrentChat(c); setCurrentDirect(null) }}>
+				<div key={c.id} onClick={() => { setCurrentChat(c) }}>
 					<div className="conversation">
 						<div className="conversation-name">
 							<Conversation name={c.name} />

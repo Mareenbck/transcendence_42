@@ -4,17 +4,20 @@ import AuthContext from '../../store/AuthContext';
 import useSocket from '../../service/socket';
 import MessageReq from "./message/message.req"
 import Fetch from "../../interfaces/Fetch"
-import Message2 from "./message/message"
 import MessageD from "./message/messageD"
 import '../../style/Chat.css'
 import '../../style/Friends.css';
 import React from 'react';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
-import Channels from './channels/Channels';
 import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
+import { Tab } from '@mui/material';
+import { Tabs } from '@mui/material';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import MailIcon from '@mui/icons-material/Mail';
+import CurrentChannel from './channels/CurrentChannel';
 import UsersOnChannel from './channels/UsersOnChannel';
 import NavbarChannel from './channels/NavbarChannel';
 import UserChart from '../scores/UserChart';
@@ -25,12 +28,9 @@ function Chat() {
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<OnlineU[]> ([]);
   const [AMessageD, setAMessageD] = useState<DirectMessage | null> (null);
-  const [AMessageChat, setAMessageChat] = useState<RoomMessage | null> (null);
   const [currentChat, setCurrentChat] = useState<ChatRoom | null> (null);
   const [currentDirect, setCurrentDirect] = useState<UserChat | null> (null);
-  const [messages2, setMessages2] = useState<RoomMessage[]> ([]);
   const [messagesD, setMessagesD] = useState<DirectMessage[]> ([]);
-  const [newMessage2, setNewMessage2] = useState<string> ("");
   const [newMessageD, setNewMessageD] = useState<string> ("");
   const [otherUsers, setOtherUsers] = useState <UserChat[]> ([]);
   const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
@@ -42,14 +42,12 @@ function Chat() {
   const [sendMessage, addListener] = useSocket()
   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 
-  useEffect(() => {
-    addListener("getMessageRoom", (data) => setAMessageChat({
-      authorId: data.authorId,
-      chatroomId: data.chatroomId,
-      content: data.content,
-      createdAt: new Date(Date.now()),
-    }))
 
+///////////////////////////////////////////////////////////
+// Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
+///////////////////////////////////////////////////////////
+
+  useEffect(() => {
     addListener("getMessageDirect", (data)=> setAMessageD({
       content: data.content,
       author: data.author,
@@ -92,17 +90,6 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    AMessageChat && currentChat?.id === AMessageChat.chatroomId &&
-    setMessages2(prev => {
-      const isDuplicate = prev.some(message => (message.createdAt === AMessageChat.createdAt && message.content === AMessageChat.content));
-      if (!isDuplicate) {
-        return [...prev, AMessageChat];
-      }
-      return prev;
-    });
-  },[AMessageChat, currentChat])
-
-  useEffect(() => {
     AMessageD && currentDirect && +currentDirect?.id === +AMessageD.author &&
     setMessagesD(prev => {
       const isDuplicate = prev.some(message => (message.createdAt === AMessageD.createdAt && message.content === AMessageD.content));
@@ -127,26 +114,6 @@ function Chat() {
     getAllUsersWithBlocked(user.token);
   }, []);
 
-  async function getMess() {
-    try {
-      if (currentChat) {
-      const response = await Fetch.fetch(user.token, "GET", `chat-mess\/room`, currentChat?.id);
-      setMessages2(response);
-      sendMessage("userRoom", {
-        userId: +user.userId,
-        roomId: +currentChat.id,
-      } as any)
-    }
-    } catch(err) {
-      console.log(err);
-    }
-  };
-  useEffect(() => {
-    if (currentChat)
-    { getMess(); }
-  }, [currentChat]);
-
-  
   async function getDirMess() {
     try {
       setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.id));
@@ -220,7 +187,7 @@ function Chat() {
         NewOthers.splice(i, 1, toBlock);
         setOtherUsers([...NewOthers]);
       }
-      if (currentDirect && toBlock && +currentDirect.id === +toBlock.id) 
+      if (currentDirect && toBlock && +currentDirect.id === +toBlock.id)
         {setCurrentDirect(null)};
       setToBlock(null);
     }
@@ -282,7 +249,7 @@ function Chat() {
   function isHeBlocked(userXid: number): true | undefined {
     const i = getUser(userXid);
     if (i && i.blockedFrom && !i?.blockedFrom.find((u: UserChat) => (+id === +u?.id))) {
-       return (true); 
+       return (true);
     };
   }
 
@@ -292,7 +259,7 @@ function Chat() {
     if (dUser && gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +dUser.id) === undefined ))
     {
       if (dUser.blockedFrom.find((u: UserChat) => +u.id === +id) === undefined)
-      { 
+      {
         setCurrentDirect(dUser);
         setCurrentChat(null);
       }
@@ -312,28 +279,6 @@ function Chat() {
 // Partie V : handle submit...
 ////////////////////////////////////////////////
 
-// Chat message
-  const handleSubmit = async (e: FormEvent)=> {
-    e.preventDefault();
-    if (currentChat?.id)
-    {
-      const message2 = {
-      authorId: +id,
-      content: newMessage2,
-      chatroomId: currentChat?.id,
-      };
-      sendMessage("sendMessageRoom", {
-        authorId: +id,
-        chatroomId: +currentChat?.id,
-       content: newMessage2,
-      } as any)
-      try {
-        const res = await MessageReq.postMess(user, message2);
-        setMessages2([...messages2, res]);
-        setNewMessage2("");
-      } catch(err) {console.log(err)}
-    }
-  }
 
 // Direct message
   const handleSubmitD = async (e: FormEvent)=> {
@@ -365,11 +310,10 @@ function Chat() {
 
 useEffect(() => {
   scrollRef.current?.scrollIntoView({behavior: "smooth"})
-}, [messages2]);
-
-useEffect(() => {
-  scrollRef.current?.scrollIntoView({behavior: "smooth"})
 }, [messagesD]);
+
+
+	const [activeTab, setActiveTab] = useState<string>("Direct messages")
 
 
 {/* <div className="chatMenu"><UsersWithDirectMessage
@@ -388,40 +332,31 @@ return (
 
 
   <div className="messenger">
-    <div className="chatMenu"><UpdateChannelsInList
-      currentChat={currentChat}
-      currentDirect={currentDirect}
-      setCurrentChat={setCurrentChat}
-      setCurrentDirect={setCurrentDirect}
-    /></div>
-
+	<div className="chatMenu">
+		<Tabs
+			value={activeTab}
+			onChange={(e: any, newValue: string) => setActiveTab(newValue)}
+			aria-label="icon position tabs example"
+		>
+			<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
+			<Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
+		</Tabs>
+		{activeTab === 'Channels' && (
+			<UpdateChannelsInList
+			currentChat={currentChat}
+			setCurrentChat={setCurrentChat}
+			/>
+		)}
+	</div>
     <div className="chatBox">
       <div className="chatBoxW">
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
-        { currentChat ?
-          <>
-		  
-          <div>chat in {currentChat.name} </div>  
-          <div className="chatBoxTop">
-            { messages2.length ?
-              messages2.map((m) => (
-                <div key={m?.createdAt instanceof Date ? m.createdAt.getTime() : m.createdAt } ref={scrollRef}>
-                  <Message2 message2={m} user={getUser(m?.authorId)} authCtx={user} own={m?.authorId === +id} />
-                </div>
-              )) : <span className="noConversationText2" > No message in this room yet. </span>
-            }
-          </div>
-          <div className="chatBoxBottom">
-            <textarea className="chatMessageInput" placeholder="write something..."
-              onChange={(e) => setNewMessage2(e.target.value)} value={newMessage2}
-            ></textarea>
-            <button className="chatSubmitButton" onClick={handleSubmit}> Send </button>
-          </div>
-          </>
+		{currentChat ?
+			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} />
         : currentDirect ?
           <>
-          <div>chat with {currentDirect.username} </div>  
+          <div>chat with {currentDirect.username} </div>
           <div className="chatBoxTop">
             { messagesD.length ?
               messagesD?.map((m) => (
@@ -435,9 +370,12 @@ return (
                 <textarea className="chatMessageInput" placeholder="write something..."
                     onChange={(e) => setNewMessageD(e.target.value)} value={newMessageD}
                 ></textarea>
-                { currentChat
-                ?  <><button className="chatSubmitButton" onClick={handleSubmit}> Send </button></>
-                : <><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></> }
+                {/* { currentChat */}
+					{/* // ?   */}
+				{/* <><button className="chatSubmitButton" onClick={handleSubmit}> Send </button></> */}
+                {/* :  */}
+				<><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></>
+				{/* // } */}
               </div>
           </>
           : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
