@@ -379,6 +379,7 @@ setCurrentDirect={setCurrentDirect}
 /></div>
  */}
 
+// <NavbarChannel chatroom={currentChat} />
 
 return (
   <>
@@ -386,10 +387,6 @@ return (
 
 
   <div className="messenger">
-
-
-
-
     <div className="chatMenu"><UpdateChannelsInList
       currentChat={currentChat}
       currentDirect={currentDirect}
@@ -403,7 +400,7 @@ return (
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
         { currentChat ?
           <>
-		  <NavbarChannel chatroom={currentChat} />
+		  
           <div>chat in {currentChat.name} </div>  
           <div className="chatBoxTop">
             { messages2.length ?
