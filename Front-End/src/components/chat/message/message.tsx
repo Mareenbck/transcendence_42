@@ -1,8 +1,10 @@
 import './message.css'
 import {format} from 'timeago.js'
 import MyAvatar from '../../user/Avatar';
+import React from 'react';
 
 export default function Message2({ message2, own, user, authCtx }) {
+
   return (
     <div className= {own ? "message own" : "message"}>
       <div className="messageTop">
