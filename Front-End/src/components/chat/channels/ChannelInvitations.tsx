@@ -10,10 +10,10 @@ const ChannelInvitations = (props: any) => {
 	const pendingInvitations = invitations.filter((invitation: any) => invitation.status === 'PENDING');
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-	console.log("invitations--->")
-	console.log(invitations)
-	console.log("pendingInvitations--->")
-	console.log(pendingInvitations)
+	// console.log("invitations--->")
+	// console.log(invitations)
+	// console.log("pendingInvitations--->")
+	// console.log(pendingInvitations)
 
 	useEffect(() => {
 		getInvitations();

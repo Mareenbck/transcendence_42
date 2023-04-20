@@ -18,8 +18,8 @@ export function PrivateChannel(props: any) {
 	const userContext = useContext(AuthContext);
 	const [isAdmin, setIsAdmin] = useState<string | null>('');
 	const [demandList, setDemandList] = useState<any>();
-	console.log("props.role dans PrivateChannel")
-	console.log(props.role)
+	// console.log("props.role dans PrivateChannel")
+	// console.log(props.role)
 
 	useEffect(() => {
 		setIsAdmin(props.role);
