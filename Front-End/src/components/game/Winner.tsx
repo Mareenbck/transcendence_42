@@ -1,6 +1,8 @@
 import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
-import type {gameInit, gameState, gameWinner} from './type'
+import type {gameInit, gameState, gameWinner} from './interface'
+import MyAvatar from '../user/Avatar';
+
 
 
 const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ) => {
@@ -46,10 +48,10 @@ const Winner = (props: {gameinit: gameInit, gamewinner: gameWinner} ) => {
 				// img.onload = () => {
 				// 	context.drawImage(img, gameinit.table_width/2 + 100, gameinit.table_height / 2);
 				// }
-				context.font = "40px Verdana";
-				context.fillStyle = "#8c66ff";
-				context.lineWidth = 4;
-				context.fillText("WINNER:", 310, 150);
+				// context.font = "40px Verdana";
+				// context.fillStyle = "#8c66ff";
+				// context.lineWidth = 4;
+				// context.fillText("WINNER:", gameinit.table_width/3, gameinit.table_height/3);
 				//context.fillText(`${gamewinner.winner}`, gameinit.table_width/2 + 100, gameinit.table_height / 2);
 			}
         }

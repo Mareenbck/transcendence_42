@@ -127,4 +127,20 @@ console.log(socket.handshake.auth.token);
   @SubscribeMessage('refuseGame')
   async gameRefuse(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
   { this.gameService.refuseGame(data.author, data.player,) };
+
+  ///////////////////////////
+// Messages for Game: Invite et random
+//////////////////////////
+
+  // @SubscribeMessage('InviteGame')
+  // async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  // { this.gameService.gameInvite(data.author, socket, data.player) };
+  
+
+  @SubscribeMessage('playGame')
+  async playGame(@MessageBody() data: {user: any, roomN: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  {
+    console.log('144 playGame SubscribeMessage ', data);
+
+    this.gameService.playGame(data.user,data.roomN) };
 }
