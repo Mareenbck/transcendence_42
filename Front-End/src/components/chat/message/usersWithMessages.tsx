@@ -7,8 +7,9 @@ import { Link } from "react-router-dom";
 import MyAvatar from '../../user/Avatar';
 
 export default function UsersWithDirectMessage(props: any) {
-  const {currentChat, currentDirect, setCurrentDirect, setCurrentChat} = props;
+  const {currentDirect, setCurrentDirect, setCurrentChat} = props;
   const [usersWith, setUsersWith] = useState<UserChat[]>([]);
+  const [me, setMe] = useState<UserChat | null>(null);
   const [AUsersWith, setAUsersWith] = useState<UserChat | null>(null);
   const user = useContext(AuthContext);
   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
@@ -17,28 +18,48 @@ export default function UsersWithDirectMessage(props: any) {
   const [toUnblock, setToUnblock] = useState<UserChat | null>(null);
   const [fromBlock, setFromBlock] = useState<number | null>(null);
   const [unfromBlock, setUnfromBlock] = useState<number | null>();
+  const [blockForMe, setBlockForMe] = useState<number | null>();
+  const [unblockForMe, setUnblockForMe] = useState<number | null>();
 
-  // en cas de nouveau en reoute
+  // en cas de nouveau en route
   useEffect(() => {
     addListener("getNewDirectUser", data => setAUsersWith(data));
   });
     
   useEffect(() => {
-    AUsersWith && setUsersWith(prev => [AUsersWith, ...prev]);
+    if (AUsersWith)
+    {
+      async function getUserFromBack() {
+        if (AUsersWith)
+        { const response = await Fetch.fetch(user.token, "GET", `users/block`, +AUsersWith);
+        setUsersWith(prev => [response, ...prev]);}
+      };
+      getUserFromBack();
+    }
     }, [AUsersWith]);
 
-    // aller chercher la liste des usersq avec active conv
+  // aller chercher la liste des users avec active conv
   async function getAllUsersWith() {
     const response = await Fetch.fetch(user.token, "GET", `users/userWith`, user.userId);
     setUsersWith(response);
   };
   useEffect(() => {
     getAllUsersWith();
-  }, []); 
+  },[] ); 
+
+    // pour le mécanisme des blocked,j'ai besoin de ME as user puisque je ne suis pas dans allWith direct messsage
+    async function getMe() {
+      if (user) {
+      const response = await Fetch.fetch(user.token, "GET", `users/block`, +user.userId);
+      setMe(response);
+      }
+    };
+    useEffect(() => {
+      getMe();
+    }, [user]); 
 
   // invite to a game
   const inviteGame = (playerId :number ) => {
-    console.log(playerId);
     sendMessage("InviteGame", {
       author: getUser(+user.userId),
       player: getUser(+playerId),
@@ -46,7 +67,7 @@ export default function UsersWithDirectMessage(props: any) {
   }
   
   const getUser  = (userId: number): UserChat | null => {
-    const a = usersWith.find(userX => +userX?.id === +user.userId);
+    const a = usersWith.find(userX => +userX?.id === +userId);
     if (a !== undefined)
     { return(a)}
     return (null);
@@ -54,8 +75,7 @@ export default function UsersWithDirectMessage(props: any) {
 
   // suis-je bloqué
   const amIBlocked = (userXid: number): string => {
-    const u = getUser(+user.userId)?.blockedFrom.find((u: UserChat) => +u.id === +userXid);
-    if (u)
+  if (me && userXid && me?.blockedFrom.find((u: UserChat) => +u.id === +userXid))
       { return "chatOnlineNotFriend"; }
     else
       {return "chatOnlineFriend";}
@@ -67,61 +87,101 @@ export default function UsersWithDirectMessage(props: any) {
   }, [usersWith]);
 
   // set direct message if not blocked
+  // const getDirect = (userX: UserChat): void => {
+  //   if (userX && (userX.blockedTo.find((u: UserChat) => +u.id === +userX.id) === undefined ))
+  //   {
+  //     if (userX.blockedFrom.find((u: UserChat) => +u.id === +user.userId) === undefined)
+  //     { 
+  //       setCurrentDirect(userX);
+  //       setCurrentChat(null);
+  //     }
+  //   }
+  // }
+
   const getDirect = (userX: UserChat): void => {
-    if (userX && (userX.blockedTo.find((u: UserChat) => +u.id === +userX.id) === undefined ))
+    if (me && (me.blockedTo.find((u: UserChat) => +u.id === +userX.id) === undefined ))
     {
-      if (userX.blockedFrom.find((u: UserChat) => +u.id === +user.userId) === undefined)
+      if (me.blockedFrom.find((u: UserChat) => +u.id === +user.userId) === undefined)
       { 
         setCurrentDirect(userX);
         setCurrentChat(null);
       }
-      console.log("dsdzsdsds  2", currentDirect);
     }
   }
 
-  // Block & Unblock mechanism
 
+  /// Block & Unblock mechanism
+  // to get the info to change the icon, additional message because of the second list
+  useEffect(() => {
+    addListener("blockForMe", data => {
+      if (+data.id !== +user.userId)
+        { setBlockForMe(+data.id);}
+    });
+  });
+  useEffect(() => {
+    addListener("unblockForMe", data => {
+      if (+data.id !== +user.userId)
+        { setUnblockForMe(+data.id);}
+    });
+  });
+
+  // je reçois le socket message que ME was blocked by data
   useEffect(() => {
     addListener("wasBlocked", data => {
-      if (+data.id !== +id)
+      if (+data.id !== +user.userId)
       { setFromBlock(+data.id);}
     });
-  }, []);
+  });
 
+    // je reçois le socket message que ME was UNblocked by data
   useEffect(() => {
     addListener("wasUnblocked", data => {
-      if (+data.id !== +id)
+      if (+data.id !== +user.userId)
       { setUnfromBlock(+data.id);}
     });
-  }, []);
+  });
 
+  // je change la data en conséquence du message que ME a été bloqué
   useEffect(() => {
     if (usersWith !== undefined && user.userId && fromBlock && fromBlock !== +user.userId) {
-      const i = usersWith.findIndex(userX => +userX.id === +user.userId);
-      const j = usersWith.find(userX => +userX.id === +user.userId);
-      const k = usersWith.find(userX => +userX.id === +fromBlock);
-      k ? j?.blockedFrom.push(k) : "";
-      const NewAll = usersWith;
-      j ? NewAll.splice(i, 1, j) : "";
-      setUsersWith([...NewAll]);
+      const j = usersWith.find(userX => +userX.id === +fromBlock);
+      (j && me) ? me.blockedFrom.push(j) : "";
       if (currentDirect && +currentDirect.id === fromBlock)
         {setCurrentDirect(null);}
       setFromBlock(null);
     };
   }, [fromBlock]);
 
+  // je change la data en conséquence du message que ME a été UNblocked
   useEffect(() => {
     if (usersWith !== undefined && user.userId && unfromBlock && unfromBlock !== +user.userId) {
-      const i = usersWith.findIndex(userX => +userX.id === +user.userId);
-      const j = usersWith.find(userX => +userX.id === +user.userId);
-      j ? j.blockedFrom = j.blockedFrom.filter((u: UserChat) => +u.id !== unfromBlock) : "";
-      const NewAll = usersWith;
-      j ? NewAll.splice(i, 1, j) : "";
-      setUsersWith([...NewAll]);
+      const j = usersWith.find(userX => +userX.id === +unfromBlock);
+      (j && me) ? me.blockedFrom = j.blockedFrom.filter((u: UserChat) => +u.id !== unfromBlock) : "";
       setUnfromBlock(null);
     };
   }, [unfromBlock]);
 
+//  pour mettre à jour le toogle bouton qui viendrait de l'autre liste...
+  useEffect(() => {
+    if (blockForMe && usersWith !== undefined && user.userId && blockForMe !== (undefined || null) && blockForMe !== +user.userId) {
+      const j = usersWith.find(userX => +userX.id === +blockForMe);
+      if (j && me && blockForMe) {
+        me.blockedTo.push(j);
+      };
+    };
+      setBlockForMe(null);
+  }, [blockForMe]);
+     
+  useEffect(() => {
+    if (unblockForMe && usersWith !== undefined && user.userId && unblockForMe !== (undefined || null) && unblockForMe !== +user.userId) {
+      const j = usersWith.find(userX => +userX.id === +unblockForMe);
+      if (j && me && unblockForMe) {
+        me.blockedTo = me.blockedTo.filter((u: UserChat) => +u.id !== +unblockForMe)} 
+    };
+      setBlockForMe(null);
+  }, [unblockForMe]);   
+       
+  // Je viens de bloquer un user, 1 j'envoie le message socket, 2 je POST en bdd, 3 je met à jour la data ici
   useEffect(() => {
     if (toBlock)
     { 
@@ -136,12 +196,7 @@ export default function UsersWithDirectMessage(props: any) {
       };
       blockUser();
       if (usersWith && usersWith.find(user => +user.id === +toBlock.id)) {
-        const i = usersWith.findIndex(user => +user.id === +toBlock.id);
-        const j = getUser(+user.userId)
-        j ? toBlock.blockedFrom.push(j) : "";
-        const NewOthers = usersWith;
-        NewOthers.splice(i, 1, toBlock);
-        setUsersWith([...NewOthers]);
+        me ? me.blockedTo.push(toBlock) : "";
       }
       if (currentDirect && toBlock && +currentDirect.id === +toBlock.id) 
         {setCurrentDirect(null)};
@@ -149,6 +204,7 @@ export default function UsersWithDirectMessage(props: any) {
     }
   }, [toBlock]);
 
+    // Je viens de UNblock un user, 1 j'envoie le message socket, 2 je POST en bdd, 3 je met à jour la data ici
   useEffect(() => {
     if (toUnblock)
     {
@@ -164,10 +220,7 @@ export default function UsersWithDirectMessage(props: any) {
       unblockUser();
       if (usersWith && usersWith.find(userX => +userX.id === +toUnblock.id)) {
         const i = usersWith.findIndex(userX => +userX.id === +toUnblock.id);
-        toUnblock.blockedFrom = toUnblock.blockedFrom.filter((u: UserChat) => +u.id !== +user.userId);
-        const NewOthers = usersWith;
-        NewOthers.splice(i, 1, toUnblock);
-        setUsersWith([...NewOthers]);
+        me ? me.blockedTo = me.blockedTo.filter((u: UserChat) => +u.id !== +toUnblock.id) : "";
       }
       setToUnblock(null);
     }
@@ -177,8 +230,8 @@ export default function UsersWithDirectMessage(props: any) {
         <>
         <div className="userWith">
            { usersWith && usersWith.map((o) => (
-            +o?.id !== +user.userId ?
-            <div  key={o?.id} className={amIBlocked(o?.id)} >
+            // +o?.id !== +user.userId ?
+            <div  key={o.id} className={amIBlocked(+o?.id)} >
                 <Link to={'/game/play'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
                 <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                 <div className="fname" onClick={()=> {getDirect(o)}} >
@@ -187,7 +240,7 @@ export default function UsersWithDirectMessage(props: any) {
                     </div>
                     <span className="chatOnlineName"> {o?.username} </span>
                 </div>
-                { !o.blockedFrom.find((u: UserChat)=>(+user.userId === +u?.id)) ?
+                { !me?.blockedTo.find((u: UserChat)=>(+o?.id === +u?.id)) ?
                 <button className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
                     <i className="fa fa-unlock" aria-hidden="true"></i>
                 </button>
@@ -196,7 +249,7 @@ export default function UsersWithDirectMessage(props: any) {
                     <i className="fa fa-lock" aria-hidden="true"></i>
                 </button>}
             </div>
-            : <span className="noConversationText2" > New here ?... </span>
+            // : <span className="noConversationText2" > New here ?... </span>
             ))}
         </div>
         </>

@@ -10,7 +10,7 @@ import '../../style/Friends.css';
 import React from 'react';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
-import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite, OnlineU} from "../../interfaces/iChat";
+import {DirectMessage, UserChat, ChatRoom, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
 import { Tab } from '@mui/material';
@@ -41,6 +41,8 @@ function Chat() {
   const [invited, setInvited] = useState<UserChat | null> (null);
   const [sendMessage, addListener] = useSocket()
   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
+  const [blockForMe, setBlockForMe] = useState<number | null>();
+  const [unblockForMe, setUnblockForMe] = useState<number | null>();
 
 
 ///////////////////////////////////////////////////////////
@@ -80,14 +82,28 @@ function Chat() {
       if (+data.id !== +id)
       { setFromBlock(+data.id);}
     });
-  }, []);
+  },);
 
   useEffect(() => {
     addListener("wasUnblocked", data => {
       if (+data.id !== +id)
       { setUnfromBlock(+data.id);}
     });
-  }, []);
+  },);
+
+  useEffect(() => {
+    addListener("blockForMe", data => {
+      if (+data.id !== +user.userId)
+        { setBlockForMe(+data.id);}
+    });
+  });
+  useEffect(() => {
+    addListener("unblockForMe", data => {
+      if (+data.id !== +user.userId)
+        { setUnblockForMe(+data.id);}
+    });
+  });
+
 
   useEffect(() => {
     AMessageD && currentDirect && +currentDirect?.id === +AMessageD.author &&
@@ -226,6 +242,33 @@ function Chat() {
     }
   }, [toUnblock]);
 
+  useEffect(() => {
+    if (blockForMe && allUsers && allUsers.find(userX => +userX.id === +blockForMe)) {
+      const i = allUsers.findIndex(userX => +userX.id === +blockForMe);
+      const j = getUser(+id);
+      const k = allUsers.find(userX => +userX.id === +blockForMe);
+      if (j && k)
+      { 
+        k.blockedFrom.push(j);
+        const NewAll = allUsers;
+        NewAll.splice(i, 1, k);
+        setAllUsers([...NewAll]);}
+    }
+    setBlockForMe(null);
+  }, [blockForMe]);
+     
+  useEffect(() => {
+    if (unblockForMe && allUsers && user.userId && unblockForMe !== (undefined || null) && unblockForMe !== +user.userId) {
+      const i = allUsers.findIndex(userX => +userX.id === +unblockForMe);
+      const k = allUsers.find(userX => +userX.id === +unblockForMe);
+      if (k) {
+        k.blockedFrom = k.blockedFrom.filter((u: UserChat) => +u.id !== +user.userId);
+        const NewAll = allUsers;
+        NewAll.splice(i, 1, k);
+        setAllUsers([...NewAll]);};
+    }
+    setBlockForMe(null);
+  }, [unblockForMe]);  
 
 ////////////////////////////////////////////////
 // Partie IV : fonctions ...
@@ -313,41 +356,39 @@ useEffect(() => {
 }, [messagesD]);
 
 
+
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
-
-
-{/* <div className="chatMenu"><UsersWithDirectMessage
-currentChat={currentChat}
-currentDirect={currentDirect}
-setCurrentChat={setCurrentChat}
-setCurrentDirect={setCurrentDirect}
-/></div>
- */}
-
-// <NavbarChannel chatroom={currentChat} />
 
 return (
   <>
   {" "}
 
-
   <div className="messenger">
-	<div className="chatMenu">
-		<Tabs
-			value={activeTab}
-			onChange={(e: any, newValue: string) => setActiveTab(newValue)}
-			aria-label="icon position tabs example"
-		>
-			<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
-			<Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
-		</Tabs>
-		{activeTab === 'Channels' && (
-			<UpdateChannelsInList
-			currentChat={currentChat}
-			setCurrentChat={setCurrentChat}
-			/>
-		)}
-	</div>
+	  <div className="chatMenu">
+		  <Tabs
+			  value={activeTab}
+			  onChange={(e: any, newValue: string) => setActiveTab(newValue)}
+			  aria-label="icon position tabs example"
+		  >
+		  	<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
+			  <Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
+		  </Tabs>
+		  {activeTab === 'Channels' && (
+			  <UpdateChannelsInList
+			  currentChat={currentChat}
+			  setCurrentChat={setCurrentChat}
+			  />
+		  )}
+      {activeTab === "Direct messages" && (
+			  <UsersWithDirectMessage
+			  currentDirect={currentDirect}
+			  setCurrentDirect={setCurrentDirect}
+        currentChat={currentChat}
+			  setCurrentChat={setCurrentChat}
+			  />
+		  )}
+	  </div>
+
     <div className="chatBox">
       <div className="chatBoxW">
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
