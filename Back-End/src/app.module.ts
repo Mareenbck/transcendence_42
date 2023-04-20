@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
-//import { ChatGateway } from './chat/chat.gateway';
+import { ChatModule } from './chat/chat.module';
 import { GlobalGateway } from './gateway/global.gateway';
 import { GlobalModule } from './gateway/global.module';
 import { JwtModule } from '@nestjs/jwt';
@@ -28,6 +28,7 @@ import { GlobalService } from './gateway/global.service';
 		PrismaModule,
 		JwtModule.register({ secret: `${process.env.JWT_SECRET}` }),
 		ChatroomModule,
+		ChatModule,
 		ChatMessModule,
 		DirMessModule,
 		GameModule,
