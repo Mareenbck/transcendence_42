@@ -87,16 +87,28 @@ export default function UsersWithDirectMessage(props: any) {
   }, [usersWith]);
 
   // set direct message if not blocked
+  // const getDirect = (userX: UserChat): void => {
+  //   if (userX && (userX.blockedTo.find((u: UserChat) => +u.id === +userX.id) === undefined ))
+  //   {
+  //     if (userX.blockedFrom.find((u: UserChat) => +u.id === +user.userId) === undefined)
+  //     { 
+  //       setCurrentDirect(userX);
+  //       setCurrentChat(null);
+  //     }
+  //   }
+  // }
+
   const getDirect = (userX: UserChat): void => {
-    if (userX && (userX.blockedTo.find((u: UserChat) => +u.id === +userX.id) === undefined ))
+    if (me && (me.blockedTo.find((u: UserChat) => +u.id === +userX.id) === undefined ))
     {
-      if (userX.blockedFrom.find((u: UserChat) => +u.id === +user.userId) === undefined)
+      if (me.blockedFrom.find((u: UserChat) => +u.id === +user.userId) === undefined)
       { 
         setCurrentDirect(userX);
         setCurrentChat(null);
       }
     }
   }
+
 
   /// Block & Unblock mechanism
   // to get the info to change the icon, additional message because of the second list

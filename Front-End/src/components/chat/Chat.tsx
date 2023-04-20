@@ -382,7 +382,9 @@ return (
       {activeTab === "Direct messages" && (
 			  <UsersWithDirectMessage
 			  currentDirect={currentDirect}
-			  setCurrentChat={setCurrentDirect}
+			  setCurrentDirect={setCurrentDirect}
+        currentChat={currentChat}
+			  setCurrentChat={setCurrentChat}
 			  />
 		  )}
 	  </div>
