@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import MyAvatar from '../../user/Avatar';
 
 export default function UsersWithDirectMessage(props: any) {
-  const {currentChat, currentDirect, setCurrentDirect, setCurrentChat} = props;
+  const {currentDirect, setCurrentDirect, setCurrentChat} = props;
   const [usersWith, setUsersWith] = useState<UserChat[]>([]);
   const [me, setMe] = useState<UserChat | null>(null);
   const [AUsersWith, setAUsersWith] = useState<UserChat | null>(null);

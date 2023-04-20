@@ -10,7 +10,7 @@ import '../../style/Friends.css';
 import React from 'react';
 import PopupChallenge from './PopupChallenge';
 import MyAvatar from '../user/Avatar';
-import {ToBlock, RoomMessage, UserInRoom, DirectMessage, UserChat, ChatRoom, UserCtx, Invite, OnlineU} from "../../interfaces/iChat";
+import {DirectMessage, UserChat, ChatRoom, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
 import { Tab } from '@mui/material';
@@ -359,43 +359,33 @@ useEffect(() => {
 
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
 
-//  Liste des USER AVEC DIRECT MESSAGES 
- {/* <div className="chatMenu"><UsersWithDirectMessage
-currentChat={currentChat}
-currentDirect={currentDirect}
-setCurrentChat={setCurrentChat}
-setCurrentDirect={setCurrentDirect}
-/></div> */}
- 
-//  ANCIENNE LISTE DES CHANNELS DE EMMA... 
-{/* <div className="chatMenu"><UpdateChannelsInList
-currentChat={currentChat}
-currentDirect={currentDirect}
-setCurrentChat={setCurrentChat}
-setCurrentDirect={setCurrentDirect}
-/></div> */}
-
-
 return (
   <>
   {" "}
 
-	<div className="chatMenu">
-		<Tabs
-			value={activeTab}
-			onChange={(e: any, newValue: string) => setActiveTab(newValue)}
-			aria-label="icon position tabs example"
-		>
-			<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
-			<Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
-		</Tabs>
-		{activeTab === 'Channels' && (
-			<UpdateChannelsInList
-			currentChat={currentChat}
-			setCurrentChat={setCurrentChat}
-			/>
-		)}
-	</div>
+  <div className="messenger">
+	  <div className="chatMenu">
+		  <Tabs
+			  value={activeTab}
+			  onChange={(e: any, newValue: string) => setActiveTab(newValue)}
+			  aria-label="icon position tabs example"
+		  >
+		  	<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
+			  <Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
+		  </Tabs>
+		  {activeTab === 'Channels' && (
+			  <UpdateChannelsInList
+			  currentChat={currentChat}
+			  setCurrentChat={setCurrentChat}
+			  />
+		  )}
+      {activeTab === "Direct messages" && (
+			  <UsersWithDirectMessage
+			  currentDirect={currentDirect}
+			  setCurrentChat={setCurrentDirect}
+			  />
+		  )}
+	  </div>
 
     <div className="chatBox">
       <div className="chatBoxW">
