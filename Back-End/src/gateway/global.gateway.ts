@@ -120,27 +120,29 @@ console.log(socket.handshake.auth.token);
   async chatInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
   { this.chatService.chatInvite(data.author, data.player,) };
   
-  @SubscribeMessage('acceptGame')
-  async gameAccept(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
-  { this.gameService.acceptGame(data.author, data.player,) };
-
-  @SubscribeMessage('refuseGame')
-  async gameRefuse(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
-  { this.gameService.refuseGame(data.author, data.player,) };
+  
 
   ///////////////////////////
 // Messages for Game: Invite et random
 //////////////////////////
+  @SubscribeMessage('acceptGame')
+  async acceptGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.gameService.acceptGame(data.author, data.player) };
 
-  // @SubscribeMessage('InviteGame')
-  // async gameInvite(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
-  // { this.gameService.gameInvite(data.author, socket, data.player) };
+  @SubscribeMessage('refuseGame')
+  async refuseGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.gameService.refuseGame(data.author, data.player) };
+
+  @SubscribeMessage('InviteGame')
+  async gameInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { 
+    console.log('139 playGame SubscribeMessage ', data);
+    this.gameService.gameInvite(data.author, data.player) };
   
-
   @SubscribeMessage('playGame')
   async playGame(@MessageBody() data: {user: any, roomN: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
   {
     console.log('144 playGame SubscribeMessage ', data);
 
-    this.gameService.playGame(data.user,data.roomN) };
+    this.gameService.playGame(data.user, data.roomN) };
 }
