@@ -40,6 +40,10 @@ export interface roomsList{
 	playerL: any;
 }
 
+export interface invited{
+	author: any;
+	player: any;
+}
 
 // export interface IGameState {
 // 	player1: IProfil;
@@ -54,10 +58,6 @@ export interface roomsList{
 // 	ABORTED = 'aborted',
 // }
 
-// export enum GameType {
-// 	RANKED = 'RANKED',
-// 	FUN = 'FUN',
-// }
 
 export const GameParams = {
 	GAME_WIDTH: 1000, // 
@@ -69,3 +69,4 @@ export const GameParams = {
 	BALL_DEFAULT_SPEED: 7,
 	PERIOD: 100
 };
+
