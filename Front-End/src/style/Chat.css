@@ -85,7 +85,8 @@
 }
 
 .chatMenu {
-  flex: 3.5;
+  height: 100vh;
+  padding: 2px;
 }
 
 .chatMenuInput {
@@ -200,8 +201,46 @@
   align-items: center;
 }
 
+.conversation .MuiAvatar-rounded.channel-public {
+	background-color: #699af7;
+}
+
+.conversation .MuiAvatar-rounded.channel-protected {
+	background-color: #ffc700;
+}
+
+.conversation .MuiAvatar-rounded.channel-private {
+	background-color: #c7b9ff;
+}
+
+.channel-inlist {
+	display: flex;
+	align-items: center;
+	border-bottom: #bdbdbd57 1px solid;
+	height: 75px;
+	padding: 25px;
+}
+
+.invitations-inlist {
+	display: flex;
+	align-items: center;
+	border-bottom: #bdbdbd57 1px solid;
+	height: 75px;
+	padding: 25px;
+	background-color: #c01ee912;
+}
+
 .conversation-name {
   flex: 1;
+}
+
+.invitation-name {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	margin-bottom: 15px;
+	margin-top: 15px;
+	margin-left: 10px;
 }
 
 .conversation-icon {
@@ -216,4 +255,33 @@
   margin-right: 200px;
   background-color: #E2DBFF;
   margin-top: 15px;
+}
+
+.accept-icon .MuiIconButton-root {
+	color: #00d03b;
+}
+
+.accept-icon .MuiSvgIcon-root {
+	font-size: 30px;
+	height: 35px;
+}
+
+.rejected-icon .MuiIconButton-root {
+	color: #d60000;
+}
+
+.rejected-icon .MuiSvgIcon-root {
+	font-size: 30px;
+	height: 35px;
+}
+
+.conversation-list {
+	position: relative;
+	height: inherit;
+}
+
+.create-channel-position {
+	position: absolute;
+	bottom: 50px;
+	right: 30px;
 }

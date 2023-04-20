@@ -2,12 +2,18 @@ import React from "react";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../../store/AuthContext";
 import SelectDialog from "../../utils/SelectDialog";
+import ChannelsSettings from "./ChannelsSettings";
+import { Modal } from "@mui/material";
+import { Box } from "@mui/material";
 
 export function NavbarChannel(props: any) {
 	const userContext = useContext(AuthContext);
 	const [isAdmin, setIsAdmin] = useState<string | null>('');
 	const [selectedUser, setSelectedUser] = useState<string | null>('');
+	const [openModal, setOpenModal] = useState(false);
 
+	console.log("props--->")
+	console.log(props)
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
 		if (currentUser) {
@@ -39,13 +45,27 @@ export function NavbarChannel(props: any) {
 		inviteUserOnChannel(props.chatroom.id, parseInt(invitedUserId));
 	}
 
+	const handleOpenModal = () => {
+		setOpenModal(true);
+	};
+
+
 	return (
 		<>
 			{isAdmin === 'ADMIN' &&
 				<div className="visibility-icon">
 					<SelectDialog onSelect={(userId: string) => setSelectedUser(userId)} onInvite={handleInviteUser} />
+					<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
 				</div>
 			}
+				<>
+			<Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
+				<Box className="modal-content">
+					<h2>Welcome to {props.chatroom.name} settings</h2>
+					<div>Do you want to change the password ?</div>
+				</Box>
+			</Modal>
+			</>
 		</>
 	);
 }
