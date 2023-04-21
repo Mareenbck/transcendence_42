@@ -186,7 +186,7 @@ console.log("constructor Class.game");
 	public run(): void {
 console.log("game.class.run");
 	//interval function: update the game at the certain period until the score reaches MAX
-		this.interval = setInterval(() => {
+		this.interval = setInterval(async () => {
 			this.updatePositions();
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
@@ -211,26 +211,14 @@ console.log("237 ", {
 		score2: this.playerL.score,
 });
 
-				// 		this.gameService.create({
-				// 		playerOneId: this.playerR.user.user.userId,
-				// 		playerTwoId: this.playerL.user.user.userId,
-				// 		winnerId: this.winner.user.userId,
-				// 		score1: this.playerR.score,
-				// 		score2: this.playerL.score,
-				// });
+	const game = await this.gameService.create({
+		playerOneId: this.playerR.user.user.userId,
+		playerTwoId: this.playerL.user.user.userId,
+		winnerId: this.winner.user.userId,
+		score1: this.playerR.score,
+		score2: this.playerL.score,
+	});
 
-				this.prisma.game.create({
-					data: {
-						playerOne: {
-							connect: {id: this.playerR.user.user.userId}},
-						playerTwo: {
-							connect: {id: this.playerL.user.user.userId}},
-						winner: {
-							connect: { id: this.winner.user.userId}},
-							score1: this.playerR.score,
-							score2: this.playerL.score,
-					}
-			});
 ////////////////////////////////////////////////////		
 				this.player_disconect(this.winner);
 				clearInterval(this.interval);
