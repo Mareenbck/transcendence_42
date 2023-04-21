@@ -51,6 +51,7 @@ export function NavbarChannel(props: any) {
 			  },
 			});
 			const data = await response.json();
+			console.log("DATA IN FETCH", data)
 			return data;
 		} catch(err) {
 			console.log(err);
@@ -74,8 +75,11 @@ export function NavbarChannel(props: any) {
 		<>
 			{isAdmin === 'ADMIN' &&
 				<div className="visibility-icon">
-					<SelectDialog onSelect={(userId: string) => setSelectedUser(userId)} onInvite={handleInviteUser} channelId={props.chatroom.id}/>
-					{/* <SelectDialog onSelect={(userId: string) => setSelectedUser(userId)} onInvite={handleInviteUser} /> */}
+					<SelectDialog 
+						onSelect={(userId: string) => setSelectedUser(userId)} 
+						onInvite={handleInviteUser} 
+						channelId={props.chatroom.id}
+						onAddAdmin={handleAddAdmin}/>
 					<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
 				</div>
 			}

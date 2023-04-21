@@ -11,7 +11,10 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import AuthContext from "../../store/AuthContext";
 import { FriendContext } from "../../store/FriendshipContext";
 
-export default function DialogSelect(props: { onSelect: (userId: string) => void, onInvite: (userId: string) => void, channelId: string}) {
+export default function DialogSelect(props: { onSelect: (userId: string) => void, 
+											onInvite: (userId: string) => void, 
+											channelId: string, 
+											onAddAdmin: (userId: string) => void}) {
 
 	const [open, setOpen] = React.useState(false);
 	const [friends, setFriends] = React.useState<any[]>([]);
@@ -34,16 +37,22 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 		}
 	};
 
-
 	const handleInvite = (event: React.SyntheticEvent<unknown>) => {
 		if (invitedUser) {
 			// console.log("invitedUser--->")
 			// console.log(invitedUser)
-			props.onSelect(invitedUser); // Appeler props.onSelect avec l'ID de l'utilisateur sélectionné
+			props.onSelect(invitedUser); 
 			props.onInvite(invitedUser);
 		}
 		handleClose(event, '');
 	};
+
+	const handleInviteAdmin = (event: React.SyntheticEvent<unknown>) => {
+		if (invitedUser) {
+			props.onAddAdmin(invitedUser);
+		}
+		handleClose(event, '');
+	}
 
 	React.useEffect(() => {
 		const url = "http://localhost:3000/users/";
@@ -83,7 +92,7 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
                 )
                 if (response.ok) {
                     const data = await response.json();
-                    console.log("data ------>", data);
+                    // console.log("data ------>", data);
                     setParticipants(data);
                 }
             } catch(err) {
@@ -98,6 +107,8 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 
 		const admins = participants.filter((p) => p.role === 'ADMIN');
 		const users = participants.filter((p) => p.role === 'USER') || []; 
+		const [selectedUser, setSelectedUser] = React.useState<number | undefined>();
+
 
 	return (
 		<div>
@@ -137,7 +148,8 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 							<InputLabel htmlFor="demo-dialog-native">Users</InputLabel>
 							<Select
 								native
-								value={users.length !== 0 ? users[0].id : undefined}								onChange={handleChange}
+								value={selectedUser}
+								onChange={handleChange}
 							>
 								{/* <option aria-label="None" value="" /> */}
 								{users && users.map((p) => (
@@ -151,7 +163,7 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose}>Cancel</Button>
-					<Button onClick={handleInvite}>Ok</Button>
+					<Button onClick={handleInviteAdmin}>Ok</Button>
 				</DialogActions>
 			</Dialog>		
 		</div>

@@ -108,34 +108,31 @@ export class ChatroomService {
       where: { channelId },
       include: { user: true },
     });
-    //   console.log("CHANNEL IN GET PARTICIPANTS", channel);
       return channel;
   }
 
-  async addAdmin(channelId: number, userId: number, currentUserId: number): Promise<void> {
+  async addAdmin(channelId: number, userId: number) {
+	// console.log("entre dans le service")
+	const users = await this.prisma.userOnChannel.findMany({  
+		where: { channelId },
+		include: { user: true },
+	  });
+	// console.log("USERS ON SERVICE", users)
 
-    // Vérifier que l'utilisateur que l'on veut nommer admin est déjà sur le channel
-    const userOnChannel = await this.prisma.userOnChannel.findFirst({
-      where: {
-        userId,
-        channelId,
-      },
-    });
-    if (!userOnChannel) {
-      throw new ForbiddenException(`User with ID ${userId} is not on channel with ID ${channelId}`);
-    }
+	if (!users || users.length === 0) {
+	  throw new ForbiddenException(`User with ID ${userId} is not on channel with ID ${channelId}`);
+	}
 
-    // Mettre à jour le rôle de l'utilisateur sur le channel
-    await this.prisma.userOnChannel.update({
-      where: {
-        id: userOnChannel.id,
-      },
-      data: {
-        role: UserRoleInChannel.ADMIN,
-      },
-    });
-  }
-
+	const updatedrole = await this.prisma.userOnChannel.update({
+	  where: {
+		id: userId,
+	  },
+	  data: {
+		role: UserRoleInChannel.ADMIN,
+	},
+});
+	return updatedrole;
+}
     
 
 	async openInvitations(senderId: number, channelId: number, receiverId: number) {
