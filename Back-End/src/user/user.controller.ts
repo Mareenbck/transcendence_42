@@ -38,6 +38,15 @@ export class UserController {
     return allUsers;
   }
 
+  @Get('block/:id')
+  @UseGuards(JwtGuard)
+  async getMeWB(@Param('id') id: number) {
+    if (id === undefined || isNaN(id))
+    {   throw new BadRequestException('Undefined user ID in getMeWB of users'); }
+    const me = await this.userService.getMeWithBlocked(+id);
+    return me;
+  }
+
   @Get('games')
   @UseGuards(JwtGuard)
   async getAllUsersWithGames() {
@@ -49,10 +58,12 @@ export class UserController {
   @UseGuards(JwtGuard)
   async getWithDirectMessages(@Param('id') id: number) {
     if (id === undefined || isNaN(id))
-    {   throw new BadRequestException('Undefined user ID'); }
-    return this.userService.getUsersWithMessages(+id);
-   };
+    {   throw new BadRequestException('Undefined user ID in getWithDirectMessages of users'); }
+    const usersW = await this.userService.getUsersWithMessages(+id);
+	return usersW;   
+	};
 
+  
 	@Get('/profile/:id')
 	@UseGuards(JwtGuard)
 	async getMe(@GetCurrentUserId() id: string) {

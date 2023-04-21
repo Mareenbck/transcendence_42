@@ -25,8 +25,12 @@ export class UserService {
 	}
 
 	async getUsers() {
+		try {
 		const allUsers = await this.prisma.user.findMany({});
 		return allUsers;
+	} catch (error) {
+		throw new BadRequestException('getUser error : ' + error);
+	}
 	}
 
 	async getUsersWithBlocked() {
@@ -36,14 +40,28 @@ export class UserService {
 		return allUsers;
 	}
 
+	async getMeWithBlocked(id: number) {
+		const me = await this.prisma.user.findUniqueOrThrow({
+			include: { blockedFrom: true, blockedTo: true },
+			where: { id: id, },
+		});
+		return me;
+	}
+
 	async getUsersWithGames() {
+		try {
    		const allUsers = await this.prisma.user.findMany({
       		include: { playerOne: true, playerTwo: true, winner: true }
     	});
     	return allUsers;
+	} catch (error) {
+		throw new BadRequestException('getUser error : ' + error);
+	}
   	}
 
-	async getUsersWithMessages(id) {
+	async getUsersWithMessages(id: number) {
+		console.log("get usersWithMess");
+		try {
 		const allUsersWithMessages = await this.prisma.user.findMany({
 		  	include: {
 				dirMessEmited: {
@@ -63,6 +81,9 @@ export class UserService {
 		  	}
 		});
 		return allUsersWithMessages;
+		} catch (error) {
+			throw new BadRequestException('getUser error : ' + error);
+		}
 	}
 
 	async getUser(id: number) {
@@ -299,6 +320,7 @@ export class UserService {
 	}
 
   async block(blockFrom: number, blockTo: number) {
+	console.log("BLOC USER SERVICE", blockTo);
     const updateUser = await this.prisma.user.update({
       where: {
         id: +blockFrom,

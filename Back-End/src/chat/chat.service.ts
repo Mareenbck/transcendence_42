@@ -1,18 +1,21 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, Inject  } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Server, Socket } from "socket.io";
 import UsersSockets from "src/gateway/socket.class";
 import { UserDto } from "src/user/dto/user.dto";
 import { UserChannelVisibility } from '@prisma/client';
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class ChatService {
+
     public server: Server = null;
     private readonly logger = new Logger(ChatService.name);
     public userSockets: UsersSockets;
 
-    constructor(private readonly prismaService: PrismaService){}
-    
+   // constructor(private readonly prismaService: PrismaService){}
+    constructor(@Inject(UserService) private readonly userService: UserService) {}
+
     userChat = new Array();
     roomUsers = new Array();
 
@@ -52,19 +55,33 @@ export class ChatService {
         }
     };
 
-    sendDirectMessage:any = (content: string, author: number, receiver: number, ) => {
+    sendDirectMessage:any = async (content: string, author: number, receiver: number, ) => {    
         const user = this.getUser(receiver);
-        if (user) {
+        const a = this.getUser(author);
+        if (user && a) 
+        {
             this.server.to(user.socketId).emit("getMessageDirect", {
                 content,
                 author,
                 receiver,
             });
+            const usersDirectForReceiver = await this.userService.getUsersWithMessages(receiver);
+            if (!usersDirectForReceiver || !(usersDirectForReceiver.find(u => +u.id === +author)))
+            {
+                this.server.to(user.socketId).emit("getNewDirectUser", author);
+            };
+        }   
+        if (a && user) {
+            const usersDirectForAuthor = await this.userService.getUsersWithMessages(author);
+            if (!usersDirectForAuthor || !(usersDirectForAuthor.find(u => +u.id === +author)))
+            {
+                const a = this.getUser(author);
+                this.server.to(a.socketId).emit("getNewDirectUser", receiver)
+            };
         }
     };
 
     sendConv:any = (channelId: number, name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean) => {
-        console.log("qdsqsdqsdqds", name)
         let visibility: UserChannelVisibility;
         if (isPrivate) {
           visibility = UserChannelVisibility.PRIVATE;
@@ -91,6 +108,11 @@ export class ChatService {
                 user: userFrom,
             });
         }
+        if (userFrom) {
+            this.server.to(userFrom.socketId).emit('blockForMe', {
+                id: blockTo,
+            });
+        }
     };
 
     chatUnblock:any = (blockFrom: number, blockTo: number,) => {
@@ -100,6 +122,11 @@ export class ChatService {
             this.server.to(userTo.socketId).emit('wasUnblocked', {
                 id: blockFrom,
                 user: userFrom,
+            });
+        }
+        if (userFrom) {
+            this.server.to(userFrom.socketId).emit('unblockForMe', {
+                id: blockTo,
             });
         }
     };

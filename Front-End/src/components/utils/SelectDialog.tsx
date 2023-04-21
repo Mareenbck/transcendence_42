@@ -11,22 +11,17 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import AuthContext from "../../store/AuthContext";
 import { FriendContext } from "../../store/FriendshipContext";
 
-export default function DialogSelect(props: { onSelect: (userId: string) => void, onInvite: (userId: string) => void, channelId: string }) {
+export default function DialogSelect(props: { onSelect: (userId: string) => void, onInvite: (userId: string) => void, channelId: string}) {
 
 	const [open, setOpen] = React.useState(false);
 	const [friends, setFriends] = React.useState<any[]>([]);
 	const authCtx = React.useContext(AuthContext);
 	const friendCtx = React.useContext(FriendContext);
 	const [invitedUser, setInvitedUser] = React.useState<string | null>(''); // Ajouter une variable d'état pour stocker l'ID de l'utilisateur sélectionné
-    const [participants, setParticipants] = React.useState<string | null>('');
 
 	const handleChange = (event: SelectChangeEvent) => {
 		setInvitedUser(event.target.value ? event.target.value : ''); // Mettre à jour l'ID de l'utilisateur sélectionné
 	};	
-	
-	const handleChangeAdmin = (event: SelectChangeEvent) => {
-		setInvitedUser(event.target.value ? event.target.value : ''); // Mettre à jour l'ID de l'utilisateur sélectionné
-	};
 
 
 	const handleClickOpen = () => {
@@ -49,14 +44,6 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 		}
 		handleClose(event, '');
 	};
-
-	const handleInviteAdmin = (event: React.SyntheticEvent<unknown>) => {
-		if (participants) {
-			props.onSelect(participants);
-			props.onInvite(participants);
-		}
-		handleClose(event, '');
-	}
 
 	React.useEffect(() => {
 		const url = "http://localhost:3000/users/";
@@ -81,28 +68,36 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 		fetchUsers();
 	}, [])
 
-	React.useEffect(() => {
-		const url = `http://localhost:3000/chatroom2/${props.channelId}/participants`;
-		const fetchUsers = async () => {
-			const response = await fetch(
-				url,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${authCtx.token}`
-					}
-				}
-			)
-			const data = await response.json();
-			const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
-				const avatar = await friendCtx.fetchAvatar(friend.id);
-				return { ...friend, avatar };
-			}));
-			setFriends(updatedFriends);
-		}
-		fetchUsers();
-	}, [])
+	const [participants, setParticipants] = React.useState([]);
+
+	const showParticipants = async (channelId: string) => {
+        try {
+            const response = await fetch(
+                `http://localhost:3000/chatroom2/${channelId}/participants`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${authCtx.token}`
+                    }
+                }
+                )
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("data ------>", data);
+                    setParticipants(data);
+                }
+            } catch(err) {
+                console.log(err)
+            }
+        }
+        
+        
+        React.useEffect(() =>  {
+            showParticipants(props.channelId);
+        }, [props.channelId])
+
+		const admins = participants.filter((p) => p.role === 'ADMIN');
+		const users = participants.filter((p) => p.role === 'USER') || []; 
 
 	return (
 		<div>
@@ -133,33 +128,32 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 				</DialogActions>
 			</Dialog>	
 
-
-			<Button onClick={handleClickOpen}>Invite new Admins</Button>
+			<Button onClick={handleClickOpen}>Invite Admins</Button>
 			<Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-				<DialogTitle>Choose a new admin :</DialogTitle>
+				<DialogTitle>Invite :</DialogTitle>
 				<DialogContent>
 					<Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
 						<FormControl sx={{ m: 1, minWidth: 120 }}>
 							<InputLabel htmlFor="demo-dialog-native">Users</InputLabel>
 							<Select
 								native
-								value={participants !== null ? participants : ''}
-								onChange={handleChangeAdmin}
+								value={users.length !== 0 ? users[0].id : undefined}								onChange={handleChange}
 							>
-								<option aria-label="None" value="" />
-								{friends.map((friend) => (
-									<option key={friend.id} value={friend.id}>
-										{friend.username}
-									</option>))}
+								{/* <option aria-label="None" value="" /> */}
+								{users && users.map((p) => (
+									<option key={p.id} value={p.id}>
+										{p.user.username}
+									</option>
+								))}
 							</Select>
 						</FormControl>
 					</Box>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose}>Cancel</Button>
-					<Button onClick={handleInviteAdmin}>Ok</Button>
+					<Button onClick={handleInvite}>Ok</Button>
 				</DialogActions>
-			</Dialog>
+			</Dialog>		
 		</div>
 	);
 }

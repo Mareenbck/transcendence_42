@@ -1,19 +1,20 @@
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { Snackbar } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import AuthContext from "../../../store/AuthContext";
+import Avatar from '@mui/material/Avatar';
+import PublicIcon from '@mui/icons-material/Public';
+import LockIcon from '@mui/icons-material/Lock';
+import PasswordIcon from '@mui/icons-material/Password';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import IconButton from "@mui/material/IconButton";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const ChannelInvitations = (props: any) => {
 	const [invitations, setInvitations] = useState<any[]>([]);
 	const authCtx = useContext(AuthContext);
 	const pendingInvitations = invitations.filter((invitation: any) => invitation.status === 'PENDING');
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-	// console.log("invitations--->")
-	// console.log(invitations)
-	// console.log("pendingInvitations--->")
-	// console.log(pendingInvitations)
+	const [icon, setIcon] = useState<any>();
 
 	useEffect(() => {
 		getInvitations();
@@ -30,34 +31,8 @@ const ChannelInvitations = (props: any) => {
 		}
 		)
 		const data = await response.json();
-		// const updatedDemands = await Promise.all(data.map(async (demand: any) => {
-		// 	const avatar = await fetchAvatar(demand.userId);
-		// 	if (!avatar) {
-		// 		return demand;
-		// 	}
-		// 	return { ...demand, user: {...demand.user, avatar }};
-		// }));
 		setInvitations(data);
 	}
-
-
-	// const fetchAvatar = async (userId: number) => {
-	// 	try {
-	// 		const response = await fetch(`http://localhost:3000/friendship/${userId}/avatar`, {
-	// 			method: 'GET',
-	// 		});
-	// 		if (response.ok) {
-	// 			if (response.status === 204) {
-	// 				return null
-	// 			}
-	// 			const blob = await response.blob();
-	// 			return URL.createObjectURL(blob);
-	// 		}
-	// 	} catch (error) {
-	// 		return console.log("error", error);
-	// 	}
-	// }
-
 
 	const updateDemand = async (invitId: number, res: string) => {
 		try {
@@ -91,28 +66,47 @@ const ChannelInvitations = (props: any) => {
 		}
 	}
 
+	useEffect(() => {
+		if (props.visibility === 'PUBLIC') {
+			setIcon(<PublicIcon />);
+		} else if (props.visibility === 'PWD_PROTECTED') {
+			setIcon(<PasswordIcon />);
+		} else {
+			setIcon(<LockIcon />);
+		}
+	}, [props.visibility])
+
 	return (
 		<>
-			<ul>
-				{pendingInvitations.map((invit: any) => (
-					<li key={invit.id} className='friend'>
-						<span className='demand-username'>{invit.chatroom.name}</span>
-						<div onClick={(event: FormEvent) => { handleUpdate(event, invit.id, 'ACCEPTED') }} className='accept'>
-							<CheckCircleOutlineIcon />
-						</div>
-						<Snackbar
-							anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-							open={snackbarOpen}
-							autoHideDuration={1000}
-							onClose={handleCloseSnackbar}
-							message="Invitation Accepted"
-						/>
-						<div onClick={(event: FormEvent) => { handleUpdate(event, invit.id, 'REJECTED') }} className='deny'>
-							<HighlightOffIcon />
-						</div>
-					</li>
-				))}
-			</ul>
+		{pendingInvitations.map((invit: any) => (
+			<div key={invit.id} >
+				<div className="invitations-inlist">
+					<div className="invitation-name">
+						<Avatar variant="rounded" >
+							{icon}
+						</Avatar>
+						<div className="conversationName">{invit.chatroom.name}</div>
+					</div>
+					<div className="accept-icon">
+						<IconButton onClick={(event: FormEvent) => { handleUpdate(event, invit.id, 'ACCEPTED') }} className='accept'>
+							<CheckCircleIcon />
+						</IconButton>
+					</div>
+					<Snackbar
+					anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+					open={snackbarOpen}
+					autoHideDuration={1000}
+					onClose={handleCloseSnackbar}
+					message="Invitation Accepted"
+					/>
+					<div className="rejected-icon">
+						<IconButton onClick={(event: FormEvent) => { handleUpdate(event, invit.id, 'REJECTED') }} className='deny'>
+							<CancelIcon />
+						</IconButton>
+					</div>
+				</div>
+			</div>
+		))}
 		</>
 	)
 }

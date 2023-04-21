@@ -58,11 +58,6 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 }
 
 
-  // @Post(':id/delete')
-  // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {
-  //   return await this.prismaService.chatroom.deleteChatroom(id);
-  // }
-
 	@Post('/invite_channel')
 	@UseGuards(JwtGuard)
 	async openFriendship(@Body() ids: any, @GetCurrentUserId() userId: string) {
