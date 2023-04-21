@@ -24,7 +24,7 @@ export class GameService {
 	public server: Server = null;
 	public userSockets: UsersSockets;
 	public gameService: GameService;
-
+	
 	// private playerR: any;
 	// private playerL: any;
 	private gameId: number = 0;
@@ -43,21 +43,16 @@ export class GameService {
 	// getPlayer:any = (username: string) => {
     //     return this.players.find(u => +u.user.username === +username);
     // }
-	getPair = (author: any, player: any): boolean => {
-	console.log("47_game service getPair ", author, player)
-		const index = this.invited.findIndex(pair => pair.author.username == author.username && pair.player.username == player.username);
-	console.log("48_game service getPair ", index)
+
+	searchPair = (author: number, player: number): boolean => {
+		const index = this.invited.findIndex(i => i.author.id == author && i.player.id == player);
+	console.log("53_game service searchPair ", index)
   		if (index !== -1) {
-    		this.invited.splice(index, 1);
+			this.invited.splice(index, 1);
 			return true;
 		}
 		return false;
 	}
-	// for (let i = 0; i < this.invitedPlayers.length; i++) {
-	// 	if (this.invitedPlayers[i].author === author && this.invitedPlayers[i].player === player) {
-	// 	  this.invitedPlayers.splice(i, 1);
-	// 	  return true;
-
 	
 // add player in array "players"> random game > after pressing "Play Game"
 	addPlayer = (user: any) => {
@@ -66,14 +61,14 @@ export class GameService {
 	};
 
 // creating rooms for a pair of players and game launch 
-	addNewRoom = (playerR: any, playerL: any): void => {
+	addNewRoom = (playerR: UserDto, playerL: UserDto): void => {
 		let roomN = 0;
 		while (this.gameMap.has(roomN)){
 			roomN++;
 	    }
 		const room = `room${roomN}`;
-		this.userSockets.joinToRoom(playerR.user.username, room);
-		this.userSockets.joinToRoom(playerL.user.username, room);
+		this.userSockets.joinToRoom(playerR.username, room);
+		this.userSockets.joinToRoom(playerL.username, room);
 
 		let game = new Games (this.server, roomN, this.prisma, this, this.userSockets);
 		game.init(playerR);
@@ -88,15 +83,14 @@ export class GameService {
 	}
 
 //function to process the message "playGame" or "watch"
-	playGame = (player: any, roomN: number): void => {
-		// if (!username){
-		// 	return ;
-		// }
+	playGame = async (player: any, roomN: number): Promise<void> => {
 		if (roomN == -1){ //
 			this.addPlayer(player);
 			if (this.players.length == 2){
-//console.log("76_game.service: players  ", this.players);	
-				this.addNewRoom(this.players[0], this.players[1]);
+				const playerR: UserDto = await this.userService.getUser(this.players[0].user.userId);
+				const playerL: UserDto = await this.userService.getUser(this.players[1].user.userId)
+// console.log("76_game.service: players  ", playerL);	
+				this.addNewRoom(playerR, playerL);
 			}
 		}
 		else {
@@ -106,36 +100,19 @@ export class GameService {
 	}
 
 //function to process the messages "InviteGame", 'acceptGame', 'refuseGame'
-	gameInvite = (author: any, player: any): void => {
-console.log("112_game.service: invited message  ", author, player);	
-			this.invited.push({author, player});
-console.log("114_game.service: invited  ", this.invited);	
+	gameInvite = (author: UserDto, player: UserDto): void => {
+		this.invited.push({author, player});
 	}
 
-///////////////////////////
-// refuseGame: any = (author: UserDto, player: UserDto,) => {
-// 	console.log(player.username);
-// 	console.log("///////// refuses challenge from");
-// 	console.log(author.username);	
-// };
-
-// acceptGame:any = (author: UserDto, player: UserDto,) => {
-// 	console.log(player.username);
-// 	console.log("///////// accepts challenge from");
-// 	console.log(author.username);
-// };
-	acceptGame = (author: any, player: any): void => {
-console.log("///////// GAME ACCEPT");
-		if(this.getPair(author, player)){
+	acceptGame = (author: UserDto, player: UserDto): void => {
+		if(this.searchPair(author.id, player.id)){
 			this.addNewRoom(author, player);
-console.log("129_game.service: accept  ", this.invited);	
-			}
+		}
 	};
 		
-	refuseGame = (author: any, player: any): void => {
+	refuseGame = (author: UserDto, player: UserDto): void => {
 console.log("///////// GAME REFUSAL");
-			this.getPair(author, player);
-console.log("136_game.service: Refuse  ", this.invited);	
+		this.searchPair(author.id, player.id);
 	};
 
 
@@ -189,7 +166,4 @@ console.log("136_game.service: Refuse  ", this.invited);
 		});
 		return user;
 	}
-
-
-
 }

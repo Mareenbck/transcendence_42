@@ -1,9 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import './Game.css'
 import '../../style/OptionGame.css'
-import type { player, gamesList} from './interface'
-//import { Socket } from 'socket.io-client';
-//import { socket } from '../../service/socket';
 import ColorModal from './modal.tsx/ColorModal';
 import { Link, useLocation } from "react-router-dom";
 import SideBar from '../SideBar';
@@ -12,6 +9,7 @@ import AuthContext from '../../store/AuthContext';
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
 import { UserChat } from '../../interfaces/iChat'
+import { UserGame, gamesList } from './type';
 
 function OptionGame () {
     const user = useContext(AuthContext);
@@ -20,12 +18,12 @@ function OptionGame () {
 
     const location = useLocation();
     const [sendMessage, addListener] = useSocket()
-    const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
 
-    useEffect(() => {
-        setActiveLink(location.pathname);
-      }, [location.pathname]);
+
+    // useEffect(() => {
+    //     setActiveLink(location.pathname);
+    //   }, [location.pathname]);
 
     // const handleLinkClick = (path: string) => {
     //     setActiveLink(path);
@@ -38,13 +36,14 @@ function OptionGame () {
             setOnlinePlayers(games);
         });
     })
+
 // function GameButton({ user, playGame }) {
     const [clicked, setClicked] = useState(false);
   
     const handleClick = (roomN: number) => {
 //console.log('playGame sendMessage', user);
         sendMessage("playGame", {user: user, roomN: roomN});
-      setClicked(true);
+        setClicked(true);
     };
 
     return (
@@ -68,7 +67,7 @@ function OptionGame () {
 {/* /LIST OF CURRENT GAME with button "Watch*/}
                         <div>
                             {games.map((game: gamesList) => (
-                                <Link to={'/game/play'} onClick={() => handleClick(game.roomN)}>Room {game.roomN} ({game.playerR.user.username} vs {game.playerL.user.username})</Link>
+                                <Link to={'/game/play'} onClick={() => handleClick(game.roomN)}>Room {game.roomN} ({game.playerR.username} vs {game.playerL.username})</Link>
                             ))}
                         </div>
 {/* /LIST OF CURRENT GAME */}
