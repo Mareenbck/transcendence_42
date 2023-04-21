@@ -12,6 +12,7 @@ export default function ChannelVisibility(props: any) {
   const userContext = useContext(AuthContext);
 //   const [isAdmin, setIsAdmin] = useState<string | null>('');
   const passwordInputRef = useRef<HTMLInputElement>(null);
+    const [isJoined, setIsJoined] = useState(false);
 
 
 //   const getRolesUser = async (id: string, channelId: string) => {
@@ -51,31 +52,42 @@ export default function ChannelVisibility(props: any) {
   };
 
 
-	function getIconByChannelType() {
-		let icon;
+  function getIconByChannelType() {
+    let icon;
 
-		if (props.visibility === "PWD_PROTECTED") {
-			icon = (<>
-				<div className="visibility-icon">
-					<IconButton onClick={handleOpenJoinModal} aria-label="fingerprint">
-						<ArrowCircleRightIcon />
-					</IconButton>
-					{/* <JoinProtectedChannel onOpenJoinModal={handleOpenJoinModal} className="join-channel" fontSize="small"/> */}
-					{/* <KeyIcon className="channel-icon" fontSize="large" /> */}
-					{/* <ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} /> */}
-				</div>
-			</>);
-		} else if (props.visibility == "PUBLIC") {
-			icon = (<>
-				<div className="visibility-icon">
-					<IconButton onClick={(e: FormEvent) => joinChannel(e, props.id)} aria-label="fingerprint">
-						<ArrowCircleRightIcon />
-					</IconButton>
-				</div>
-			</>);
-		}
-		return icon;
-	}
+    if (props.visibility === "PWD_PROTECTED") {
+      icon = (
+        <div className="visibility-icon">
+          {!isJoined && (
+            <IconButton onClick={handleOpenJoinModal} aria-label="fingerprint">
+              <ArrowCircleRightIcon />
+            </IconButton>
+          )}
+          {isJoined && (
+            <IconButton disabled={true} aria-label="fingerprint" style={{ opacity: 0 }}>
+              <ArrowCircleRightIcon />
+            </IconButton>
+          )}
+        </div>
+      );
+    } else if (props.visibility === "PUBLIC") {
+      icon = (
+        <div className="visibility-icon">
+          {!isJoined && (
+            <IconButton onClick={(e: FormEvent) => joinChannel(e, props.id)} aria-label="fingerprint">
+              <ArrowCircleRightIcon />
+            </IconButton>
+          )}
+          {isJoined && (
+            <IconButton disabled={true} aria-label="fingerprint" style={{ opacity: 0 }}>
+              <ArrowCircleRightIcon />
+            </IconButton>
+          )}
+        </div>
+      );
+    }
+    return icon;
+  }
 
 	const joinChannel = async (e: FormEvent, channelId: number) => {
 		e.preventDefault();
@@ -98,6 +110,7 @@ export default function ChannelVisibility(props: any) {
 				throw new Error(message);
 			}
 			const data = await resp.json();
+			setIsJoined(true);
 		} catch(err) {
 			console.log(err)
 		}
@@ -107,18 +120,18 @@ export default function ChannelVisibility(props: any) {
 
 	return (
 		<>
-		<div>
+		  <div>
 			<Modal className="modal-container" open={openJoinModal} onClose={() => setOpenJoinModal(false)}>
-				<Box className="modal-content">
-					<div className="form-input">
-						<label htmlFor="floatingPassword">Password</label>
-						<input type="password" ref={passwordInputRef} className="form-fields-channel" placeholder="Password" />
-					</div>
-					<button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
-				</Box>
+			  <Box className="modal-content">
+				<div className="form-input">
+				  <label htmlFor="floatingPassword">Password</label>
+				  <input type="password" ref={passwordInputRef} className="form-fields-channel" placeholder="Password" />
+				</div>
+				<button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
+			  </Box>
 			</Modal>
-		</div>
-		{getIconByChannelType()}
+		  </div>
+		  {getIconByChannelType()}
 		</>
-	);
+	  );
 }
