@@ -75,7 +75,7 @@ export class GameService {
 		this.userSockets.joinToRoom(playerR.user.username, room);
 		this.userSockets.joinToRoom(playerL.user.username, room);
 
-		let game = new Games (this.server, roomN, this.prisma, this.gameService, this.userSockets);
+		let game = new Games (this.server, roomN, this.prisma, this, this.userSockets);
 		game.init(playerR);
 		game.init(playerL);
 		this.gameMap[roomN] = game;
