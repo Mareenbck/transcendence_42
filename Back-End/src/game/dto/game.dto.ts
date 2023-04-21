@@ -14,7 +14,7 @@ export class GameDto {
   @IsNotEmpty()
   playerTwoId: number;
 
-    @IsNumber()
+  @IsNumber()
   @IsNotEmpty()
   winnerId: number;
 
