@@ -1,12 +1,14 @@
 // import { Server, Socket } from "socket.io";
 
+import { UserDto } from "src/user/dto/user.dto";
+
 // export interface profile{
 // 	socket: Socket; // socketId: any //socketId: any [];
 // 	user: any; //userId: any
 // }
 
 export interface player{
-	user: any;
+	user: UserDto;
 	racket: racket;
 	score: number;
 }
@@ -36,13 +38,13 @@ export interface gameInit {
 
 export interface roomsList{
 	roomN: number;
-	playerR: any;
-	playerL: any;
+	playerR: UserDto;
+	playerL: UserDto;
 }
 
 export interface invited{
-	author: any;
-	player: any;
+	author: UserDto;
+	player: UserDto;
 }
 
 // export interface IGameState {

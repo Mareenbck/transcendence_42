@@ -1,12 +1,26 @@
-export interface player{
-    socket: any;
-	userId: any;
-}
+// export interface player{
+//     socket: any;
+// 	userId: any;
+// }
+
+export interface UserGame {
+	id: number;
+	username: string;
+	email: string;
+    hash: string;
+	avatar: string;
+	ftAvatar: string;
+	is2FA: boolean;
+    eceivedFriendships: FriendsDto[];
+    blockedTo: UserDto[];
+    blockedFrom: UserDto[];
+    dirMessEmited: DirMessDto[];
+};
 
 export interface gamesList{
     roomN: number;
-	playerR: any;
-	playerL: any;
+	playerR: UserGame;
+	playerL: UserGame;
 }
 
 // export interface profile{

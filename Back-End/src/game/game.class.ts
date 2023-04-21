@@ -1,15 +1,13 @@
 import {Server, Socket} from 'socket.io'
 import { PrismaService} from '../prisma/prisma.service';
 import { GameService } from 'src/game/game.service';
-
-import {
-		player,
-		ball,
-		gameInit,
-		GameParams
-	 } from './game.interfaces';
+import { player,
+		 ball,
+		 gameInit,
+		 GameParams } from './game.interfaces';
 import UsersSockets from 'src/gateway/socket.class';
 import { GameDto } from './dto/game.dto';
+import { UserDto } from 'src/user/dto/user.dto';
 
 
 var ballSpeed = GameParams.BALL_DEFAULT_SPEED;
@@ -26,12 +24,12 @@ export class Games {
 
 // initialization of players (L - left, R - right)
 	private playerL: player = {
-		user: {} as any,
+		user: {} as UserDto,
 		racket: {x: 10, y: (height - racket_height)/2},
 		score: 0,
 	};
 	private playerR: player = {
-		user: {} as any,
+		user: {} as UserDto,
 		racket: {x: width - racket_width - 10, y: (height - racket_height)/2},
 		score: 0,
 	};
@@ -39,7 +37,7 @@ export class Games {
 	private isrunning: boolean = false; 
 	private interval: NodeJS.Timeout; // define the interval property
 	private leave: boolean = false;
-	private winner: any = '';
+	private winner: UserDto = null;
 
 	private ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
 	private ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
@@ -70,7 +68,7 @@ console.log("constructor Class.game");
 // function: emit game - tacking the changing coordinates of rackets and ball> sends message to the room
 	private emit2all(){
 		this.server.to(this.room).emit('pong',
-		{ // !!! sens for each room
+		{ // !!! send for each room
 			ball: this.ball,
 			racket1: this.playerR.racket,
 			racket2: this.playerL.racket,
@@ -80,8 +78,8 @@ console.log("constructor Class.game");
 	}
 
 // function: initialization of game during the ferst connection to the game
-	public init(player: any){
-		this.userSockets.emitToUser(player.user.username, 'init-pong', { 
+	public init(player: UserDto){
+		this.userSockets.emitToUser(player.username, 'init-pong', { 
 			table_width: width,
 			table_height: height,
 			racket_width: racket_width,
@@ -138,13 +136,13 @@ console.log("constructor Class.game");
 
 // move rakets event
 	public initMoveEvent(
-		idPlayerR: any,
-		idPlayerL: any,
+		playerR: UserDto,
+		playerL: UserDto,
 	): void {
-		this.playerR.user = idPlayerR;
-		this.playerL.user = idPlayerL;
+		this.playerR.user = playerR;
+		this.playerL.user = playerL;
 
-		this.userSockets.onFromUser(idPlayerR.user.username,'move', (message: string) => {
+		this.userSockets.onFromUser(playerR.username,'move', (message: string) => {
 // console.log("game_class_playerR socket message", message);
 			if (message == 'up') {
 				if (this.playerR.racket.y > 0) {
@@ -159,7 +157,7 @@ console.log("constructor Class.game");
 			}
 		});
 		  
-		this.userSockets.onFromUser(idPlayerL.user.username,'move', (message: string) => {
+		this.userSockets.onFromUser(playerL.username,'move', (message: string) => {
 // console.log("game_class_playerL socket message", message);	
 			if (message == 'up') {
 				if (this.playerL.racket.y > 0) {
@@ -176,7 +174,7 @@ console.log("constructor Class.game");
 
 	}
 
-	private player_disconect = (user: any) => {
+	private player_disconect = (user: UserDto) => {
 		this.isrunning = false;
 		this.winner = user;
 		this.server.emit('winner', {winner: this.winner, leave: this.leave});
@@ -200,21 +198,10 @@ console.log("game.class.run");
 // promisses.push(
 // WRITING GAME TO THE DB
 
-console.log("237 ", {
-	playerOne: {
-		connect: {id: this.playerR.user.user.userId}},
-	playerTwo: {
-		connect: {id: this.playerL.user.user.userId}},
-	winner: {
-		connect: { id: this.winner.user.userId}},
-		score1: this.playerR.score,
-		score2: this.playerL.score,
-});
-
-	const game = await this.gameService.create({
-		playerOneId: this.playerR.user.user.userId,
-		playerTwoId: this.playerL.user.user.userId,
-		winnerId: this.winner.user.userId,
+	const game: GameDto = await this.gameService.create({
+		playerOneId: this.playerR.user.id,
+		playerTwoId: this.playerL.user.id,
+		winnerId: this.winner.id,
 		score1: this.playerR.score,
 		score2: this.playerL.score,
 	});
@@ -222,7 +209,6 @@ console.log("237 ", {
 ////////////////////////////////////////////////////		
 				this.player_disconect(this.winner);
 				clearInterval(this.interval);
-// console.log("262 res ", res);
 				this.playerL.score = 0;
 				this.playerR.score = 0;
 			}
