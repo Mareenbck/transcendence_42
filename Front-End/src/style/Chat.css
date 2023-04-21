@@ -142,9 +142,10 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-   color: white;
+   color: #c7b9ff;
   margin-right: 5px;
   margin-left: 5px;
+  border: black 2px solid;
   /* background-color: teal; */
 }
 

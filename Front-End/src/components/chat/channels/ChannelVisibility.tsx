@@ -89,49 +89,77 @@ export default function ChannelVisibility(props: any) {
     return icon;
   }
 
-	const joinChannel = async (e: FormEvent, channelId: number) => {
-		e.preventDefault();
-		const password = passwordInputRef.current?.value;
-		try {
-			const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
-				method: "POST",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${userContext.token}`,
-				},
-				body: JSON.stringify({
-					channelId: channelId,
-					userId: userContext.userId,
-					hash: password,
-				}),
-			});
-			if (!resp.ok) {
-				const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
-				throw new Error(message);
-			}
-			const data = await resp.json();
-			setIsJoined(true);
-		} catch(err) {
-			console.log(err)
-		}
-		setOpenJoinModal(false);
-	}
+//   useEffect(() => {
+//     async function fetchChannelJoinStatus() {
+//       try {
+//         const resp = await fetch(`http://localhost:3000/chatroom2/userTable/${userContext.userId}/${props.id}`, {
+//           method: "GET",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${userContext.token}`
+//           }
+//         });
+
+//         if (!resp.ok) {
+//           const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
+//           throw new Error(message);
+//         }
+
+//         const data = await resp.json();
+//         if (data && data.length > 0) {
+//           setIsJoined(true);
+//         }
+//       } catch (err) {
+//         console.log(err);
+//       }
+//     }
+
+//     fetchChannelJoinStatus();
+//   }, [props.id, userContext.token, userContext.userId]);
 
 
-	return (
-		<>
-		  <div>
-			<Modal className="modal-container" open={openJoinModal} onClose={() => setOpenJoinModal(false)}>
-			  <Box className="modal-content">
-				<div className="form-input">
-				  <label htmlFor="floatingPassword">Password</label>
-				  <input type="password" ref={passwordInputRef} className="form-fields-channel" placeholder="Password" />
-				</div>
-				<button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
-			  </Box>
-			</Modal>
-		  </div>
-		  {getIconByChannelType()}
-		</>
-	  );
+  const joinChannel = async (e: FormEvent, channelId: number) => {
+    e.preventDefault();
+    const password = passwordInputRef.current?.value;
+    try {
+      const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userContext.token}`
+        },
+        body: JSON.stringify({
+          channelId: channelId,
+          userId: userContext.userId,
+          hash: password
+        })
+      });
+      if (!resp.ok) {
+        const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
+        throw new Error(message);
+      }
+      setIsJoined(true);
+    } catch (err) {
+      console.log(err);
+    }
+    setOpenJoinModal(false);
+  };
+
+
+  return (
+	<>
+	  <div>
+		<Modal className="modal-container" open={openJoinModal} onClose={() => setOpenJoinModal(false)}>
+		  <Box className="modal-content">
+			<div className="form-input">
+			  <label htmlFor="floatingPassword">Password</label>
+			  <input type="password" ref={passwordInputRef} className="form-fields-channel" placeholder="Password" />
+			</div>
+			<button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
+		  </Box>
+		</Modal>
+	  </div>
+	  {getIconByChannelType()}
+	</>
+  );
 }
