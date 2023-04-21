@@ -103,14 +103,36 @@ export class ChatroomService {
 	}
 
   async getParticipants(channelId: number) {
-    console.log("ENTRE DANS LE SERVICE")
+    // console.log("ENTRE DANS LE SERVICE")
     const channel = await this.prisma.userOnChannel.findMany({  
       where: { channelId },
       include: { user: true },
     });
-      console.log("CHANNEL IN GET PARTICIPANTS", channel);
       return channel;
   }
+
+  async addAdmin(channelId: number, userId: number) {
+	// console.log("entre dans le service")
+	const users = await this.prisma.userOnChannel.findMany({  
+		where: { channelId },
+		include: { user: true },
+	  });
+	// console.log("USERS ON SERVICE", users)
+
+	if (!users || users.length === 0) {
+	  throw new ForbiddenException(`User with ID ${userId} is not on channel with ID ${channelId}`);
+	}
+
+	const updatedrole = await this.prisma.userOnChannel.update({
+	  where: {
+		id: userId,
+	  },
+	  data: {
+		role: UserRoleInChannel.ADMIN,
+	},
+});
+	return updatedrole;
+}
     
 
 	async openInvitations(senderId: number, channelId: number, receiverId: number) {

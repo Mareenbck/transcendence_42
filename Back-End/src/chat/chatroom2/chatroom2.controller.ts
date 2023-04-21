@@ -46,14 +46,17 @@ export class Chatroom2Controller {
   @UseGuards(JwtGuard)
   async getParticipants(@Param('channelId') channelId: string) {
     const participants = await this.chatRoomService.getParticipants(parseInt(channelId));
-    console.log("Participants in controller----->", participants)
     return participants;
   }
 
-  // @Post(':id/delete')
-  // async delete(@Param('id'): Promise<CreateChatroom2Dto[]> {
-  //   return await this.prismaService.chatroom.deleteChatroom(id);
-  // }
+@Post(':channelId/admin/:userId')
+@UseGuards(JwtGuard)
+async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: string) {
+  const response = await this.chatRoomService.addAdmin(parseInt(channelId), parseInt(userId));
+  console.log("response in controller", response);
+  return response;
+}
+
 
 	@Post('/invite_channel')
 	@UseGuards(JwtGuard)
@@ -85,6 +88,10 @@ export class Chatroom2Controller {
 		console.log(result)
 		return result;
 	}
+
+	// @Post('/invite_admin')
+	// @UseGuards(JwtGuard)
+	// async receiv
 
 }
 

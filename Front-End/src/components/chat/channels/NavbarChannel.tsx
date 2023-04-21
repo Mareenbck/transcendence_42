@@ -12,8 +12,8 @@ export function NavbarChannel(props: any) {
 	const [selectedUser, setSelectedUser] = useState<string | null>('');
 	const [openModal, setOpenModal] = useState(false);
 
-	console.log("props--->")
-	console.log(props)
+	// console.log("props--->")
+	// console.log(props)
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
 		if (currentUser) {
@@ -41,10 +41,31 @@ export function NavbarChannel(props: any) {
 		}
 	}
 
+	const addAdminToChannel = async (channelId: number, userId: number) => {
+		try {
+			const response = await fetch(`http://localhost:3000/chatroom2/${channelId}/admin/${userId}`, {
+			  method: 'POST',
+			  headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${userContext.token}`,
+			  },
+			});
+			const data = await response.json();
+			console.log("DATA IN FETCH", data)
+			return data;
+		} catch(err) {
+			console.log(err);
+		}
+	  }
+	  
+
 	const handleInviteUser = (invitedUserId: string) => {
 		inviteUserOnChannel(props.chatroom.id, parseInt(invitedUserId));
 	}
 
+	const handleAddAdmin = (invitedUserId: string) => {
+		addAdminToChannel(props.chatroom.id, parseInt(invitedUserId));
+	}
 	const handleOpenModal = () => {
 		setOpenModal(true);
 	};
@@ -54,7 +75,11 @@ export function NavbarChannel(props: any) {
 		<>
 			{isAdmin === 'ADMIN' &&
 				<div className="visibility-icon">
-					<SelectDialog onSelect={(userId: string) => setSelectedUser(userId)} onInvite={handleInviteUser} />
+					<SelectDialog 
+						onSelect={(userId: string) => setSelectedUser(userId)} 
+						onInvite={handleInviteUser} 
+						channelId={props.chatroom.id}
+						onAddAdmin={handleAddAdmin}/>
 					<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
 				</div>
 			}
