@@ -6,7 +6,14 @@ import type { gameInit, gameState, gameWinner, player, gamesList } from './inter
 import ColorModal from './modal.tsx/ColorModal';
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
+import '../../style/OptionGame.css';
+import { Link, useLocation } from "react-router-dom";
+import SideBar from '../SideBar';
+import style from '../../style/Menu.module.css';
+import { UserChat } from '../../interfaces/iChat';
 
+import SelectColor from './SelectColor';
+import Card from "../../components/utils/Card";
 
 function Game() {
     const user = useContext(AuthContext);
@@ -55,8 +62,19 @@ function Game() {
 
     
     //**** *******************************************************************/
- //initialization of the initial parameters of the game
-    const [gameinit, setGameInit] = useState<gameInit>(
+    const id = user.userId;
+    const [activeLink, setActiveLink] = useState('');
+
+    const location = useLocation();
+   
+   
+    const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
+
+    useEffect(() => {
+        setActiveLink(location.pathname);
+    });
+    //initialization of the initial parameters of the game
+    /*const [gameinit, setGameInit] = useState<gameInit>(
         {
             table_width: 800,
             table_height: 400,
@@ -66,7 +84,36 @@ function Game() {
             scoreR: 0,
             scoreL: 0
         }
-    );
+    );*/
+    useEffect(() => {
+        addListener("gameRooms", (games: gamesList[]) => {
+    //console.log('gameRooms ', games[0].playerR.user.username);
+    //console.log('gameRooms ', games[0].playerL.user.username);
+            setOnlinePlayers(games);
+        });
+    });
+    // function GameButton({ user, playGame }) {
+        const [clicked, setClicked] = useState(false);
+  
+        const handleClick = (roomN: number) => {
+    //console.log('playGame sendMessage', user);
+            sendMessage("playGame", {user: any, roomN: roomN});
+          setClicked(true);
+        }
+        
+    
+     //initialization of the initial parameters of the game
+        const [gameinit, setGameInit] = useState<gameInit>(
+            {
+                table_width: 800,
+                table_height: 400,
+                ballR: 15,
+                racket_width: 10,
+                racket_height: 100,
+                scoreR: 0,
+                scoreL: 0
+            }
+        );
     // const [gameinit, setGameInit] = useState<gameInit>(
     //     {
     //         table_width: window.innerWidth,
@@ -135,24 +182,51 @@ console.log("event.code = ", event.code);
 
     if (!gamewinner.winner){
         return (
-            <div tabIndex={0} onKeyDown={keyDownHandler}>
-                <h2> Game </h2>
+            <>
+        <div tabIndex={0} onKeyDown={keyDownHandler}>
+                    
+            <div className={style.mainPos}>
+            <SideBar title="Option Game" />
+                <div className='container-optionPage'>
+                    <h1 className='titre_option'></h1>
+                
+                    {/* <SelectColor /> */}
+                    <button onClick={handleColorModal}>Change Color</button>
+                    <div>
+                    
+
+                { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+                {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed} 
+                                                                            changColorToBlue={changColorToBlue}
+                                                                            changColorToGreen={changColorToGreen}
+                                                                            changColorToBlack={changColorToBlack}
+                                                                            />}
+                {!ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+
+            </div> 
+{/* /LIST OF CURRENT GAME with button "Watch*/}
+                <div className='card-wrapper'>
+						<Card color='yellow' title="List of online Games" type="match" width="90%"></Card>
+                </div>
+                    
+
                 <div>
-                     <button onClick={handleColorModal}>Change Color</button>
+                    {games.map((game: gamesList) => (
+                        <Link to={'/game/play'} onClick={() => handleClick(game.roomN)}>Room {game.roomN} ({game.playerR.user.username} vs {game.playerL.user.username})</Link>
+                    ))}
+                </div>
+{/* /LIST OF CURRENT GAME */}
 
-                    { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
-                    {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed} 
-                                                                              changColorToBlue={changColorToBlue}
-                                                                              changColorToGreen={changColorToGreen}
-                                                                              changColorToBlack={changColorToBlack}
-                                                                              />}
-                    {!ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+                <div className="btn">
 
-                    
-                {/* <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner}   //>*/}
-                    
+                <Link to={'/game/play'} onClick={() => handleClick(-1)}>Play Game</Link>
+                </div>
+
                 </div>
             </div>
+        </div>
+
+    </> 
         );
     }
     else {
@@ -165,20 +239,7 @@ console.log("event.code = ", event.code);
             </div>
         );
     }
-    /*return (
-        <div tabIndex={0} onKeyDown={keyDownHandler}>
-            
-                <h2 > Game </h2>
-                <div>
-                     <button onClick={handleColorModal}>Change Color</button>
-                   
-                    {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
-                    {ShowColorModal && <ColorModal handelClose={handleClose}  changColor={changColor} />}
-                    {!ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
-                </div>
-              
-        </div>
-    );*/
+
 }
 
 export default Game;

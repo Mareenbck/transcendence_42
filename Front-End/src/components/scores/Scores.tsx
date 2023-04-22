@@ -81,7 +81,7 @@ const Scores = () => {
     return(
 
     <>
-   <div >
+   <div  >
     <section className= "main">
 
       <SideBar title="Scores" />          
@@ -94,7 +94,7 @@ const Scores = () => {
          
         </form>
            
-              <div>
+              <div >
                 
                 <table className='table'>
                   <thead className='thead'>

@@ -1,6 +1,6 @@
 
 * {
-    /*box-sizing: border-box; */
+    box-sizing: border-box; 
 	font-family: 'Noto Sans', sans-serif;
 }
 
@@ -12,11 +12,13 @@ body{
 .main{
     display: flex;
     flex-direction: row;
-    height: 100vh;
+   /* height: 100vh;*/
 }
 
 .one{
-    width: 200%;
+    width: 150%;
+    height: 100vh; /*for labtop ne fonction pas !!*/
+
 }
 
 .one_podium{
@@ -33,23 +35,21 @@ body{
     display: flex;
     flex-direction: column-reverse;
     align-items:self-start;
-    padding-top: 80px;
+    padding-top: 50px;
     width: 100%;
     margin: auto;
 }
 
 
-@media (max-width: 1700px) {
+@media (max-width: 1500px) {
     .two{
-       
-
         display: flex;
         flex-direction: column-reverse;
         align-items:self-start;
-        padding-top: 80px;
         width: 50%;
-        margin: 10;
+        margin: auto;
         padding: 0;
+        padding-top: 5px;
     }
    
 
@@ -64,7 +64,7 @@ body{
     
 }
 
-@media (max-width: 1700px) {
+@media (max-width: 1500px) {
     .midPos{
         display: flex;
        flex-direction: row;
@@ -95,23 +95,23 @@ body{
 .table{
      
     border: 3px solid #699BF7;
-    width: 200%;
+    width: 150%;
     align-self:center;
+    margin: auto;
     margin-left:70px;
        
     
 }
 
 
-
-
-@media (max-width: 1850px) {
+@media (max-width: 1500px) {
     .table{
 
         border: 3px solid #699BF7;
-        width: 100%;
+        width: 50%;
         align-self:center;
         /*margin-left: 100px;*/
+        margin: auto;
         margin-top: 5px;
        
         
@@ -141,7 +141,7 @@ th{
 }
 
 td{
-    height: 50px;
+    height: 15px;
     vertical-align:middle;
    
 }
