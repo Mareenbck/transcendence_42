@@ -59,12 +59,11 @@ export interface gameInit {
     racket_height: number,
     ballR: number
     scoreR: number;
-    scoreL: number
+    scoreL: number;
 }
 
 export interface gameWinner {
-    winner: any;
-    leave: string;
+    winner: UserGame;
 }
 
 export interface star {

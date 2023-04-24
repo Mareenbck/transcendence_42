@@ -12,7 +12,7 @@ import {
 	roomsList,
 	invited
 	} from './game.interfaces';
-import { Games } from './game.class';
+import { GameRoom } from './game.class';
 
 
 @Injectable()
@@ -36,7 +36,7 @@ export class GameService {
 //all connected spectateurs
 	private invited: invited [] = []; // roomUsers = new Array();	
 //map of the games
-	private gameMap = new  Map<number, Game>();
+	private gameMap = new  Map<number, GameRoom>();
 //array of the active rooms 
 	private roomArray: roomsList[]= [];	
 
@@ -56,8 +56,8 @@ export class GameService {
 	
 // add player in array "players"> random game > after pressing "Play Game"
 	addPlayer = (user: any) => {
-	    !this.players.some((u) => +u.user.userId === +user.userId) &&
-		this.players.push({user})
+	    !this.players.some((u) => +u.userId === +user.userId) &&
+		this.players.push(user);
 	};
 
 // creating rooms for a pair of players and game launch 
@@ -70,32 +70,72 @@ export class GameService {
 		this.userSockets.joinToRoom(playerR.username, room);
 		this.userSockets.joinToRoom(playerL.username, room);
 
-		let game = new Games (this.server, roomN, this.prisma, this, this.userSockets);
+		let game = new GameRoom (this.server, roomN, this.prisma, this, this.userSockets);
 		game.init(playerR);
 		game.init(playerL);
 		this.gameMap[roomN] = game;
-		game.initMoveEvent(playerR, playerL);
+		game.setPlayers(playerR, playerL);
+		game.initMoveEvents();
 		this.roomArray.push({roomN, playerR, playerL});
-// console.log("68 resultatArray ")
-	 	this.server.emit("gameRooms", this.roomArray); // send to Front
+ console.log("68 resultatArray ", playerL)
 		this.players = [];
+		this.sendListRooms();
 		game.run();
+	}
+
+// removing room 
+	removeRoom = (roomN: number): void => {
+		const room = `room${roomN}`;
+		this.userSockets.leaveRoom(room);
+		let game = this.gameMap[roomN];
+		game = [];
+		this.gameMap.delete(roomN);
+		this.roomArray = this.roomArray.filter(i => i.roomN != roomN);
+		this.sendListRooms();
+	}
+
+	sendListRooms = () => {
+		this.server.emit("gameRooms", this.roomArray); // send to Front
+	}
+
+	checkPlayerInRooms = async (player: any) => {
+console.log("101_game.service: checkPlayerInRoom user = ", player);	
+		const playerDto: UserDto = await this.userService.getUser(player.userId);
+		// find room by user Dto
+		const [roomN, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
+console.log("101_game.service: checkPlayer roomN = ", roomN);	
+		if (roomN) {
+			// if exist send init
+			this.playGame(playerDto, roomN);
+		}
+		else{
+			// or new game
+			this.playGame(playerDto, -1);
+		}
 	}
 
 //function to process the message "playGame" or "watch"
 	playGame = async (player: any, roomN: number): Promise<void> => {
-		if (roomN == -1){ //
+		// const playerDto: UserDto = await this.userService.getUser(player.userId);
+		// // find room by user Dto
+		// const [N, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
+//console.log("92_game.service: player = ", player);
+		if (roomN == -1 /*&& N == undefined*/){ //
 			this.addPlayer(player);
 			if (this.players.length == 2){
-				const playerR: UserDto = await this.userService.getUser(this.players[0].user.userId);
-				const playerL: UserDto = await this.userService.getUser(this.players[1].user.userId)
-// console.log("76_game.service: players  ", playerL);	
+				const playerR: UserDto = await this.userService.getUser(this.players[0].userId);
+				const playerL: UserDto = await this.userService.getUser(this.players[1].userId)
+//console.log("97_game.service: this.players[1]  ", this.players[1]);	
 				this.addNewRoom(playerR, playerL);
 			}
 		}
 		else {
-			this.gameMap[roomN].init(player);
-			this.userSockets.joinToRoom(player.user.username, `room${roomN}`);
+			let game = this.gameMap[roomN];
+//console.log("104_game.service: player.userId = ", player.userId);
+			const playerDto: UserDto = await this.userService.getUser(player.userId);
+			game.init(playerDto);
+			game.initMoveEvents();
+			this.userSockets.joinToRoom(playerDto.username, `room${roomN}`);
 		}
 	}
 

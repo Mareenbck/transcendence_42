@@ -9,7 +9,7 @@ import AuthContext from '../../store/AuthContext';
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
 import { UserChat } from '../../interfaces/iChat'
-import { UserGame, gamesList } from './type';
+import { UserGame, gamesList } from './interface';
 
 function OptionGame () {
     const user = useContext(AuthContext);
@@ -17,7 +17,7 @@ function OptionGame () {
     const [activeLink, setActiveLink] = useState('');
 
     const location = useLocation();
-    const [sendMessage, addListener] = useSocket()
+    const [sendMessage, addListener] = useSocket();
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
 
 

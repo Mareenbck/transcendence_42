@@ -9,9 +9,9 @@ import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
 import {UserScore, Game} from "../interfaces/iChat";
 import Card from "../../components/utils/Card";
-// import Table from "./Table";
+import { ListItem } from '@mui/material';
 
-const Scores = () => {
+const Table = (props: any) => {
   const [games, setGames] = useState<Game[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
   
@@ -83,26 +83,26 @@ const Scores = () => {
     return(
 
     <>
-   <div  >
-    <section className= "main">
+   {/* <div  > */}
+    {/* <section className= "main"> */}
 
-      <SideBar title="Scores" />          
+      {/* <SideBar title="Scores" />           */}
     
-      <section className= "one">  
-          <h1 className='one_podium'>PODIUM</h1>
+      {/* <section className= "one">   */}
+          {/* <h1 className='one_podium'>PODIUM</h1> */}
           
-          <section className= "two">
+          {/* <section className= "two"> */}
           <form onSubmit={(event) => handleNewGame(event)}>
          
         </form>
            
               
-            <div className="pos">
+            {/* <div className="pos"> */}
                     
              
-              <div className="midPos">
+              {/* <div className="midPos">
 
-                
+                    
 
                     <div className='rangAvatar'>
                       <UserChart   userName={second?.username}  h={(getScore(second))} />
@@ -118,27 +118,61 @@ const Scores = () => {
                       <UserChart   userName={third?.username}  h={(getScore(third))} color={"black"}/>
                       <MyAvatar authCtx={authCtx } id={third?.id}  style="l" avatar={third?.avatar} ftAvatar={third?.ftavatar}/> 
                     </div>
-
-                   
                   
-                </div>
-                    <div className='card-wrapper'>
-						          <Card color='yellow' title="" type="table" width="100%"></Card>
-                   </div>
+                </div> */}
 
+                <div >
+                
+                <table className='table'>
+                  <thead className='thead'>
+                     <tr>
+                      <td>User</td>
+                      <td>Nbre de parties</td>
+                      <td>Nombre total de points</td>
+                      <td>Nombre total de victoires</td>
+                      <td> avatar</td> 
+                    </tr>
+                  </thead>
+                  <tbody>
 
+                  { sorted.map((g) => (
+                    // <ListItem key={g?.id}>
+                    //     <div className="container-match">
 
+                    //     {/* <td>{g?.username}</td>
+                    //     <td>{getNbGames(g)}</td>
+                    //     <td>{getScore(g)}</td>
+                    //     <td>{getWinner(g)}</td> */}
+                    //    {/* <td><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></td>
+                    //         <PlayerOne player={game.playerOne} winner={game.winner} score={game.score1} />
+                    //         <ScoresMatch score1={game.score1} score2={game.score2} date={game.createdAt}/>
+                    //         <PlayerTwo player={game.playerTwo} winner={game.winner} score={game.score2} /> */}
+                    //     </div>
+			        // </ListItem>
 
+                    <tr key={g?.id} >
+                      <td>{g?.username}</td>
+                      <td>{getNbGames(g)}</td>
+                      <td>{getScore(g)}</td>
+                      <td>{getWinner(g)}</td>
+                      <td><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></td>
+                    </tr>
+                  ))}
+                  </tbody>
+                </table>
+            </div>
+
+{/* 
                   </div>  
                 </section>
             </section>
 
           </section>    
-          </div>
+          </div> */}
 
         </>
     )
     }
 
 
-export default Scores;
+export default Table;

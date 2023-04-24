@@ -11,6 +11,7 @@ import { UserDto } from 'src/user/dto/user.dto';
 
 
 var ballSpeed = GameParams.BALL_DEFAULT_SPEED;
+const MAX_SCORE = 3;
 const width = GameParams.GAME_WIDTH;
 const height = GameParams.GAME_HEIGHT;
 const racket_height = GameParams.RACKET_HEIGHT;
@@ -20,7 +21,7 @@ const ballR = GameParams.BALL_RADIUS;
 let period = GameParams.PERIOD
 
 
-export class Games {
+export class GameRoom {
 
 // initialization of players (L - left, R - right)
 	private playerL: player = {
@@ -42,9 +43,12 @@ export class Games {
 	private ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
 	private ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
 	private ball: ball = {x: width/2, y: height/2};
-
+	private rackets_ypos : [number, number] = [0, 0];
+	private rackets_acel : [number, number] = [0, 0];
+  
 	private server: Server;
 	private room: string;
+	private roomN: number;
 	private prisma: PrismaService;
 	private gameService: GameService;
 	public userSockets: UsersSockets; 
@@ -59,6 +63,7 @@ export class Games {
 	) {
 console.log("constructor Class.game");
 		this.server = server;
+		this.roomN = roomN;
 		this.room = `room${roomN}`;
 		this.prisma = prisma;
 		this.userSockets = userSockets;
@@ -91,17 +96,39 @@ console.log("constructor Class.game");
 		});
 	}
 
+	public setPlayers(
+		playerR: UserDto,
+		playerL: UserDto,
+	): void {
+		this.playerR.user = playerR;
+		this.playerL.user = playerL;
+	}
+
+	public checkPlayer(
+		player: UserDto,
+	): boolean {
+		return this.playerR.user == player || this.playerL.user == player;
+	}
+
+
 // function: game logic ...
 //			> describe the movement of the ball in collisions with rackets and the edges of the playing field
 	private updatePositions(): void
 	{
+		this.rackets_acel[0] = this.playerL.racket.y - this.rackets_ypos[0];
+		this.rackets_acel[1] = this.playerR.racket.y - this.rackets_ypos[1];
+		this.rackets_ypos[0] = this.playerL.racket.y;
+		this.rackets_ypos[1] = this.playerL.racket.y;
+
+	// racket reflections
 		if (this.ball.y > this.playerL.racket.y
 			&& this.ball.y < this.playerL.racket.y + racket_height
 			&& this.ball.x - ballR < this.playerL.racket.x + racket_width
 			&& this.ballSpeedX < 0) {
 	// left racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
-			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
+//			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
+			this.ballSpeedY = Math.floor(0.4*this.rackets_acel[0] + this.ballSpeedY + 0.001*(1 - 2 * Math.random()) * ballSpeed);
 		}
 		else if (this.ball.y > this.playerR.racket.y
 			&& this.ball.y < this.playerR.racket.y + racket_height
@@ -109,25 +136,31 @@ console.log("constructor Class.game");
 			&& this.ballSpeedX > 0) {
 	// right racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
-			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
+//			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
+			this.ballSpeedY = Math.floor(0.4*this.rackets_acel[1] + this.ballSpeedY + 0.001*(1 - 2 * Math.random()) * ballSpeed);
 		}
+		if(Math.abs(this.ballSpeedY)>1.6*ballSpeed)
+      		this.ballSpeedY = Math.sign(this.ballSpeedY)*1.6*ballSpeed;
 
 	// board reflections
 		if (this.ball.x < ballR) {
 			++this.playerR.score;
 			this.ball.x = width / 2 - this.ballSpeedX;
-			this.ball.y = height / 2 - this.ballSpeedX;
+			this.ball.y = Math.floor(Math.random() * height);
+			// this.ball.y = height / 2;
 			++ballSpeed;
 			this.ballSpeedX = ballSpeed;
 		} else if (this.ball.x > width - ballR) {
 			this.ballSpeedX = -this.ballSpeedX;
 			++this.playerL.score;
 			this.ball.x = width / 2 - this.ballSpeedX;
-			this.ball.y = height / 2 - this.ballSpeedX;
+			this.ball.y = Math.floor(Math.random() * height);
+			// this.ball.y = height / 2 - this.ballSpeedX;
 			++ballSpeed;
 			this.ballSpeedX = -ballSpeed;
 //console.log('ballSpeed = ', ballSpeed);
-		} else if (this.ball.y < ballR || this.ball.y > height - ballR) {
+		} else if ((this.ball.y < ballR && this.ballSpeedY < 0)
+		 || (this.ball.y > height - ballR && this.ballSpeedY > 0)) {
 			this.ballSpeedY = -this.ballSpeedY;
 		}
 			this.ball.x += this.ballSpeedX;
@@ -135,14 +168,8 @@ console.log("constructor Class.game");
 	}
 
 // move rakets event
-	public initMoveEvent(
-		playerR: UserDto,
-		playerL: UserDto,
-	): void {
-		this.playerR.user = playerR;
-		this.playerL.user = playerL;
-
-		this.userSockets.onFromUser(playerR.username,'move', (message: string) => {
+	public initMoveEvents(): void {
+		this.userSockets.onFromUser(this.playerR.user.username,'move', (message: string) => {
 // console.log("game_class_playerR socket message", message);
 			if (message == 'up') {
 				if (this.playerR.racket.y > 0) {
@@ -157,7 +184,7 @@ console.log("constructor Class.game");
 			}
 		});
 		  
-		this.userSockets.onFromUser(playerL.username,'move', (message: string) => {
+		this.userSockets.onFromUser(this.playerL.user .username,'move', (message: string) => {
 // console.log("game_class_playerL socket message", message);	
 			if (message == 'up') {
 				if (this.playerL.racket.y > 0) {
@@ -189,7 +216,7 @@ console.log("game.class.run");
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
 			//score MAX - change here
-			if ((this.playerL.score >= 2 || this.playerR.score >= 2)){ 
+			if ((this.playerL.score >= MAX_SCORE || this.playerR.score >= MAX_SCORE)){ 
 				this.isrunning = false;
 				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
 
@@ -198,21 +225,21 @@ console.log("game.class.run");
 // promisses.push(
 // WRITING GAME TO THE DB
 
-	const game: GameDto = await this.gameService.create({
-		playerOneId: this.playerR.user.id,
-		playerTwoId: this.playerL.user.id,
-		winnerId: this.winner.id,
-		score1: this.playerR.score,
-		score2: this.playerL.score,
-	});
+				const game: GameDto = await this.gameService.create({
+					playerOneId: this.playerR.user.id,
+					playerTwoId: this.playerL.user.id,
+					winnerId: this.winner.id,
+					score1: this.playerR.score,
+					score2: this.playerL.score,
+				});
 
 ////////////////////////////////////////////////////		
 				this.player_disconect(this.winner);
 				clearInterval(this.interval);
 				this.playerL.score = 0;
 				this.playerR.score = 0;
+				this.gameService.removeRoom(this.roomN);
 			}
 		}, period);
 	}
 }
-

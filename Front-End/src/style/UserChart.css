@@ -14,8 +14,8 @@
         display: flex;
         flex-direction:column;
         align-items:center;
-        margin: 0;
-       padding: 0;
+        /* margin: 0;
+       padding: 0; */
     }
    
 
@@ -28,6 +28,7 @@
     padding-left: auto;
     padding-right: auto;
     text-align: center;
+    align-items: center;
     color: black;
     font-weight:bold;
     border: 5px solid black;
@@ -68,6 +69,10 @@
     
     }
 
+}
+
+.cadre p{
+    padding: auto;
 }
 
 
