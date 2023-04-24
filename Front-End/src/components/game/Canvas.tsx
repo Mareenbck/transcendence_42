@@ -74,7 +74,7 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
 
     }, [gameinit, gamestate, gamewinner]);
      
-    return (<canvas className='field' ref={canvasRef} width={gameinit.table_width} height={gameinit.table_height} />)
+    return (<canvas className='canvas' ref={canvasRef} width={gameinit.table_width} height={gameinit.table_height} />)
 }
 export default Canvas
 
