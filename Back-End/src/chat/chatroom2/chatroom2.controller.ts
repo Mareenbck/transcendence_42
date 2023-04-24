@@ -87,6 +87,17 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 		return result;
 	}
 
+	@Post('/leave_channel')
+	@UseGuards(JwtGuard)
+	async leaveChannel(@Body() chatroomId: number, @GetCurrentUserId() userId: string) {
+		console.log("userId--->")
+		console.log(userId)
+		console.log("chatroomId------>")
+		console.log(chatroomId)
+		const user = await this.chatRoomService.removeUserFromChannel(parseInt(userId), chatroomId);
+		return user;
+	}
+
 	// @Post('/invite_admin')
 	// @UseGuards(JwtGuard)
 	// async receiv

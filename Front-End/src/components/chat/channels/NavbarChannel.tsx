@@ -5,6 +5,8 @@ import SelectDialog from "../../utils/SelectDialog";
 import ChannelsSettings from "./ChannelsSettings";
 import { Modal } from "@mui/material";
 import { Box } from "@mui/material";
+import { Button } from '@mui/material';
+import CasinoIcon from '@mui/icons-material/Casino';
 
 export function NavbarChannel(props: any) {
 	const userContext = useContext(AuthContext);
@@ -12,8 +14,6 @@ export function NavbarChannel(props: any) {
 	const [selectedUser, setSelectedUser] = useState<string | null>('');
 	const [openModal, setOpenModal] = useState(false);
 
-	console.log("props--->")
-	console.log(props)
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
 		if (currentUser) {
@@ -58,6 +58,25 @@ export function NavbarChannel(props: any) {
 		}
 	  }
 
+	const leaveChannel = async (channelId: number) => {
+		console.log("channelId--->")
+		console.log(channelId)
+		try {
+			const response = await fetch(`http://localhost:3000/chatroom2/leave_channel`, {
+			  method: 'POST',
+			  headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${userContext.token}`,
+			  },
+			  body: JSON.stringify({ channelId: channelId }),
+			});
+			const data = await response.json();
+			// console.log("DATA IN FETCH", data)
+			return data;
+		} catch(err) {
+			console.log(err);
+		}
+	  }
 
 	const handleInviteUser = (invitedUserId: string) => {
 		inviteUserOnChannel(props.chatroom.id, parseInt(invitedUserId));
@@ -94,7 +113,7 @@ export function NavbarChannel(props: any) {
 				}
 				</div>
 			}
-			{/* BOUTON POUR LEAVE */}
+			 <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button>
 				<>
 			<Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
 				<Box className="modal-content">

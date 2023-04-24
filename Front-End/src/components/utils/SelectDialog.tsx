@@ -70,37 +70,37 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 		fetchUsers();
 	}, [])
 
-	const [participants, setParticipants] = React.useState([]);
+	// const [participants, setParticipants] = React.useState([]);
 
-	const showParticipants = async (channelId: string) => {
-        try {
-            const response = await fetch(
-                `http://localhost:3000/chatroom2/${channelId}/participants`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${authCtx.token}`
-                    }
-                }
-                )
-                if (response.ok) {
-                    const data = await response.json();
-                    // console.log("data ------>", data);
-                    setParticipants(data);
-                }
-            } catch(err) {
-                console.log(err)
-            }
-        }
+	// const showParticipants = async (channelId: string) => {
+    //     try {
+    //         const response = await fetch(
+    //             `http://localhost:3000/chatroom2/${channelId}/participants`, {
+    //                 method: "GET",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     Authorization: `Bearer ${authCtx.token}`
+    //                 }
+    //             }
+    //             )
+    //             if (response.ok) {
+    //                 const data = await response.json();
+    //                 // console.log("data ------>", data);
+    //                 setParticipants(data);
+    //             }
+    //         } catch(err) {
+    //             console.log(err)
+    //         }
+    //     }
 
 
         // React.useEffect(() =>  {
         //     showParticipants(props.channelId);
         // }, [props.channelId])
 
-	const admins = participants.filter((p) => p.role === 'ADMIN');
-	const users = participants.filter((p) => p.role === 'USER') || [];
-	const [selectedUser, setSelectedUser] = React.useState<number | undefined>();
+	// const admins = participants.filter((p) => p.role === 'ADMIN');
+	// const users = participants.filter((p) => p.role === 'USER') || [];
+	// const [selectedUser, setSelectedUser] = React.useState<number | undefined>();
 
 
 	return (
