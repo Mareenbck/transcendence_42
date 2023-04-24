@@ -89,6 +89,13 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 		return result;
 	}
 
+	@Post('/:channelId/newpassword')
+	@UseGuards(JwtGuard)
+	async changePassword(@Param('channelId') channelId: string, @Body() hash:any) {
+		const newPassword = await this.chatRoomService.updatePassword(parseInt(channelId), hash);
+		return newPassword;
+	}
+
 	// @Post('/invite_admin')
 	// @UseGuards(JwtGuard)
 	// async receiv
