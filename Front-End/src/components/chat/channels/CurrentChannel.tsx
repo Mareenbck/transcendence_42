@@ -6,6 +6,7 @@ import AuthContext from "../../../store/AuthContext";
 import Message2 from "../message/message";
 import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
+import ChatInChatroom from "./ChatInChatroom";
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -90,21 +91,7 @@ export default function CurrentChannel(props: any) {
 		<>
 			<div>chat in {currentChatroom.name} </div>
 			<NavbarChannel chatroom={currentChatroom} />
-			<div className="chatBoxTop">
-				{messages2.length ?
-					messages2.map((m) => (
-						<div key={m?.createdAt instanceof Date ? m.createdAt.getTime() : m.createdAt} ref={scrollRef}>
-							<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
-						</div>
-					)) : <span className="noConversationText2"> No message in this room yet. </span>
-				}
-			</div>
-			<div className="chatBoxBottom">
-				<textarea className="chatMessageInput" placeholder="write something..."
-					onChange={(e) => setNewMessage2(e.target.value)} value={newMessage2}
-				></textarea>
-				<button className="chatSubmitButton" onClick={handleSubmit}> Send </button>
-			</div>
+			<ChatInChatroom/>
 		</>
 	)
 }
