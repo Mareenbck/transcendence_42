@@ -84,8 +84,6 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 		else if (result.status === 'REJECTED') {
 			await this.chatRoomService.deleteRefusedInvitations();
 		}
-		console.log("result--->")
-		console.log(result)
 		return result;
 	}
 

@@ -24,9 +24,9 @@ function Game() {
         const location = useLocation();
         const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
         const [isruning, setIsRuning] = useState<boolean>(false);
-    
-    
-    
+
+
+
         useEffect(() => {
     // onKeyDown handler function
             const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -38,57 +38,57 @@ function Game() {
                     sendMessage('move', "down" as any)
                 }
             };
-            
+
             // Attach the event listener to the window object
             window.addEventListener('keydown', keyDownHandler);
-        
+
             // Remove the event listener when the component unmounts
             return () => {
               window.removeEventListener('keydown', keyDownHandler);
             };
           }, []);
-    
+
     // Pour partis de Modal select Color,
-        
-        const [ShowColorModal, setShowColorModal] = useState(false); 
+
+        const [ShowColorModal, setShowColorModal] = useState(false);
         const handleColorModal = () => {
             setShowColorModal(true)
         }
         const handleClose = () => {
             setShowColorModal(false)
         }
-    
-        const [ShowCamva, setShowCamva] = useState(true); 
+
+        const [ShowCamva, setShowCamva] = useState(true);
         const [backColorGame, setbackColorGame] = useState<string>("black");
-        const changColorToRed= () => {    
+        const changColorToRed= () => {
             setbackColorGame("red");
             setShowColorModal(false);
             ShowCamva? setShowCamva(false): setShowCamva(true);
         }
-        
-        const changColorToBlue= () => {    
+
+        const changColorToBlue= () => {
             setbackColorGame("blue");
             setShowColorModal(false);
             ShowCamva? setShowCamva(false): setShowCamva(true);
         }
-    
-        const changColorToGreen= () => {    
+
+        const changColorToGreen= () => {
             setbackColorGame("green");
             setShowColorModal(false);
             ShowCamva? setShowCamva(false): setShowCamva(true);
         }
-    
-        const changColorToBlack= () => {    
+
+        const changColorToBlack= () => {
             setbackColorGame("black");
             setShowColorModal(false);
             ShowCamva? setShowCamva(false): setShowCamva(true);
         }
-    
+
         useEffect(() => {
-    
+
         }, [backColorGame])
-    
-        
+
+
         //**** *******************************************************************/
      //initialization of the initial parameters of the game
         const [gameinit, setGameInit] = useState<gameInit>(
@@ -103,7 +103,7 @@ function Game() {
                 winner: null,
             }
         );
-    
+
     // game parameters update (coordinates ball and racket)
         const [gamestate, setGameState] = useState<gameState>(
             {
@@ -114,13 +114,13 @@ function Game() {
                 scoreL: 0,
             }
         );
-    
+
         const [gamewinner, setGameWinner] = useState<gameWinner>(
            {
                 winner: null,
-           } 
+           }
         );
-    
+
         const initListener = (data: gameInit)=>{
             setIsRuning(true);
             setGameInit(data);
@@ -131,14 +131,14 @@ function Game() {
         const initWinner = (data: gameWinner)=>{
             setGameWinner(data);
         }
-    
-    
+
+
     //get data from the server and redraw canvas
         useEffect(() => {
             addListener('init-pong', initListener);
             addListener('pong', updateListener);
             addListener('winner', initWinner )
-        console.log("pong", gameinit);        
+        // console.log("pong", gameinit);
             // return () => {
             //     socket?.off('init-pong', initListener);
             //     socket?.off('pong', updateListener);
@@ -146,17 +146,17 @@ function Game() {
             // }
     //        sendMessage('doIplay');
         }, [initListener, updateListener, initWinner])
-    
+
     /////////////////////////////////////////Page OptionGame/////////////////////////////////////
-    
+
     // useEffect(() => {
     //     setActiveLink(location.pathname);
     //   }, [location.pathname]);
-    
+
     // const handleLinkClick = (path: string) => {
     //     setActiveLink(path);
     //   };
-    
+
     //Game request: click on the button
     useEffect(() => {
         addListener("gameRooms", (games: gamesList[]) => {
@@ -165,49 +165,49 @@ function Game() {
         });
         sendMessage('listRooms');
     }, [])
-    
+
     const isInPlay = (): boolean => {
         return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
     };
-    
+
     // function GameButton({ user, playGame }) {
     const [clicked, setClicked] = useState(false);
-    
+
     const handleClick = (roomN: number) => {
     //console.log('playGame sendMessage', user);
         sendMessage("playGame", {user: user, roomN: roomN});
         setClicked(true);
     };
-    //////////////////////////////////////////////////////////////////////////    
+    //////////////////////////////////////////////////////////////////////////
 
     if (!gamewinner.winner){
         return (
-            <>                    
+            <>
             <div className={style.mainPos}>
             <SideBar title="Option Game" />
                 <div className='container-optionPage'>
                     <h1 className='titre_option'></h1>
-                
+
                     {/* <SelectColor /> */}
                     <button onClick={handleColorModal}>Change Color</button>
                     <div>
-                    
+
 
                 <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />
                 {/* { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />} */}
-                {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed} 
+                {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
                                                                             changColorToBlue={changColorToBlue}
                                                                             changColorToGreen={changColorToGreen}
                                                                             changColorToBlack={changColorToBlack}
                                                                             />}
                 {/* {!ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />} */}
 
-            </div> 
+            </div>
 {/* /LIST OF CURRENT GAME with button "Watch*/}
                 <div className='card-wrapper'>
 						<Card color='yellow' title="List of online Games" type="match" width="90%"></Card>
                 </div>
-                    
+
 
                 <div>
                     {games.map((game: gamesList) => (
@@ -220,12 +220,12 @@ function Game() {
                 <div className="btn">
 
                 <button  onClick={() => handleClick(-1)}>Play Game</button>
-                </div> 
+                </div>
                 </>)}
 
             </div>
         </div>
-    </> 
+    </>
         );
     }
     else {

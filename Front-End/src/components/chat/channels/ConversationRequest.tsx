@@ -23,8 +23,8 @@ export class ConversationReq {
   };
 
 	static async postRoom(user: AuthContext, newConv: any) {
-		console.log("newConv--->")
-		console.log(newConv)
+		// console.log("newConv--->")
+		// console.log(newConv)
 		try {
 			const resp = await fetch(`http://localhost:3000/chatroom2`, {
 				method: "POST",

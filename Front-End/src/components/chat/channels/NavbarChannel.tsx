@@ -12,8 +12,8 @@ export function NavbarChannel(props: any) {
 	const [selectedUser, setSelectedUser] = useState<string | null>('');
 	const [openModal, setOpenModal] = useState(false);
 
-	// console.log("props--->")
-	// console.log(props)
+	console.log("props--->")
+	console.log(props)
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
 		if (currentUser) {
@@ -51,13 +51,13 @@ export function NavbarChannel(props: any) {
 			  },
 			});
 			const data = await response.json();
-			console.log("DATA IN FETCH", data)
+			// console.log("DATA IN FETCH", data)
 			return data;
 		} catch(err) {
 			console.log(err);
 		}
 	  }
-	  
+
 
 	const handleInviteUser = (invitedUserId: string) => {
 		inviteUserOnChannel(props.chatroom.id, parseInt(invitedUserId));
@@ -75,14 +75,26 @@ export function NavbarChannel(props: any) {
 		<>
 			{isAdmin === 'ADMIN' &&
 				<div className="visibility-icon">
-					<SelectDialog 
-						onSelect={(userId: string) => setSelectedUser(userId)} 
-						onInvite={handleInviteUser} 
-						channelId={props.chatroom.id}
-						onAddAdmin={handleAddAdmin}/>
+					<SelectDialog
+						onSelect={(userId: string) => setSelectedUser(userId)}
+						onInvite={handleInviteUser}
+						onAddAdmin={handleAddAdmin}
+						type="invite-admin"
+						/>
+				{props.chatroom.visibility === 'PRIVATE' &&
+					<SelectDialog
+					onSelect={(userId: string) => setSelectedUser(userId)}
+					onInvite={handleInviteUser}
+					onAddAdmin={handleAddAdmin}
+					type="invite-user"
+					/>
+				}
+				{props.chatroom.visibility === 'PWD_PROTECTED' &&
 					<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
+				}
 				</div>
 			}
+			{/* BOUTON POUR LEAVE */}
 				<>
 			<Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
 				<Box className="modal-content">

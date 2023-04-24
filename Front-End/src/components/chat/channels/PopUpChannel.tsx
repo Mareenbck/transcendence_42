@@ -31,8 +31,8 @@ function PopUp(props: any) {
 
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
-        console.log("passwordInputRef--->")
-        console.log(passwordInputRef.current!.value)
+        // console.log("passwordInputRef--->")
+        // console.log(passwordInputRef.current!.value)
         // const password = passwordInputRef.current!.value;
         // console.log("password--->")
         // console.log(password)
@@ -49,7 +49,7 @@ function PopUp(props: any) {
             idConv = await ConversationReq.postRoom(user, newConv);
         } catch (err) {  console.log(err)}
         if (idConv !== undefined)
-        { 
+        {
             sendMessage("sendConv", {
                 channelId: idConv,
                 name: channelName,

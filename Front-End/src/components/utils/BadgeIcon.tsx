@@ -37,8 +37,6 @@ const BadgeIcon = (props: any) => {
 	const [style, setStyle] = useState<string>('');
 	const [content, setContent] = useState<any>(null);
 
-	console.log("props style")
-
 	useEffect(() => {
 		if (props.style === "m") {
 			setStyle(customStylesM);

@@ -11,11 +11,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import AuthContext from "../../store/AuthContext";
 import { FriendContext } from "../../store/FriendshipContext";
 
-export default function DialogSelect(props: { onSelect: (userId: string) => void, 
-											onInvite: (userId: string) => void, 
-											channelId: string, 
-											onAddAdmin: (userId: string) => void}) {
-
+export default function DialogSelect(props: { onSelect: (userId: string) => void, onInvite: (userId: string) => void, onAddAdmin: (userId: string) => void, type: string}) {
 	const [open, setOpen] = React.useState(false);
 	const [friends, setFriends] = React.useState<any[]>([]);
 	const authCtx = React.useContext(AuthContext);
@@ -24,8 +20,7 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 
 	const handleChange = (event: SelectChangeEvent) => {
 		setInvitedUser(event.target.value ? event.target.value : ''); // Mettre à jour l'ID de l'utilisateur sélectionné
-	};	
-
+	};
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -39,9 +34,7 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 
 	const handleInvite = (event: React.SyntheticEvent<unknown>) => {
 		if (invitedUser) {
-			// console.log("invitedUser--->")
-			// console.log(invitedUser)
-			props.onSelect(invitedUser); 
+			props.onSelect(invitedUser);
 			props.onInvite(invitedUser);
 		}
 		handleClose(event, '');
@@ -99,22 +92,22 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
                 console.log(err)
             }
         }
-        
-        
-        React.useEffect(() =>  {
-            showParticipants(props.channelId);
-        }, [props.channelId])
 
-		const admins = participants.filter((p) => p.role === 'ADMIN');
-		const users = participants.filter((p) => p.role === 'USER') || []; 
-		const [selectedUser, setSelectedUser] = React.useState<number | undefined>();
+
+        // React.useEffect(() =>  {
+        //     showParticipants(props.channelId);
+        // }, [props.channelId])
+
+	const admins = participants.filter((p) => p.role === 'ADMIN');
+	const users = participants.filter((p) => p.role === 'USER') || [];
+	const [selectedUser, setSelectedUser] = React.useState<number | undefined>();
 
 
 	return (
 		<div>
-			<Button onClick={handleClickOpen}>Invite Users</Button>
+			<Button onClick={handleClickOpen}>{props.type === "invite-user" ? "Invite User" : "Add Admin"}</Button>
 			<Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-				<DialogTitle>Invite :</DialogTitle>
+				<DialogTitle>{props.type === "invite-user" ? "Invite User" : "Add Admin"}</DialogTitle>
 				<DialogContent>
 					<Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
 						<FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -135,37 +128,9 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose}>Cancel</Button>
-					<Button onClick={handleInvite}>Ok</Button>
+					<Button onClick={props.type === "invite-user" ? handleInvite : handleInviteAdmin}>Ok</Button>
 				</DialogActions>
-			</Dialog>	
-
-			<Button onClick={handleClickOpen}>Invite Admins</Button>
-			<Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-				<DialogTitle>Invite :</DialogTitle>
-				<DialogContent>
-					<Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
-						<FormControl sx={{ m: 1, minWidth: 120 }}>
-							<InputLabel htmlFor="demo-dialog-native">Users</InputLabel>
-							<Select
-								native
-								value={selectedUser}
-								onChange={handleChange}
-							>
-								{/* <option aria-label="None" value="" /> */}
-								{users && users.map((p) => (
-									<option key={p.id} value={p.id}>
-										{p.user.username}
-									</option>
-								))}
-							</Select>
-						</FormControl>
-					</Box>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={handleClose}>Cancel</Button>
-					<Button onClick={handleInviteAdmin}>Ok</Button>
-				</DialogActions>
-			</Dialog>		
+			</Dialog>
 		</div>
 	);
 }
