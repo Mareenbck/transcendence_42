@@ -10,11 +10,11 @@ const MenuCard = (props: any) => {
 		if (props.body === "play") {
 			setBody("choose one of your online friends and play against them in a pong match");
 			setIcon("fa-sharp fa-solid fa-trophy");
-			setLink("/game/play")
+			setLink("/game")
 		} else if (props.body === "watch") {
 			setBody("join a room and attend a pong match between your friends")
 			setIcon("fa-solid fa-video");
-			setLink("/game/play")
+			setLink("/game")
 		} else if (props.body === "chat") {
 			setBody("join a channel or discuss privately with your friends")
 			setIcon("fa-solid fa-comments");
