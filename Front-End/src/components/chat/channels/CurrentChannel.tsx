@@ -17,13 +17,15 @@ export default function CurrentChannel(props: any) {
 	const [messages2, setMessages2] = useState<RoomMessage[]>([]);
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
+	const [isJoined, setIsJoined] = useState(false);
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
 		if (author !== undefined) { return (author) }
 		return (null);
 	};
-
+	
+	// console.log("ALL USERS", props.allUsers);
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [messages2]);
@@ -56,6 +58,33 @@ export default function CurrentChannel(props: any) {
 			console.log(err);
 		}
 	};
+	async function checkIfJoined() {
+		try {
+			const response = await fetch (
+				`http://localhost:3000/chatroom2/userTable/${currentId}/${currentChatroom.id}`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${authCtx.token}`
+					}
+				}
+			)
+			const data = await response.json();
+			if (data.length > 0) {
+				setIsJoined(true);
+			} else {
+				setIsJoined(false);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
+	
+	
+
+	useEffect(() => {
+		checkIfJoined();
+	  }, []);
 
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
@@ -87,11 +116,32 @@ export default function CurrentChannel(props: any) {
 		}
 	}
 
+	
 	return (
 		<>
 			<div>chat in {currentChatroom.name} </div>
 			<NavbarChannel chatroom={currentChatroom} />
-			<ChatInChatroom/>
+			{isJoined && (
+				<>
+					<div className="chatBoxTop">
+						{messages2.length?
+							messages2.map((m) => (
+								<div key={m?.createdAt instanceof Date ? m.createdAt.getTime() : m.createdAt} ref={scrollRef}>
+									<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
+								</div>
+							)) : <span className="noConversationText2"> No message in this room yet. </span>
+						}
+					</div>
+					<div className="chatBoxBottom">
+						<textarea className="chatMessageInput" placeholder="write something..."
+							onChange={(e) => setNewMessage2(e.target.value)} value={newMessage2}
+						></textarea>
+						<button className="chatSubmitButton" onClick={handleSubmit}> Send </button>
+					</div>
+				</>
+			)}
+			{!isJoined && <div>You need to join this channel to view messages.</div>}
 		</>
 	)
+	
 }

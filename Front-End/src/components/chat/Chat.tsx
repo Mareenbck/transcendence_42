@@ -13,7 +13,7 @@ import MyAvatar from '../user/Avatar';
 import {DirectMessage, UserChat, ChatRoom, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
-import { Tab } from '@mui/material';
+import { Tab, useThemeProps } from '@mui/material';
 import { Tabs } from '@mui/material';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import MailIcon from '@mui/icons-material/Mail';
@@ -22,6 +22,7 @@ import UsersOnChannel from './channels/UsersOnChannel';
 import NavbarChannel from './channels/NavbarChannel';
 import UserChart from '../scores/UserChart';
 import UsersWithDirectMessage from './message/usersWithMessages';
+import ChatInChatroom from './channels/ChatInChatroom';
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -356,8 +357,10 @@ useEffect(() => {
 }, [messagesD]);
 
 
-
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
+  // console.log("isjoined ????", isJoined)
+  const [isJoined, setIsJoined] = useState(false);
+
 
 return (
   <>
@@ -394,7 +397,7 @@ return (
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 		{currentChat ?
-			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} />
+			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined}/>
         : currentDirect ?
           <>
           <div>chat with {currentDirect.username} </div>

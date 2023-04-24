@@ -39,3 +39,16 @@
 .form-fields-channel {
     width: 250px;
 }
+
+.channel-list-container {
+    display: inline-block;
+    vertical-align: top;
+    /* width: 200px; */
+  }
+  
+  .chat-room-container {
+    display: inline-block;
+    vertical-align: top;
+    /* width: calc(100% - 200px); */
+  }
+  

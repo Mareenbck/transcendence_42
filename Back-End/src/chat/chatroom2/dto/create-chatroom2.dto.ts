@@ -27,4 +27,5 @@ export class ParticipantsOnChannel
   isPublic: boolean;
   isPrivate: boolean;
   isProtected: boolean;
+  // isJoined: boolean;
 }
