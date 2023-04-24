@@ -9,14 +9,16 @@ const ShowAchievements = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const { id } = useParams();
 	const [achievements, setAchievements] = useState<any[]>([]);
-	const isMyProfile = id === authCtx.userId;
-	const [style, setStyle] = useState<string>("l");
-	let nameIconClass = '';
+	const isMyProfile = parseInt(id) === parseInt(authCtx.userId);
+	const [style, setStyle] = useState<string>(isMyProfile ? "s" : "l");
+	let nameIconClass = 'name-icon';
 
 	useEffect(() => {
 		fetchUserAchievements();
 		if (isMyProfile) {
 			setStyle("s");
+		} else {
+			setStyle("l")
 		}
 	}, [id])
 
