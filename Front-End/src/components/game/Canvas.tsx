@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
-import type {gameInit, gameState, gameWinner} from './interface'
+import type {gameInit, gameState, gameWinner} from './interface_game'
 
 const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, backColorGame: backColorGame} ): JSX => {
     const gamestate = props.gamestate;

@@ -7,6 +7,7 @@ import BodyStatsCard from "./BodyStatsCard";
 import MenuCard from "./MenuCard";
 import MatchHistory from "../game/MatchHistory";
 import ShowAchievements from "../game/ShowAchievements";
+import Table from "../scores/Table"
 
 const Card = (props: any) => {
 	const [color, setColor] = useState<string>('');
@@ -42,6 +43,8 @@ const Card = (props: any) => {
 			setContent(<MatchHistory id={props.id} authCtx={props.authCtx}/>);
 		} else if (props.type === 'achiev') {
 			setContent(<ShowAchievements id={props.id}/>)
+		}else if (props.type === 'table') {
+			setContent(<Table id={props.id}/>)
 		}
 	}, [props.type])
 

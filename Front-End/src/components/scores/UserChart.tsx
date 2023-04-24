@@ -12,7 +12,7 @@ const UserChart= (props: any) => {
         <div className="combPos">
             <div className="cadre" style={{height: h}}>
                
-                <p>{props.userName}</p>
+                <p>{props.userName} </p>
                 <p>{props.h}</p>
             </div>
 

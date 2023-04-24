@@ -41,12 +41,20 @@ export default class UsersSockets {
         this.getUserSockets(username)?.forEach((socket: Socket) => socket.emit(event, data));
     }
 
-    onFromUser(username: string, event: string, data: any | undefined = undefined) {
-        this.getUserSockets(username)?.forEach((socket: Socket) => socket.on(event, data));
+    onFromUser(username: string, event: string, listener: any | undefined = undefined) {
+        this.getUserSockets(username)?.forEach((socket: Socket) => socket.on(event, listener));
     }
 
-    joinToRoom(username: string, room: string, data: any | undefined = undefined) {
+    offFromUser(username: string, event: string, listener: any | undefined = undefined) {
+        this.getUserSockets(username)?.forEach((socket: Socket) => socket.off(event, listener));
+    }
+
+    joinToRoom(username: string, room: string) {
         this.getUserSockets(username)?.forEach((socket: Socket) => socket.join(room));
+    }
+
+    leaveRoom(room: string) {
+        this.map?.forEach(socketMap => socketMap.forEach(socket => socket.leave(room)));
     }
 
     getUserSockets(username: string): SocketMap | undefined {

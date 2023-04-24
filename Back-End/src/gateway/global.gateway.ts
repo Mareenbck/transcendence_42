@@ -68,6 +68,7 @@ console.log(socket.handshake.auth.token);
   }
 
   async handleDisconnect(client: Socket) {
+  console.log("71 handleDisconnect: client");
     this.userSockets.removeSocket(client)
     client.disconnect(true);
   }
@@ -141,5 +142,21 @@ console.log(socket.handshake.auth.token);
   @SubscribeMessage('playGame')
   async playGame(@MessageBody() data: {user: any, roomN: number}, @ConnectedSocket() socket: Socket,): Promise<void> 
   {
-    this.gameService.playGame(data.user, data.roomN) };
+    this.gameService.playGame(data.user, data.roomN); 
+  };
+
+  @SubscribeMessage('listRooms')
+  async listRooms(@ConnectedSocket() socket: Socket): Promise<void> 
+  {
+    this.gameService.sendListRooms(); 
+  };
+
+  @SubscribeMessage('doIplay')
+  async doIplay(@ConnectedSocket() socket: Socket): Promise<void> 
+  {
+console.log("157_doIplay: socket.id = ", socket.id);	
+    let user = this.userSockets.getUserBySocket(socket.id);
+    if(user) this.gameService.checkPlayerInRooms(user); 
+  };
+
 }

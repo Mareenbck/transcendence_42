@@ -5,8 +5,8 @@ h2{
 .field{
     background-color: black;
     display: block;
-    margin: 0 auto;
-    
+    /* margin: 0 auto;     */
+    margin-left: 100px;
 }
 
 .racket{
@@ -51,4 +51,3 @@ h2{
     100% {
         transform: rotate(360deg);
     }
-}
