@@ -6,7 +6,9 @@ import AuthContext from "../../../store/AuthContext";
 import Message2 from "../message/message";
 import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
-import ChatInChatroom from "./ChatInChatroom";
+import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
+import JoinChannelModal from "./JoinChannelModal";
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -18,6 +20,7 @@ export default function CurrentChannel(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState(false);
+    const [openModal, setOpenModal] = useState(true);
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -115,11 +118,11 @@ export default function CurrentChannel(props: any) {
 			} catch (err) { console.log(err) }
 		}
 	}
-
+	const [open, setOpen] = useState(false);
 	
 	return (
 		<>
-			<div>chat in {currentChatroom.name} </div>
+			{/* <div>chat in {currentChatroom.name} </div> */}
 			<NavbarChannel chatroom={currentChatroom} />
 			{isJoined && (
 				<>
@@ -140,7 +143,13 @@ export default function CurrentChannel(props: any) {
 					</div>
 				</>
 			)}
-			{!isJoined && <div>You need to join this channel to view messages.</div>}
+
+			{!isJoined && (
+				<p>you need to join the channel before talking into it</p>
+			// <JoinChannelModal openModal={openModal} setOpenModal={setOpenModal}/>
+			)}
+
+		
 		</>
 	)
 	
