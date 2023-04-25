@@ -6,6 +6,8 @@ import AuthContext from "../../../store/AuthContext";
 import Message2 from "../message/message";
 import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -126,14 +128,15 @@ export default function CurrentChannel(props: any) {
 								<div key={m?.createdAt instanceof Date ? m.createdAt.getTime() : m.createdAt} ref={scrollRef}>
 									<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
 								</div>
-							)) : <span className="noConversationText2"> No message in this room yet. </span>
+							)) : <div className="box-msg"><span className="noConversationText2"> No message in this room yet. </span></div>
 						}
 					</div>
 					<div className="chatBoxBottom">
-						<textarea className="chatMessageInput" placeholder="write something..."
+						<input className="chatMessageInput" placeholder="write something..."
 							onChange={(e) => setNewMessage2(e.target.value)} value={newMessage2}
-						></textarea>
-						<button className="chatSubmitButton" onClick={handleSubmit}> Send </button>
+						></input>
+						<FontAwesomeIcon icon={faPaperPlane} onClick={handleSubmit} className="send-btn-chat"/>
+						{/* <button className="chatSubmitButton" onClick={handleSubmit}> Send </button> */}
 					</div>
 				</>
 			)}

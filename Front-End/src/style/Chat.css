@@ -94,7 +94,9 @@
 }
 
 .chatBox {
-  flex: 5.5;
+	flex: 5.5;
+	height: 100vh;
+	padding-bottom: 10px;
 }
 
 .chatBoxW {
@@ -107,7 +109,8 @@
 .chatBoxTop {
   height: 100%;
   overflow-y: scroll;
-  padding-right: 10px;
+  background-color: #FDFAF9;
+  padding: 15px;
 }
 
 .conversationListe {
@@ -117,20 +120,24 @@
 }
 
 .chatBoxBottom {
-  margin-top: 5px;
+	width: 97%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+	border-top: solid 1px #c7c7c7;
 }
 
 .chatMessageInput {
-  width: 80%;
-  height: 90px;
-  padding: 10px;
-  margin: 10px;
-  background-color: #C7B9FF;
-  border-radius: 4px;
-  border: 2px solid black;
+	 width: 100%;
+	height: 67px;
+	border: solid 1px #ffffff40;
+	padding-left: 20px;
+    /* height: 90px; */
+    /* padding: 10px; */
+    /* margin: 10px; */
+    /* background-color: #C7B9FF; */
+    /* border-radius: 4px; */
+    /* border: 1px solid grey; */
 }
 
 .chatSubmitButton,
@@ -163,18 +170,18 @@
 
 .chatBoxW,
 .chatOnlineW {
-  padding: 10px;
   height: 100%;
 }
 
 .chatMenu {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  width: 350px;
-  height: 100vh;
-  padding: 2px;
+	background-color: #F0F0F0;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	width: 350px;
+	height: 100vh;
+	padding: 2px;
 }
 
 
@@ -192,10 +199,16 @@
 }
 
 .noConversationText2 {
-  top: 10%;
-  font-size: 50px;
+  font-size: 20px;
   color: rgb(224, 220, 220);
-  cursor: default;
+  align-items: center;
+}
+
+.box-msg {
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	padding-top: 200px;
 }
 
 .conversation {
@@ -279,6 +292,7 @@
 }
 
 .conversation-list {
+	background-color: #F0F0F0;
 	position: relative;
 	height: inherit;
 	overflow-y: scroll;
@@ -290,4 +304,15 @@
 	position: fixed;
 	bottom: 50px;
 	left: 250px;
+}
+
+.send-btn-chat {
+	height: 25px;
+	color: #0000008f;
+	margin-right: 20px;
+}
+
+.send-btn-chat:hover {
+	color: #1006968f;
+	cursor: pointer;
 }
