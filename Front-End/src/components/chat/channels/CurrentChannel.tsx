@@ -6,9 +6,6 @@ import AuthContext from "../../../store/AuthContext";
 import Message2 from "../message/message";
 import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
-import { Modal, Box, Typography, IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import JoinChannelModal from "./JoinChannelModal";
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -21,14 +18,20 @@ export default function CurrentChannel(props: any) {
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState(false);
     const [openModal, setOpenModal] = useState(true);
+	const [open, setOpen] = useState(false);
+	const [showPopUp, setShowPopUp] = useState(false);
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
 		if (author !== undefined) { return (author) }
 		return (null);
 	};
-	
-	// console.log("ALL USERS", props.allUsers);
+
+	console.log("Current Channel : props.allUsers--->")
+	console.log(props.allUsers)
+	console.log("Current Channel : props.chatroom--->")
+	console.log(props.chatroom)
+
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [messages2]);
@@ -61,33 +64,31 @@ export default function CurrentChannel(props: any) {
 			console.log(err);
 		}
 	};
-	async function checkIfJoined() {
-		try {
-			const response = await fetch (
-				`http://localhost:3000/chatroom2/userTable/${currentId}/${currentChatroom.id}`, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${authCtx.token}`
-					}
-				}
-			)
-			const data = await response.json();
-			if (data.length > 0) {
-				setIsJoined(true);
-			} else {
-				setIsJoined(false);
-			}
-		} catch (err) {
-			console.log(err);
-		}
-	}
-	
-	
+	// async function checkIfJoined() {
+	// 	try {
+	// 		const response = await fetch (
+	// 			`http://localhost:3000/chatroom2/userTable/${currentId}/${currentChatroom.id}`, {
+	// 				method: "GET",
+	// 				headers: {
+	// 					"Content-Type": "application/json",
+	// 					Authorization: `Bearer ${authCtx.token}`
+	// 				}
+	// 			}
+	// 		)
+	// 		const data = await response.json();
+	// 		if (data.length > 0) {
+	// 			setIsJoined(true);
+	// 		} else {
+	// 			setIsJoined(false);
+	// 		}
+	// 	} catch (err) {
+	// 		console.log(err);
+	// 	}
+	// }
 
-	useEffect(() => {
-		checkIfJoined();
-	  }, []);
+	// useEffect(() => {
+	// 	checkIfJoined();
+	//   }, []);
 
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
@@ -118,8 +119,7 @@ export default function CurrentChannel(props: any) {
 			} catch (err) { console.log(err) }
 		}
 	}
-	const [open, setOpen] = useState(false);
-	const [showPopUp, setShowPopUp] = useState(false);
+
 
 
     const handleFormSubmit = (e: FormEvent) => {
@@ -130,14 +130,14 @@ export default function CurrentChannel(props: any) {
 	return (
 		<>
 			{/* <div>chat in {currentChatroom.name} </div> */}
-			<NavbarChannel 
-			chatroom={currentChatroom} 
-			onCancel={() => setShowPopUp(false)}
-			onClick={() => setShowPopUp(false)}
-			onSubmit={{handleFormSubmit}}
-			/>
 			{isJoined && (
 				<>
+				<NavbarChannel
+				chatroom={currentChatroom}
+				onCancel={() => setShowPopUp(false)}
+				onClick={() => setShowPopUp(false)}
+				onSubmit={{handleFormSubmit}}
+				/>
 					<div className="chatBoxTop">
 						{messages2.length?
 							messages2.map((m) => (
@@ -161,8 +161,8 @@ export default function CurrentChannel(props: any) {
 			// <JoinChannelModal openModal={openModal} setOpenModal={setOpenModal}/>
 			)}
 
-		
+
 		</>
 	)
-	
+
 }

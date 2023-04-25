@@ -123,5 +123,5 @@ export default function ChannelVisibility(props: any) {
         {getIconByChannelType()}
     </>
   );
-  
+
 }

@@ -1,0 +1,9 @@
+.channel-avatar-navbar {
+	color: rgb(241, 234, 241);
+	background-color: black;
+	border-radius: 25px;
+}
+
+.navbar-channel {
+	display: flex;
+}

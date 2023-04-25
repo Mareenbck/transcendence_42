@@ -200,7 +200,7 @@ export class ChatroomService {
 			where: {
 				AND: [
 					{userId: userId},
-						{channelId: channelId},
+					{channelId: channelId},
 				]
 			},
 		  });

@@ -6,8 +6,12 @@ import ChannelsSettings from "./ChannelsSettings";
 import { Modal, TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import { Button } from '@mui/material';
-import CasinoIcon from '@mui/icons-material/Casino';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import PublicIcon from '@mui/icons-material/Public';
+import LockIcon from '@mui/icons-material/Lock';
+import PasswordIcon from '@mui/icons-material/Password';
+import Avatar from '@mui/material/Avatar';
+import '../../../style/NavbarChannel.css';
 
 
 export function NavbarChannel(props: any) {
@@ -135,9 +139,23 @@ export function NavbarChannel(props: any) {
         e.preventDefault();
         setOpenModal(false);
     };
+	const [icon, setIcon] = useState<any>();
+	useEffect(() => {
+		if (props.chatroom.visibility === 'PUBLIC') {
+			setIcon(<PublicIcon />);
+		} else if (props.chatroom.visibility === 'PWD_PROTECTED') {
+			setIcon(<PasswordIcon />);
+		} else {
+			setIcon(<LockIcon />);
+		}
+	}, [props.chatroom.visibility])
 
 	return (
-		<>
+		<div className="navbar-channel">
+			<Avatar variant="rounded" className="channel-avatar-navbar" >
+				{icon}
+			</Avatar>
+			<h4>{props.chatroom.name}</h4>
 			{isAdmin === 'ADMIN' &&
 				<div className="visibility-icon">
 					<SelectDialog
@@ -146,17 +164,17 @@ export function NavbarChannel(props: any) {
 						onAddAdmin={handleAddAdmin}
 						type="invite-admin"
 						/>
-				{props.chatroom.visibility === 'PRIVATE' &&
-					<SelectDialog
-					onSelect={(userId: string) => setSelectedUser(userId)}
-					onInvite={handleInviteUser}
-					onAddAdmin={handleAddAdmin}
-					type="invite-user"
-					/>
-				}
-				{props.chatroom.visibility === 'PWD_PROTECTED' &&
-					<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
-				}
+					{props.chatroom.visibility === 'PRIVATE' &&
+						<SelectDialog
+						onSelect={(userId: string) => setSelectedUser(userId)}
+						onInvite={handleInviteUser}
+						onAddAdmin={handleAddAdmin}
+						type="invite-user"
+						/>
+					}
+					{props.chatroom.visibility === 'PWD_PROTECTED' &&
+						<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
+					}
 				</div>
 			}
 			 <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button>
@@ -180,7 +198,7 @@ export function NavbarChannel(props: any) {
 				</Box>
 			</Modal>
 			</>
-		</>
+		</div>
 	);
 }
 export default NavbarChannel;
