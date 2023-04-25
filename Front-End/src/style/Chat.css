@@ -281,10 +281,13 @@
 .conversation-list {
 	position: relative;
 	height: inherit;
+	overflow-y: scroll;
+	scrollbar-color: rebeccapurple green;
+	scrollbar-width: thin;
 }
 
 .create-channel-position {
-	position: absolute;
+	position: fixed;
 	bottom: 50px;
-	right: 30px;
+	left: 250px;
 }
