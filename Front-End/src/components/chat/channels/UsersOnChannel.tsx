@@ -51,19 +51,24 @@ export default function UsersOnChannel(props: any) {
                   headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${authCtx.token}`,
-                },
-            }
-            );
-            console.log("RESPONSE", response )
+                  },
+                }
+              );
+              console.log("RESPONSE", response);
               if (!response.ok) {
                 throw new Error("Failed to kick user.");
               }
-              const data = await response.json();
-              console.log(data); // affiche la réponse du serveur après avoir viré l'utilisateur
+              const data = await response.text();
+            //   if (data) {
+            //     const parsedData = JSON.parse(data);
+            //     console.log(parsedData);
+            //   }
+            console.log("DATA",data)
             } catch (error) {
               console.error(error);
             }
           };
+          
         
 
         // console.log("participants -----> ", participants)
