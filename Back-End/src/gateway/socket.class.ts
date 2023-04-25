@@ -22,9 +22,7 @@ export default class UsersSockets {
             this.map.set(socket.data.username, new Map<string, Socket>().set(socket.id, socket));
         } else {
             this.map.get(socket.data.username).set(socket.id, socket);
-        }
-    console.log("26 Connect + map: client", this.map[0]);
-       
+        }      
     }
 
     removeSocket(socket: Socket) {

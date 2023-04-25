@@ -64,7 +64,7 @@ export interface invited{
 export const GameParams = {
 	GAME_WIDTH: 1000, // 
 	GAME_HEIGHT: 500,
-	RACKET_SPEED_Y: 5,
+	RACKET_SPEED_Y: 8,
 	RACKET_HEIGHT: 150,
 	RACKET_WIDTH: 10,
 	BALL_RADIUS: 15,
