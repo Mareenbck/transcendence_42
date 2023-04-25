@@ -1,16 +1,26 @@
-import React from "react";
+import React, { FormEvent, useRef } from "react";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../../store/AuthContext";
 import SelectDialog from "../../utils/SelectDialog";
 import ChannelsSettings from "./ChannelsSettings";
-import { Modal } from "@mui/material";
+import { Modal, TextField } from "@mui/material";
 import { Box } from "@mui/material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
 
 export function NavbarChannel(props: any) {
 	const userContext = useContext(AuthContext);
 	const [isAdmin, setIsAdmin] = useState<string | null>('');
 	const [selectedUser, setSelectedUser] = useState<string | null>('');
 	const [openModal, setOpenModal] = useState(false);
+	const passwordInputRef = useRef<HTMLInputElement>(null);
+
+
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
+	const [showPopUp, setShowPopUp] = useState(true);
+
+
 
 	// console.log("props--->")
 	// console.log(props)
@@ -69,7 +79,43 @@ export function NavbarChannel(props: any) {
 	const handleOpenModal = () => {
 		setOpenModal(true);
 	};
+	
+	const changePassword = async (e: FormEvent) => {
+		e.preventDefault();
+		const newPassword = passwordInputRef.current?.value;
+		try {
+			const response = await fetch(`http://localhost:3000/chatroom2/${props.chatroom.id}/newpassword`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${userContext.token}`,
+				},
+				body: JSON.stringify({ password: newPassword }),
+			});
+			if (!response.ok) {
+				const message = `An error has occured: ${response.status} - ${response.statusText}`;
+				throw new Error(message);
+			} 
+			const data = await response.json();
+			console.log('Password changed:', data);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	
 
+	const changeAndClose = async (e:FormEvent) => {
+		try {
+			await changePassword(e);
+			setOpenModal(false);
+			// props.onCLick();
+		} catch (err) { console.log(err);}
+	}
+
+	const handleFormSubmit = (e:FormEvent) => {
+        e.preventDefault();
+        setOpenModal(false);
+    };
 
 	return (
 		<>
@@ -88,11 +134,22 @@ export function NavbarChannel(props: any) {
 				<Box className="modal-content">
 					<h2>Welcome to {props.chatroom.name} settings</h2>
 					<div>Do you want to change the password ?</div>
+					<TextField
+						id="password"
+						className="custom-field"
+						label="password"
+						type={showPassword ? 'text' : 'password'}
+						variant="filled"
+						placeholder="Type a new password..."
+						inputRef={passwordInputRef}
+					/>
+					 <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
+					<button type='submit' onSubmit={handleFormSubmit} onClick={changeAndClose}>OK</button>
+					<button onClick={() => setOpenModal(false)}>Cancel</button> 
 				</Box>
 			</Modal>
 			</>
 		</>
 	);
 }
-
 export default NavbarChannel;

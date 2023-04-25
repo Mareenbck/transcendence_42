@@ -7,7 +7,7 @@ import { useMemo } from "react";
 //////////////////////////
 // A SUPPRIMER QUAND TU SERAS PASS2E SUR USE SOCKET 
 /////////////////////////
-export const socket = io( "ws://localhost:8001" );
+// export const socket = io( "ws://localhost:8001" );
 //////////////////////////////
 
 

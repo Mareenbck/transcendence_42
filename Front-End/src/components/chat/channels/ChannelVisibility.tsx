@@ -5,47 +5,26 @@ import { Box } from "@mui/material";
 import AuthContext from "../../../store/AuthContext";
 import IconButton from "@mui/material/IconButton";
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import ChatInChatroom from "./ChatInChatroom";
+import ErrorModal from "../../auth/ErrorModal";
+import ErrorModalPassword from "./ErrorModalPassword";
+
+
+interface ErrorMsg {
+	title: string;
+	message: string
+}
+
 
 export default function ChannelVisibility(props: any) {
 
   const [openJoinModal, setOpenJoinModal] = useState(false);
   const userContext = useContext(AuthContext);
-//   const [isAdmin, setIsAdmin] = useState<string | null>('');
   const passwordInputRef = useRef<HTMLInputElement>(null);
-    const [isJoined, setIsJoined] = useState(false);
+	const [isJoined, setIsJoined] = useState(false);
+  const [error, setError] = useState<ErrorMsg | null>(null);
 
 
-//   const getRolesUser = async (id: string, channelId: string) => {
-//     try {
-//       const response = await fetch(
-//         `http://localhost:3000/chatroom2/userTable/${id}/${channelId}`, {
-//           method: "GET",
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${userContext.token}`
-//           }
-//         }
-//       );
-//       if (response.ok) {
-//         const data = await response.json();
-//         if (data && data.length > 0) {
-//           setIsAdmin(data[0].role);
-//         }
-//       }
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-
-//   const handleOpenModal = () => {
-//     setOpenModal(true);
-//   };
-
-
-//   useEffect(() => {
-//     if (props.id)
-//       {getRolesUser(userContext.userId, props.id)};
-//   }, [props.id, userContext.userId])
 
   const handleOpenJoinModal = (e: FormEvent) => {
     setOpenJoinModal(true);
@@ -89,49 +68,60 @@ export default function ChannelVisibility(props: any) {
     return icon;
   }
 
-	const joinChannel = async (e: FormEvent, channelId: number) => {
-		e.preventDefault();
-		const password = passwordInputRef.current?.value;
-		try {
-			const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
-				method: "POST",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${userContext.token}`,
-				},
-				body: JSON.stringify({
-					channelId: channelId,
-					userId: userContext.userId,
-					hash: password,
-				}),
-			});
-			if (!resp.ok) {
-				const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
-				throw new Error(message);
-			}
-			const data = await resp.json();
-			setIsJoined(true);
-		} catch(err) {
-			console.log(err)
-		}
-		setOpenJoinModal(false);
-	}
+  const joinChannel = async (e: FormEvent, channelId: number) => {
+    e.preventDefault();
+    const password = passwordInputRef.current?.value;
+    try {
+      const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userContext.token}`
+        },
+        body: JSON.stringify({
+          channelId: channelId,
+          userId: userContext.userId,
+          hash: password
+        })
+      });
+      const dataResponse = await resp.json();
+      if (!resp.ok) {
+					setError({
+						title: "Wrong Password",
+						message: dataResponse.error,
+					})
+      }
+      setIsJoined(true);
+    } catch (err) {
+      console.log(err);
+    }
+    setOpenJoinModal(false);
+  };
+
+  function handleError() {
+		setError(null);
+	};
 
 
-	return (
-		<>
-		  <div>
-			<Modal className="modal-container" open={openJoinModal} onClose={() => setOpenJoinModal(false)}>
-			  <Box className="modal-content">
-				<div className="form-input">
-				  <label htmlFor="floatingPassword">Password</label>
-				  <input type="password" ref={passwordInputRef} className="form-fields-channel" placeholder="Password" />
-				</div>
-				<button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
-			  </Box>
-			</Modal>
-		  </div>
-		  {getIconByChannelType()}
-		</>
-	  );
+  return (
+    <>
+        <div>
+        {error && <ErrorModalPassword
+        title={error.title}
+        message={error.message}
+        onConfirm={handleError} />}
+          <Modal className="modal-container" open={openJoinModal} onClose={() => setOpenJoinModal(false)}>
+            <Box className="modal-content">
+              <div className="form-input">
+                <label htmlFor="floatingPassword">Password</label>
+                <input type="password" ref={passwordInputRef} className="form-fields-channel" placeholder="Password" />
+              </div>
+              <button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
+            </Box>
+          </Modal>
+        </div>
+        {getIconByChannelType()}
+    </>
+  );
+  
 }
