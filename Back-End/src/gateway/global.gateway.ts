@@ -53,7 +53,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   async handleConnection(socket: Socket) {
     try {
 console.log("Enter Global Soket server");
-console.log(socket.handshake.auth.token);
+console.log("Server token", socket.handshake.auth.token);
       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
       if (!user) {
         throw new WsException('Invalid credentials.');
@@ -65,10 +65,11 @@ console.log(socket.handshake.auth.token);
         this.userSockets.removeSocket(socket)
         socket.disconnect(true);
     }
+console.log("68 handleConnect: client");
   }
 
   async handleDisconnect(client: Socket) {
-  console.log("71 handleDisconnect: client");
+console.log("71 handleDisconnect: client");
     this.userSockets.removeSocket(client)
     client.disconnect(true);
   }
@@ -151,12 +152,12 @@ console.log(socket.handshake.auth.token);
     this.gameService.sendListRooms(); 
   };
 
-  @SubscribeMessage('doIplay')
-  async doIplay(@ConnectedSocket() socket: Socket): Promise<void> 
-  {
-console.log("157_doIplay: socket.id = ", socket.id);	
-    let user = this.userSockets.getUserBySocket(socket.id);
-    if(user) this.gameService.checkPlayerInRooms(user); 
-  };
+//   @SubscribeMessage('doIplay')
+//   async doIplay(@ConnectedSocket() socket: Socket): Promise<void> 
+//   {
+// console.log("157_doIplay: socket.id = ", socket.id);	
+//     let user = this.userSockets.getUserBySocket(socket.id);
+//     if(user) this.gameService.checkPlayerInRooms(user); 
+//   };
 
 }

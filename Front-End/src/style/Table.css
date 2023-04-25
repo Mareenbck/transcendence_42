@@ -1,0 +1,48 @@
+.container-match {
+    display: flex;
+    justify-content: space-between;
+    width: inherit;
+    align-items: center;
+    background-color: #F3F0FF;
+    border-radius: 10px;
+    padding: 3px 10px 3px 10px;
+    border: solid 1px #0000000f;
+    /* margin-left: -15px; */
+}
+
+.container-match p{
+    padding: 0;
+    margin: 0;
+    padding-left: 30px;    
+    
+}
+
+.headTable{
+    align-items: center;
+    background-color:rgb(248, 221, 124);
+    padding-top: 0;
+    margin-top: 0;
+
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    
+    border: 3.19377px solid #000000;
+    box-shadow: 3.65002px 3.65002px 0px #000000;
+    border-radius: 10.9501px;
+
+}
+
+.headTable p{
+    padding-left: 30px;
+}
+
+.cardPodium{
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.wrapLook{
+    display: inline;
+    flex-direction: row;
+}

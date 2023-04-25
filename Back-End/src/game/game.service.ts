@@ -116,6 +116,7 @@ console.log("101_game.service: checkPlayer roomN = ", roomN);
 
 //function to process the message "playGame" or "watch"
 	playGame = async (player: any, roomN: number): Promise<void> => {
+console.log("///////// GAME PLAY", player);
 		// const playerDto: UserDto = await this.userService.getUser(player.userId);
 		// // find room by user Dto
 		// const [N, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
@@ -151,7 +152,7 @@ console.log("101_game.service: checkPlayer roomN = ", roomN);
 	};
 		
 	refuseGame = (author: UserDto, player: UserDto): void => {
-console.log("///////// GAME REFUSAL");
+console.log("///////// GAME REFUSAL", author, player);
 		this.searchPair(author.id, player.id);
 	};
 

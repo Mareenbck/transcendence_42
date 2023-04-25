@@ -7,7 +7,7 @@ import { useMemo } from "react";
 //////////////////////////
 // A SUPPRIMER QUAND TU SERAS PASS2E SUR USE SOCKET 
 /////////////////////////
-// export const socket = io( "ws://localhost:8001" );
+//export const socket = io( "ws://localhost:8001" );
 //////////////////////////////
 
 
@@ -25,7 +25,7 @@ export default function useSocket() {
   }, [authCtx])
 
   const addListener = useMemo<(signal: string, callback: (data: any) => void) => void>
-  (() => (signal, message) => {
+  (() => (signal:any, message:any) => {
     if (socket)
       { socket.on(signal, message)} ;
   }, [socket])
@@ -38,7 +38,7 @@ export default function useSocket() {
 
   const sendMessage = useMemo<(signal: string, message: any) => void>
   (() => {
-      return (signal, message) => {
+      return (signal:any, message:any) => {
         if (socket) {
           socket.emit(signal, message);
         }

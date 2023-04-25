@@ -45,6 +45,8 @@ const Card = (props: any) => {
 			setContent(<ShowAchievements id={props.id}/>)
 		}else if (props.type === 'table') {
 			setContent(<Table id={props.id}/>)
+		}else if (props.type === 'viweGame') {
+			setContent(<MatchHistory id={props.id} authCtx={props.authCtx}/>)
 		}
 	}, [props.type])
 
