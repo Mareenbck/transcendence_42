@@ -12,6 +12,9 @@ import LockIcon from '@mui/icons-material/Lock';
 import PasswordIcon from '@mui/icons-material/Password';
 import Avatar from '@mui/material/Avatar';
 import '../../../style/NavbarChannel.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+
 
 
 export function NavbarChannel(props: any) {
@@ -22,12 +25,13 @@ export function NavbarChannel(props: any) {
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 
 
-    const [showPassword, setShowPassword] = useState(false);
-    const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
+	const [showPassword, setShowPassword] = useState(false);
+	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
 	const [showPopUp, setShowPopUp] = useState(true);
 
 
-
+console.log("props.chatroom.participants---->");
+console.log(props.chatroom.participants);
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
 		if (currentUser) {
@@ -73,8 +77,6 @@ export function NavbarChannel(props: any) {
 	  }
 
 	const leaveChannel = async (channelId: number) => {
-		console.log("channelId--->")
-		console.log(channelId)
 		try {
 			const response = await fetch(`http://localhost:3000/chatroom2/leave_channel`, {
 			  method: 'POST',
@@ -85,12 +87,12 @@ export function NavbarChannel(props: any) {
 			  body: JSON.stringify({ channelId: channelId }),
 			});
 			const data = await response.json();
-			// console.log("DATA IN FETCH", data)
+			props.onLeaveChannel();
 			return data;
 		} catch(err) {
 			console.log(err);
 		}
-	  }
+	}
 
 	const handleInviteUser = (invitedUserId: string) => {
 		inviteUserOnChannel(props.chatroom.id, parseInt(invitedUserId));
@@ -126,7 +128,6 @@ export function NavbarChannel(props: any) {
 		}
 	};
 
-
 	const changeAndClose = async (e:FormEvent) => {
 		try {
 			await changePassword(e);
@@ -150,14 +151,20 @@ export function NavbarChannel(props: any) {
 		}
 	}, [props.chatroom.visibility])
 
+
+
 	return (
 		<div className="navbar-channel">
 			<Avatar variant="rounded" className="channel-avatar-navbar" >
 				{icon}
 			</Avatar>
-			<h4>{props.chatroom.name}</h4>
+			<div className="name-channel">
+				<h4>{props.chatroom.name}</h4>
+				<p>{props.chatroom.participants.length} members</p>
+			</div>
+
 			{isAdmin === 'ADMIN' &&
-				<div className="visibility-icon">
+				<div className="btn-admin-channel">
 					<SelectDialog
 						onSelect={(userId: string) => setSelectedUser(userId)}
 						onInvite={handleInviteUser}
@@ -177,7 +184,8 @@ export function NavbarChannel(props: any) {
 					}
 				</div>
 			}
-			 <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button>
+			<FontAwesomeIcon onClick={() => leaveChannel(props.chatroom.id)} icon={faArrowRightFromBracket} className="btn-dialog-navbar-leave"/>
+			 {/* <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button> */}
 				<>
 			<Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
 				<Box className="modal-content">

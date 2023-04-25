@@ -42,11 +42,11 @@ export default function ChannelVisibility(props: any) {
               <ArrowCircleRightIcon />
             </IconButton>
           )}
-          {isJoined && (
+          {/* {isJoined && (
             <IconButton disabled={true} aria-label="fingerprint" style={{ opacity: 0 }}>
               <ArrowCircleRightIcon />
             </IconButton>
-          )}
+          )} */}
         </div>
       );
     } else if (props.visibility === "PUBLIC") {

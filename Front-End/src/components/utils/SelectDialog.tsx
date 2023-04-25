@@ -10,6 +10,12 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import AuthContext from "../../store/AuthContext";
 import { FriendContext } from "../../store/FriendshipContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCrown, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import Tooltip from '@mui/material/Tooltip';
+
+
 
 export default function DialogSelect(props: { onSelect: (userId: string) => void, onInvite: (userId: string) => void, onAddAdmin: (userId: string) => void, type: string}) {
 	const [open, setOpen] = React.useState(false);
@@ -17,6 +23,7 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 	const authCtx = React.useContext(AuthContext);
 	const friendCtx = React.useContext(FriendContext);
 	const [invitedUser, setInvitedUser] = React.useState<string | null>(''); // Ajouter une variable d'état pour stocker l'ID de l'utilisateur sélectionné
+	const [button, setButton] = React.useState<any>()
 
 	const handleChange = (event: SelectChangeEvent) => {
 		setInvitedUser(event.target.value ? event.target.value : ''); // Mettre à jour l'ID de l'utilisateur sélectionné
@@ -102,10 +109,22 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 	// const users = participants.filter((p) => p.role === 'USER') || [];
 	// const [selectedUser, setSelectedUser] = React.useState<number | undefined>();
 
+	React.useEffect (() => {
+		console.log("props.type--->")
+		console.log(props.type)
+		if (props.type === 'invite-user') {
+			setButton(<Tooltip title="Invite User">
+						<FontAwesomeIcon icon={faUserPlus} onClick={handleClickOpen} className="btn-dialog-navbar"/></Tooltip>)
+		} else {
+			setButton(<Tooltip title="Add Admin">
+						<FontAwesomeIcon icon={faCrown} onClick={handleClickOpen} className="btn-dialog-navbar"/></Tooltip>)
+		}
+	}, [props.type])
 
 	return (
 		<div>
-			<Button onClick={handleClickOpen}>{props.type === "invite-user" ? "Invite User" : "Add Admin"}</Button>
+			{button}
+			{/* <Button onClick={handleClickOpen}>{props.type === "invite-user" ? "Invite User" : "Add Admin"}</Button> */}
 			<Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
 				<DialogTitle>{props.type === "invite-user" ? "Invite User" : "Add Admin"}</DialogTitle>
 				<DialogContent>

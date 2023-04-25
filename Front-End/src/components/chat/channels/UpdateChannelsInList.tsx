@@ -13,11 +13,9 @@ export default function UpdateChannelsInList(props: any) {
 	const [conversations, setConversations] = useState([]);
 	const [AConversation, setAConversation] = useState(null);
 	const user = useContext(AuthContext);
-	console.log("UpdateChannelList : conversations--->")
-	console.log(conversations)
 	const { currentChat, setCurrentChat } = props;
 	// const [openModal, setOpenModal] = useState(false);
-	const [sendMessage, addListener] = useSocket()
+	const [sendMessage, addListener] = useSocket();
 
 	useEffect(() => {
 		addListener("getConv", data => setAConversation({
@@ -44,13 +42,11 @@ export default function UpdateChannelsInList(props: any) {
 			}
 		};
 		getAllConv(user);
-	}, [AConversation]);
+	}, [AConversation, conversations]);
 
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [conversations]);
-
-
 
 	return (
 		<div className="conversation-list">

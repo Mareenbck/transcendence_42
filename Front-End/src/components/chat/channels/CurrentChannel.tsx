@@ -16,21 +16,17 @@ export default function CurrentChannel(props: any) {
 	const [messages2, setMessages2] = useState<RoomMessage[]>([]);
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
-	const [isJoined, setIsJoined] = useState(false);
-    const [openModal, setOpenModal] = useState(true);
-	const [open, setOpen] = useState(false);
+	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
+    // const [openModal, setOpenModal] = useState(true);
+	// const [open, setOpen] = useState(false);
 	const [showPopUp, setShowPopUp] = useState(false);
+	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
 		if (author !== undefined) { return (author) }
 		return (null);
 	};
-
-	console.log("Current Channel : props.allUsers--->")
-	console.log(props.allUsers)
-	console.log("Current Channel : props.chatroom--->")
-	console.log(props.chatroom)
 
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -64,31 +60,14 @@ export default function CurrentChannel(props: any) {
 			console.log(err);
 		}
 	};
-	// async function checkIfJoined() {
-	// 	try {
-	// 		const response = await fetch (
-	// 			`http://localhost:3000/chatroom2/userTable/${currentId}/${currentChatroom.id}`, {
-	// 				method: "GET",
-	// 				headers: {
-	// 					"Content-Type": "application/json",
-	// 					Authorization: `Bearer ${authCtx.token}`
-	// 				}
-	// 			}
-	// 		)
-	// 		const data = await response.json();
-	// 		if (data.length > 0) {
-	// 			setIsJoined(true);
-	// 		} else {
-	// 			setIsJoined(false);
-	// 		}
-	// 	} catch (err) {
-	// 		console.log(err);
-	// 	}
-	// }
 
-	// useEffect(() => {
-	// 	checkIfJoined();
-	//   }, []);
+	useEffect(() => {
+		if (userJoined) {
+			setIsJoined(true)
+		} else {
+			setIsJoined(false)
+		}
+	  }, [currentChatroom]);
 
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
@@ -120,12 +99,14 @@ export default function CurrentChannel(props: any) {
 		}
 	}
 
+	const handleFormSubmit = (e: FormEvent) => {
+		e.preventDefault();
+		setShowPopUp(true);
+	};
 
-
-    const handleFormSubmit = (e: FormEvent) => {
-        e.preventDefault();
-        setShowPopUp(true);
-      };
+	const handleLeaveChannel = () => {
+		setIsJoined(false);
+	  };
 
 	return (
 		<>
@@ -137,6 +118,7 @@ export default function CurrentChannel(props: any) {
 				onCancel={() => setShowPopUp(false)}
 				onClick={() => setShowPopUp(false)}
 				onSubmit={{handleFormSubmit}}
+				onLeaveChannel={handleLeaveChannel}
 				/>
 					<div className="chatBoxTop">
 						{messages2.length?

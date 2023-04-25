@@ -249,7 +249,7 @@ function Chat() {
       const j = getUser(+id);
       const k = allUsers.find(userX => +userX.id === +blockForMe);
       if (j && k)
-      { 
+      {
         k.blockedFrom.push(j);
         const NewAll = allUsers;
         NewAll.splice(i, 1, k);
@@ -257,7 +257,7 @@ function Chat() {
     }
     setBlockForMe(null);
   }, [blockForMe]);
-     
+
   useEffect(() => {
     if (unblockForMe && allUsers && user.userId && unblockForMe !== (undefined || null) && unblockForMe !== +user.userId) {
       const i = allUsers.findIndex(userX => +userX.id === +unblockForMe);
@@ -269,7 +269,7 @@ function Chat() {
         setAllUsers([...NewAll]);};
     }
     setBlockForMe(null);
-  }, [unblockForMe]);  
+  }, [unblockForMe]);
 
 ////////////////////////////////////////////////
 // Partie IV : fonctions ...
@@ -394,7 +394,7 @@ return (
 
     <div className="chatBox">
       <div className="chatBoxW">
-        <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
+        {/* <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div> */}
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 		{currentChat ?
 			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined}/>
