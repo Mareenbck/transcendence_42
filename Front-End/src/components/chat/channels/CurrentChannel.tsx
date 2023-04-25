@@ -9,6 +9,7 @@ import NavbarChannel from "./NavbarChannel";
 import { Modal, Box, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import JoinChannelModal from "./JoinChannelModal";
+import UsersOnChannel from "./UsersOnChannel";
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -61,6 +62,7 @@ export default function CurrentChannel(props: any) {
 			console.log(err);
 		}
 	};
+
 	async function checkIfJoined() {
 		try {
 			const response = await fetch (
@@ -160,8 +162,8 @@ export default function CurrentChannel(props: any) {
 				<p>you need to join the channel before talking into it</p>
 			// <JoinChannelModal openModal={openModal} setOpenModal={setOpenModal}/>
 			)}
+		              <UsersOnChannel currentChatroom={props.currentChatroom} channelId={props.currentChatroom.id} />
 
-		
 		</>
 	)
 	

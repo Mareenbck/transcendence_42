@@ -361,6 +361,9 @@ useEffect(() => {
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
   // console.log("isjoined ????", isJoined)
   const [isJoined, setIsJoined] = useState(false);
+  const [participants, setParticipants] = useState(false);
+  const [showParticipantsModal, setShowParticipantsModal] = useState(true);
+
 
 
 return (
@@ -419,7 +422,7 @@ return (
               </div>
           </>
           : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
-        }
+    }
         </div>
         </div>
         <div className="chatOnline">
@@ -479,7 +482,6 @@ return (
         </div>
         <div> 
         </div>
-
       </div>
 
     </>

@@ -41,35 +41,33 @@ export default function UsersOnChannel(props: any) {
 
         const admins = participants.filter((p) => p.role === 'ADMIN');
         const users = participants.filter((p) => p.role === 'USER');
-
-        const kickSomeone = async (channelId: string, userId: string) => {
-            try {
-              const response = await fetch(
-                `http://localhost:3000/chatroom2/${channelId}/kick/${userId}`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${authCtx.token}`,
-                  },
-                }
-              );
-              console.log("RESPONSE", response);
-              if (!response.ok) {
-                throw new Error("Failed to kick user.");
-              }
-              const data = await response.text();
-            //   if (data) {
-            //     const parsedData = JSON.parse(data);
-            //     console.log(parsedData);
-            //   }
-            console.log("DATA",data)
-            } catch (error) {
-              console.error(error);
-            }
-          };
-          
         
+        const kickSomeone = async (channelId: string, userId: string) => {
+          try {
+            const response = await fetch(
+              `http://localhost:3000/chatroom2/${channelId}/kick/${userId}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${authCtx.token}`,
+                },
+              }
+            );
+            console.log("RESPONSE", response);
+            if (!response.ok) {
+              throw new Error("Failed to kick user.");
+            }
+            const updatedParticipants = participants.filter(p => p.user.id !== userId);
+            setParticipants(updatedParticipants);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        
+        useEffect(() => {
+          showParticipants(props.channelId);
+        }, [props.channelId, kickSomeone]);
 
         // console.log("participants -----> ", participants)
         return (
