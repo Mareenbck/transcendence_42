@@ -12,9 +12,10 @@ import SideBar from '../SideBar';
 import style from '../../style/Menu.module.css';
 //import { UserChat } from '../../interfaces/iChat';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import SelectColor from './SelectColor';
 import Card from "../../components/utils/Card";
+import { start } from 'repl';
 
 function Game() {
     /////////////////////////////////////////Page Game/////////////////////////////////////
@@ -62,19 +63,19 @@ function Game() {
     const [ShowCamva, setShowCamva] = useState(true); 
     const [backColorGame, setbackColorGame] = useState<string>("black");
     const changColorToRed= () => {    
-        setbackColorGame("red");
+        setbackColorGame("rgb(158, 28, 28)");
         setShowColorModal(false);
         ShowCamva? setShowCamva(false): setShowCamva(true);
     }
         
     const changColorToBlue= () => {    
-        setbackColorGame("blue");
+        setbackColorGame("rgb(37, 37, 167)");
         setShowColorModal(false);
         ShowCamva? setShowCamva(false): setShowCamva(true);
     }
     
     const changColorToGreen= () => {    
-        setbackColorGame("green");
+        setbackColorGame("rgb(40, 128, 40)");
         setShowColorModal(false);
         ShowCamva? setShowCamva(false): setShowCamva(true);
     }
@@ -198,24 +199,29 @@ function Game() {
                             </div> 
                         ) : (
                         <>
-                            {/* <SelectColor /> */}
-                            <button onClick={handleColorModal}>Change Color</button>
+                            { !isInPlay() ? (<SelectColor changColorToRed={changColorToRed} 
+                                         changColorToBlue={changColorToBlue}
+                                         changColorToGreen={changColorToGreen}
+                                        changColorToBlack={changColorToBlack}>
+                            </SelectColor> ): (<h1>GAME</h1>)}
+
+                           
+                            
                             <div>                   
-                                <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />
-                                {/* { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />} */}
-                                {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed} 
+                               { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+                               {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed} 
                                                                                             changColorToBlue={changColorToBlue}
                                                                                             changColorToGreen={changColorToGreen}
                                                                                             changColorToBlack={changColorToBlack}
                                                                                             />}
-                                {/* {!ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />} */}
+                                { !ShowCamva &&<Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
                             </div> 
                         </>)}
                     </>
                         ):(
                     <>
                         <h2> WINNER </h2>
-                        <div> 
+                        <div className='wrapLook'> 
                             {/* <Winner gameinit={gameinit} gamewinner={gamewinner} /> */}
                             <MyAvatar  id={gamewinner.winner.id} style="m" avatar={gamewinner.winner.avatar} ftAvatar={gamewinner.winner.ftAvatar}/>
                            < EmojiEventsIcon class = "winner"/>
@@ -224,26 +230,38 @@ function Game() {
                 )}
                 {/* /LIST OF CURRENT GAME with button "Watch*/}
                 {/* <div className='card-wrapper'>
-						<Card color='yellow' title="List of online Games" type="match" width="90%"></Card>
-                </div>                 */}
+					<Card color='yellow' title="List of online Games" type="viweGame" width="90%"></Card>
+                </div> */}
 
                 <div>
                     {games.map((game: gamesList) => (
-                        <button  onClick={() => handleClick(game.roomN)}>Room {game.roomN} ({game.playerR.username} vs {game.playerL.username})</button>
+                        <div>
+
+                        <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
+                            <div  onClick={() => handleClick(game.roomN)}>{game.roomN} ({game.playerR.username} 
+                            <MyAvatar  id={game.playerR.id} style="s" avatar={game.playerR.avatar} ftAvatar={game.playerR.ftAvatar}/>
+                            vs 
+                            {game.playerL.username})
+                            <MyAvatar  id={game.playerL.id} style="s" avatar={game.playerL.avatar} ftAvatar={game.playerL.ftAvatar}/>
+                            </div>
+                         </div>
+                    
                     ))}
                 </div>
-                {/* /LIST OF CURRENT GAME */}
-                {!isInPlay() && (
-                    <div >
-                        <button className="btn" onClick={() => handleClick(-1)}>Play Game</button>
-                    </div> 
-                )}
-                {/* /EXIT FROM THE GAME. IF GAME - THE LOSS*/}
-                {!isInPlay() && (
-                    <Link to="/menu">
-                        <button className="btn" >Menu</button>
-                    </Link>   
-                )}
+                <div className='posBtn'>
+                    {/* /LIST OF CURRENT GAME */}
+                    {!isInPlay() && (
+                        <div >
+                            <button className="btn" onClick={() => handleClick(-1)}>Play Game</button>
+                        </div> 
+                    )}
+                    {/* /EXIT FROM THE GAME. IF GAME - THE LOSS*/}
+                    {!isInPlay() && (
+                        <Link to="/menu">
+                            <button className="btn"  style={{ alignSelf: "flex-end"}}>Menu</button>
+                        </Link>   
+                    )}
+                </div>
             </div>
         </div>
      </> 

@@ -45,9 +45,26 @@
 }
 
 .btn
-{
+{	
+	color: black;
+    box-shadow: 3.65002px 3.65002px 0px #000000;
+    font-family: 'Inter';
+    text-transform: none;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    background: #FFFFFF;
+    border: 3.19377px solid #000000;
+    box-shadow: 3.65002px 3.65002px 0px #000000;
+    border-radius: 10.9501px;
+    width: 117px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    margin-right: 30px;
 	
-		border-radius: 0px;
+		/* border-radius: 0px;
 		border: 1px solid transparent;
 		padding: 0.6em 1.2em;
 		font-size: 1em;
@@ -55,7 +72,7 @@
 		font-family: inherit;
 		background-color: #979494;
 		cursor: pointer;
-		transition: border-color 0.25s;
+		transition: border-color 0.25s; */
 
 }
 

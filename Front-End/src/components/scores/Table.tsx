@@ -10,6 +10,8 @@ import MyAvatar from '../user/Avatar';
 import {UserScore, Game} from "../interfaces/iChat";
 import Card from "../../components/utils/Card";
 import { ListItem } from '@mui/material';
+import '../../style/Profile.css'
+import '../../style/Table.css'
 
 const Table = (props: any) => {
   const [games, setGames] = useState<Game[]>([]);
@@ -83,92 +85,39 @@ const Table = (props: any) => {
     return(
 
     <>
-   {/* <div  > */}
-    {/* <section className= "main"> */}
-
-      {/* <SideBar title="Scores" />           */}
-    
-      {/* <section className= "one">   */}
-          {/* <h1 className='one_podium'>PODIUM</h1> */}
-          
-          {/* <section className= "two"> */}
-          <form onSubmit={(event) => handleNewGame(event)}>
-         
-        </form>
-           
-              
-            {/* <div className="pos"> */}
-                    
+      <form onSubmit={(event) => handleNewGame(event)}></form>
              
-              {/* <div className="midPos">
-
-                    
-
-                    <div className='rangAvatar'>
-                      <UserChart   userName={second?.username}  h={(getScore(second))} />
-                      <MyAvatar authCtx={authCtx } id={second?.id} style="l" avatar={second?.avatar} ftAvatar={second?.ftavatar}/>
-                    </div>
-
-                    <div className='rangAvatar'>       
-                      <UserChart   userName={firts?.username}  h={(getScore(firts))} />
-                      <MyAvatar authCtx={authCtx } id={firts?.id} style="l" avatar={firts?.avatar} ftAvatar={firts?.ftavatar}/>
-                    </div>
-
-                    <div className='rangAvatar'> 
-                      <UserChart   userName={third?.username}  h={(getScore(third))} color={"black"}/>
-                      <MyAvatar authCtx={authCtx } id={third?.id}  style="l" avatar={third?.avatar} ftAvatar={third?.ftavatar}/> 
-                    </div>
-                  
-                </div> */}
 
                 <div >
+
+
+                  <ListItem  className="headTable">
+                      <p className='tdd'>Name</p>
+                      <p>Games</p>
+                      <p>Points</p>
+                      <p>Victoires</p>
+                      <p> Avatar</p> 
+                    </ListItem >
+
+                  {sorted.map((g) => (
+                      <ListItem key={g?.id}>
+                        <div className="container-match">
+                            <p>{g?.username}</p>
+                            <p>{getNbGames(g)}</p>
+                            <p>{getScore(g)}</p>
+                            <p>{getWinner(g)}</p>
+                            <p><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></p>
+                          {/* <PlayerOne player={game.playerOne} winner={game.winner} score={game.score1} />
+                          <ScoresMatch score1={game.score1} score2={game.score2} date={game.createdAt}/>
+                          <PlayerTwo player={game.playerTwo} winner={game.winner} score={game.score2} /> */}
+                        </div>
+                      </ListItem>
+		              ))}
+
+                  
                 
-                <table className='table'>
-                  <thead className='thead'>
-                     <tr>
-                      <td>User</td>
-                      <td>Nbre de parties</td>
-                      <td>Nombre total de points</td>
-                      <td>Nombre total de victoires</td>
-                      <td> avatar</td> 
-                    </tr>
-                  </thead>
-                  <tbody>
+                </div>
 
-                  { sorted.map((g) => (
-                    // <ListItem key={g?.id}>
-                    //     <div className="container-match">
-
-                    //     {/* <td>{g?.username}</td>
-                    //     <td>{getNbGames(g)}</td>
-                    //     <td>{getScore(g)}</td>
-                    //     <td>{getWinner(g)}</td> */}
-                    //    {/* <td><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></td>
-                    //         <PlayerOne player={game.playerOne} winner={game.winner} score={game.score1} />
-                    //         <ScoresMatch score1={game.score1} score2={game.score2} date={game.createdAt}/>
-                    //         <PlayerTwo player={game.playerTwo} winner={game.winner} score={game.score2} /> */}
-                    //     </div>
-			        // </ListItem>
-
-                    <tr key={g?.id} >
-                      <td>{g?.username}</td>
-                      <td>{getNbGames(g)}</td>
-                      <td>{getScore(g)}</td>
-                      <td>{getWinner(g)}</td>
-                      <td><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></td>
-                    </tr>
-                  ))}
-                  </tbody>
-                </table>
-            </div>
-
-{/* 
-                  </div>  
-                </section>
-            </section>
-
-          </section>    
-          </div> */}
 
         </>
     )
