@@ -26,7 +26,7 @@ body{
     align-items: center;
     width: 100%;
     border-bottom: 3px solid grey;
-    padding: 30px;
+    padding: 0px;
 
 }
 
@@ -35,9 +35,10 @@ body{
     display: flex;
     flex-direction: row-reverse;
     align-items:self-start;
-    padding: 10;
-    padding-top: 10px;
-    width: 100%;
+    padding: 0;
+    /* padding-top: 10px; */
+    width: 80%;
+    margin-left: 5px;
     /* margin: auto; */
 }
 
@@ -54,6 +55,26 @@ body{
     }
    
 
+}
+
+.pos{
+    display: flex;
+    flex-direction: row;
+    
+    margin: 30px;
+    align-self: center;
+
+}
+
+@media (min-width: 1500px) {
+    .Pos{
+        display: grid;
+        /* flex-direction: column; */
+        margin: 30px;
+        align-self: center;  
+       
+    }
+    
 }
 
 .midPos{
@@ -75,17 +96,6 @@ body{
     
 }
 
-.pos{
-    display: flex;
-    flex-direction: row;
-    
-    margin: 30px;
-    align-self: center;
-
-}
-
-
-
 .rangAvatar{
     display: flex;
     flex-direction:column-reverse;
@@ -95,11 +105,13 @@ body{
 
 .table{
      
-    border: 3px solid #699BF7;
+    /* border: 3px solid #699BF7; */
+    border-radius: 10;
     width: 100%;
     align-self:center;
     /* margin: auto;
     margin-left:70px; */
+    
        
     
 }
@@ -114,7 +126,7 @@ body{
         /*margin-left: 100px;*/
         margin: auto;
         margin-top: 5px;
-       
+      
         
     }
     

@@ -13,7 +13,7 @@ import MyAvatar from '../user/Avatar';
 import {DirectMessage, UserChat, ChatRoom, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import MyAccountMenu from "./../AccountMenu";
-import { Tab } from '@mui/material';
+import { Tab, useThemeProps } from '@mui/material';
 import { Tabs } from '@mui/material';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import MailIcon from '@mui/icons-material/Mail';
@@ -22,6 +22,7 @@ import UsersOnChannel from './channels/UsersOnChannel';
 import NavbarChannel from './channels/NavbarChannel';
 import UserChart from '../scores/UserChart';
 import UsersWithDirectMessage from './message/usersWithMessages';
+import ChatInChatroom from './channels/ChatInChatroom';
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -356,8 +357,10 @@ useEffect(() => {
 }, [messagesD]);
 
 
-
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
+  // console.log("isjoined ????", isJoined)
+  const [isJoined, setIsJoined] = useState(false);
+
 
 return (
   <>
@@ -394,7 +397,7 @@ return (
         <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 		{currentChat ?
-			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} />
+			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined}/>
         : currentDirect ?
           <>
           <div>chat with {currentDirect.username} </div>
@@ -411,12 +414,7 @@ return (
                 <textarea className="chatMessageInput" placeholder="write something..."
                     onChange={(e) => setNewMessageD(e.target.value)} value={newMessageD}
                 ></textarea>
-                {/* { currentChat */}
-					{/* // ?   */}
-				{/* <><button className="chatSubmitButton" onClick={handleSubmit}> Send </button></> */}
-                {/* :  */}
 				<><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></>
-				{/* // } */}
               </div>
           </>
           : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
@@ -429,7 +427,7 @@ return (
               { onlineUsers ? onlineUsers?.map((o) => (
                 +o?.userId.userId !== +id ?
                 <div  key={o?.userId.userId} className={amIBlocked(+o?.userId.userId)}  >
-                    <Link to={'/game/play'} onClick={() => inviteGame(+o?.userId.userId)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+                    <Link to={'/game'} onClick={() => inviteGame(+o?.userId.userId)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
                     <Link to={`/users/profile/${o?.userId.userId}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                   <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
                     <div className="chatOnlineImgContainer">
@@ -454,7 +452,7 @@ return (
               { otherUsers ? otherUsers?.map((o) => (
                 +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
                   <div  key={o?.id} className={amIBlocked(o?.id)} >
-                    <Link to={'/game/play'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+                    <Link to={'/game'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
                     <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                     <div className="fname" onClick={()=> {getDirect(o)}} >
                       <div className="chatOnlineImgContainer">

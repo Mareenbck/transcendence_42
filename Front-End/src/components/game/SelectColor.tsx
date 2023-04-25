@@ -1,12 +1,16 @@
 import React , { useEffect, useState, useContext, useRef }  from "react";
 
-import '../../style/SelectColor';
+import '../../style/SelectColor.css';
 import Card from "../../components/utils/Card";
 
 
+type props = {
+	changcolor : any;
+	handelclose: any;
+}
+
 const SelectColor = (props: any) => {
-    // Pour partis de Modal select Color,
-    
+
     const [ShowColorModal, setShowColorModal] = useState(false); 
     const handleColorModal = () => {
         setShowColorModal(true)
@@ -20,15 +24,6 @@ const SelectColor = (props: any) => {
 	return (
 		<>
 			<div className="">
-            {/*<div className="card-menu">
-					<Card color='blue' title="Select your favorite color for.."  type="menu" width="100%"></Card>
-					
-    </div>
-                <div className='card-wrapper'>
-						<Card color='yellow' title="List of online Games" type="match" width="100%"></Card>
-				</div>*/}
-
-
 
             <div className="card-option">
                         <div className="poslogo">
@@ -37,13 +32,13 @@ const SelectColor = (props: any) => {
                             </a>
                             <h2 >Select your favorite color for...</h2>
                          </div>
-                         <div className="posColor">
-                            <button  className = "posColor__circlebtn" /*onClick={props.changColorToRed} */  style={{backgroundColor: "red"}} ></button>
-                            <button  className = "posColor__circlebtn" /*onClick={props.changColorToBlue}*/ style={{backgroundColor: "blue"}}></button>
-                            <button  className = "posColor__circlebtn" /*onClick={props.changColorToGreen}*/ style={{backgroundColor: "green"}}></button>
-                            <button  className = "posColor__circlebtn "/*onClick={props.changColorToBlack}*/ style={{backgroundColor: "black"}}></button>
+                         <div className="posColor" style={{"cursor": "prompt"}}>
+                            <button  className = "posColor__circlebtn" onClick={props.changColorToRed}   style={{backgroundColor: "rgb(158, 28, 28)"}} ></button>
+                            <button  className = "posColor__circlebtn" onClick={props.changColorToBlue} style={{backgroundColor: "rgb(37, 37, 167)"}}></button>
+                            <button  className = "posColor__circlebtn" onClick={props.changColorToGreen} style={{backgroundColor: "rgb(40, 128, 40)"}}></button>
+                            <button  className = "posColor__circlebtn " onClick={props.changColorToBlack} style={{backgroundColor: "black"}}></button>
                          </div>
-                         {/*<button onClick={handleColorModal}>Change Color</button>*/}
+                         
                     </div>
 
                     

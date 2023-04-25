@@ -211,4 +211,16 @@ export class ChatroomService {
 		}
 	  }
 
+	async updatePassword(channelId: number, newPasswordHash: any): Promise<Chatroom> {
+		// const chatroom = await this.prisma.chatroom.findOne({ where: { id: channelId } });
+		const {password} = newPasswordHash;
+		const newpassword =  await argon.hash(password)
+	//hash argon
+		const updatedChatroom = await this.prisma.chatroom.update({
+		  where: { id: channelId },
+		  data: { hash: newpassword},
+		});
+		console.log("updatedPassword", updatedChatroom)
+		return updatedChatroom;
+	  }
 }

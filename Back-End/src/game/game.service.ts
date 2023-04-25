@@ -116,6 +116,7 @@ export class GameService {
 
 //function to process the message "playGame" or "watch"
 	playGame = async (player: any, roomN: number): Promise<void> => {
+console.log("///////// GAME PLAY", player);
 		// const playerDto: UserDto = await this.userService.getUser(player.userId);
 		// // find room by user Dto
 		// const [N, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];

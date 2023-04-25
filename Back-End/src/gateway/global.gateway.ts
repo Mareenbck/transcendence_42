@@ -65,6 +65,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         this.userSockets.removeSocket(socket)
         socket.disconnect(true);
     }
+console.log("68 handleConnect: client");
   }
 
   async handleDisconnect(client: Socket) {
@@ -151,12 +152,12 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.gameService.sendListRooms();
   };
 
-  @SubscribeMessage('doIplay')
-  async doIplay(@ConnectedSocket() socket: Socket): Promise<void>
-  {
+//   @SubscribeMessage('doIplay')
+//   async doIplay(@ConnectedSocket() socket: Socket): Promise<void>
+//   {
 // console.log("157_doIplay: socket.id = ", socket.id);
-    let user = this.userSockets.getUserBySocket(socket.id);
-    if(user) this.gameService.checkPlayerInRooms(user);
-  };
+//     let user = this.userSockets.getUserBySocket(socket.id);
+//     if(user) this.gameService.checkPlayerInRooms(user);
+//   };
 
 }

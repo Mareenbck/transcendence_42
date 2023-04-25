@@ -34,7 +34,7 @@ function PopupChallenge(props: PopupChallengeProps) {
       <div className="popupChallenge-inner">
         <MyAvatar  id={props.trigger.id} style="m" avatar={props.trigger.avatar} ftAvatar={props.trigger.ftAvatar}/>
         <div>  You have been challenged by {props.trigger.username} ! </div>
-          <Link to={'/game/play'} onClick={acceptGame} > <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+          <Link to={'/game'} onClick={acceptGame} > <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
           <button className="close-btn" onClick={() => { refuseGame(); props.setTrigger(null); }}>Close</button>
         {props.children}
       </div>
