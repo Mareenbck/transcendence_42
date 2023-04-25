@@ -5,6 +5,8 @@ import SelectDialog from "../../utils/SelectDialog";
 import ChannelsSettings from "./ChannelsSettings";
 import { Modal, TextField } from "@mui/material";
 import { Box } from "@mui/material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
 
 export function NavbarChannel(props: any) {
 	const userContext = useContext(AuthContext);
@@ -93,7 +95,7 @@ export function NavbarChannel(props: any) {
 			if (!response.ok) {
 				const message = `An error has occured: ${response.status} - ${response.statusText}`;
 				throw new Error(message);
-			}
+			} 
 			const data = await response.json();
 			console.log('Password changed:', data);
 		} catch (err) {
@@ -105,13 +107,14 @@ export function NavbarChannel(props: any) {
 	const changeAndClose = async (e:FormEvent) => {
 		try {
 			await changePassword(e);
-			setShowPopUp(false);
+			setOpenModal(false);
+			// props.onCLick();
 		} catch (err) { console.log(err);}
 	}
 
 	const handleFormSubmit = (e:FormEvent) => {
         e.preventDefault();
-        setShowPopUp(false);
+        setOpenModal(false);
     };
 
 	return (
@@ -140,12 +143,13 @@ export function NavbarChannel(props: any) {
 						placeholder="Type a new password..."
 						inputRef={passwordInputRef}
 					/>
+					 <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
 					<button type='submit' onSubmit={handleFormSubmit} onClick={changeAndClose}>OK</button>
+					<button onClick={() => setOpenModal(false)}>Cancel</button> 
 				</Box>
 			</Modal>
 			</>
 		</>
 	);
 }
-
 export default NavbarChannel;

@@ -6,6 +6,15 @@ import AuthContext from "../../../store/AuthContext";
 import IconButton from "@mui/material/IconButton";
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import ChatInChatroom from "./ChatInChatroom";
+import ErrorModal from "../../auth/ErrorModal";
+import ErrorModalPassword from "./ErrorModalPassword";
+
+
+interface ErrorMsg {
+	title: string;
+	message: string
+}
+
 
 export default function ChannelVisibility(props: any) {
 
@@ -13,6 +22,8 @@ export default function ChannelVisibility(props: any) {
   const userContext = useContext(AuthContext);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 	const [isJoined, setIsJoined] = useState(false);
+  const [error, setError] = useState<ErrorMsg | null>(null);
+
 
 
   const handleOpenJoinModal = (e: FormEvent) => {
@@ -73,9 +84,12 @@ export default function ChannelVisibility(props: any) {
           hash: password
         })
       });
+      const dataResponse = await resp.json();
       if (!resp.ok) {
-        const message = `An error has occured: ${resp.status} - ${resp.statusText}`;
-        throw new Error(message);
+					setError({
+						title: "Wrong Password",
+						message: dataResponse.error,
+					})
       }
       setIsJoined(true);
     } catch (err) {
@@ -84,10 +98,18 @@ export default function ChannelVisibility(props: any) {
     setOpenJoinModal(false);
   };
 
+  function handleError() {
+		setError(null);
+	};
+
 
   return (
     <>
         <div>
+        {error && <ErrorModalPassword
+        title={error.title}
+        message={error.message}
+        onConfirm={handleError} />}
           <Modal className="modal-container" open={openJoinModal} onClose={() => setOpenJoinModal(false)}>
             <Box className="modal-content">
               <div className="form-input">

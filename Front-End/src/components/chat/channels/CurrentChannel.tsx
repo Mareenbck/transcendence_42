@@ -119,11 +119,23 @@ export default function CurrentChannel(props: any) {
 		}
 	}
 	const [open, setOpen] = useState(false);
-	
+	const [showPopUp, setShowPopUp] = useState(false);
+
+
+    const handleFormSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        setShowPopUp(true);
+      };
+
 	return (
 		<>
 			{/* <div>chat in {currentChatroom.name} </div> */}
-			<NavbarChannel chatroom={currentChatroom} />
+			<NavbarChannel 
+			chatroom={currentChatroom} 
+			onCancel={() => setShowPopUp(false)}
+			onClick={() => setShowPopUp(false)}
+			onSubmit={{handleFormSubmit}}
+			/>
 			{isJoined && (
 				<>
 					<div className="chatBoxTop">
