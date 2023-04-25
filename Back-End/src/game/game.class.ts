@@ -204,7 +204,7 @@ console.log("constructor Class.game");
 	private player_disconect = (user: UserDto) => {
 		this.isrunning = false;
 		this.winner = user;
-		this.server.emit('winner', {winner: this.winner, leave: this.leave});
+		this.server.to(this.room).emit('winner', {winner: this.winner}); //room
 	}
 
 // function: run game

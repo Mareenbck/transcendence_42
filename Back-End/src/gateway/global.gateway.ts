@@ -66,6 +66,7 @@ console.log("Server token", socket.handshake.auth.token);
         socket.disconnect(true);
     }
 console.log("68 handleConnect: client");
+console.log("26 Connect + map: client", this.userSockets.users);
   }
 
   async handleDisconnect(client: Socket) {
@@ -132,8 +133,8 @@ console.log("71 handleDisconnect: client");
   { this.gameService.acceptGame(data.author, data.player) };
 
   @SubscribeMessage('refuseGame')
-  async refuseGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
-  { this.gameService.refuseGame(data.author, data.player) };
+  async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  { this.gameService.refusalGame(data.author, data.player) };
 
   @SubscribeMessage('InviteGame')
   async gameInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 

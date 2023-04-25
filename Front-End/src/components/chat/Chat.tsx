@@ -199,7 +199,7 @@ function Chat() {
       if (otherUsers && otherUsers.find(user => +user.id === +toBlock.id)) {
         const i = otherUsers.findIndex(user => +user.id === +toBlock.id);
         const j = getUser(+id)
-        j ? toBlock.blockedFrom.push(j) : "";
+        j ? toBlock.blockedFrom2fa.push(j) : "";
         const NewOthers = otherUsers;
         NewOthers.splice(i, 1, toBlock);
         setOtherUsers([...NewOthers]);

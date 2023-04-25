@@ -53,7 +53,7 @@ export class GameService {
 		}
 		return false;
 	}
-	
+
 // add player in array "players"> random game > after pressing "Play Game"
 	addPlayer = (user: any) => {
 	    !this.players.some((u) => +u.userId === +user.userId) &&
@@ -93,7 +93,7 @@ export class GameService {
 		this.roomArray = this.roomArray.filter(i => i.roomN != roomN);
 		this.sendListRooms();
 	}
-
+// emit to all users all rooms that play
 	sendListRooms = () => {
 		this.server.emit("gameRooms", this.roomArray); // send to Front
 	}
@@ -120,19 +120,18 @@ console.log("///////// GAME PLAY", player);
 		// const playerDto: UserDto = await this.userService.getUser(player.userId);
 		// // find room by user Dto
 		// const [N, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
-//console.log("92_game.service: player = ", player);
+//if player comes in to random game
 		if (roomN == -1 /*&& N == undefined*/){ //
 			this.addPlayer(player);
 			if (this.players.length == 2){
 				const playerR: UserDto = await this.userService.getUser(this.players[0].userId);
 				const playerL: UserDto = await this.userService.getUser(this.players[1].userId)
-//console.log("97_game.service: this.players[1]  ", this.players[1]);	
 				this.addNewRoom(playerR, playerL);
 			}
 		}
+//if spectator comes to watch
 		else {
 			let game = this.gameMap[roomN];
-//console.log("104_game.service: player.userId = ", player.userId);
 			const playerDto: UserDto = await this.userService.getUser(player.userId);
 			game.init(playerDto);
 			game.initMoveEvents();
@@ -142,18 +141,22 @@ console.log("///////// GAME PLAY", player);
 
 //function to process the messages "InviteGame", 'acceptGame', 'refuseGame'
 	gameInvite = (author: UserDto, player: UserDto): void => {
+		this.userSockets.emitToUser(author.username,'isagree', {isagree: 'waiting'} ); 
 		this.invited.push({author, player});
 	}
 
 	acceptGame = (author: UserDto, player: UserDto): void => {
 		if(this.searchPair(author.id, player.id)){
+			// this.userSockets.emitToUser(author.username,'isagree', 'true'); 
 			this.addNewRoom(author, player);
 		}
 	};
 		
-	refuseGame = (author: UserDto, player: UserDto): void => {
+	refusalGame = (author: UserDto, player: UserDto): void => {
 console.log("///////// GAME REFUSAL", author, player);
-		this.searchPair(author.id, player.id);
+		if(this.searchPair(author.id, player.id)) {
+			this.userSockets.emitToUser(author.username,'isagree', {isagree: 'false'} ); 
+		};
 	};
 
 

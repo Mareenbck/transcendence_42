@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
-import Winner from './Winner'
+// import Winner from './Winner'
 import type { gameInit, gameState, gameWinner, player, gamesList } from './interface_game'
 import ColorModal from './modal.tsx/ColorModal';
+import RerusModal from './modal.tsx/ColorModal';
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
 import '../../style/OptionGame.css';
 import { Link, useLocation } from "react-router-dom";
 import SideBar from '../SideBar';
 import style from '../../style/Menu.module.css';
-//import { UserChat } from '../../interfaces/iChat';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import SelectColor from './SelectColor';
@@ -24,8 +24,8 @@ function Game() {
     const [sendMessage, addListener] = useSocket()
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
-    const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
-    const [isruning, setIsRuning] = useState<boolean>(false);
+    // const [isruning, setIsRuning] = useState<boolean>(false);
+
     
     
     
@@ -118,14 +118,11 @@ function Game() {
     );
     
     const [gamewinner, setGameWinner] = useState<gameWinner>(
-        {
-            winner: null,
-        } 
-    );
-    
+        { winner: null,} 
+    );  
+     
     const initListener = (data: gameInit)=>{
-        setIsRuning(true);
-        setGameInit(data);
+          setGameInit(data);
     }
     const updateListener = (data: gameState)=>{
         setGameState(data);
@@ -133,32 +130,39 @@ function Game() {
     const initWinner = (data: gameWinner)=>{
         setGameWinner(data);
     }
+
+ ///////////////////////////////////////////////////////   
+    const [isagree, setStatus] = useState<string>('');
+    const [showModal, setShowModal] = useState(false);  
     
-    
+    const updateStatus = (data: string) =>{
+        setShowModal(true);
+    console.log("status" , data)
+        setStatus(data);
+    }
+    const handleCloseModal = () => {
+        setStatus('');
+        setShowModal(false);
+    };
+////////////////////////////////////////////////////////
+
 //get data from the server and redraw canvas
     useEffect(() => {
         addListener('init-pong', initListener);
         addListener('pong', updateListener);
-        addListener('winner', initWinner )
-    console.log("pong", gameinit);        
+        addListener('winner', initWinner );
+        addListener('isagree', updateStatus);
         // return () => {
         //     socket?.off('init-pong', initListener);
         //     socket?.off('pong', updateListener);
         //     socket?.off('pong', initWinner);
         // }
 //        sendMessage('doIplay');
-    }, [initListener, updateListener, initWinner])
+    }, [initListener, updateListener, updateStatus, initWinner]) //updateStatus
     
 /////////////////////////////////////////Page OptionGame/////////////////////////////////////
 
-// useEffect(() => {
-//     setActiveLink(location.pathname);
-//   }, [location.pathname]);
-
-// const handleLinkClick = (path: string) => {
-//     setActiveLink(path);
-//   };
-    
+const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
 //Game request: click on the button
     useEffect(() => {
         addListener("gameRooms", (games: gamesList[]) => {
@@ -181,7 +185,7 @@ function Game() {
         gamewinner.winner = null;
         setClicked(true);
     };
-    //////////////////////////////////////////////////////////////////////////    
+//////////////////////////////////////////////////////////////////////////    
 
     return (
         <>                    
@@ -192,7 +196,9 @@ function Game() {
             {/* /GAME or WINNER*/}
                 {(!gamewinner.winner) ? (
                     <>
-                        {(!isInPlay() && clicked_play) ? (
+                        {(isagree == 'false') && (<RerusModal/>)};
+
+                        {((!isInPlay() && (clicked_play || isagree == 'waiting'))) ? (
                             <div class="center">
                                 <h1 class="blink"> Waiting your opponent</h1>
                                 <div class="circle"></div>
@@ -203,10 +209,7 @@ function Game() {
                                          changColorToBlue={changColorToBlue}
                                          changColorToGreen={changColorToGreen}
                                         changColorToBlack={changColorToBlack}>
-                            </SelectColor> ): (<h1>GAME</h1>)}
-
-                           
-                            
+                            </SelectColor> ): (<h1>GAME</h1>)}                   
                             <div>                   
                                { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
                                {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed} 
@@ -269,4 +272,6 @@ function Game() {
 }
 
 
-export default Game;12
+export default Game;
+
+// import SportsVolleyballRoundedIcon from '@mui/icons-material/SportsVolleyballRounded';
