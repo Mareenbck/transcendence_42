@@ -6,9 +6,8 @@ import AuthContext from "../../../store/AuthContext";
 import Message2 from "../message/message";
 import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
-import { Modal, Box, Typography, IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import JoinChannelModal from "./JoinChannelModal";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -19,16 +18,18 @@ export default function CurrentChannel(props: any) {
 	const [messages2, setMessages2] = useState<RoomMessage[]>([]);
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
-	const [isJoined, setIsJoined] = useState(false);
-    const [openModal, setOpenModal] = useState(true);
+	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
+    // const [openModal, setOpenModal] = useState(true);
+	// const [open, setOpen] = useState(false);
+	const [showPopUp, setShowPopUp] = useState(false);
+	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
 		if (author !== undefined) { return (author) }
 		return (null);
 	};
-	
-	// console.log("ALL USERS", props.allUsers);
+
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [messages2]);
@@ -61,33 +62,14 @@ export default function CurrentChannel(props: any) {
 			console.log(err);
 		}
 	};
-	async function checkIfJoined() {
-		try {
-			const response = await fetch (
-				`http://localhost:3000/chatroom2/userTable/${currentId}/${currentChatroom.id}`, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${authCtx.token}`
-					}
-				}
-			)
-			const data = await response.json();
-			if (data.length > 0) {
-				setIsJoined(true);
-			} else {
-				setIsJoined(false);
-			}
-		} catch (err) {
-			console.log(err);
-		}
-	}
-	
-	
 
 	useEffect(() => {
-		checkIfJoined();
-	  }, []);
+		if (userJoined) {
+			setIsJoined(true)
+		} else {
+			setIsJoined(false)
+		}
+	  }, [currentChatroom]);
 
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
@@ -118,40 +100,43 @@ export default function CurrentChannel(props: any) {
 			} catch (err) { console.log(err) }
 		}
 	}
-	const [open, setOpen] = useState(false);
-	const [showPopUp, setShowPopUp] = useState(false);
 
+	const handleFormSubmit = (e: FormEvent) => {
+		e.preventDefault();
+		setShowPopUp(true);
+	};
 
-    const handleFormSubmit = (e: FormEvent) => {
-        e.preventDefault();
-        setShowPopUp(true);
-      };
+	const handleLeaveChannel = () => {
+		setIsJoined(false);
+	  };
 
 	return (
 		<>
 			{/* <div>chat in {currentChatroom.name} </div> */}
-			<NavbarChannel 
-			chatroom={currentChatroom} 
-			onCancel={() => setShowPopUp(false)}
-			onClick={() => setShowPopUp(false)}
-			onSubmit={{handleFormSubmit}}
-			/>
 			{isJoined && (
 				<>
+				<NavbarChannel
+				chatroom={currentChatroom}
+				onCancel={() => setShowPopUp(false)}
+				onClick={() => setShowPopUp(false)}
+				onSubmit={{handleFormSubmit}}
+				onLeaveChannel={handleLeaveChannel}
+				/>
 					<div className="chatBoxTop">
 						{messages2.length?
 							messages2.map((m) => (
 								<div key={m?.createdAt instanceof Date ? m.createdAt.getTime() : m.createdAt} ref={scrollRef}>
 									<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
 								</div>
-							)) : <span className="noConversationText2"> No message in this room yet. </span>
+							)) : <div className="box-msg"><span className="noConversationText2"> No message in this room yet. </span></div>
 						}
 					</div>
 					<div className="chatBoxBottom">
-						<textarea className="chatMessageInput" placeholder="write something..."
+						<input className="chatMessageInput" placeholder="write something..."
 							onChange={(e) => setNewMessage2(e.target.value)} value={newMessage2}
-						></textarea>
-						<button className="chatSubmitButton" onClick={handleSubmit}> Send </button>
+						></input>
+						<FontAwesomeIcon icon={faPaperPlane} onClick={handleSubmit} className="send-btn-chat"/>
+						{/* <button className="chatSubmitButton" onClick={handleSubmit}> Send </button> */}
 					</div>
 				</>
 			)}
@@ -161,8 +146,8 @@ export default function CurrentChannel(props: any) {
 			// <JoinChannelModal openModal={openModal} setOpenModal={setOpenModal}/>
 			)}
 
-		
+
 		</>
 	)
-	
+
 }

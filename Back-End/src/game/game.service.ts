@@ -17,28 +17,28 @@ import { GameRoom } from './game.class';
 
 @Injectable()
 export class GameService {
-	constructor(private readonly prisma: PrismaService, 
+	constructor(private readonly prisma: PrismaService,
 		private readonly userService: UserService){}
-	
+
 // Les infos sur les sockets et l'accès au serveur Global
 	public server: Server = null;
 	public userSockets: UsersSockets;
 	public gameService: GameService;
-	
+
 	// private playerR: any;
 	// private playerL: any;
 	private gameId: number = 0;
 
 //connected users> random game >:  MAX length = 2 and after paring, cleared
-	private players: any[] = []; 
+	private players: any[] = [];
 //all connected spectateurs
 	private spectateurs: any [] = []; // roomUsers = new Array();
 //all connected spectateurs
-	private invited: invited [] = []; // roomUsers = new Array();	
+	private invited: invited [] = []; // roomUsers = new Array();
 //map of the games
 	private gameMap = new  Map<number, GameRoom>();
-//array of the active rooms 
-	private roomArray: roomsList[]= [];	
+//array of the active rooms
+	private roomArray: roomsList[]= [];
 
 	// getPlayer:any = (username: string) => {
     //     return this.players.find(u => +u.user.username === +username);
@@ -46,21 +46,21 @@ export class GameService {
 
 	searchPair = (author: number, player: number): boolean => {
 		const index = this.invited.findIndex(i => i.author.id == author && i.player.id == player);
-	console.log("53_game service searchPair ", index)
+	// console.log("53_game service searchPair ", index)
   		if (index !== -1) {
 			this.invited.splice(index, 1);
 			return true;
 		}
 		return false;
 	}
-	
+
 // add player in array "players"> random game > after pressing "Play Game"
 	addPlayer = (user: any) => {
 	    !this.players.some((u) => +u.userId === +user.userId) &&
 		this.players.push(user);
 	};
 
-// creating rooms for a pair of players and game launch 
+// creating rooms for a pair of players and game launch
 	addNewRoom = (playerR: UserDto, playerL: UserDto): void => {
 		let roomN = 0;
 		while (this.gameMap.has(roomN)){
@@ -77,13 +77,13 @@ export class GameService {
 		game.setPlayers(playerR, playerL);
 		game.initMoveEvents();
 		this.roomArray.push({roomN, playerR, playerL});
- console.log("68 resultatArray ", playerL)
+//  console.log("68 resultatArray ", playerL)
 		this.players = [];
 		this.sendListRooms();
 		game.run();
 	}
 
-// removing room 
+// removing room
 	removeRoom = (roomN: number): void => {
 		const room = `room${roomN}`;
 		this.userSockets.leaveRoom(room);
@@ -99,11 +99,11 @@ export class GameService {
 	}
 
 	checkPlayerInRooms = async (player: any) => {
-console.log("101_game.service: checkPlayerInRoom user = ", player);	
+// console.log("101_game.service: checkPlayerInRoom user = ", player);
 		const playerDto: UserDto = await this.userService.getUser(player.userId);
 		// find room by user Dto
 		const [roomN, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
-console.log("101_game.service: checkPlayer roomN = ", roomN);	
+// console.log("101_game.service: checkPlayer roomN = ", roomN);
 		if (roomN) {
 			// if exist send init
 			this.playGame(playerDto, roomN);
@@ -126,7 +126,7 @@ console.log("///////// GAME PLAY", player);
 			if (this.players.length == 2){
 				const playerR: UserDto = await this.userService.getUser(this.players[0].userId);
 				const playerL: UserDto = await this.userService.getUser(this.players[1].userId)
-//console.log("97_game.service: this.players[1]  ", this.players[1]);	
+//console.log("97_game.service: this.players[1]  ", this.players[1]);
 				this.addNewRoom(playerR, playerL);
 			}
 		}
@@ -150,9 +150,9 @@ console.log("///////// GAME PLAY", player);
 			this.addNewRoom(author, player);
 		}
 	};
-		
+
 	refuseGame = (author: UserDto, player: UserDto): void => {
-console.log("///////// GAME REFUSAL", author, player);
+// console.log("///////// GAME REFUSAL");
 		this.searchPair(author.id, player.id);
 	};
 

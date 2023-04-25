@@ -26,9 +26,9 @@ function Game() {
     const location = useLocation();
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
     const [isruning, setIsRuning] = useState<boolean>(false);
-    
-    
-    
+
+
+
     useEffect(() => {
 // onKeyDown handler function
         const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -40,10 +40,10 @@ function Game() {
                 sendMessage('move', "down" as any)
             }
         };
-        
+
         // Attach the event listener to the window object
         window.addEventListener('keydown', keyDownHandler);
-    
+
         // Remove the event listener when the component unmounts
         return () => {
             window.removeEventListener('keydown', keyDownHandler);
@@ -51,46 +51,46 @@ function Game() {
     }, []);
 
     // Pour partis de Modal select Color,
-        
-    const [ShowColorModal, setShowColorModal] = useState(false); 
+
+    const [ShowColorModal, setShowColorModal] = useState(false);
     const handleColorModal = () => {
         setShowColorModal(true)
     }
     const handleClose = () => {
         setShowColorModal(false)
     }
-    
-    const [ShowCamva, setShowCamva] = useState(true); 
+
+    const [ShowCamva, setShowCamva] = useState(true);
     const [backColorGame, setbackColorGame] = useState<string>("black");
-    const changColorToRed= () => {    
+    const changColorToRed= () => {
         setbackColorGame("rgb(158, 28, 28)");
         setShowColorModal(false);
         ShowCamva? setShowCamva(false): setShowCamva(true);
     }
-        
-    const changColorToBlue= () => {    
+
+    const changColorToBlue= () => {
         setbackColorGame("rgb(37, 37, 167)");
         setShowColorModal(false);
         ShowCamva? setShowCamva(false): setShowCamva(true);
     }
-    
-    const changColorToGreen= () => {    
+
+    const changColorToGreen= () => {
         setbackColorGame("rgb(40, 128, 40)");
         setShowColorModal(false);
         ShowCamva? setShowCamva(false): setShowCamva(true);
     }
-    
-    const changColorToBlack= () => {    
+
+    const changColorToBlack= () => {
         setbackColorGame("black");
         setShowColorModal(false);
         ShowCamva? setShowCamva(false): setShowCamva(true);
     }
-    
+
     useEffect(() => {
 
     }, [backColorGame])
-    
-        
+
+
 //**** *******************************************************************/
 //initialization of the initial parameters of the game
     const [gameinit, setGameInit] = useState<gameInit>(
@@ -105,7 +105,7 @@ function Game() {
             winner: null,
         }
     );
-    
+
 // game parameters update (coordinates ball and racket)
     const [gamestate, setGameState] = useState<gameState>(
         {
@@ -116,13 +116,13 @@ function Game() {
             scoreL: 0,
         }
     );
-    
+
     const [gamewinner, setGameWinner] = useState<gameWinner>(
         {
             winner: null,
-        } 
+        }
     );
-    
+
     const initListener = (data: gameInit)=>{
         setIsRuning(true);
         setGameInit(data);
@@ -133,14 +133,14 @@ function Game() {
     const initWinner = (data: gameWinner)=>{
         setGameWinner(data);
     }
-    
-    
+
+
 //get data from the server and redraw canvas
     useEffect(() => {
         addListener('init-pong', initListener);
         addListener('pong', updateListener);
         addListener('winner', initWinner )
-    console.log("pong", gameinit);        
+    console.log("pong", gameinit);
         // return () => {
         //     socket?.off('init-pong', initListener);
         //     socket?.off('pong', updateListener);
@@ -148,7 +148,7 @@ function Game() {
         // }
 //        sendMessage('doIplay');
     }, [initListener, updateListener, initWinner])
-    
+
 /////////////////////////////////////////Page OptionGame/////////////////////////////////////
 
 // useEffect(() => {
@@ -158,7 +158,7 @@ function Game() {
 // const handleLinkClick = (path: string) => {
 //     setActiveLink(path);
 //   };
-    
+
 //Game request: click on the button
     useEffect(() => {
         addListener("gameRooms", (games: gamesList[]) => {
@@ -167,24 +167,24 @@ function Game() {
         });
         sendMessage('listRooms');
     }, [])
-    
+
     const isInPlay = (): boolean => {
         return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
     };
-    
+
 // function GameButton({ user, playGame }) {
     const [clicked_play, setClicked] = useState(false);
-    
+
     const handleClick = (roomN: number) => {
     //console.log('playGame sendMessage', user);
         sendMessage("playGame", {user: user, roomN: roomN});
         gamewinner.winner = null;
         setClicked(true);
     };
-    //////////////////////////////////////////////////////////////////////////    
+    //////////////////////////////////////////////////////////////////////////
 
     return (
-        <>                    
+        <>
         <div className={style.mainPos}>
             <SideBar title="Option Game" />
                 <div className='container-optionPage'>
@@ -196,32 +196,32 @@ function Game() {
                             <div class="center">
                                 <h1 class="blink"> Waiting your opponent</h1>
                                 <div class="circle"></div>
-                            </div> 
+                            </div>
                         ) : (
                         <>
-                            { !isInPlay() ? (<SelectColor changColorToRed={changColorToRed} 
+                            { !isInPlay() ? (<SelectColor changColorToRed={changColorToRed}
                                          changColorToBlue={changColorToBlue}
                                          changColorToGreen={changColorToGreen}
                                         changColorToBlack={changColorToBlack}>
                             </SelectColor> ): (<h1>GAME</h1>)}
 
-                           
-                            
-                            <div>                   
+
+
+                            <div>
                                { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
-                               {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed} 
+                               {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
                                                                                             changColorToBlue={changColorToBlue}
                                                                                             changColorToGreen={changColorToGreen}
                                                                                             changColorToBlack={changColorToBlack}
                                                                                             />}
                                 { !ShowCamva &&<Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
-                            </div> 
+                            </div>
                         </>)}
                     </>
                         ):(
                     <>
                         <h2> WINNER </h2>
-                        <div className='wrapLook'> 
+                        <div className='wrapLook'>
                             {/* <Winner gameinit={gameinit} gamewinner={gamewinner} /> */}
                             <MyAvatar  id={gamewinner.winner.id} style="m" avatar={gamewinner.winner.avatar} ftAvatar={gamewinner.winner.ftAvatar}/>
                            < EmojiEventsIcon class = "winner"/>
@@ -238,14 +238,14 @@ function Game() {
                         <div>
 
                         <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
-                            <div  onClick={() => handleClick(game.roomN)}>{game.roomN} ({game.playerR.username} 
+                            <div  onClick={() => handleClick(game.roomN)}>{game.roomN} ({game.playerR.username}
                             <MyAvatar  id={game.playerR.id} style="s" avatar={game.playerR.avatar} ftAvatar={game.playerR.ftAvatar}/>
-                            vs 
+                            vs
                             {game.playerL.username})
                             <MyAvatar  id={game.playerL.id} style="s" avatar={game.playerL.avatar} ftAvatar={game.playerL.ftAvatar}/>
                             </div>
                          </div>
-                    
+
                     ))}
                 </div>
                 <div className='posBtn'>
@@ -253,18 +253,18 @@ function Game() {
                     {!isInPlay() && (
                         <div >
                             <button className="btn" onClick={() => handleClick(-1)}>Play Game</button>
-                        </div> 
+                        </div>
                     )}
                     {/* /EXIT FROM THE GAME. IF GAME - THE LOSS*/}
                     {!isInPlay() && (
                         <Link to="/menu">
                             <button className="btn"  style={{ alignSelf: "flex-end"}}>Menu</button>
-                        </Link>   
+                        </Link>
                     )}
                 </div>
             </div>
         </div>
-     </> 
+     </>
     );
 }
 

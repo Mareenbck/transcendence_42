@@ -49,7 +49,7 @@ function PopUp(props: any) {
             idConv = await ConversationReq.postRoom(user, newConv);
         } catch (err) {  console.log(err)}
         if (idConv !== undefined)
-        { 
+        {
             sendMessage("sendConv", {
                 channelId: idConv,
                 name: channelName,

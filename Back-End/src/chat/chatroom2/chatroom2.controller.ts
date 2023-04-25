@@ -84,9 +84,14 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 		else if (result.status === 'REJECTED') {
 			await this.chatRoomService.deleteRefusedInvitations();
 		}
-		console.log("result--->")
-		console.log(result)
 		return result;
+	}
+
+	@Post('/leave_channel')
+	@UseGuards(JwtGuard)
+	async leaveChannel(@Body() chatroomId: number, @GetCurrentUserId() userId: string) {
+		const user = await this.chatRoomService.removeUserFromChannel(parseInt(userId), chatroomId);
+		return user;
 	}
 
 	@Post('/:channelId/newpassword')

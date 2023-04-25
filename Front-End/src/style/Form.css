@@ -46,7 +46,7 @@
 	margin: 40px;
 }
 
-input {
+.form-input input {
 	height: 50px;
 	width: 430px;
 	background-color: #C7B9FF;
