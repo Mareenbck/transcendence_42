@@ -23,6 +23,7 @@ export default function UpdateChannelsInList(props: any) {
 			id: data.channelId,
 			name: data.name,
 			visibility: data.visibility,
+			// isJoined: data.isJoined,
 		}));
 	});
 
@@ -50,6 +51,8 @@ export default function UpdateChannelsInList(props: any) {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [conversations]);
 
+
+
 	return (
 		<div className="conversation-list">
 			{conversations.map((c) => (
@@ -59,7 +62,7 @@ export default function UpdateChannelsInList(props: any) {
 							<Conversation name={c.name} id={c.id} visibility={c.visibility}/>
 						</div>
 						<div className="conversation-icon">
-							<ChannelVisibility visibility={c.visibility} id={c.id} />
+							<ChannelVisibility visibility={c.visibility} id={c.id} isJoined={c.isJoined} />
 						</div>
 					</div>
 				</div>

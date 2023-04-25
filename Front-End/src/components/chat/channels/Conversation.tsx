@@ -8,6 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
 import PasswordIcon from '@mui/icons-material/Password';
+import ChatInChatroom from "./ChatInChatroom";
 
 
 export default function Conversation(props: any) {
@@ -44,7 +45,7 @@ export default function Conversation(props: any) {
 		</Avatar>
         <div className="conversationName" onClick={handleOpen}>{props.name}</div>
       </div>
-          <Modal
+          {/* <Modal
         open={showParticipants}
         onClose={handleClose}
         BackdropComponent={(props) => (
@@ -59,7 +60,8 @@ export default function Conversation(props: any) {
             <UsersOnChannel channelName={props.name} channelId={props.id} />
           </ul>
         </div>
-      </Modal>
+      </Modal> */}
+
     </>
   );
 }
