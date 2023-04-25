@@ -205,4 +205,32 @@ export class ChatroomService {
 		console.log("updatedPassword", updatedChatroom)
 		return updatedChatroom;
 	  }
+
+	  async kick(channelId: number, userId: number) {
+		try {
+			const userOnChannel = await this.prisma.userOnChannel.findFirst({
+				where: {
+					channelId: channelId,
+					userId: userId,
+				},
+			});
+	
+			if (!userOnChannel) {
+				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
+			}
+	
+			const deletedUserOnChannel = await this.prisma.userOnChannel.delete({
+				where: {
+					id: userOnChannel.id,
+				},
+			});
+	
+			return `User with ID ${userId} has been kicked from channel with ID ${channelId}`;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to kick user from channel.");
+		}
+	}
+	
+	  
 }

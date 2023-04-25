@@ -7,6 +7,7 @@ import AuthContext from "../../../store/AuthContext";
 import CreateChannelButton from "./CreateChannelBtn";
 import ChannelInvitations from "./ChannelInvitations";
 import Fetch from "../../../interfaces/Fetch";
+import UsersOnChannel from "./UsersOnChannel";
 
 export default function UpdateChannelsInList(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
@@ -67,6 +68,7 @@ export default function UpdateChannelsInList(props: any) {
 					</div>
 				</div>
 			))}
+
 			<ChannelInvitations />
 			<div className="create-channel-position">
 				<CreateChannelButton />

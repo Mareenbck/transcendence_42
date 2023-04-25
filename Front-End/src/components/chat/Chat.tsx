@@ -23,6 +23,7 @@ import NavbarChannel from './channels/NavbarChannel';
 import UserChart from '../scores/UserChart';
 import UsersWithDirectMessage from './message/usersWithMessages';
 import ChatInChatroom from './channels/ChatInChatroom';
+import Conversation from './channels/Conversation';
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -475,6 +476,8 @@ return (
               }
             </div>
           </div>
+        </div>
+        <div> 
         </div>
 
       </div>

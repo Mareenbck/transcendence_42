@@ -45,7 +45,7 @@ export default function Conversation(props: any) {
 		</Avatar>
         <div className="conversationName" onClick={handleOpen}>{props.name}</div>
       </div>
-          {/* <Modal
+          <Modal
         open={showParticipants}
         onClose={handleClose}
         BackdropComponent={(props) => (
@@ -60,7 +60,7 @@ export default function Conversation(props: any) {
             <UsersOnChannel channelName={props.name} channelId={props.id} />
           </ul>
         </div>
-      </Modal> */}
+      </Modal>
 
     </>
   );
