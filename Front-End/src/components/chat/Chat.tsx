@@ -405,6 +405,7 @@ return (
       currentChatroom={currentChat}
       channelId={currentChat?.id}
       channelVisibility={currentChat?.visibility}
+      channelName={currentChat.name}
       isChannelClicked={isChannelClicked}/>
     </>
       : currentDirect ?

@@ -64,10 +64,36 @@ export default function UsersOnChannel(props: any) {
             console.error(error);
           }
         };
-        
+
+        const [banTimeout, setBanTimeout] = useState<NodeJS.Timeout | number>(0);
+
+        const banSomeone = async (channelId: string, userId: string) => {
+          try {
+            const response = await fetch(
+              `http://localhost:3000/chatroom2/${channelId}/ban/${userId}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${authCtx.token}`,
+                },
+              }
+            );
+            console.log("RESPONSE", response);
+            if (!response.ok) {
+              throw new Error("Failed to ban user.");
+            }
+            const updatedParticipants = participants.filter(p => p.user.id !== userId);
+            setParticipants(updatedParticipants);
+                
+          } catch (error) {
+            console.error(error);
+          }
+        };
+      
         useEffect(() => {
           showParticipants(props.channelId);
-        }, [props.channelId, kickSomeone]);
+        }, [props.channelId, banSomeone]);
 
         // console.log("channel id ", props.channelVisibility)
         // console.log("participants -----> ", participants)
@@ -95,7 +121,7 @@ export default function UsersOnChannel(props: any) {
                       <>
                         <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>
                         {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED'? (
-                          <RemoveCircleIcon onClick={() => kickSomeone(props.channelId, p.user.id)}/>
+                          <RemoveCircleIcon onClick={() => banSomeone(props.channelId, p.user.id)}/>
                           ) : null}
                         <MicOffIcon/>
                       </>

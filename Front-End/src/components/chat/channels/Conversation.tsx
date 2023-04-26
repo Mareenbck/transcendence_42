@@ -45,22 +45,6 @@ export default function Conversation(props: any) {
 		</Avatar>
         <div className="conversationName" onClick={handleOpen}>{props.name}</div>
       </div>
-          {/* <Modal
-        open={showParticipants}
-        onClose={handleClose}
-        BackdropComponent={(props) => (
-          <div style={{ backgroundColor: 'transparent', ...props.style }} />
-        )}
-      >
-        <div className="modal-participants">
-        <button className="close-btn" onClick={handleClose}>
-          <i className="fa fa-times"></i>
-        </button>
-          <ul>
-            <UsersOnChannel channelName={props.name} channelId={props.id} />
-          </ul>
-        </div>
-      </Modal> */}
 
     </>
   );
