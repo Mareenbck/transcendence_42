@@ -19,6 +19,8 @@ export const FriendContext = createContext(defaultValue);
 export const FriendContextProvider = (props: any) => {
 	const [demands, setDemands] = useState<Demand[]>([]);
 	const [friends, setFriends] = useState<Friend[]>([]);
+	const [avatarCache, setAvatarCache] = useState<Map<number, string>>(new Map());
+
 
 	const authCtx = useContext(AuthContext);
 
@@ -67,11 +69,11 @@ export const FriendContextProvider = (props: any) => {
 		)
 		const data = await response.json();
 		const updatedDemands = await Promise.all(data.map(async (demand: Demand) => {
-			const avatar = await fetchAvatar(demand.requester.id);
-			if (!avatar) {
+			const avatarUrl = avatarCache.get(demand.requester.id) ?? await fetchAvatar(demand.requester.id);
+			if (!avatarUrl) {
 				return demand;
 			}
-			return { ...demand, requester: {...demand.requester, avatar }};
+			return { ...demand, requester: {...demand.requester, avatar: avatarUrl }};
 		}));
 		setDemands(updatedDemands);
 	}
@@ -91,8 +93,8 @@ export const FriendContextProvider = (props: any) => {
 
 		// For each friend in the data array, fetch their avatar
 		const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
-			const avatar = await fetchAvatar(friend.id);
-			return { ...friend, avatar };
+			const avatarUrl = avatarCache.get(friend.id) ?? await fetchAvatar(friend.id);
+			return { ...friend, avatar: avatarUrl };
 		}));
 		setFriends(updatedFriends);
 	}
@@ -107,10 +109,13 @@ export const FriendContextProvider = (props: any) => {
 					return null
 				}
 				const blob = await response.blob();
-				return URL.createObjectURL(blob);
+				const avatarUrl = URL.createObjectURL(blob);
+				avatarCache.set(userId, avatarUrl);
+				setAvatarCache(new Map(avatarCache)); // trigger re-render to update state
+				return avatarUrl;
 			}
 		} catch (error) {
-			return console.log("error", error);
+			console.log("error", error);
 		}
 	}
 
@@ -124,7 +129,9 @@ export const FriendContextProvider = (props: any) => {
 				},
 				body: JSON.stringify({ friendId: friendId, currentId: currentId }),
 			});
-			await response.json();
+			const data = await response.json();
+			console.log("data--->")
+			console.log(data)
 			if (!response.ok) {
 				console.log("POST error on /friendship/delete");
 				return "error";

@@ -90,8 +90,10 @@ export class FriendshipService {
 
 	async findAndDeleteFriendship(userOne: number, userTwo: number) {
 		const friendship = await this.findFriendship(userOne, userTwo);
+		console.log("friendship-------------->")
+		console.log(friendship)
 		if (!friendship) {
-			throw new BadRequestException('getReceivedFriendships error : ');
+			throw new BadRequestException('findAndDeleteFriendship error : ');
 		}
 		await this.prisma.friendship.delete({
 		  where: { id: friendship.id },
@@ -107,7 +109,6 @@ export class FriendshipService {
 	async removeFriend(usersId: any) {
 		const { friendId, currentId } = usersId;
 		const updatedCurrent = await this.userService.removeFriendOnTable(parseInt(currentId), friendId)
-		await this.userService.removeFriendOnTable(friendId, parseInt(currentId))
 		await this.findAndDeleteFriendship(friendId, parseInt(currentId));
 		return updatedCurrent;
 	}

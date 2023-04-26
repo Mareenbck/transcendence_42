@@ -3,7 +3,6 @@ import { FriendContext } from "../../store/FriendshipContext";
 import Friend from '../../interfaces/IFriendship'
 import { AvatarGroup } from '@mui/material';
 import MyAvatar from "../user/Avatar";
-import { Button } from '@mui/material';
 import { Link } from "react-router-dom";
 
 
