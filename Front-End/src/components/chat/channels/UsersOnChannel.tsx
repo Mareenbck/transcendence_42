@@ -93,7 +93,6 @@ export default function UsersOnChannel(props: any) {
                     },
                 }
                 );
-                console.log("RESPONSE", response);
                 if (!response.ok) {
                     throw new Error("Failed to unban user.");
                 }
@@ -119,7 +118,7 @@ export default function UsersOnChannel(props: any) {
         return (
             <>
               <div className='participants-container'>
-                <h2 className='participants-modal'>Participants of {props.channelName}:</h2>
+                <h3 className='participants-title'>Participants of {props.channelName}:</h3>
                 <h4 className='name-participants'>Admins:</h4>
                 <ul className='ul-participants'>
                   {admins.map((p) => (

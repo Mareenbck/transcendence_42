@@ -8,6 +8,8 @@ import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { IconButton, Snackbar } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -20,9 +22,8 @@ export default function CurrentChannel(props: any) {
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
 	const isBanned = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'BAN');
-	// const [openModal, setOpenModal] = useState(true);
-	// const [open, setOpen] = useState(false);
 	const [showPopUp, setShowPopUp] = useState(false);
+	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
 
 	const getUser = (userId: number): UserChat | null => {
@@ -111,41 +112,75 @@ export default function CurrentChannel(props: any) {
 		setIsJoined(false);
 	  };
 
+	  const handleCloseSnackbar = (e: FormEvent) => {
+	  e.preventDefault();
+	  
+		setSnackbarOpen(false);
+	  };
+	  
+
 	return (
 		<>
-			{isJoined && !isBanned && (
-				<>
-				<NavbarChannel
+		  {isJoined && !isBanned (
+			<>
+			  <NavbarChannel
 				chatroom={currentChatroom}
 				onCancel={() => setShowPopUp(false)}
 				onClick={() => setShowPopUp(false)}
-				onSubmit={{handleFormSubmit}}
+				onSubmit={handleFormSubmit} // Supprimez les accolades inutiles ici
 				onLeaveChannel={handleLeaveChannel}
+			  />
+			  <div className="chatBoxTop">
+				{messages2.length ? (
+				  messages2.map((m, i) => ( // Ajoutez un index pour éviter l'avertissement de la console
+					<div key={i} ref={scrollRef}> {/* Utilisez un index plutôt que la date pour éviter les problèmes */}
+					  <Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
+					</div>
+				  ))
+				) : (
+				  <div className="box-msg"><span className="noConversationText2">No message in this room yet.</span></div>
+				)}
+			  </div>
+			  <div className="chatBoxBottom">
+				<input
+				  className="chatMessageInput"
+				  placeholder="write something..."
+				  onChange={(e) => setNewMessage2(e.target.value)}
+				  value={newMessage2}
+				></input>
+				<FontAwesomeIcon
+				  icon={faPaperPlane}
+				  onClick={handleSubmit}
+				  className="send-btn-chat"
 				/>
-					<div className="chatBoxTop">
-						{messages2.length?
-							messages2.map((m) => (
-								<div key={m?.createdAt instanceof Date ? m.createdAt.getTime() : m.createdAt} ref={scrollRef}>
-									<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
-								</div>
-							)) : <div className="box-msg"><span className="noConversationText2"> No message in this room yet. </span></div>
-						}
-					</div>
-					<div className="chatBoxBottom">
-						<input className="chatMessageInput" placeholder="write something..."
-							onChange={(e) => setNewMessage2(e.target.value)} value={newMessage2}
-						></input>
-						<FontAwesomeIcon icon={faPaperPlane} onClick={handleSubmit} className="send-btn-chat"/>
-						{/* <button className="chatSubmitButton" onClick={handleSubmit}> Send </button> */}
-					</div>
-				</>
+			  </div>
+			</>
+		  )}
+		
+		{!isJoined && (
+		<Snackbar
+			anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+			open={!isJoined} 
+			autoHideDuration={5000}
+			onClose={handleCloseSnackbar}
+			message="You must join the channel to send message"
+			action={
+				<IconButton
+				  size="small"
+				  aria-label="close"
+				  color="inherit"
+				  onClick={(event) => {
+					event.stopPropagation();
+					handleCloseSnackbar(event, 'user');
+				  }}
+				>
+				  <CloseIcon fontSize="small" />
+				</IconButton>
+			  }
+			/>
 			)}
-
-			{!isJoined && (
-				<p>you need to join the channel before talking into it</p>
-			)}
-
 		</>
-	)
-
+	  );
+	  
+	  
 }

@@ -5,16 +5,23 @@
     height: 100%;
     background-color: white;
     overflow-y: auto;
-    padding: 10px;
+    margin-right: 15px;
     flex: 3;
-    width: 29%;
+    width: 25%;
     right: 0; /* Ajout de la propriété right */
     margin-top: 25%;
   }
   
   
   .name-participants {
+    text-align: left;
+    color: #699af7;
+  }
+
+  .participants-title {
     font-weight: bold;
+    text-align: left;
+    color: black;
   }
   
   .ul-participants {
