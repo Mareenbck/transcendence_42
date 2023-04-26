@@ -101,6 +101,15 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 		return newPassword;
 	}
 
+	@Post('/:channelId/kick/:userId')
+	@UseGuards(JwtGuard)
+	async kick(@Param('channelId') channelId: string, @Param('userId') userId: string) {
+		// console.log("entre dans le controller ")
+		const kickSomeone = await this.chatRoomService.kick(parseInt(channelId), parseInt(userId));
+		// console.log("KICK SOMEONE", kickSomeone);
+		return kickSomeone;
+	}
+
 	// @Post('/invite_admin')
 	// @UseGuards(JwtGuard)
 	// async receiv

@@ -23,6 +23,7 @@ import NavbarChannel from './channels/NavbarChannel';
 import UserChart from '../scores/UserChart';
 import UsersWithDirectMessage from './message/usersWithMessages';
 import ChatInChatroom from './channels/ChatInChatroom';
+import Conversation from './channels/Conversation';
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -249,7 +250,7 @@ function Chat() {
       const j = getUser(+id);
       const k = allUsers.find(userX => +userX.id === +blockForMe);
       if (j && k)
-      {
+      { 
         k.blockedFrom.push(j);
         const NewAll = allUsers;
         NewAll.splice(i, 1, k);
@@ -257,7 +258,7 @@ function Chat() {
     }
     setBlockForMe(null);
   }, [blockForMe]);
-
+     
   useEffect(() => {
     if (unblockForMe && allUsers && user.userId && unblockForMe !== (undefined || null) && unblockForMe !== +user.userId) {
       const i = allUsers.findIndex(userX => +userX.id === +unblockForMe);
@@ -269,7 +270,7 @@ function Chat() {
         setAllUsers([...NewAll]);};
     }
     setBlockForMe(null);
-  }, [unblockForMe]);
+  }, [unblockForMe]);  
 
 ////////////////////////////////////////////////
 // Partie IV : fonctions ...
@@ -360,6 +361,7 @@ useEffect(() => {
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
   // console.log("isjoined ????", isJoined)
   const [isJoined, setIsJoined] = useState(false);
+  const [isChannelClicked, setIsChannelClicked] = useState(false);
 
 
 return (
@@ -383,13 +385,13 @@ return (
 			  />
 		  )}
       {activeTab === "Direct messages" && (
-			  <UsersWithDirectMessage
+        <UsersWithDirectMessage
 			  currentDirect={currentDirect}
 			  setCurrentDirect={setCurrentDirect}
         currentChat={currentChat}
 			  setCurrentChat={setCurrentChat}
 			  />
-		  )}
+        )}
 	  </div>
 
     <div className="chatBox">
@@ -397,9 +399,16 @@ return (
         {/* <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div> */}
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 		{currentChat ?
+    <>
 			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined}/>
-        : currentDirect ?
-          <>
+      <UsersOnChannel
+      currentChatroom={currentChat}
+      channelId={currentChat?.id}
+      channelVisibility={currentChat?.visibility}
+      isChannelClicked={isChannelClicked}/>
+    </>
+      : currentDirect ?
+      <>
           <div>chat with {currentDirect.username} </div>
           <div className="chatBoxTop">
             { messagesD.length ?
@@ -427,7 +436,7 @@ return (
               { onlineUsers ? onlineUsers?.map((o) => (
                 +o?.userId.userId !== +id ?
                 <div  key={o?.userId.userId} className={amIBlocked(+o?.userId.userId)}  >
-                    <Link to={'/game'} onClick={() => inviteGame(+o?.userId.userId)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+                    <Link to={'/game/play'} onClick={() => inviteGame(+o?.userId.userId)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
                     <Link to={`/users/profile/${o?.userId.userId}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                   <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
                     <div className="chatOnlineImgContainer">
@@ -441,7 +450,7 @@ return (
                         <i className="fa fa-unlock" aria-hidden="true"></i>
                       </button>
                      :
-                       <button className="chatSubmitButton2" onClick={() => {setToUnblock(getUser(+o.userId.userId))}} >
+                     <button className="chatSubmitButton2" onClick={() => {setToUnblock(getUser(+o.userId.userId))}} >
                         <i className="fa fa-lock" aria-hidden="true"></i>
                       </button>
                     }
@@ -451,8 +460,8 @@ return (
               }
               { otherUsers ? otherUsers?.map((o) => (
                 +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
-                  <div  key={o?.id} className={amIBlocked(o?.id)} >
-                    <Link to={'/game'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+                <div  key={o?.id} className={amIBlocked(o?.id)} >
+                    <Link to={'/game/play'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
                     <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                     <div className="fname" onClick={()=> {getDirect(o)}} >
                       <div className="chatOnlineImgContainer">
@@ -465,7 +474,7 @@ return (
                           <i className="fa fa-unlock" aria-hidden="true"></i>
                       </button>
                      :
-                       <button className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
+                     <button className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
                         <i className="fa fa-lock" aria-hidden="true"></i>
                       </button>
                     }
@@ -473,10 +482,12 @@ return (
                 : null
                 )) : <span className="noConversationText2" > Nobody in the air... </span>
               }
+            {/* {isChannelClicked && ( */}
+    
+            {/* )}             */}
             </div>
           </div>
         </div>
-
       </div>
 
     </>

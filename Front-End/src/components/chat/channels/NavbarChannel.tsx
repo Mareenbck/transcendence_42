@@ -27,6 +27,9 @@ export function NavbarChannel(props: any) {
 	const [showPassword, setShowPassword] = useState(false);
 	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
 
+
+// console.log("props.chatroom.participants---->");
+// console.log(props.chatroom.participants);
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
 		if (currentUser) {
