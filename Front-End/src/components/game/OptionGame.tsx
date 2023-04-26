@@ -32,14 +32,14 @@ function OptionGame () {
 //Game request: click on the button
     useEffect(() => {
         addListener("gameRooms", (games: gamesList[]) => {
-    console.log('gameRooms ', games);
+    // console.log('gameRooms ', games);
             setOnlinePlayers(games);
         });
     })
 
 // function GameButton({ user, playGame }) {
     const [clicked, setClicked] = useState(false);
-  
+
     const handleClick = (roomN: number) => {
 //console.log('playGame sendMessage', user);
         sendMessage("playGame", {user: user, roomN: roomN});

@@ -396,7 +396,7 @@ return (
 
     <div className="chatBox">
       <div className="chatBoxW">
-        <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div>
+        {/* <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div> */}
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 		{currentChat ?
     <>

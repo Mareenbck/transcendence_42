@@ -14,10 +14,9 @@ export default function UpdateChannelsInList(props: any) {
 	const [conversations, setConversations] = useState([]);
 	const [AConversation, setAConversation] = useState(null);
 	const user = useContext(AuthContext);
-
 	const { currentChat, setCurrentChat } = props;
 	// const [openModal, setOpenModal] = useState(false);
-	const [sendMessage, addListener] = useSocket()
+	const [sendMessage, addListener] = useSocket();
 
 	useEffect(() => {
 		addListener("getConv", data => setAConversation({
@@ -36,8 +35,6 @@ export default function UpdateChannelsInList(props: any) {
 		async function getAllConv(user: AuthContext) {
 			if (user) {
 				const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
-				// console.log("response ")
-				// console.log(response)
 				const filteredConversations = response.filter(c =>
 					c.visibility === 'PUBLIC' || c.visibility === 'PWD_PROTECTED' ||
 					(c.visibility === 'PRIVATE' && c.participants.some(p => p.userId === user.userId))
@@ -46,13 +43,11 @@ export default function UpdateChannelsInList(props: any) {
 			}
 		};
 		getAllConv(user);
-	}, [AConversation]);
+	}, [AConversation, conversations]);
 
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [conversations]);
-
-
 
 	return (
 		<div className="conversation-list">
@@ -63,8 +58,9 @@ export default function UpdateChannelsInList(props: any) {
 							<Conversation name={c.name} id={c.id} visibility={c.visibility}/>
 						</div>
 						<div className="conversation-icon">
+						{c.participants && !c.participants.some(p => p.userId === user.userId) && (
 							<ChannelVisibility visibility={c.visibility} id={c.id} isJoined={c.isJoined} />
-							
+						)}
 						</div>
 					</div>
 				</div>

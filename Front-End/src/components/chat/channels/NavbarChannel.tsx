@@ -5,7 +5,16 @@ import SelectDialog from "../../utils/SelectDialog";
 import ChannelsSettings from "./ChannelsSettings";
 import { Modal, TextField } from "@mui/material";
 import { Box } from "@mui/material";
+import { Button } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import PublicIcon from '@mui/icons-material/Public';
+import LockIcon from '@mui/icons-material/Lock';
+import PasswordIcon from '@mui/icons-material/Password';
+import Avatar from '@mui/material/Avatar';
+import '../../../style/NavbarChannel.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+
 
 
 export function NavbarChannel(props: any) {
@@ -16,14 +25,13 @@ export function NavbarChannel(props: any) {
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 
 
-    const [showPassword, setShowPassword] = useState(false);
-    const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
+	const [showPassword, setShowPassword] = useState(false);
+	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
 	const [showPopUp, setShowPopUp] = useState(true);
 
 
-
-	// console.log("props--->")
-	// console.log(props)
+// console.log("props.chatroom.participants---->");
+// console.log(props.chatroom.participants);
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
 		if (currentUser) {
@@ -61,13 +69,30 @@ export function NavbarChannel(props: any) {
 			  },
 			});
 			const data = await response.json();
-			console.log("DATA IN FETCH", data)
+			// console.log("DATA IN FETCH", data)
 			return data;
 		} catch(err) {
 			console.log(err);
 		}
 	  }
-	  
+
+	const leaveChannel = async (channelId: number) => {
+		try {
+			const response = await fetch(`http://localhost:3000/chatroom2/leave_channel`, {
+			  method: 'POST',
+			  headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${userContext.token}`,
+			  },
+			  body: JSON.stringify({ channelId: channelId }),
+			});
+			const data = await response.json();
+			props.onLeaveChannel();
+			return data;
+		} catch(err) {
+			console.log(err);
+		}
+	}
 
 	const handleInviteUser = (invitedUserId: string) => {
 		inviteUserOnChannel(props.chatroom.id, parseInt(invitedUserId));
@@ -79,7 +104,7 @@ export function NavbarChannel(props: any) {
 	const handleOpenModal = () => {
 		setOpenModal(true);
 	};
-	
+
 	const changePassword = async (e: FormEvent) => {
 		e.preventDefault();
 		const newPassword = passwordInputRef.current?.value;
@@ -95,14 +120,13 @@ export function NavbarChannel(props: any) {
 			if (!response.ok) {
 				const message = `An error has occured: ${response.status} - ${response.statusText}`;
 				throw new Error(message);
-			} 
+			}
 			const data = await response.json();
 			console.log('Password changed:', data);
 		} catch (err) {
 			console.log(err);
 		}
 	};
-	
 
 	const changeAndClose = async (e:FormEvent) => {
 		try {
@@ -116,19 +140,52 @@ export function NavbarChannel(props: any) {
         e.preventDefault();
         setOpenModal(false);
     };
+	const [icon, setIcon] = useState<any>();
+	useEffect(() => {
+		if (props.chatroom.visibility === 'PUBLIC') {
+			setIcon(<PublicIcon />);
+		} else if (props.chatroom.visibility === 'PWD_PROTECTED') {
+			setIcon(<PasswordIcon />);
+		} else {
+			setIcon(<LockIcon />);
+		}
+	}, [props.chatroom.visibility])
+
+
 
 	return (
-		<>
+		<div className="navbar-channel">
+			<Avatar variant="rounded" className="channel-avatar-navbar" >
+				{icon}
+			</Avatar>
+			<div className="name-channel">
+				<h4>{props.chatroom.name}</h4>
+				<p>{props.chatroom.participants.length} members</p>
+			</div>
+
 			{isAdmin === 'ADMIN' &&
-				<div className="visibility-icon">
-					<SelectDialog 
-						onSelect={(userId: string) => setSelectedUser(userId)} 
-						onInvite={handleInviteUser} 
-						channelId={props.chatroom.id}
-						onAddAdmin={handleAddAdmin}/>
-					<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
+				<div className="btn-admin-channel">
+					<SelectDialog
+						onSelect={(userId: string) => setSelectedUser(userId)}
+						onInvite={handleInviteUser}
+						onAddAdmin={handleAddAdmin}
+						type="invite-admin"
+						/>
+					{props.chatroom.visibility === 'PRIVATE' &&
+						<SelectDialog
+						onSelect={(userId: string) => setSelectedUser(userId)}
+						onInvite={handleInviteUser}
+						onAddAdmin={handleAddAdmin}
+						type="invite-user"
+						/>
+					}
+					{props.chatroom.visibility === 'PWD_PROTECTED' &&
+						<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
+					}
 				</div>
 			}
+			<FontAwesomeIcon onClick={() => leaveChannel(props.chatroom.id)} icon={faArrowRightFromBracket} className="btn-dialog-navbar-leave"/>
+			 {/* <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button> */}
 				<>
 			<Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
 				<Box className="modal-content">
@@ -145,11 +202,11 @@ export function NavbarChannel(props: any) {
 					/>
 					 <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
 					<button type='submit' onSubmit={handleFormSubmit} onClick={changeAndClose}>OK</button>
-					<button onClick={() => setOpenModal(false)}>Cancel</button> 
+					<button onClick={() => setOpenModal(false)}>Cancel</button>
 				</Box>
 			</Modal>
 			</>
-		</>
+		</div>
 	);
 }
 export default NavbarChannel;

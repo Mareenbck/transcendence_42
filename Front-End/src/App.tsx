@@ -14,6 +14,7 @@ import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';
 import Setting from './pages/Setting';
 import Scores from'./components/scores/Scores';
+// import { fab } from '@fortawesome/free-brands-svg-icons'
 
 
 function App() {

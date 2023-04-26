@@ -4,8 +4,6 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 
-import MyAvatar from '../user/Avatar';
-
 const customStylesL = `
 	.custom-icon.icon-l {
 		width: 80px;
@@ -36,7 +34,7 @@ const customStyleXS = `
 `;
 
 const BadgeIcon = (props: any) => {
-	const [style, setStyle] = useState('');
+	const [style, setStyle] = useState<string>('');
 	const [content, setContent] = useState<any>(null);
 
 	useEffect(() => {

@@ -37,7 +37,7 @@
     margin-bottom: 0;
     width: 100px;
     direction:initial;
-    border-radius: 4%;
+    border-radius: 10.9501px;
     margin-bottom: 2;
     background: linear-gradient(0deg, #003ba5, #84c4e9);
     
@@ -49,10 +49,11 @@
     .cadre{
 
         padding: 40px;
-        padding-top: 5px;
+        padding-top: 10px;
         padding-left: auto;
         padding-right: auto;
         text-align: center;
+        align-items: center;
         color: black;
         font-weight:bold;
         border: 3px solid black;
@@ -60,7 +61,8 @@
         margin-top: 0;
         width: 20px;
         direction:initial;
-        border-radius: 4%;
+        /* border-radius: 4%; */
+        border-radius: 10.9501px;
         margin-bottom: 2;
         background: linear-gradient(0deg, #003ba5, #84c4e9);
 
@@ -72,7 +74,26 @@
 }
 
 .cadre p{
-    padding: auto;
+    /* padding: auto; */
+    display: block;
+    align-self:stretch;
+    padding-right: 50px;
+    margin: auto;
+    text-align: center;
+    font-weight: 800;
 }
 
+@media (min-width: 1700px) {
+    .cadre p{
+
+        /* padding: auto; */
+        display: block;
+        align-self:stretch;
+        padding-right: 50px;
+        margin: auto;
+        text-align: center;
+        
+
+}
+}
 

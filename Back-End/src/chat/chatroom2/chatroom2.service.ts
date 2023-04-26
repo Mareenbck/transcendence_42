@@ -104,7 +104,7 @@ export class ChatroomService {
 
   async getParticipants(channelId: number) {
     // console.log("ENTRE DANS LE SERVICE")
-    const channel = await this.prisma.userOnChannel.findMany({  
+    const channel = await this.prisma.userOnChannel.findMany({
       where: { channelId },
       include: { user: true },
     });
@@ -113,7 +113,7 @@ export class ChatroomService {
 
   async addAdmin(channelId: number, userId: number) {
 	// console.log("entre dans le service")
-	const users = await this.prisma.userOnChannel.findMany({  
+	const users = await this.prisma.userOnChannel.findMany({
 		where: { channelId },
 		include: { user: true },
 	  });
@@ -133,7 +133,7 @@ export class ChatroomService {
 });
 	return updatedrole;
 }
-    
+
 
 	async openInvitations(senderId: number, channelId: number, receiverId: number) {
 		const demand = await this.prisma.chatroomInvitations.create({
@@ -192,6 +192,24 @@ export class ChatroomService {
 			where: { status: 'REJECTED' },
 		});
 	}
+
+	async removeUserFromChannel(userId: number, chatroom: any) {
+		const { channelId } = chatroom;
+		try {
+		  const result = await this.prisma.userOnChannel.deleteMany({
+			where: {
+				AND: [
+					{userId: userId},
+					{channelId: channelId},
+				]
+			},
+		  });
+		  console.log("result ===", result);
+		  return result;
+		} catch (err) {
+		  console.log(err);
+		}
+	  }
 
 	async updatePassword(channelId: number, newPasswordHash: any): Promise<Chatroom> {
 		// const chatroom = await this.prisma.chatroom.findOne({ where: { id: channelId } });

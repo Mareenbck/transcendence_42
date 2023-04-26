@@ -123,7 +123,7 @@ const Scores = () => {
                   
                 </div>
                     <div className='card-wrapper'>
-						          <Card color='yellow' title="" type="table" width="100%"></Card>
+						          <Card  calssName="cardPodium" color='yellow' title="Users list" type="table" width="100%" ></Card>
                    </div>
 
 
