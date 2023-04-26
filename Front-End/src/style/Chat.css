@@ -196,6 +196,7 @@
   font-size: 50px;
   color: rgb(224, 220, 220);
   cursor: default;
+  z-index: -10;
 }
 
 .noConversationText2 {
@@ -304,6 +305,7 @@
 	position: fixed;
 	bottom: 50px;
 	left: 250px;
+  z-index: 10;
 }
 
 .send-btn-chat {

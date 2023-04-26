@@ -414,7 +414,7 @@ return (
                 <textarea className="chatMessageInput" placeholder="write something..."
                     onChange={(e) => setNewMessageD(e.target.value)} value={newMessageD}
                 ></textarea>
-				<><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></>
+				<button className="chatSubmitButton" onClick={handleSubmitD}>Send </button>
               </div>
           </>
           : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>

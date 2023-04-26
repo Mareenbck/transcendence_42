@@ -306,6 +306,8 @@ export class UserService {
 			  achievementId: achievement.id,
 			},
 		});
+		console.log("existingUserAchievement dans user service !!!!")
+		console.log(existingUserAchievement)
 		if (!existingUserAchievement) {
 			await this.prisma.userAchievement.create({
 				data: {

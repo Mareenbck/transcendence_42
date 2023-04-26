@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Friends from "../friends/Friends";
+import Friends from "../friends/FriendsDrawer";
 import "../../style/utils.css"
 import { Drawer } from '@mui/material';
 import ButtonLateral from "./ButtonLateral";
