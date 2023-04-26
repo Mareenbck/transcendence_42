@@ -119,6 +119,15 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 		return banSomeone;
 	}
 
+	@Post('/:channelId/unban/:userId')
+	@UseGuards(JwtGuard)
+	async unBan(@Param('channelId') channelId: string, @Param('userId') userId: string) {
+		console.log("entre dans le controller ")
+		const unBanSomeone = await this.chatRoomService.unBan(parseInt(channelId), parseInt(userId));
+		console.log("ban someone", unBanSomeone);
+		return unBanSomeone;
+	}
+
 	// @Post('/invite_admin')
 	// @UseGuards(JwtGuard)
 	// async receiv

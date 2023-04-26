@@ -33,104 +33,144 @@ export default function UsersOnChannel(props: any) {
                 console.log(err)
             }
         }
-        
-        
-        useEffect(() =>  {
-            showParticipants(props.channelId);
-        }, [props.channelId])
 
-        const admins = participants.filter((p) => p.role === 'ADMIN');
-        const users = participants.filter((p) => p.role === 'USER');
-        
         const kickSomeone = async (channelId: string, userId: string) => {
-          try {
-            const response = await fetch(
-              `http://localhost:3000/chatroom2/${channelId}/kick/${userId}`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${authCtx.token}`,
-                },
-              }
+            try {
+                const response = await fetch(
+                    `http://localhost:3000/chatroom2/${channelId}/kick/${userId}`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${authCtx.token}`,
+                        },
+                    }
             );
-            console.log("RESPONSE", response);
+            // console.log("RESPONSE", response);
             if (!response.ok) {
               throw new Error("Failed to kick user.");
             }
             const updatedParticipants = participants.filter(p => p.user.id !== userId);
             setParticipants(updatedParticipants);
-          } catch (error) {
+        } catch (error) {
             console.error(error);
-          }
+        }
         };
 
-        const [banTimeout, setBanTimeout] = useState<NodeJS.Timeout | number>(0);
-
+        
         const banSomeone = async (channelId: string, userId: string) => {
-          try {
-            const response = await fetch(
-              `http://localhost:3000/chatroom2/${channelId}/ban/${userId}`,
+            try {
+                const response = await fetch(
+                    `http://localhost:3000/chatroom2/${channelId}/ban/${userId}`,
               {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${authCtx.token}`,
-                },
-              }
-            );
-            console.log("RESPONSE", response);
-            if (!response.ok) {
-              throw new Error("Failed to ban user.");
-            }
-            const updatedParticipants = participants.filter(p => p.user.id !== userId);
-            setParticipants(updatedParticipants);
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${authCtx.token}`,
+                    },
+                }
+                );
+                console.log("RESPONSE", response);
+                if (!response.ok) {
+                    throw new Error("Failed to ban user.");
+                }
+                const updatedParticipants = participants.filter(p => p.user.id !== userId);
+                setParticipants(updatedParticipants);
                 
-          } catch (error) {
-            console.error(error);
-          }
+            } catch (error) {
+                console.error(error);
+            }
         };
-      
-        useEffect(() => {
-          showParticipants(props.channelId);
-        }, [props.channelId, banSomeone]);
+        
+        const unBanSomeone = async (channelId: string, userId: string) => {
+            try {
+                const response = await fetch(
+                    `http://localhost:3000/chatroom2/${channelId}/unban/${userId}`,
+                    {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${authCtx.token}`,
+                    },
+                }
+                );
+                console.log("RESPONSE", response);
+                if (!response.ok) {
+                    throw new Error("Failed to unban user.");
+                }
+                const updatedParticipants = participants.filter(p => p.user.id !== userId);
+                setParticipants(updatedParticipants);
+                
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        
 
-        // console.log("channel id ", props.channelVisibility)
-        // console.log("participants -----> ", participants)
+        const banned = participants.filter((p) => p.status === 'BAN');
+        const clean = participants.filter((p) => p.status === 'CLEAN');
+        
+        const admins = participants.filter((p) => p.role === 'ADMIN');
+        const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));
+        
+        
+        useEffect(() => {
+            showParticipants(props.channelId);
+        }, [props.channelId, kickSomeone]);
+
+
         return (
             <>
-            <div className='participants-container'>
-
+              <div className='participants-container'>
                 <h2 className='participants-modal'>Participants of {props.channelName}:</h2>
-                <h4 className='name-participants'>Admins:  </h4>
+                <h4 className='name-participants'>Admins:</h4>
                 <ul className='ul-participants'>
-                    {admins.map((p) => (
-                      <li className='username-participants' key={p.id}>
-                        <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
-                        {p.user.username} <i className="fa-sharp fa-solid fa-crown"></i>
+                  {admins.map((p) => (
+                    <li className='username-participants' key={p.id}>
+                      <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                      {p.user.username} <i className="fa-sharp fa-solid fa-crown"></i>
                     </li>
-                    ))}
+                  ))}
                 </ul>
                 <h4 className='name-participants'>Users:</h4>
                 <ul className='ul-participants'>
-                {users.map((p) => (
-                  <li className='username-participants' key={p.id}>
-                    <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
-                    {p.user.username} 
-                    {admins.some(admin => admin.user.id === authCtx.userId) && (
-                      <>
-                        <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>
-                        {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED'? (
-                          <RemoveCircleIcon onClick={() => banSomeone(props.channelId, p.user.id)}/>
+                  {users.map((p) => (
+                    <li className='username-participants' key={p.id}>
+                      <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                      {p.user.username} 
+                      {admins.some(admin => admin.user.id === authCtx.userId) && (
+                        <>
+                          <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>
+                          {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
+                            <RemoveCircleIcon onClick={() => banSomeone(props.channelId, p.user.id)} />
                           ) : null}
-                        <MicOffIcon/>
-                      </>
-                    )}
-                </li>
-                ))}
+                          <MicOffIcon />
+                        </>
+                      )}
+                    </li>
+                  ))}
                 </ul>
-             </div>
+                <h4 className='name-participants'>Users Banned:</h4>
+                <ul className='ul-participants'>
+                  {banned.map((p) => (
+                    <li className='username-participants' key={p.id}>
+                      <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                      {p.user.username} 
+                      {admins.some(admin => admin.user.id === authCtx.userId) && (
+                        <>
+                          <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>
+                          {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
+                            <RemoveCircleIcon onClick={() => unBanSomeone(props.channelId, p.user.id)} />
+                          ) : null}
+                          {/* <MicOffIcon /> */}
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </>
           );
+          
           
 }
