@@ -87,7 +87,9 @@ export default function UsersOnChannel(props: any) {
                 {users.map((p) => (
                 <li className='username-participants' key={p.id}>
                     <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
-                    {p.user.username} <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>
+                    {p.user.username} 
+                    {admins.some(admin => admin.user.id === authCtx.userId) && (
+                    <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>)}
                 </li>
                 ))}
                 </ul>
