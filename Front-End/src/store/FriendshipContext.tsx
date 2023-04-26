@@ -24,10 +24,15 @@ export const FriendContextProvider = (props: any) => {
 
 	useEffect (() => {
 		if (authCtx.isLoggedIn) {
-			getDemands(authCtx.token, authCtx.userId);
 			getFriends(authCtx.token, authCtx.userId);
 		}
-	}, []);
+	}, [friends]);
+
+	useEffect (() => {
+		if (authCtx.isLoggedIn) {
+			getDemands(authCtx.token, authCtx.userId);
+		}
+	}, [demands]);
 
 	const createDemand = async (receiverId: number, token: string, currentId: string) => {
 		try {

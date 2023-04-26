@@ -12,7 +12,9 @@ import { FriendContext } from "../../store/FriendshipContext";
 
 const FriendsDemands = (props: any) => {
 	const friendCtx = useContext(FriendContext);
-	const prendingDemands = friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING');
+	const [prendingDemands, setPendingDemands] = useState(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
+	// const prendingDemands = friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING');
+
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [badgeCount, setBadgeCount] = useState(0);
@@ -42,7 +44,12 @@ const FriendsDemands = (props: any) => {
 
 	useEffect(() => {
 	  setBadgeCount(prendingDemands.length)
-	}, [prendingDemands.length])
+	}, [prendingDemands.length]);
+
+	useEffect(() => {
+		// Update the component when there are changes in the FriendContext
+		setPendingDemands(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
+	  }, [friendCtx.demands]);
 
 
 	return (
