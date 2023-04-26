@@ -160,9 +160,7 @@ export default function CurrentChannel(props: any) {
 
 			{!isJoined && (
 				<p>you need to join the channel before talking into it</p>
-			// <JoinChannelModal openModal={openModal} setOpenModal={setOpenModal}/>
 			)}
-		    <UsersOnChannel currentChatroom={props.currentChatroom} channelId={props.currentChatroom.id} />
 
 		</>
 	)

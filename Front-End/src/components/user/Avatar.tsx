@@ -35,6 +35,17 @@ const customStyleS = `
 	}
 `;
 
+const customStyle0 = `
+.custom-avatar.avatar-s {
+	width: 40px;
+	height: 40px;
+	border: 2.97px solid #FFFFFF;
+	filter: drop-shadow(4.97px 3.97px 0px #000000);
+	margin-right: 25px;
+	opacity: 0;
+}
+`;
+
 const customStyleXS = `
 	.custom-avatar.avatar-xs {
 		width: 30px;
@@ -79,6 +90,8 @@ const MyAvatar = (props: any) => {
 			setStyle(customStyleS);
 		} else if (props.style === 'l') {
 			setStyle(customStylesL);
+		} else if (props.style === '0') {
+			setStyle(customStyle0);
 		}
 	}, [props.style]);
 
