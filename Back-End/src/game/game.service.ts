@@ -123,10 +123,14 @@ console.log("///////// GAME PLAY", player);
 //if player comes in to random game
 		if (roomN == -1 /*&& N == undefined*/){ //
 			this.addPlayer(player);
+			this.userSockets.emitToUser(player.username,'status', {status: 'waiting'} ); 
 			if (this.players.length == 2){
 				const playerR: UserDto = await this.userService.getUser(this.players[0].userId);
-				const playerL: UserDto = await this.userService.getUser(this.players[1].userId)
+				const playerL: UserDto = await this.userService.getUser(this.players[1].userId);
+				this.userSockets.emitToUser(playerR.username,'status', {status:'game'}); 
+				this.userSockets.emitToUser(playerL.username,'status', {status:'game'}); 
 				this.addNewRoom(playerR, playerL);
+
 			}
 		}
 //if spectator comes to watch
@@ -136,18 +140,20 @@ console.log("///////// GAME PLAY", player);
 			game.init(playerDto);
 			game.initMoveEvents();
 			this.userSockets.joinToRoom(playerDto.username, `room${roomN}`);
+			this.userSockets.emitToUser(playerDto.username,'status', {status:'watch'}); 
 		}
 	}
 
 //function to process the messages "InviteGame", 'acceptGame', 'refuseGame'
 	gameInvite = (author: UserDto, player: UserDto): void => {
-		this.userSockets.emitToUser(author.username,'isagree', {isagree: 'waiting'} ); 
+		this.userSockets.emitToUser(author.username,'status', {status: 'waiting'} ); 
 		this.invited.push({author, player});
 	}
 
 	acceptGame = (author: UserDto, player: UserDto): void => {
 		if(this.searchPair(author.id, player.id)){
-			// this.userSockets.emitToUser(author.username,'isagree', 'true'); 
+					this.userSockets.emitToUser(author.username,'status', {status:'game'}); 
+			this.userSockets.emitToUser(player.username,'status', {status:'game'}); 
 			this.addNewRoom(author, player);
 		}
 	};
@@ -155,7 +161,7 @@ console.log("///////// GAME PLAY", player);
 	refusalGame = (author: UserDto, player: UserDto): void => {
 console.log("///////// GAME REFUSAL", author, player);
 		if(this.searchPair(author.id, player.id)) {
-			this.userSockets.emitToUser(author.username,'isagree', {isagree: 'false'} ); 
+			this.userSockets.emitToUser(author.username,'status', {status: 'false'} ); 
 		};
 	};
 

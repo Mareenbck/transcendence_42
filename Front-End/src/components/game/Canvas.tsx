@@ -1,11 +1,11 @@
 import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
-import type {gameInit, gameState, gameWinner} from './interface_game'
+import type {gameInit, gameState} from './interface_game'
 
-const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: gameWinner, backColorGame: backColorGame} ): JSX => {
+const Canvas = (props: {gamestate: gameState, gameinit: gameInit, backColorGame: backColorGame} ): JSX => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
-    const gamewinner = props.gamewinner;
+    // const gamewinner = props.gamewinner;
     const backColorGame = props.backColorGame;
     const canvasRef = useRef<HTMLCanvasElement>(null);  
     
@@ -48,16 +48,16 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
                 context.fillText(`${gamestate.scoreR }`, gameinit.table_width/2 + 50, 50);
             
 
-                if (gamewinner.leave){
-                    // context.fillStyle = "#FDD9";
-                    // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
-                    // context.closePath();
+                // if (gamewinner.leave){
+                //     // context.fillStyle = "#FDD9";
+                //     // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
+                //     // context.closePath();
 
-                    context.font = "40px Verdana";
-                    context.lineWidth = 2;
-                    context.fillText(`${gamewinner.leave}`, 100, gameinit.table_height/2);
-                    context.fillText("scoreL the game" , gameinit.table_width/2 + 100, gameinit.table_height/2);
-                }
+                //     context.font = "40px Verdana";
+                //     context.lineWidth = 2;
+                //     context.fillText(`${gamewinner.leave}`, 100, gameinit.table_height/2);
+                //     context.fillText("scoreL the game" , gameinit.table_width/2 + 100, gameinit.table_height/2);
+                // }
                 //if winner
                 // if (gamewinner.winner){
                 //     // context.fillStyle = "#FDD9";
@@ -72,7 +72,7 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, gamewinner: ga
             }
         }
 
-    }, [gameinit, gamestate, gamewinner]);
+    }, [gameinit, gamestate]);
      
     return (<canvas className='canvas' ref={canvasRef} width={gameinit.table_width} height={gameinit.table_height} />)
 }

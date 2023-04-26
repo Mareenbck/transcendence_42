@@ -4,7 +4,8 @@ import { GameService } from 'src/game/game.service';
 import { player,
 		 ball,
 		 gameInit,
-		 GameParams } from './game.interfaces';
+		 GameParams,
+		 status } from './game.interfaces';
 import UsersSockets from 'src/gateway/socket.class';
 import { GameDto } from './dto/game.dto';
 import { UserDto } from 'src/user/dto/user.dto';
@@ -38,7 +39,9 @@ export class GameRoom {
 	private isrunning: boolean = false; 
 	private interval: NodeJS.Timeout; // define the interval property
 	private leave: boolean = false;
-	private winner: UserDto = null;
+	private status: status = {
+		winner: null,
+		status: null};
 
 	private ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
 	private ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
@@ -203,8 +206,8 @@ console.log("constructor Class.game");
 
 	private player_disconect = (user: UserDto) => {
 		this.isrunning = false;
-		this.winner = user;
-		this.server.to(this.room).emit('winner', {winner: this.winner}); //room
+		this.status.winner = user;
+		this.server.to(this.room).emit('status', {winner: this.status.winner, status: 'winner',}); //room
 	}
 
 // function: run game
@@ -218,7 +221,7 @@ console.log("game.class.run");
 			//score MAX - change here
 			if ((this.playerL.score >= MAX_SCORE || this.playerR.score >= MAX_SCORE)){ 
 				this.isrunning = false;
-				this.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
+				this.status.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
 
 ///////////////////////////////////////////
 // let promisses = [];
@@ -228,13 +231,13 @@ console.log("game.class.run");
 				const game: GameDto = await this.gameService.create({
 					playerOneId: this.playerR.user.id,
 					playerTwoId: this.playerL.user.id,
-					winnerId: this.winner.id,
+					winnerId: this.status.winner.id,
 					score1: this.playerR.score,
 					score2: this.playerL.score,
 				});
 
 ////////////////////////////////////////////////////		
-				this.player_disconect(this.winner);
+				this.player_disconect(this.status.winner);
 				clearInterval(this.interval);
 				this.playerL.score = 0;
 				this.playerR.score = 0;
