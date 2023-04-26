@@ -30,8 +30,8 @@ export function NavbarChannel(props: any) {
 	const [showPopUp, setShowPopUp] = useState(true);
 
 
-console.log("props.chatroom.participants---->");
-console.log(props.chatroom.participants);
+// console.log("props.chatroom.participants---->");
+// console.log(props.chatroom.participants);
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
 		if (currentUser) {

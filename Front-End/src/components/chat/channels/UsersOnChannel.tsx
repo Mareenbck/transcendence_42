@@ -4,7 +4,8 @@ import AuthContext from '../../../store/AuthContext';
 import '../../../style/UsersOnChannel.css'
 import { FaCrown } from "react-icons/fa";
 import MyAvatar from '../../user/Avatar';
-
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import MicOffIcon from '@mui/icons-material/MicOff';
 
 export default function UsersOnChannel(props: any) {
 
@@ -40,15 +41,45 @@ export default function UsersOnChannel(props: any) {
 
         const admins = participants.filter((p) => p.role === 'ADMIN');
         const users = participants.filter((p) => p.role === 'USER');
+        
+        const kickSomeone = async (channelId: string, userId: string) => {
+          try {
+            const response = await fetch(
+              `http://localhost:3000/chatroom2/${channelId}/kick/${userId}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${authCtx.token}`,
+                },
+              }
+            );
+            console.log("RESPONSE", response);
+            if (!response.ok) {
+              throw new Error("Failed to kick user.");
+            }
+            const updatedParticipants = participants.filter(p => p.user.id !== userId);
+            setParticipants(updatedParticipants);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        
+        useEffect(() => {
+          showParticipants(props.channelId);
+        }, [props.channelId, kickSomeone]);
 
+        // console.log("channel id ", props.channelVisibility)
         // console.log("participants -----> ", participants)
         return (
             <>
+            <div className='participants-container'>
+
                 <h2 className='participants-modal'>Participants of {props.channelName}:</h2>
                 <h4 className='name-participants'>Admins:  </h4>
                 <ul className='ul-participants'>
                     {admins.map((p) => (
-                    <li className='username-participants' key={p.id}>
+                      <li className='username-participants' key={p.id}>
                         <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
                         {p.user.username} <i className="fa-sharp fa-solid fa-crown"></i>
                     </li>
@@ -56,13 +87,23 @@ export default function UsersOnChannel(props: any) {
                 </ul>
                 <h4 className='name-participants'>Users:</h4>
                 <ul className='ul-participants'>
-                    {users.map((p) => (
-                    <li className='username-participants' key={p.id}>
-                        <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
-                        {p.user.username}
-                    </li>
-                    ))}
+                {users.map((p) => (
+                  <li className='username-participants' key={p.id}>
+                    <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                    {p.user.username} 
+                    {admins.some(admin => admin.user.id === authCtx.userId) && (
+                      <>
+                        <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>
+                        {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED'? (
+                          <RemoveCircleIcon onClick={() => kickSomeone(props.channelId, p.user.id)}/>
+                          ) : null}
+                        <MicOffIcon/>
+                      </>
+                    )}
+                </li>
+                ))}
                 </ul>
+             </div>
             </>
           );
           
