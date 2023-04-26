@@ -113,18 +113,14 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@Post('/:channelId/ban/:userId')
 	@UseGuards(JwtGuard)
 	async ban(@Param('channelId') channelId: string, @Param('userId') userId: string) {
-		console.log("entre dans le controller ")
 		const banSomeone = await this.chatRoomService.ban(parseInt(channelId), parseInt(userId));
-		console.log("ban someone", banSomeone);
 		return banSomeone;
 	}
 
 	@Post('/:channelId/unban/:userId')
 	@UseGuards(JwtGuard)
 	async unBan(@Param('channelId') channelId: string, @Param('userId') userId: string) {
-		console.log("entre dans le controller ")
 		const unBanSomeone = await this.chatRoomService.unBan(parseInt(channelId), parseInt(userId));
-		console.log("ban someone", unBanSomeone);
 		return unBanSomeone;
 	}
 

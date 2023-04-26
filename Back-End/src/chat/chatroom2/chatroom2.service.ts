@@ -251,15 +251,12 @@ export class ChatroomService {
 	
 	async ban(channelId: number, userId: number) {
 		try {
-			console.log("entre dans le service ")
 			const userOnChannel = await this.prisma.userOnChannel.findFirst({
 				where: {
 					channelId: channelId,
 					userId: userId,
 				},
 			});
-
-			console.log("USER ON CHANNEL", userOnChannel)
 	
 			if (!userOnChannel) {
 				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
@@ -276,7 +273,6 @@ export class ChatroomService {
 					status: UserStatusOnChannel.BAN,
 				},
 			});
-			console.log("UPDATED STATUS --->", updatedStatus)
 			return `User with ID ${userId} has been banned from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
@@ -286,15 +282,12 @@ export class ChatroomService {
 	
 	async unBan(channelId: number, userId: number) {
 		try {
-			console.log("entre dans le service ")
 			const userOnChannel = await this.prisma.userOnChannel.findFirst({
 				where: {
 					channelId: channelId,
 					userId: userId,
 				},
 			});
-
-			console.log("USER ON CHANNEL", userOnChannel)
 	
 			if (!userOnChannel) {
 				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
@@ -311,7 +304,6 @@ export class ChatroomService {
 					status: UserStatusOnChannel.CLEAN,
 				},
 			});
-			console.log("UPDATED STATUS --->", updatedStatus)
 			return `User with ID ${userId} has been unbanned from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);

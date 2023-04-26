@@ -6,6 +6,7 @@ import { FaCrown } from "react-icons/fa";
 import MyAvatar from '../../user/Avatar';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import MicOffIcon from '@mui/icons-material/MicOff';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 export default function UsersOnChannel(props: any) {
 
@@ -26,7 +27,6 @@ export default function UsersOnChannel(props: any) {
                 )
                 if (response.ok) {
                     const data = await response.json();
-                    // console.log("data ------>", data);
                     setParticipants(data);
                 }
             } catch(err) {
@@ -46,7 +46,6 @@ export default function UsersOnChannel(props: any) {
                         },
                     }
             );
-            // console.log("RESPONSE", response);
             if (!response.ok) {
               throw new Error("Failed to kick user.");
             }
@@ -108,8 +107,6 @@ export default function UsersOnChannel(props: any) {
         
 
         const banned = participants.filter((p) => p.status === 'BAN');
-        const clean = participants.filter((p) => p.status === 'CLEAN');
-        
         const admins = participants.filter((p) => p.role === 'ADMIN');
         const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));
         
@@ -142,7 +139,7 @@ export default function UsersOnChannel(props: any) {
                         <>
                           <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>
                           {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                            <RemoveCircleIcon onClick={() => banSomeone(props.channelId, p.user.id)} />
+                            <RemoveCircleIcon className="ban-icon" onClick={() => banSomeone(props.channelId, p.user.id)} />
                           ) : null}
                           <MicOffIcon />
                         </>
@@ -160,9 +157,8 @@ export default function UsersOnChannel(props: any) {
                         <>
                           <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>
                           {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                            <RemoveCircleIcon onClick={() => unBanSomeone(props.channelId, p.user.id)} />
+                            <RemoveCircleOutlineIcon  onClick={() => unBanSomeone(props.channelId, p.user.id)} />
                           ) : null}
-                          {/* <MicOffIcon /> */}
                         </>
                       )}
                     </li>

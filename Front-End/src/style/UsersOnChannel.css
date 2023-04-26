@@ -46,9 +46,8 @@
   .fa-trash:hover {
     color: darkred;
   }
-  
-  .MuiSvgIcon-root:hover {
-    color: black;
+
+  .ban-icon {
+    color: red;
     cursor: pointer;
   }
-  

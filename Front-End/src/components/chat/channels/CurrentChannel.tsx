@@ -19,7 +19,8 @@ export default function CurrentChannel(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
-    // const [openModal, setOpenModal] = useState(true);
+	const isBanned = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'BAN');
+	// const [openModal, setOpenModal] = useState(true);
 	// const [open, setOpen] = useState(false);
 	const [showPopUp, setShowPopUp] = useState(false);
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
@@ -112,8 +113,7 @@ export default function CurrentChannel(props: any) {
 
 	return (
 		<>
-			{/* <div>chat in {currentChatroom.name} </div> */}
-			{isJoined && (
+			{isJoined && !isBanned && (
 				<>
 				<NavbarChannel
 				chatroom={currentChatroom}
