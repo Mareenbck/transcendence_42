@@ -62,8 +62,9 @@ export interface gameInit {
     scoreL: number;
 }
 
-export interface gameWinner {
+export interface gameStatus {
     winner: UserGame;
+    status: string;
 }
 
 export interface star {

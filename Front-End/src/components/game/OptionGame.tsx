@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import './Game.css'
 import '../../style/OptionGame.css'
-import ColorModal from './modal.tsx/ColorModal';
+import ColorModal from './modal/ColorModal';
 import { Link, useLocation } from "react-router-dom";
 import SideBar from '../SideBar';
 import style from '../../style/Menu.module.css';

@@ -2,9 +2,9 @@ import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
 // import Winner from './Winner'
-import type { gameInit, gameState, gameWinner, player, gamesList } from './interface_game'
-import ColorModal from './modal.tsx/ColorModal';
-import RerusModal from './modal.tsx/ColorModal';
+import type { gameInit, gameState, gameStatus, player, gamesList } from './interface_game'
+import ColorModal from './modal/ColorModal';
+import RefusModal from './modal/RefusModal';
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
 import '../../style/OptionGame.css';
@@ -117,8 +117,9 @@ function Game() {
         }
     );
 
-    const [gamewinner, setGameWinner] = useState<gameWinner>(
-        { winner: null,} 
+    const [gamestatus, setGameStatus] = useState<gameStatus>(
+        {   winner: null,
+            status: null} 
     );  
      
     const initListener = (data: gameInit)=>{
@@ -127,21 +128,21 @@ function Game() {
     const updateListener = (data: gameState)=>{
         setGameState(data);
     }
-    const initWinner = (data: gameWinner)=>{
-        setGameWinner(data);
+    const updateStatus = (data: gameStatus)=>{
+        setGameStatus(data);
     }
 
  ///////////////////////////////////////////////////////   
-    const [isagree, setStatus] = useState<string>('');
+    // const [status, setStatus] = useState<string>('');
     const [showModal, setShowModal] = useState(false);  
     
-    const updateStatus = (data: string) =>{
-        setShowModal(true);
-    console.log("status" , data)
-        setStatus(data);
-    }
+    // const updateStatus = (data: string) =>{
+    //     setShowModal(true);
+    // console.log("status" , data)
+    //     setStatus(data);
+    // }
     const handleCloseModal = () => {
-        setStatus('');
+        // setStatus('');
         setShowModal(false);
     };
 ////////////////////////////////////////////////////////
@@ -150,15 +151,14 @@ function Game() {
     useEffect(() => {
         addListener('init-pong', initListener);
         addListener('pong', updateListener);
-        addListener('winner', initWinner );
-        addListener('isagree', updateStatus);
+        addListener('status', updateStatus);
         // return () => {
         //     socket?.off('init-pong', initListener);
         //     socket?.off('pong', updateListener);
         //     socket?.off('pong', initWinner);
         // }
 //        sendMessage('doIplay');
-    }, [initListener, updateListener, updateStatus, initWinner]) //updateStatus
+    }, [initListener, updateListener, updateStatus]) //updateStatus
     
 /////////////////////////////////////////Page OptionGame/////////////////////////////////////
 
@@ -182,7 +182,7 @@ const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
     const handleClick = (roomN: number) => {
     //console.log('playGame sendMessage', user);
         sendMessage("playGame", {user: user, roomN: roomN});
-        gamewinner.winner = null;
+        gamestatus.winner = null;
         setClicked(true);
     };
 //////////////////////////////////////////////////////////////////////////    
@@ -194,40 +194,39 @@ const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
                 <div className='container-optionPage'>
                     <h1 className='titre_option'></h1>
             {/* /GAME or WINNER*/}
-                {(!gamewinner.winner) ? (
+                {(!gamestatus.winner) ? (
                     <>
-                        {(isagree == 'false') && (<RerusModal/>)};
-
-                        {((!isInPlay() && (clicked_play || isagree == 'waiting'))) ? (
-                            <div class="center">
-                                <h1 class="blink"> Waiting your opponent</h1>
-                                <div class="circle"></div>
+                        {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)};
+                        {(gamestatus.status == 'waiting') && (
+                            <div className="center">
+                                <h1 className="blink"> Waiting your opponent</h1>
+                                <div className="circle"></div>
                             </div>
-                        ) : (
-                        <>
-                            { !isInPlay() ? (<SelectColor changColorToRed={changColorToRed}
-                                         changColorToBlue={changColorToBlue}
-                                         changColorToGreen={changColorToGreen}
-                                        changColorToBlack={changColorToBlack}>
-                            </SelectColor> ): (<h1>GAME</h1>)}                   
+                        )}
+                            { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? (<h1>GAME</h1>) :
+                                (<SelectColor changColorToRed={changColorToRed}
+                                            changColorToBlue={changColorToBlue}
+                                            changColorToGreen={changColorToGreen}
+                                            changColorToBlack={changColorToBlack}>
+                                </SelectColor> ) }                   
                             <div>                   
-                               { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+                               { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
                                {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
                                                                                             changColorToBlue={changColorToBlue}
                                                                                             changColorToGreen={changColorToGreen}
                                                                                             changColorToBlack={changColorToBlack}
                                                                                             />}
-                                { !ShowCamva &&<Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+                                { !ShowCamva &&<Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
                             </div>
-                        </>)}
+                
                     </>
                         ):(
                     <>
                         <h2> WINNER </h2>
                         <div className='wrapLook'>
                             {/* <Winner gameinit={gameinit} gamewinner={gamewinner} /> */}
-                            <MyAvatar  id={gamewinner.winner.id} style="m" avatar={gamewinner.winner.avatar} ftAvatar={gamewinner.winner.ftAvatar}/>
-                           < EmojiEventsIcon class = "winner"/>
+                            <MyAvatar  id={gamestatus.winner.id} style="m" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
+                           < EmojiEventsIcon id = "win"/>
                         </div>
                     </>
                 )}
@@ -275,3 +274,28 @@ const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
 export default Game;
 
 //import SportsVolleyballRoundedIcon from '@mui/icons-material/SportsVolleyballRounded';
+// {(status == 'false') && (<RefusModal/>)};
+
+
+// {((!isInPlay() && clicked_play && isagree == 'waiting')) ? (
+//     <div class="center">
+//         <h1 class="blink"> Waiting your opponent</h1>
+//         <div class="circle"></div>
+//     </div>
+// ) : (
+// <>
+//     { !isInPlay() ? (<SelectColor changColorToRed={changColorToRed}
+//                  changColorToBlue={changColorToBlue}
+//                  changColorToGreen={changColorToGreen}
+//                 changColorToBlack={changColorToBlack}>
+//     </SelectColor> ): (<h1>GAME</h1>)}                   
+//     <div>                   
+//        { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+//        {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
+//                                                                     changColorToBlue={changColorToBlue}
+//                                                                     changColorToGreen={changColorToGreen}
+//                                                                     changColorToBlack={changColorToBlack}
+//                                                                     />}
+//         { !ShowCamva &&<Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
+//     </div>
+// </>)}

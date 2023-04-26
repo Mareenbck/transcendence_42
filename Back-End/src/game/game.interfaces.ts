@@ -47,6 +47,10 @@ export interface invited{
 	player: UserDto;
 }
 
+export interface status{
+	winner: UserDto;
+	status: string;
+}
 // export interface IGameState {
 // 	player1: IProfil;
 // 	player2: IProfil;

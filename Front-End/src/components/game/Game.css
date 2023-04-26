@@ -23,7 +23,7 @@ h2{
     margin-left: 100px;
 }
 
-.winner{
+#win{
     font-size: 105px; 
     color: rgb(247, 199, 56);
 }
