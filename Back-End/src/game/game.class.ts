@@ -148,6 +148,8 @@ console.log("constructor Class.game");
 	// board reflections
 		if (this.ball.x < ballR) {
 			++this.playerR.score;
+			this.gameService.changeScore(this.roomN, this.playerR.score, this.playerL.score);
+
 			this.ball.x = width / 2 - this.ballSpeedX;
 			this.ball.y = Math.floor(Math.random() * height);
 			// this.ball.y = height / 2;
@@ -156,6 +158,8 @@ console.log("constructor Class.game");
 		} else if (this.ball.x > width - ballR) {
 			this.ballSpeedX = -this.ballSpeedX;
 			++this.playerL.score;
+			this.gameService.changeScore(this.roomN, this.playerR.score, this.playerL.score);
+
 			this.ball.x = width / 2 - this.ballSpeedX;
 			this.ball.y = Math.floor(Math.random() * height);
 			// this.ball.y = height / 2 - this.ballSpeedX;

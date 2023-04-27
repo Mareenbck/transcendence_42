@@ -46,8 +46,9 @@ h2{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    /* height: 100vh; */
     align-items: center;
+    margin-top: 150px;
 }
 
 .circle {
@@ -96,7 +97,7 @@ h2{
 .posBtn{
     /* width: 230px;
     height: 270px; */
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -104,8 +105,65 @@ h2{
     gap: 50%;
     /* border: 3px solid #000000; */
     border-radius: 12px;
-    
+    margin-left: 150px;
     margin-top: 21px;
     margin-right: 20px;
+  
+}
+
+.wrapWaiting{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-left: 150px;
+    width: 100%;
+   align-items: center;
+}
+
+@media (max-width: 1500px) {
+    .wrapWaiting{
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        margin-left: 50px;
+        width: 70%;
+       align-items: center;
+    }
+
+}
+
+.posWating{
+    display: flex;
+    flex-direction: row;
+    /* margin: 100px; */
+    margin-top: 150px;
+    align-items: center;
    
+
+}
+
+.posBtnWating{
+    margin: 30px;
+    align-items: center;
+
+}
+
+.wrapList{
+    margin: 0;
+    padding: 5px;
+    margin-left: 200px;
+    /* width: calc(100% - 50px); */
+    width: 100%;
+    align-items: center;
+
+}
+@media (max-width: 1500px) {
+    .wrapList{
+        margin: 0;
+        padding: 5px;
+        margin-left: 50px;
+        width: 50%;
+        align-items:center ;
+    }
+
 }

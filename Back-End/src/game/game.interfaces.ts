@@ -40,6 +40,8 @@ export interface roomsList{
 	roomN: number;
 	playerR: UserDto;
 	playerL: UserDto;
+	scoreR: number;
+	scoreL: number;
 }
 
 export interface invited{
