@@ -15,7 +15,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import SelectColor from './SelectColor';
 import Card from "../utils/Card";
-import { start } from 'repl';
+//import { start } from 'repl';
 import PlayerOne from './PlayerOne';
 import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
@@ -32,7 +32,17 @@ function Game() {
         {   winner: null,
             status: "null"} 
     );  
+    const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
     
+//Game request: click on the button
+    useEffect(() => {
+        addListener("gameRooms", (games: gamesList[]) => {
+    //console.log('gameRooms ', games);
+            setOnlinePlayers(games);
+        });
+        sendMessage('listRooms');
+    }, [])
+
 //event when user leaves the page   
     useEffect(() => {
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -53,29 +63,28 @@ function Game() {
 //     });    
     
     useEffect(() => {
-
 // onKeyDown handler function
         const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
 //console.log("event.code = ", event.code);
-            if (gamestatus.status == "game") {
-                event.preventDefault();
-                if (event.code === "ArrowUp") {
-                    sendMessage('move', "up" as any)
-                }
-                if (event.code === "ArrowDown") {
-                    sendMessage('move', "down" as any)
-                }
+            event.preventDefault();
+            if (event.code === "ArrowUp") {
+                sendMessage('move', "up" as any)
+            }
+            if (event.code === "ArrowDown") {
+                sendMessage('move', "down" as any)
             }
         };
 
-        // Attach the event listener to the window object
+        if (gamestatus.status == "game") {
+            // Attach the event listener to the window object
         window.addEventListener('keydown', keyDownHandler);
-        
+        }
+        else{
         // Remove the event listener when the component unmounts
-        return () => {
             window.removeEventListener('keydown', keyDownHandler);
-        };
+        }
     }, [gamestatus]);
+
 
     // Pour partis de Modal select Color,
 
@@ -185,15 +194,6 @@ function Game() {
     
 /////////////////////////////////////////Page OptionGame/////////////////////////////////////
 
-const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
-//Game request: click on the button
-    useEffect(() => {
-        addListener("gameRooms", (games: gamesList[]) => {
-    //console.log('gameRooms ', games);
-            setOnlinePlayers(games);
-        });
-        sendMessage('listRooms');
-    }, [])
 
     const isInPlay = (): boolean => {
         return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
@@ -271,14 +271,14 @@ const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
                                                                                             changColorToBlack={changColorToBlack}
                                                                                             />}
                                 { !ShowCamva &&<Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
-                             <div className='posBtn' >
-                                    {/* /LIST OF CURRENT GAME */}
+                                <div className='posBtn' >
+                                    {/* /BUTTON FOR GAME START */}
                                     {!isInPlay() && (
                                         <div >
                                             <button className="btn" onClick={() => handleClick(-1)}>Play Game</button>
                                         </div>
                                     )}
-                                    {/* /EXIT FROM THE GAME. IF GAME - THE LOSS*/}
+                                    {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
                                     {!isInPlay() && (
                                         <Link to="/menu">
                                             <button className="btn"  style={{ alignSelf: "flex-end"}}>Menu</button>

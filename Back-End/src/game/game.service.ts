@@ -47,7 +47,7 @@ export class GameService {
 	
 // ...
 	changeScore = (roomN: number, scoreR: number, scoreL: number) => {
-		const index = this.roomArray.findIndex(i => i.roomN != roomN);
+		const index = this.roomArray.findIndex(i => i.roomN == roomN);
 		if (index !== -1) {
 			this.roomArray[index].scoreR = scoreR;
 			this.roomArray[index].scoreL = scoreL;
