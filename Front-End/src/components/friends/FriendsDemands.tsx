@@ -9,8 +9,10 @@ import BadgeUnstyled from '@mui/base/BadgeUnstyled';
 import Face2Icon from '@mui/icons-material/Face2';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { FriendContext } from "../../store/FriendshipContext";
+import useSocket from "../../service/socket";
 
 const FriendsDemands = (props: any) => {
+	const [sendMessage, addListener] = useSocket();
 	const friendCtx = useContext(FriendContext);
 	const [prendingDemands, setPendingDemands] = useState(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
 	// const prendingDemands = friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING');
@@ -18,6 +20,7 @@ const FriendsDemands = (props: any) => {
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [badgeCount, setBadgeCount] = useState(0);
+
 
 	const handleClick = (event: any) => {
 		setAnchorEl(event.currentTarget);
@@ -39,7 +42,9 @@ const FriendsDemands = (props: any) => {
 		friendCtx.updateDemand(demandId, res, props.token)
 		if (res === 'ACCEPTED') {
 			setSnackbarOpen(true);
+			// sendMessage('demandAccepted', { demandId })
 		}
+		setPendingDemands(prevDemands => prevDemands.filter(demand => demand.id !== demandId));
 	}
 
 	useEffect(() => {
@@ -47,10 +52,17 @@ const FriendsDemands = (props: any) => {
 	}, [prendingDemands.length]);
 
 	useEffect(() => {
-		// Update the component when there are changes in the FriendContext
 		setPendingDemands(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
-	  }, [friendCtx.demands]);
+	}, [friendCtx.demands]);
 
+	useEffect(() => {
+		addListener('pendingDemands', (pendingDemands: any[]) => {
+			const receiverDemands = pendingDemands.filter(
+				(demand: Demand) => demand.receiverId === parseInt(props.authCtx.userId)
+			);
+			setPendingDemands(receiverDemands.filter((demand: Demand) => demand.status === 'PENDING'));
+		});
+	}, [addListener]);
 
 	return (
 		<>

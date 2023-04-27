@@ -11,12 +11,14 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Snackbar } from '@mui/material';
 import { faUserPlus, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useSocket from '../../service/socket';
 
 
 
 const FriendsList = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
+	const [sendMessage, addListener] = useSocket();
 
 	const currentUserId = authCtx.userId;
 
@@ -37,14 +39,15 @@ const FriendsList = (props: any) => {
 			});
 			await response.json();
 			setSnackbarOpen(true);
+			sendMessage('createDemand', {id: receiverId});
 			if (!response.ok) {
 				console.log("POST error on /friendship/create");
 				return "error";
-			  }
+			}
 		} catch (error) {
 			console.log("error", error);
-		  }
 		}
+	}
 
 	return (
 		<>

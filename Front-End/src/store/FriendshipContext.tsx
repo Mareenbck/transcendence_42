@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import AuthContext from "./AuthContext";
 import Demand from '../interfaces/IFriendship'
 import Friend from '../interfaces/IFriendship'
+import useSocket from "../service/socket";
 
 const defaultValue = {
 	demands: [] as Demand[],
@@ -17,10 +18,10 @@ const defaultValue = {
 export const FriendContext = createContext(defaultValue);
 
 export const FriendContextProvider = (props: any) => {
+	const [sendMessage, addListener] = useSocket();
 	const [demands, setDemands] = useState<Demand[]>([]);
 	const [friends, setFriends] = useState<Friend[]>([]);
 	const [avatarCache, setAvatarCache] = useState<Map<number, string>>(new Map());
-
 
 	const authCtx = useContext(AuthContext);
 
@@ -28,13 +29,13 @@ export const FriendContextProvider = (props: any) => {
 		if (authCtx.isLoggedIn) {
 			getFriends(authCtx.token, authCtx.userId);
 		}
-	}, [friends]);
+	}, []);
 
 	useEffect (() => {
 		if (authCtx.isLoggedIn) {
 			getDemands(authCtx.token, authCtx.userId);
 		}
-	}, [demands]);
+	}, []);
 
 	const createDemand = async (receiverId: number, token: string, currentId: string) => {
 		try {
@@ -46,14 +47,16 @@ export const FriendContextProvider = (props: any) => {
 				},
 				body: JSON.stringify({ requesterId: currentId, receiverId: receiverId }),
 			});
-			await response.json();
+			const data = await response.json();
 			if (!response.ok) {
 				console.log("POST error on /friendship/create");
 				return "error";
 			}
+			console.log("CREATE DEMAND")
 		} catch (error) {
 			console.log("error", error);
 		}
+
 	}
 
 	const getDemands = async (token: string, currentId: string) => {
@@ -68,7 +71,7 @@ export const FriendContextProvider = (props: any) => {
 			}
 		)
 		const data = await response.json();
-		const updatedDemands = await Promise.all(data.map(async (demand: Demand) => {
+		const updatedDemands: any[] = await Promise.all(data.map(async (demand: Demand) => {
 			const avatarUrl = avatarCache.get(demand.requester.id) ?? await fetchAvatar(demand.requester.id);
 			if (!avatarUrl) {
 				return demand;
@@ -130,8 +133,6 @@ export const FriendContextProvider = (props: any) => {
 				body: JSON.stringify({ friendId: friendId, currentId: currentId }),
 			});
 			const data = await response.json();
-			console.log("data--->")
-			console.log(data)
 			if (!response.ok) {
 				console.log("POST error on /friendship/delete");
 				return "error";
@@ -152,6 +153,7 @@ export const FriendContextProvider = (props: any) => {
 				body: JSON.stringify({ demandId: demandId, response: res }),
 			});
 			await response.json();
+			sendMessage('updateDemands', { demandId: demandId, response: res })
 			if (!response.ok) {
 				console.log("POST error on /friendship/validate");
 				return "error";

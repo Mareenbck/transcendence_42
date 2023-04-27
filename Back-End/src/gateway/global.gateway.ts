@@ -9,6 +9,7 @@ import { Server, Socket } from 'socket.io';
 import { GlobalService } from './global.service';
 import { ChatService } from '../chat/chat.service';
 import { GameService } from '../game/game.service';
+import { FriendshipService } from '../friendship/friendship.service';
 import { Logger } from "@nestjs/common";
 import UsersSockets from "./socket.class";
 import { AuthService } from 'src/auth/auth.service';
@@ -33,6 +34,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       private readonly chatService: ChatService,
       private readonly globalService: GlobalService,
       private readonly authService: AuthService,
+	  private readonly friendshipService: FriendshipService,
   ) {
       this.userSockets = new UsersSockets();
   }
@@ -159,5 +161,24 @@ console.log("68 handleConnect: client");
 //     let user = this.userSockets.getUserBySocket(socket.id);
 //     if(user) this.gameService.checkPlayerInRooms(user);
 //   };
+
+	@SubscribeMessage('updateDemands')
+	async updateDemands(@MessageBody() updatedDemands: any[]): Promise<void> {
+		const updatedDemand = await this.friendshipService.updateFriendship(updatedDemands);
+		this.server.emit('demandsUpdated', updatedDemand);
+	}
+
+	@SubscribeMessage('updateFriends')
+	async updateFriends(@MessageBody() updatedFriends: any[]): Promise<void> {
+		this.server.emit('friendsUpdated', updatedFriends);
+	}
+
+	@SubscribeMessage('createDemand')
+	async createDemand(@MessageBody() receiverId: any ): Promise<void> {
+		// Récupérer les demandes mises à jour
+		const pendingDemands = await this.friendshipService.getReceivedFriendships(receiverId);
+		// Envoyer les demandes mises à jour à tous les clients connectés
+		this.server.emit('pendingDemands', pendingDemands);
+	}
 
 }
