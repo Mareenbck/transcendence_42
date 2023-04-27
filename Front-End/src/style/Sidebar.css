@@ -8,6 +8,19 @@
     /* height: fit-content; */
 }
 
+@media (max-width: 1500px) {
+    .sidebar {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		background-color: #699BF7;
+		width: 280px;
+		height: 100vh;
+		/* height: fit-content; */
+	}
+
+}
+
 .sidebar h4 {
 	font-weight: 700;
 	font-size: 28px;

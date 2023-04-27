@@ -44,6 +44,17 @@ export class GameService {
     //     return this.players.find(u => +u.user.username === +username);
     // }
 
+	
+// ...
+	changeScore = (roomN: number, scoreR: number, scoreL: number) => {
+		const index = this.roomArray.findIndex(i => i.roomN != roomN);
+		if (index !== -1) {
+			this.roomArray[index].scoreR = scoreR;
+			this.roomArray[index].scoreL = scoreL;
+			this.sendListRooms();
+		}
+	};
+
 	searchPair = (author: number, player: number): boolean => {
 		const index = this.invited.findIndex(i => i.author.id == author && i.player.id == player);
 	// console.log("53_game service searchPair ", index)
@@ -76,7 +87,7 @@ export class GameService {
 		this.gameMap[roomN] = game;
 		game.setPlayers(playerR, playerL);
 		game.initMoveEvents();
-		this.roomArray.push({roomN, playerR, playerL});
+		this.roomArray.push({roomN, playerR, playerL, scoreR: 0, scoreL: 0});
 //  console.log("68 resultatArray ", playerL)
 		this.players = [];
 		this.sendListRooms();
