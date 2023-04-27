@@ -47,7 +47,7 @@ export class GameService {
 	
 // ...
 	changeScore = (roomN: number, scoreR: number, scoreL: number) => {
-		const index = this.roomArray.findIndex(i => i.roomN != roomN);
+		const index = this.roomArray.findIndex(i => i.roomN == roomN);
 		if (index !== -1) {
 			this.roomArray[index].scoreR = scoreR;
 			this.roomArray[index].scoreL = scoreL;
@@ -88,7 +88,7 @@ export class GameService {
 		game.setPlayers(playerR, playerL);
 		game.initMoveEvents();
 		this.roomArray.push({roomN, playerR, playerL, scoreR: 0, scoreL: 0});
-//  console.log("68 resultatArray ", playerL)
+console.log("68 resultatArray- room ", this.roomArray)
 		this.players = [];
 		this.sendListRooms();
 		game.run();
