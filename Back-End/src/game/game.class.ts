@@ -118,9 +118,9 @@ console.log("constructor Class.game");
 //			> describe the movement of the ball in collisions with rackets and the edges of the playing field
 	private updatePositions(): void
 	{
-		this.rackets_acel[0] = this.playerL.racket.y - this.rackets_ypos[0];
-		this.rackets_acel[1] = this.playerR.racket.y - this.rackets_ypos[1];
-		this.rackets_ypos[0] = this.playerL.racket.y;
+		this.rackets_acel[0] = this.playerR.racket.y - this.rackets_ypos[0];
+		this.rackets_acel[1] = this.playerL.racket.y - this.rackets_ypos[1];
+		this.rackets_ypos[0] = this.playerR.racket.y;
 		this.rackets_ypos[1] = this.playerL.racket.y;
 
 	// racket reflections
@@ -159,7 +159,6 @@ console.log("constructor Class.game");
 			this.ballSpeedX = -this.ballSpeedX;
 			++this.playerL.score;
 			this.gameService.changeScore(this.roomN, this.playerR.score, this.playerL.score);
-
 			this.ball.x = width / 2 - this.ballSpeedX;
 			this.ball.y = Math.floor(Math.random() * height);
 			// this.ball.y = height / 2 - this.ballSpeedX;
@@ -177,7 +176,6 @@ console.log("constructor Class.game");
 // move rakets event
 	public initMoveEvents(): void {
 		this.userSockets.onFromUser(this.playerR.user.username,'move', (message: string) => {
-// console.log("game_class_playerR socket message", message);
 			if (message == 'up') {
 				if (this.playerR.racket.y > 0) {
 					this.playerR.racket.y -= racketSpeedY;
@@ -220,6 +218,7 @@ console.log("game.class.run");
 	//interval function: update the game at the certain period until the score reaches MAX
 		this.interval = setInterval(async () => {
 			this.updatePositions();
+// console.log("162_game_class", this.playerR.user.username, this.playerR.score , "vs", this.playerL.user.username, this.playerL.score )
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
 			//score MAX - change here
@@ -227,12 +226,9 @@ console.log("game.class.run");
 				this.isrunning = false;
 				this.status.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
 
-///////////////////////////////////////////
-// let promisses = [];
-// promisses.push(
-// WRITING GAME TO THE DB
+////////////////////////////////////////////////////
 
-				const game: GameDto = await this.gameService.create({
+	const game: GameDto = await this.gameService.create({
 					playerOneId: this.playerR.user.id,
 					playerTwoId: this.playerL.user.id,
 					winnerId: this.status.winner.id,
