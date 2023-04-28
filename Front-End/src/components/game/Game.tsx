@@ -70,26 +70,47 @@ function Game() {
 //     });    
    
 // onKeyDown handler function
-    useEffect(() => {
-        const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-            event.preventDefault();
-            if (event.code === "ArrowUp") {
-                sendMessage('move', "up" as any)
-            }
-            if (event.code === "ArrowDown") {
-                sendMessage('move', "down" as any)
-            }
-        };
 
-        if (gamestatus.status == "game") {
-            // Attach the event listener to the window object
-        window.addEventListener('keydown', keyDownHandler);
+    const onkeyPress = (event: KeyboardEvent) => {
+        event.preventDefault();
+        if (event.code === "ArrowUp") {
+            sendMessage('move', "up" as any)
         }
-        else{
+        if (event.code === "ArrowDown") {
+            sendMessage('move', "down" as any)
+        }
+    };
+
+    useEffect(() => {
+// Attach the event listener to the window object
+        window.addEventListener('keydown', onkeyPress);
+        
+        return () => {
         // Remove the event listener when the component unmounts
-            window.removeEventListener('keydown', keyDownHandler);
+            window.removeEventListener('keydown', onkeyPress);
         }
-    }, [gamestatus]);
+    }, []);
+
+    // useEffect(() => {
+    //     const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    //         event.preventDefault();
+    //         if (event.code === "ArrowUp") {
+    //             sendMessage('move', "up" as any)
+    //         }
+    //         if (event.code === "ArrowDown") {
+    //             sendMessage('move', "down" as any)
+    //         }
+    //     };
+
+    //     if (gamestatus.status == "game") {
+    //         // Attach the event listener to the window object
+    //     window.addEventListener('keydown', keyDownHandler);
+    //     }
+    //     else{
+    //     // Remove the event listener when the component unmounts
+    //         window.removeEventListener('keydown', keyDownHandler);
+    //     }
+    // }, [gamestatus]);
 
 
     // Pour partis de Modal select Color,
@@ -218,7 +239,7 @@ function Game() {
                                     
                                     <div className="container-matchh">
                                         
-                                        <PlayerOne  style={{backgroundColor: "white"}} player={game.playerR} winner={0} score={game.scoreR} sizeAvatar={"l"} />
+                                        <PlayerOne  style={{backgroundColor: "white"}} player={game.playerL} winner={0} score={game.scoreL} sizeAvatar={"l"} />
                                            <p> VS </p>
                                            {/* {game.playerR.username}
                                             <MyAvatar  id={game.playerR.id} style="l" avatar={game.playerR.avatar} ftAvatar={game.playerR.ftAvatar}/>
@@ -228,7 +249,7 @@ function Game() {
                                            <MyAvatar  id={game.playerL.id} style="l" avatar={game.playerL.avatar} ftAvatar={game.playerL.ftAvatar}/>
                                            {game.playerL.username} */}
                                         {/* <ScoresMatch score1={game.scoreR} score2={game.scoreL} sizeAvatar={"l"}/> */}
-                                        <PlayerTwo player={game.playerL} winner={0} score={game.playerL} sizeAvatar={"l"} />
+                                        <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} sizeAvatar={"l"} />
                                     </div>
 
                                     
@@ -255,7 +276,7 @@ function Game() {
                             ):(   
 
                              <div >                   
-                                { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
+                                {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
                                 {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
                                                                                             changColorToBlue={changColorToBlue}
                                                                                             changColorToGreen={changColorToGreen}
@@ -336,9 +357,9 @@ function Game() {
                             <div  onClick={() => handleClick(game.roomN)}>
                                 <div className="container-match">
                                     <button  style={{backgroundColor: "#F3F0FF"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
-                                    <PlayerOne player={game.playerR} winner={0} score={game.scoreR} />
-                                    <ScoresMatch score1={game.scoreR} score2={game.scoreL}/>
-                                    <PlayerTwo player={game.playerL} winner={0} score={game.playerL} />
+                                    <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
+                                    <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
+                                    <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
                                 </div>
                                 {/* ({game.playerR.username}
                                 <MyAvatar  id={game.playerR.id} style="s" avatar={game.playerR.avatar} ftAvatar={game.playerR.ftAvatar}/>

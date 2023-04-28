@@ -29,12 +29,12 @@ export class GameService {
 //connected users> random game >:  MAX length = 2 and after paring, cleared
 	private players: any[] = [];
 //all connected spectateurs
-	private spectateurs: any [] = []; // roomUsers = new Array();
-//all connected spectateurs
-	private invited: invited [] = []; // roomUsers = new Array();
-//map of the games
+	private spectateurs: any [] = [];
+//all connected paires [invitation author + invited] 
+	private invited: invited [] = [];
+//map of the games [key: N_room; game]
 	private gameMap: Map<number, GameRoom> = new  Map<number, GameRoom>();
-//array of the active rooms
+//array of the active rooms: roomN, playerR, playerL, scoreR, scoreL
 	private roomArray: roomsList[]= [];
 
 	// getPlayer:any = (username: string) => {
@@ -54,7 +54,6 @@ export class GameService {
 
 	searchPair = (author: number, player: number): boolean => {
 		const index = this.invited.findIndex(i => i.author.id == author && i.player.id == player);
-	// console.log("53_game service searchPair ", index)
   		if (index !== -1) {
 			this.invited.splice(index, 1);
 			return true;
@@ -77,7 +76,7 @@ export class GameService {
 		const room = `room${roomN}`;
 		this.userSockets.joinToRoom(playerR.username, room);
 		this.userSockets.joinToRoom(playerL.username, room);
-
+//game initialization 
 		let game = new GameRoom (this.server, roomN, this.prisma, this, this.userSockets);
 		game.init(playerR);
 		game.init(playerL);
@@ -90,7 +89,7 @@ export class GameService {
 		game.run();
 	}
 
-// removing room
+// removing room in gameMap and roomArray
 	removeRoom = (roomN: number): void => {
 		const room = `room${roomN}`;
 		this.userSockets.leaveRoom(room);
@@ -99,18 +98,20 @@ export class GameService {
 		this.gameMap.delete(roomN);
 		this.roomArray = this.roomArray.filter(i => i.roomN != roomN);
 		this.sendListRooms();
+
+	console.log("gameMap", this.gameMap);	
+	console.log("roomArray", this.roomArray);	
+
 	}
-// emit to all users all rooms that play
+// emit to all users in all rooms that play
 	sendListRooms = () => {
 		this.server.emit("gameRooms", this.roomArray); // send to Front
 	}
 
 	checkPlayerInRooms = async (player: any) => {
-// console.log("101_game.service: checkPlayerInRoom user = ", player);
 		const playerDto: UserDto = await this.userService.getUser(player.userId);
-		// find room by user Dto
+// find Nroom by user Dto
 		const [roomN, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
-// console.log("101_game.service: checkPlayer roomN = ", roomN);
 		if (roomN) {
 			// if exist send init
 			this.playGame(playerDto, roomN);
@@ -121,9 +122,8 @@ export class GameService {
 		}
 	}
 
-//function to process the message "playGame" or "watch"
+//after pressing "playGame" or "watch"
 	playGame = async (player: any, roomN: number): Promise<void> => {
-console.log("///////// GAME PLAY", player);
 		// const playerDto: UserDto = await this.userService.getUser(player.userId);
 		// // find room by user Dto
 		// const [N, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
@@ -137,7 +137,6 @@ console.log("///////// GAME PLAY", player);
 				this.userSockets.emitToUser(playerR.username,'status', {status:'game'}); 
 				this.userSockets.emitToUser(playerL.username,'status', {status:'game'}); 
 				this.addNewRoom(playerR, playerL);
-
 			}
 		}
 //if spectator comes to watch
@@ -151,7 +150,7 @@ console.log("///////// GAME PLAY", player);
 		}
 	}
 
-//function to process the messages "InviteGame", 'acceptGame', 'refuseGame'
+//processing function the messages "InviteGame", 'acceptGame', 'refuseGame'
 	gameInvite = (author: UserDto, player: UserDto): void => {
 		this.userSockets.emitToUser(author.username,'status', {status: 'waiting'} ); 
 		this.invited.push({author, player});
@@ -159,7 +158,7 @@ console.log("///////// GAME PLAY", player);
 
 	acceptGame = (author: UserDto, player: UserDto): void => {
 		if(this.searchPair(author.id, player.id)){
-					this.userSockets.emitToUser(author.username,'status', {status:'game'}); 
+			this.userSockets.emitToUser(author.username,'status', {status:'game'}); 
 			this.userSockets.emitToUser(player.username,'status', {status:'game'}); 
 			this.addNewRoom(author, player);
 		}
@@ -169,6 +168,8 @@ console.log("///////// GAME PLAY", player);
 console.log("///////// GAME REFUSAL", author, player);
 		if(this.searchPair(author.id, player.id)) {
 			this.userSockets.emitToUser(author.username,'status', {status: 'false'} ); 
+			this.userSockets.emitToUser(player.username,'status', {status: 'null'} ); 
+
 		};
 	};
 
