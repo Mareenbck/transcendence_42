@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
 // import Winner from './Winner'
-import type { gameInit, gameState, gameStatus, player, gamesList } from './interface_game'
+import type { gameInit, gameState, gameStatus, gamesList } from './interface_game'
 import ColorModal from './modal/ColorModal';
 import RefusModal from './modal/RefusModal';
 import useSocket from '../../service/socket';
@@ -21,27 +21,34 @@ import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
 
 function Game() {
-    /////////////////////////////////////////Page Game/////////////////////////////////////
     const user = useContext(AuthContext);
     const id = user.userId;
-    const [sendMessage, addListener] = useSocket()
+    const [sendMessage, addListener] = useSocket();
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
-    // const [isruning, setIsRuning] = useState<boolean>(false);
     const [gamestatus, setGameStatus] = useState<gameStatus>(
         {   winner: null,
             status: "null"} 
     );  
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
+    const [curroom, setCurRoom] = useState<number>(-1);
     
-//Game request: click on the button
+//getting data about all games: roomN, playerR, playerL, scoreR, scoreL
     useEffect(() => {
-        addListener("gameRooms", (games: gamesList[]) => {
-    //console.log('gameRooms ', games);
+        const handleGameRooms = (games: gamesList[]) => {
+        //console.log('gameRooms ', games);
+            if(curroom == -1){
+                const index = games.findIndex(room => room.playerL.username == user.username || room.playerR.username == user.username);
+                if (index != -1) {   
+                    setCurRoom(games[index].roomN);
+                }
+            }
             setOnlinePlayers(games);
-        });
+        }
+
+        addListener("gameRooms", handleGameRooms);
         sendMessage('listRooms');
-    }, [])
+    }, []);
 
 //event when user leaves the page   
     useEffect(() => {
@@ -61,11 +68,10 @@ function Game() {
 //     // Execute code before the user navigates away from the page
 // alert('Leaving the page...');
 //     });    
-    
-    useEffect(() => {
+   
 // onKeyDown handler function
+    useEffect(() => {
         const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-//console.log("event.code = ", event.code);
             event.preventDefault();
             if (event.code === "ArrowUp") {
                 sendMessage('move', "up" as any)
@@ -127,7 +133,6 @@ function Game() {
     }, [backColorGame])
 
 
-//**** *******************************************************************/
 //initialization of the initial parameters of the game
     const [gameinit, setGameInit] = useState<gameInit>(
         {
@@ -152,7 +157,6 @@ function Game() {
             scoreL: 0,
         }
     );
-
      
     const initListener = (data: gameInit)=>{
           setGameInit(data);
@@ -163,21 +167,6 @@ function Game() {
     const updateStatus = (data: gameStatus)=>{
         setGameStatus(data);
     }
-
- ///////////////////////////////////////////////////////   
-    // // const [status, setStatus] = useState<string>('');
-    // const [showModal, setShowModal] = useState(false);  
-    
-    // // const updateStatus = (data: string) =>{
-    // //     setShowModal(true);
-    // // console.log("status" , data)
-    // //     setStatus(data);
-    // // }
-    // const handleCloseModal = () => {
-    //     // setStatus('');
-    //     setShowModal(false);
-    // };
-////////////////////////////////////////////////////////
 
 //get data from the server and redraw canvas
     useEffect(() => {
@@ -190,31 +179,29 @@ function Game() {
         //     socket?.off('pong', initWinner);
         // }
 //        sendMessage('doIplay');
-    }, [initListener, updateListener, updateStatus]) //updateStatus
-    
-/////////////////////////////////////////Page OptionGame/////////////////////////////////////
-
+    }, [initListener, updateListener, updateStatus]);
 
     const isInPlay = (): boolean => {
         return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
     };
 
-// function GameButton({ user, playGame }) {
+// action when clicking on "PlayGame"
     const [clicked_play, setClicked] = useState(false);
 
     const handleClick = (roomN: number) => {
-    //console.log('playGame sendMessage', user);
         sendMessage("playGame", {user: user, roomN: roomN});
         gamestatus.winner = null;
         setClicked(true);
     };
-//////////////////////////////////////////////////////////////////////////    
+//////////////////////////////////////////////////////////////////////////////  
 
     return (
         <>
-        <div className={style.mainPos}>
+        <div className={style.mainPos} >
             <SideBar title="Game" />
-                <div className='container-optionPage'>
+                {/* <div className='container-optionPage'> */}
+                {/* <div className='wrapWaiting'> */}
+                <div className='wrapGaming'>
                     <h1 className='titre_option'></h1>
             {/* /GAME or WINNER*/}
                 {(!gamestatus.winner) ? (
@@ -225,15 +212,14 @@ function Game() {
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                             
                             // head Game***********
-                               (<div>
+                               (<div >
                                 {games.map((game: gamesList) => (
-                                    <div>
-                                    <h1>GAME</h1>
-                                    <div className="container-match" style={{backgroundColor: "white",
-                                                                             border: "solid" ,
-                                                                             borderBlockColor:"black" } } >
+                                    
+                                    
+                                    <div className="container-matchh">
                                         
-                                        <PlayerOne  style={{backgroundColor: "white"}} player={game.playerR} winner={game.scoreR} score={game.scoreR} sizeAvatar={"l"} />
+                                        <PlayerOne  style={{backgroundColor: "white"}} player={game.playerR} winner={0} score={game.scoreR} sizeAvatar={"l"} />
+                                           <p> VS </p>
                                            {/* {game.playerR.username}
                                             <MyAvatar  id={game.playerR.id} style="l" avatar={game.playerR.avatar} ftAvatar={game.playerR.ftAvatar}/>
                                             {game.scoreR }  VS    { game.scoreL}
@@ -241,25 +227,30 @@ function Game() {
                                              
                                            <MyAvatar  id={game.playerL.id} style="l" avatar={game.playerL.avatar} ftAvatar={game.playerL.ftAvatar}/>
                                            {game.playerL.username} */}
-                                        <ScoresMatch score1={game.scoreR} score2={game.scoreL} sizeAvatar={"l"}/>
-                                        <PlayerTwo player={game.playerL} winner={game.playerL} score={game.playerL} sizeAvatar={"l"} />
+                                        {/* <ScoresMatch score1={game.scoreR} score2={game.scoreL} sizeAvatar={"l"}/> */}
+                                        <PlayerTwo player={game.playerL} winner={0} score={game.playerL} sizeAvatar={"l"} />
                                     </div>
-                                    </div>
+
+                                    
                                 ))}
                                 </div>    
                                )
                             //head Game************
                             :
-                                (<SelectColor changColorToRed={changColorToRed}
+                                
+                            (
+                                <SelectColor changColorToRed={changColorToRed}
                                             changColorToBlue={changColorToBlue}
                                             changColorToGreen={changColorToGreen}
                                             changColorToBlack={changColorToBlack}>
                                 </SelectColor> ) }    
 
                             {(gamestatus.status == 'waiting') ? (
+                                <div className='.wrapWaiting'>
                                 <div className="center">
                                     <h1 className="blink"> Waiting your opponent</h1>
                                     <div className="circle"></div>
+                                </div>
                                 </div>
                             ):(   
 
@@ -308,11 +299,27 @@ function Game() {
                     </>
                         ):(
                     <>
-                        <h2> WINNER </h2>
-                        <div className='wrapLook'>
+                        <div className='wrapWinner'>
+                            <h2> WINNER </h2>
+                            
                             {/* <Winner gameinit={gameinit} gamewinner={gamewinner} /> */}
-                            <MyAvatar  id={gamestatus.winner.id} style="m" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
-                           < EmojiEventsIcon id = "win"/>
+                             <MyAvatar  id={gamestatus.winner.id} style="s" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
+                             < EmojiEventsIcon id = "win" />
+
+                                <div className='posBtn' >
+                                    {/* /BUTTON FOR GAME START */}
+                                    {!isInPlay() && (
+                                        <div >
+                                            <button className="btn" onClick={() => handleClick(-1)}>Play Game</button>
+                                        </div>
+                                    )}
+                                    {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
+                                    {!isInPlay() && (
+                                        <Link to="/menu">
+                                            <button className="btn"  style={{ alignSelf: "flex-end"}}>Menu</button>
+                                        </Link>
+                                    )}
+                                </div>
                         </div>
                     </>
                 )}
@@ -326,12 +333,12 @@ function Game() {
                         <div className='wrapList'>
 
                         {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
-                            <div  onClick={() => handleClick(game.roomN)}>{game.roomN} 
+                            <div  onClick={() => handleClick(game.roomN)}>
                                 <div className="container-match">
                                     <button  style={{backgroundColor: "#F3F0FF"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
-                                    <PlayerOne player={game.playerR} winner={game.scoreR} score={game.scoreR} />
+                                    <PlayerOne player={game.playerR} winner={0} score={game.scoreR} />
                                     <ScoresMatch score1={game.scoreR} score2={game.scoreL}/>
-                                    <PlayerTwo player={game.playerL} winner={game.playerL} score={game.playerL} />
+                                    <PlayerTwo player={game.playerL} winner={0} score={game.playerL} />
                                 </div>
                                 {/* ({game.playerR.username}
                                 <MyAvatar  id={game.playerR.id} style="s" avatar={game.playerR.avatar} ftAvatar={game.playerR.ftAvatar}/>

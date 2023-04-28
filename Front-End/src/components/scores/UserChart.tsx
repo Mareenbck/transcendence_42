@@ -6,7 +6,8 @@ import AuthContext from "../../store/AuthContext";
 
 const UserChart= (props: any) => {
 
-    const h = (props.h) * (100) / 12
+    // const h = (props.h) * (100) / 10
+    const h = (props.h) * 100/12;
 
     return (
         <div className="combPos">

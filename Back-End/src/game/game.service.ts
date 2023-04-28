@@ -24,9 +24,6 @@ export class GameService {
 	public server: Server = null;
 	public userSockets: UsersSockets;
 	public gameService: GameService;
-
-	// private playerR: any;
-	// private playerL: any;
 	private gameId: number = 0;
 
 //connected users> random game >:  MAX length = 2 and after paring, cleared
@@ -36,7 +33,7 @@ export class GameService {
 //all connected spectateurs
 	private invited: invited [] = []; // roomUsers = new Array();
 //map of the games
-	private gameMap = new  Map<number, GameRoom>();
+	private gameMap: Map<number, GameRoom> = new  Map<number, GameRoom>();
 //array of the active rooms
 	private roomArray: roomsList[]= [];
 
@@ -73,7 +70,7 @@ export class GameService {
 
 // creating rooms for a pair of players and game launch
 	addNewRoom = (playerR: UserDto, playerL: UserDto): void => {
-		let roomN = 0;
+		let roomN: number = 0;
 		while (this.gameMap.has(roomN)){
 			roomN++;
 	    }
@@ -84,11 +81,10 @@ export class GameService {
 		let game = new GameRoom (this.server, roomN, this.prisma, this, this.userSockets);
 		game.init(playerR);
 		game.init(playerL);
-		this.gameMap[roomN] = game;
+		this.gameMap.set(roomN, game);
 		game.setPlayers(playerR, playerL);
 		game.initMoveEvents();
 		this.roomArray.push({roomN, playerR, playerL, scoreR: 0, scoreL: 0});
-console.log("68 resultatArray- room ", this.roomArray)
 		this.players = [];
 		this.sendListRooms();
 		game.run();
@@ -132,7 +128,7 @@ console.log("///////// GAME PLAY", player);
 		// // find room by user Dto
 		// const [N, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
 //if player comes in to random game
-		if (roomN == -1 /*&& N == undefined*/){ //
+		if (roomN == -1){ //
 			this.addPlayer(player);
 			this.userSockets.emitToUser(player.username,'status', {status: 'waiting'} ); 
 			if (this.players.length == 2){
