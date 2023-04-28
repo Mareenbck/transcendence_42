@@ -24,9 +24,6 @@ export class GameService {
 	public server: Server = null;
 	public userSockets: UsersSockets;
 	public gameService: GameService;
-
-	// private playerR: any;
-	// private playerL: any;
 	private gameId: number = 0;
 
 //connected users> random game >:  MAX length = 2 and after paring, cleared
@@ -36,7 +33,7 @@ export class GameService {
 //all connected spectateurs
 	private invited: invited [] = []; // roomUsers = new Array();
 //map of the games
-	private gameMap = new  Map<number, GameRoom>();
+	private gameMap: Map<number, GameRoom> = new  Map<number, GameRoom>();
 //array of the active rooms
 	private roomArray: roomsList[]= [];
 
@@ -73,7 +70,7 @@ export class GameService {
 
 // creating rooms for a pair of players and game launch
 	addNewRoom = (playerR: UserDto, playerL: UserDto): void => {
-		let roomN = 0;
+		let roomN: number = 0;
 		while (this.gameMap.has(roomN)){
 			roomN++;
 	    }
@@ -84,11 +81,10 @@ export class GameService {
 		let game = new GameRoom (this.server, roomN, this.prisma, this, this.userSockets);
 		game.init(playerR);
 		game.init(playerL);
-		this.gameMap[roomN] = game;
+		this.gameMap.set(roomN, game);
 		game.setPlayers(playerR, playerL);
 		game.initMoveEvents();
 		this.roomArray.push({roomN, playerR, playerL, scoreR: 0, scoreL: 0});
-//  console.log("68 resultatArray ", playerL)
 		this.players = [];
 		this.sendListRooms();
 		game.run();
@@ -132,7 +128,7 @@ console.log("///////// GAME PLAY", player);
 		// // find room by user Dto
 		// const [N, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
 //if player comes in to random game
-		if (roomN == -1 /*&& N == undefined*/){ //
+		if (roomN == -1){ //
 			this.addPlayer(player);
 			this.userSockets.emitToUser(player.username,'status', {status: 'waiting'} ); 
 			if (this.players.length == 2){
@@ -181,73 +177,73 @@ console.log("///////// GAME REFUSAL", author, player);
 //DataBase
 /////////////////////////////////////
 
-	async create({playerOneId, playerTwoId, winnerId, score1, score2}) {//+async
-		return this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
-	}
+async create({playerOneId, playerTwoId, winnerId, score1, score2}) {//+async
+	return this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
+}
 
-	async getGames() {
-	return await this.prisma.game.findMany(
-		{ include: {playerOne: true, playerTwo: true, winner: true}});
-	}
+async getGames() {
+return await this.prisma.game.findMany(
+	{ include: {playerOne: true, playerTwo: true, winner: true}});
+}
 
-	async getUserGames(userId: number): Promise<Game[]> {
-		const games = await this.prisma.game.findMany({
-			where: {
-				OR: [
-					{ playerOneId: userId },
-					{ playerTwoId: userId },
-					{ winnerId: userId }
-				]
-			},
-			include: {
-				playerOne: true,
-				playerTwo: true,
-				winner: true
-			}
-		});
-		return games;
-	}
-
-	async updateUserXPAndLevel(userId: number, allGames: GameDto[]) {
-		const xpPerWin = 25;
-		const numWins = allGames.filter(game => game.winnerId === userId).length;
-
-		const newXP = numWins * xpPerWin;
-
-		let newLevel = Math.floor(newXP / 100);
-		if (newLevel < 1) {
-			newLevel = 1;
+async getUserGames(userId: number): Promise<Game[]> {
+	const games = await this.prisma.game.findMany({
+		where: {
+			OR: [
+				{ playerOneId: userId },
+				{ playerTwoId: userId },
+				{ winnerId: userId }
+			]
+		},
+		include: {
+			playerOne: true,
+			playerTwo: true,
+			winner: true
 		}
+	});
+	return games;
+}
 
-		const moduloXp = newXP % 100;
+async updateUserXPAndLevel(userId: number, allGames: GameDto[]) {
+	const xpPerWin = 25;
+	const numWins = allGames.filter(game => game.winnerId === userId).length;
 
-		const user = await this.prisma.user.update({
-			where: { id: userId },
-			data: {
-				xp: moduloXp,
-				level: newLevel,
-			},
-		});
-		return user;
+	const newXP = numWins * xpPerWin;
+
+	let newLevel = Math.floor(newXP / 100);
+	if (newLevel < 1) {
+		newLevel = 1;
 	}
 
-	async getUserRankByWins(userId: number): Promise<number> {
-		const result = await this.prisma.user.findMany({
+	const moduloXp = newXP % 100;
+
+	const user = await this.prisma.user.update({
+		where: { id: userId },
+		data: {
+			xp: moduloXp,
+			level: newLevel,
+		},
+	});
+	return user;
+}
+
+async getUserRankByWins(userId: number): Promise<number> {
+	const result = await this.prisma.user.findMany({
+	  select: {
+		id: true,
+		username: true,
+		xp: true,
+		level: true,
+		winner: {
 		  select: {
 			id: true,
-			username: true,
-			xp: true,
-			level: true,
-			winner: {
-			  select: {
-				id: true,
-			  },
-			},
 		  },
-		});
-		const user = result.find((u) => u.id === userId);
-		const userWins = user?.winner.length || 0;
-		const higherRankUsers = result.filter((u) => (u.winner.length || 0) > userWins);
-		return higherRankUsers.length + 1;
-	  }
-	}
+		},
+	  },
+	});
+	const user = result.find((u) => u.id === userId);
+	const userWins = user?.winner.length || 0;
+	const higherRankUsers = result.filter((u) => (u.winner.length || 0) > userWins);
+	return higherRankUsers.length + 1;
+  }
+}
