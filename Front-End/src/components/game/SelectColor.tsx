@@ -27,10 +27,10 @@ const SelectColor = (props: any) => {
 
             <div className="card-option">
                         <div className="poslogo">
-                            <a herf="#">
+                            {/* <a herf="#">
                                 Logo
-                            </a>
-                            <h2 >Select your favorite color for...</h2>
+                            </a> */}
+                            <h2 >Select your favorite color for Playground</h2>
                          </div>
                          <div className="posColor" style={{"cursor": "prompt"}}>
                             <button  className = "posColor__circlebtn" onClick={props.changColorToRed}   style={{backgroundColor: "rgb(158, 28, 28)"}} ></button>

@@ -45,9 +45,10 @@ const Card = (props: any) => {
 			setContent(<ShowAchievements id={props.id}/>)
 		}else if (props.type === 'table') {
 			setContent(<Table id={props.id}/>)
-		}else if (props.type === 'viewGame') {
-			setContent(<MatchHistory id={props.id} authCtx={props.authCtx}/>)
 		}
+		// }else if (props.type === 'viewGame') {
+		// 	setContent(<MatchHistory id={props.id} authCtx={props.authCtx}/>)
+		// }
 	}, [props.type])
 
 	const menuCardClass = props.type === 'menu' ? 'menu-card' : '';

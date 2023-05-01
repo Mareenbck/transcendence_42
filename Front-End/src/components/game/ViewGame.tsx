@@ -6,11 +6,29 @@ import PlayerOne from "./PlayerOne";
 import PlayerTwo from "./PlayerTwo";
 import ScoresMatch from "./ScoresMatch";
 import AuthContext from "../../store/AuthContext";
+import useSocket from '../../service/socket';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import type { gameInit, gameState, gameStatus, gamesList } from './interface_game';
+// const [gamestatus, setGameStatus] = useState<gameStatus>(
+// 	{   winner: null,
+// 		status: "null"} 
+// );  
 
 const ViewGame = (props: any) => {
 	const [games, setGames] = useState<any[] | null>();
 	const { id } = useParams();
-	const authCtx = useContext(AuthContext)
+	const authCtx = useContext(AuthContext);
+	const [sendMessage, addListener] = useSocket()
+
+	// function GameButton({ user, playGame }) {
+		const [clicked_play, setClicked] = useState(false);
+
+		const handleClick = (roomN: number) => {
+		//console.log('playGame sendMessage', user);
+			sendMessage("playGame", {user: user, roomN: roomN});
+			gamestatus.winner = null;
+			setClicked(true);
+		};
 
 	useEffect(() => {
 		const url = `http://localhost:3000/game/allGames/${id}`;
@@ -39,18 +57,30 @@ const ViewGame = (props: any) => {
 
 	return (
         <>
-            //   {games.map((game) => (
-            // 	<ListItem key={game.id}>
-            // 		<div className="container-match">
-            // 			<PlayerOne player={game.playerOne} winner={game.winner} score={game.score1} />
-            // 			<ScoresMatch score1={game.score1} score2={game.score2} date={game.createdAt}/>
-            // 			<PlayerTwo player={game.playerTwo} winner={game.winner} score={game.score2} />
-            // 		</div>
-            // 	</ListItem>
-            //   ))}
-		</>
-		
+			{/* /LIST OF CURRENT GAME with button "Watch*/}
+			<div>
+                    {games.map((game: gamesList) => (
+                        <div className='wrapList'>
+
+                      
+                            <div  onClick={() => handleClick(game.roomN)}>
+                                <div className="container-match">
+                                    <button  style={{backgroundColor: "#F3F0FF"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
+                                    <PlayerOne player={game.playerR} winner={""} score={game.scoreR} />
+                                    <ScoresMatch score1={game.scoreR} score2={game.scoreL}/>
+                                    <PlayerTwo player={game.playerL} winner={""} score={game.playerL} />
+                                </div>
+                                
+                            </div>
+                         </div>
+
+                    ))}
+                </div>
+
+
+
+	</>	
 	)
 }
 
-export default ViweGame;
+export default ViewGame;

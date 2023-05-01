@@ -1,4 +1,4 @@
-.container-match {
+/* .container-match {
     display: flex;
     justify-content: space-between;
     width: inherit;
@@ -8,14 +8,14 @@
     padding: 3px 10px 3px 10px;
     border: solid 1px #0000000f;
     /* margin-left: -15px; */
-}
+} */
 
-.container-match p{
+/* .container-match p{
     padding: 0;
     margin: 0;
     padding-left: 30px;    
     
-}
+} */
 
 .headTable{
     align-items: center;

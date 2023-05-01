@@ -32,26 +32,30 @@ body{
 
 
 .two{
-    display: flex;
-    flex-direction: row-reverse;
-    align-items:self-start;
-    padding: 0;
+    /* display: flex;
+    flex-direction: row-reverse; */
+    /* align-items:self-start; */
+    margin: auto;
+    /* padding: 0; */
     /* padding-top: 10px; */
-    width: 80%;
-    margin-left: 5px;
+    width: 100%;
+    /* margin-left: 5px; */
     /* margin: auto; */
+    /* background-color: #f1f52e; */
 }
 
 
-@media (max-width: 1500px) {
+@media (max-width: 1000px) {
     .two{
-        display: flex;
-        flex-direction: row;
-        align-items:flex-end;
-        width: 50%;
+        /* display: grid;
+        flex-direction: column; */
+        /* align-items:flex-end; */
+        width: 100%;
         /* margin: auto; */
         padding: 10;
         padding-top: 5px;
+        /* background-color: #66f52e; */
+
     }
    
 
@@ -60,22 +64,26 @@ body{
 .pos{
     display: flex;
     flex-direction: row;
-    
+    gap: 8rem;
     margin: 30px;
     align-self: center;
+   
 
 }
 
-@media (min-width: 1500px) {
+@media (max-width: 1000px) {
     .Pos{
+        background-color: blue;
         display: grid;
+        gap: 5rem;
         /* flex-direction: column; */
-        margin: 30px;
-        align-self: center;  
+         /* margin: 30px;
+        align-self: center; */
        
-    }
-    
-}
+       
+    } 
+   
+} 
 
 .midPos{
     
@@ -86,15 +94,16 @@ body{
     
 }
 
-@media (max-width: 1500px) {
+/* @media (max-width: 1000px) {
     .midPos{
         display: flex;
        flex-direction: row;
-       margin: 20px;
+       margin: 20px; 
+       background-color: red;
        
     }
     
-}
+} */
 
 .rangAvatar{
     display: flex;

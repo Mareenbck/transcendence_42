@@ -73,17 +73,26 @@ box-shadow: 3.65002px 3.65002px 0px #000000;
 {
     text-align: left;
    display: inline-block;
-   /*align-self:flex-start;*/
-
    font-style: normal;
-    font-weight: 700;
-    font-size: 32px;
-    line-height: 24px;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 20px;
     align-self: center;
     font-family: 'Noto Sans', sans-serif;
-   
-
-  
+}
+@media (max-width: 1100px) {
+    .card-option h2
+    {
+        text-align: left;
+        display: inline-block;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 20px;
+        align-self: center;
+        font-family: 'Noto Sans', sans-serif;
+    }
+    
 }
 
 .poslogo{
@@ -95,21 +104,18 @@ box-shadow: 3.65002px 3.65002px 0px #000000;
 
 
 .posColor{
-    margin: 10;
-    /* margin-left: 300px; */
-    
-    padding: 5px;
     display: inline-block;
-   /* width: calc(90% - 50px);*/
-   text-align: right;
+    margin: auto;
+    padding: 1rem;
+
     
 
 }
 .posColor__circlebtn{
-    /*margin: 0;
-    padding: 0;*/
+    margin: -3px;
+    padding: 0;
     width: 30px;
-    height: 70px;
+    height: 40px;
     border-radius: 100%;
    /* display: inline-block;*/
 	
