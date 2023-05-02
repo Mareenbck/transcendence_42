@@ -5,7 +5,7 @@
   font-weight: 500;
   cursor: pointer;
   margin-top: 10px;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .chatOnlineNotFriend {

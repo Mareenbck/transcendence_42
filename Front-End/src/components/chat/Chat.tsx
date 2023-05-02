@@ -24,6 +24,8 @@ import UserChart from '../scores/UserChart';
 import UsersWithDirectMessage from './message/usersWithMessages';
 import ChatInChatroom from './channels/ChatInChatroom';
 import Conversation from './channels/Conversation';
+import UsersList from './UsersList';
+import InteractiveList from './UsersList';
 
 function Chat() {
   const user = useContext(AuthContext);
@@ -128,6 +130,7 @@ function Chat() {
     setAllUsers(response);
     setOtherUsers(response.filter((u: {id: string;})  => !(onlineUsers.some(e => +e.userId.userId === +u.id))));
   };
+  
   useEffect(() => {
     getAllUsersWithBlocked(user.token);
   }, []);
@@ -486,10 +489,20 @@ return (
                 : null
                 )) : <span className="noConversationText2" > Nobody in the air... </span>
               }
-            {/* {isChannelClicked && ( */}
-    
-            {/* )}             */}
             </div>
+            <InteractiveList
+              onlineUsers={onlineUsers}
+              otherUsers={otherUsers}
+              id={id}
+              getUser={getUser}
+              amIBlocked={amIBlocked}
+              inviteGame={inviteGame}
+              setToBlock={setToBlock}
+              setToUnblock={setToUnblock}
+              isHeBlocked={isHeBlocked}
+              getDirect={getDirect}
+              user={user}
+            />
           </div>
         </div>
       </div>
