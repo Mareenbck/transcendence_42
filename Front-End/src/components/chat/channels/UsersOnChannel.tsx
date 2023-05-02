@@ -11,6 +11,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 export default function UsersOnChannel(props: any) {
 
     const authCtx = useContext(AuthContext);
+    const [isBanned, setIsBanned] = useState(false);
     const [participants, setParticipants] = useState([]);
 
     
@@ -75,6 +76,7 @@ export default function UsersOnChannel(props: any) {
                 }
                 const updatedParticipants = participants.filter(p => p.user.id !== userId);
                 setParticipants(updatedParticipants);
+                setIsBanned(true);
                 
             } catch (error) {
                 console.error(error);
@@ -104,10 +106,12 @@ export default function UsersOnChannel(props: any) {
             }
         };
         
-
         const banned = participants.filter((p) => p.status === 'BAN');
+
         const admins = participants.filter((p) => p.role === 'ADMIN');
         const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));
+
+        // console.log("banned list", banned);
         
         
         useEffect(() => {

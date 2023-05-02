@@ -24,9 +24,13 @@ export default function CurrentChannel(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
-	const isBanned = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'BAN');
+	const [isBanned, setIsBanned] = useState<boolean>(currentChatroom.participants.some((p: any) => p.status === 'BAN'));
 	const [showPopUp, setShowPopUp] = useState(true);
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
+	const userBanned = currentChatroom.participants.some((p: any) => p.status === 'BAN');
+
+	console.log("userbanned", userBanned);
+
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -75,6 +79,15 @@ export default function CurrentChannel(props: any) {
 		}
 	  }, [currentChatroom]);
 
+
+	  useEffect(() => {
+		if (userBanned) {
+			setIsBanned(true)
+		} else {
+			setIsBanned(false)
+		}
+	  }, [currentChatroom]);
+
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
 			authorId: data.authorId,
@@ -114,53 +127,61 @@ export default function CurrentChannel(props: any) {
 		setIsJoined(false);
 	  };
 
-	return (
+	  return (
 		<>
-		  {isJoined && (
-			<>
-			  <NavbarChannel
-				chatroom={currentChatroom}
-				onCancel={() => setShowPopUp(false)}
-				onClick={() => setShowPopUp(false)}
-				onSubmit={handleFormSubmit} // Supprimez les accolades inutiles ici
-				onLeaveChannel={handleLeaveChannel}
-			  />
-			  <div className="chatBoxTop">
-				{messages2.length ? (
-				  messages2.map((m, i) => ( // Ajoutez un index pour éviter l'avertissement de la console
-					<div key={i} ref={scrollRef}> {/* Utilisez un index plutôt que la date pour éviter les problèmes */}
-					  <Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
-					</div>
-				  ))
-				) : (
-				  <div className="box-msg"><span className="noConversationText2">No message in this room yet.</span></div>
-				)}
-			  </div>
-			  <div className="chatBoxBottom">
-				<input
-				  className="chatMessageInput"
-				  placeholder="write something..."
-				  onChange={(e) => setNewMessage2(e.target.value)}
-				  value={newMessage2}
-				></input>
-				<FontAwesomeIcon
-				  icon={faPaperPlane}
-				  onClick={handleSubmit}
-				  className="send-btn-chat"
-				/>
-			  </div>
-			</>
-		  )}
-		  {!isJoined && showPopUp && 
-		  (
+			{isJoined && isBanned && (
 				<div className="popup-container">
-				  <div className="popup-content">
-					<span className="popup-text">You need to join the channel before being able to talk.</span>
-					<button className="popup-button" onClick={() => setShowPopUp(false)}>OK</button>
-				  </div>
+					<div className="popup-content">
+						<span className="popup-text">You have been banned from this chat room.</span>
+					</div>
 				</div>
-		  )
-		  } 
+			)}
+			{isJoined && !isBanned && (
+				<>
+					<NavbarChannel
+						chatroom={currentChatroom}
+						onCancel={() => setShowPopUp(false)}
+						onClick={() => setShowPopUp(false)}
+						onSubmit={handleFormSubmit}
+						onLeaveChannel={handleLeaveChannel}
+					/>
+					<div className="chatBoxTop">
+						{messages2.length ? (
+							messages2.map((m, i) => (
+								<div key={i} ref={scrollRef}>
+									<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
+								</div>
+							))
+						) : (
+							<div className="box-msg"><span className="noConversationText2">No message in this room yet.</span></div>
+						)}
+					</div>
+					<div className="chatBoxBottom">
+						<input
+							className="chatMessageInput"
+							placeholder="write something..."
+							onChange={(e) => setNewMessage2(e.target.value)}
+							value={newMessage2}
+						></input>
+						<FontAwesomeIcon
+							icon={faPaperPlane}
+							onClick={handleSubmit}
+							className="send-btn-chat"
+						/>
+					</div>
+				</>
+			)}
+			{!isJoined && showPopUp &&
+				(
+					<div className="popup-container">
+						<div className="popup-content">
+							<span className="popup-text">You need to join the channel before being able to talk.</span>
+							<button className="popup-button" onClick={() => setShowPopUp(false)}>OK</button>
+						</div>
+					</div>
+				)
+			}
 		</>
-	  );	  
+	);
+	
 }

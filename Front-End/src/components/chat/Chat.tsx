@@ -360,6 +360,7 @@ useEffect(() => {
 
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
   const [isJoined, setIsJoined] = useState(false);
+  const [isBanned, setIsBanned] = useState(false);
   const [isChannelClicked, setIsChannelClicked] = useState(false);
   
   // console.log("isjoined ????", isJoined)
@@ -400,13 +401,14 @@ return (
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 		{currentChat ?
     <>
-			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined}/>
+			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined} isBanned={isBanned} setIsBanned={setIsBanned}/>
         <UsersOnChannel
         currentChatroom={currentChat}
         channelId={currentChat?.id}
         channelVisibility={currentChat?.visibility}
         channelName={currentChat.name}
-        isChannelClicked={isChannelClicked}/>
+        isChannelClicked={isChannelClicked}
+        />
     </>
       : currentDirect ?
       <>
