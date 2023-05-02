@@ -16,6 +16,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { UserService } from "src/user/user.service";
 import { UserDto } from 'src/user/dto/user.dto';
 import { CreateChatMessDto } from 'src/chat/chat-mess/dto/create-chatMess.dto';
+import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
 
 @WebSocketGateway(
 8001, { cors: {origin: "http://localhost:8080",}, }
@@ -46,9 +47,11 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       this.globalService.server = this.server;
       this.gameService.server = this.server;
       this.chatService.server = this.server;
+	  this.friendshipService.server = this.server;
       this.globalService.userSockets = this.userSockets;
       this.chatService.userSockets = this.userSockets;
-      this.gameService.userSockets = this.userSockets;
+	  this.gameService.userSockets = this.userSockets;
+	  this.friendshipService.userSockets = this.userSockets;
       this.logger.verbose("globalGateway Initialized");
   }
 
@@ -169,7 +172,9 @@ console.log("68 handleConnect: client");
 	}
 
 	@SubscribeMessage('updateFriends')
-	async updateFriends(@MessageBody() updatedFriends: any[]): Promise<void> {
+	async updateFriends(@MessageBody() ids: any, @ConnectedSocket() socket: Socket): Promise<void> {
+
+		const updatedFriends = await this.friendshipService.showFriends(ids);
 		this.server.emit('friendsUpdated', updatedFriends);
 	}
 

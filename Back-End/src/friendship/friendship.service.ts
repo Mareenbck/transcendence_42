@@ -1,13 +1,18 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Friendship } from '@prisma/client';
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import path = require('path');
 import { Response } from 'express';
+import { Server, Socket } from "socket.io";
+import UsersSockets from "src/gateway/socket.class";
 
 
 @Injectable()
 export class FriendshipService {
+	public server: Server = null;
+	private readonly logger = new Logger(FriendshipService.name);
+	public userSockets: UsersSockets;
 	constructor(private readonly prisma: PrismaService,
 				private userService: UserService) { }
 
@@ -85,6 +90,15 @@ export class FriendshipService {
 			  },
 		  });
 		const friendship = friendships[0];
+		return friendship;
+	}
+
+	async findFriendshipById(demandId: number) {
+		const friendship = await this.prisma.friendship.findUniqueOrThrow({
+			where: {
+				id: demandId,
+			},
+		});
 		return friendship;
 	}
 

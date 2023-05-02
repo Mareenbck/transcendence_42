@@ -42,7 +42,7 @@ const FriendsDemands = (props: any) => {
 		friendCtx.updateDemand(demandId, res, props.token)
 		if (res === 'ACCEPTED') {
 			setSnackbarOpen(true);
-			// sendMessage('demandAccepted', { demandId })
+			// sendMessage('updateFriends', { demandId: demandId })
 		}
 		setPendingDemands(prevDemands => prevDemands.filter(demand => demand.id !== demandId));
 	}

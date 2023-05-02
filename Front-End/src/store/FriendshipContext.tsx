@@ -22,20 +22,33 @@ export const FriendContextProvider = (props: any) => {
 	const [demands, setDemands] = useState<Demand[]>([]);
 	const [friends, setFriends] = useState<Friend[]>([]);
 	const [avatarCache, setAvatarCache] = useState<Map<number, string>>(new Map());
-
+	const [acceptedDemands, setAcceptedDemands] = useState<Demand[]>([]);
 	const authCtx = useContext(AuthContext);
 
 	useEffect (() => {
 		if (authCtx.isLoggedIn) {
 			getFriends(authCtx.token, authCtx.userId);
 		}
-	}, []);
+	}, [acceptedDemands, friends]);
 
 	useEffect (() => {
 		if (authCtx.isLoggedIn) {
 			getDemands(authCtx.token, authCtx.userId);
 		}
 	}, []);
+
+	useEffect(() => {
+		addListener('demandsUpdated', (updatedDemands: Demand[]) => {
+			// Mettre à jour la liste des demandes acceptées
+			setAcceptedDemands(updatedDemands);
+		});
+	}, [addListener]);
+
+	useEffect(() => {
+		addListener('friendsUpdated', (updatedFriends: Friend[]) => {
+			setFriends(updatedFriends);
+		});
+	}, [addListener]);
 
 	const createDemand = async (receiverId: number, token: string, currentId: string) => {
 		try {
@@ -52,11 +65,9 @@ export const FriendContextProvider = (props: any) => {
 				console.log("POST error on /friendship/create");
 				return "error";
 			}
-			console.log("CREATE DEMAND")
 		} catch (error) {
 			console.log("error", error);
 		}
-
 	}
 
 	const getDemands = async (token: string, currentId: string) => {
@@ -93,7 +104,6 @@ export const FriendContextProvider = (props: any) => {
 			}
 		)
 		const data = await response.json();
-
 		// For each friend in the data array, fetch their avatar
 		const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
 			const avatarUrl = avatarCache.get(friend.id) ?? await fetchAvatar(friend.id);
@@ -133,6 +143,7 @@ export const FriendContextProvider = (props: any) => {
 				body: JSON.stringify({ friendId: friendId, currentId: currentId }),
 			});
 			const data = await response.json();
+			setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== friendId));
 			if (!response.ok) {
 				console.log("POST error on /friendship/delete");
 				return "error";
@@ -152,12 +163,13 @@ export const FriendContextProvider = (props: any) => {
 				},
 				body: JSON.stringify({ demandId: demandId, response: res }),
 			});
-			await response.json();
+			const data = await response.json();
 			sendMessage('updateDemands', { demandId: demandId, response: res })
 			if (!response.ok) {
 				console.log("POST error on /friendship/validate");
 				return "error";
 			}
+			setAcceptedDemands([...acceptedDemands, data]);
 		} catch (error) {
 			console.log("error", error);
 		}
