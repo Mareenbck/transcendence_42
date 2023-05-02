@@ -367,7 +367,6 @@ useEffect(() => {
   const [isBanned, setIsBanned] = useState(false);
   const [isChannelClicked, setIsChannelClicked] = useState(false);
   
-  // console.log("isjoined ????", isJoined)
 
 return (
   <>
@@ -439,51 +438,6 @@ return (
         <div className="chatOnline">
           <div className="chatOnlineW">
             <div className="chatOnline">
-              { onlineUsers ? onlineUsers?.map((o) => (
-                +o?.userId.userId !== +id ?
-                <div  key={o?.userId.userId} className={amIBlocked(+o?.userId.userId)}  >
-                  <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
-                    <div className="chatOnlineImgContainer">
-                      <MyAvatar authCtx={user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
-                       <div className="chatOnlineBadge"></div>
-                    </div>
-                    <span className="chatOnlineName"> {o?.userId.username} </span>
-                  </div>
-                    { isHeBlocked(+o.userId.userId) ?
-                      <button className="chatSubmitButton" onClick={() => {setToBlock(getUser(+o.userId.userId))}} >
-                        <i className="fa fa-unlock" aria-hidden="true"></i>
-                      </button>
-                     :
-                     <button className="chatSubmitButton2" onClick={() => {setToUnblock(getUser(+o.userId.userId))}} >
-                        <i className="fa fa-lock" aria-hidden="true"></i>
-                      </button>
-                    }
-                  </div>
-                : null
-                )) : null
-              }
-              { otherUsers ? otherUsers?.map((o) => (
-                +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
-                <div  key={o?.id} className={amIBlocked(o?.id)} >
-                    <div className="fname" onClick={()=> {getDirect(o)}} >
-                      <div className="chatOnlineImgContainer">
-                        <MyAvatar authCtx={user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>
-                      </div>
-                      <span className="chatOnlineName"> {o?.username} </span>
-                    </div>
-                    { !o.blockedFrom.find((u: UserChat)=>(+user.userId === +u?.id)) ?
-                      <button className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
-                          <i className="fa fa-unlock" aria-hidden="true"></i>
-                      </button>
-                     :
-                     <button className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
-                        <i className="fa fa-lock" aria-hidden="true"></i>
-                      </button>
-                    }
-                  </div>
-                : null
-                )) : <span className="noConversationText2" > Nobody in the air... </span>
-              }
             </div>
             <InteractiveList
               onlineUsers={onlineUsers}

@@ -22,6 +22,10 @@ import LockIcon from '@mui/icons-material/Lock';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Link } from "react-router-dom";
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import CurrentChannel from './channels/CurrentChannel';
+import UsersOnChannel from './channels/UsersOnChannel';
+import MessageD from './message/messageD';
+import UsersWithDirectMessage from './message/usersWithMessages';
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2].map((value) =>
@@ -46,7 +50,8 @@ export default function InteractiveList({
     setToUnblock,
     isHeBlocked,
     getDirect,
-    user
+    user,
+  
   }) {
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
@@ -60,65 +65,80 @@ export default function InteractiveList({
     }
   
     return (
-      <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
+      <Box style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
           All users
         </Typography>
-        <Demo>
+        <Demo style={{ backgroundColor: '#f2f2f2' }}>
           <List dense={dense}>
-         
-            {onlineUsers?.map((o) => (
-              +o?.userId.userId !== +id ? (
-                <ListItem
-                key={o?.userId.userId}
+          {onlineUsers?.map((o) => (
+            +o?.userId.userId !== +id ? (
+                <ListItem key={o?.userId.userId}
                 secondaryAction={
-                    <IconButton edge="end" aria-label="Jouer" onClick={() => inviteGame(o?.userId.userId)}> 
-                    <Link to={'/game/'} onClick={() => inviteGame(+o?.userId.userId)}>                    
-                        <PlayCircleIcon/>                    
+                    <div>
+                    <Link to={'/game/'} onClick={() => inviteGame(+o?.userId.userId)}>
+                        <IconButton className='violet-icon' edge="end" aria-label="Jouer">
+                        <PlayCircleIcon/>
+                        </IconButton>
                     </Link>
-                    <Link to={`/users/profile/${o?.id}`} className="profile-link">                    
-                        <AccountBoxIcon/>
+                    <Link to={`/users/profile/${o?.id}`} className="profile-link">
+                        <IconButton  className='violet-icon' edge="end" aria-label="Profil">
+                        <AccountBoxIcon />
+                        </IconButton>
                     </Link>
-                    </IconButton>
-                  }
-                  >
-                      {isHeBlocked(+o.userId.userId) ?
-                        <button className="chatSubmitButton" onClick={() => {setToBlock(getUser(+o.userId.userId))}} >
-                            <LockIcon/>
-                        </button>
-                       :
-                       <button className="chatSubmitButton2" onClick={() => {setToUnblock(getUser(+o.userId.userId))}} >
-                        <LockOpenIcon/>
-                        </button>
-                      }
-                  <ListItemAvatar>
+                    {isHeBlocked(+o.userId.userId) ?
+                        <IconButton className='violet-icon' edge="end" aria-label="Débloquer" onClick={() => {setToBlock(getUser(+o.userId.userId))}}>
+                        <LockOpenIcon />
+                        </IconButton>
+                        :
+                        <IconButton edge="end" aria-label="Bloquer" onClick={() => {setToUnblock(getUser(+o.userId.userId))}}>
+                        <LockIcon />
+                        </IconButton>
+                    }
+                    </div>
+                }
+                >
+                <ListItemAvatar>
                     <MyAvatar authCtx={user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
-                  </ListItemAvatar>
-                  <ListItemText
+                </ListItemAvatar>
+                <ListItemText
                     primary={o?.userId.username}
                     secondary={secondary ? 'Secondary text' : null}
-                  />
+                />
                 </ListItem>
-              ) : null
+            ) : null
             ))}
+
             {otherUsers?.map((o) => ( 
               +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ? (
                 <ListItem
-                  key={o?.id}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="Jouer" onClick={() => inviteGame(o?.userId.userId)}> 
-                    <Link to={'/game/'} onClick={() => inviteGame(+o?.userId.userId)}>                    
-                        <PlayCircleIcon/>                    
-                    </Link>
-                    <Link to={`/users/profile/${o?.id}`} className="profile-link">                    
-                        <AccountBoxIcon/>
-                    </Link>                    
-                    </IconButton>
-                  }
-                >
+                    key={o?.id}
+                    secondaryAction={
+                        <div>
+                        <Link to={'/game/'}  className='violet-icon' onClick={() => inviteGame(+o?.id)}>                    
+                            <IconButton  edge="end" aria-label="Jouer"> 
+                            <PlayCircleIcon className='violet-icon'/>
+                            </IconButton>                  
+                        </Link>
+                        <Link to={`/users/profile/${o?.id}`}>  
+                        <IconButton className='violet-icon' edge="end" aria-label="Profil">         
+                            <AccountBoxIcon/>
+                        </IconButton>
+                        </Link>
+                        {isHeBlocked(+o.id) ?
+                        <IconButton className='violet-icon' edge="end" aria-label="Débloquer" onClick={() => {setToBlock(getUser(+o.id))}}>
+                            <LockOpenIcon/>
+                            </IconButton>
+                            :
+                        <IconButton className='violet-icon' edge="end" aria-label="Bloquer"onClick={() => {setToUnblock(getUser(+o.id))}}>
+                            <LockIcon onClick={() => {setToUnblock(getUser(+o.id))}}/>
+                            </IconButton>
+                        }
+                        </div>
+                    }
+                    >
                   <ListItemAvatar>
                     <MyAvatar authCtx={user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>
-                
                   </ListItemAvatar>
                   <ListItemText
                     primary={o?.username}
