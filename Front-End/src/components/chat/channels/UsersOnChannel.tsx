@@ -106,8 +106,55 @@ export default function UsersOnChannel(props: any) {
             }
         };
         
-        const banned = participants.filter((p) => p.status === 'BAN');
+        const muteSomeone = async (channelId: string, userId: string) => {
+          try {
+              const response = await fetch(
+                  `http://localhost:3000/chatroom2/${channelId}/mute/${userId}`,
+                  {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authCtx.token}`,
+                  },
+              }
+              );
+              if (!response.ok) {
+                  throw new Error("Failed to mute user.");
+              }
+              const updatedParticipants = participants.filter(p => p.user.id !== userId);
+              setParticipants(updatedParticipants);
+              
+          } catch (error) {
+              console.error(error);
+          }
+      };
 
+      const unMuteSomeone = async (channelId: string, userId: string) => {
+        try {
+            const response = await fetch(
+                `http://localhost:3000/chatroom2/${channelId}/unmute/${userId}`,
+                {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${authCtx.token}`,
+                },
+            }
+            );
+            if (!response.ok) {
+                throw new Error("Failed to mute user.");
+            }
+            const updatedParticipants = participants.filter(p => p.user.id !== userId);
+            setParticipants(updatedParticipants);
+            
+        } catch (error) {
+            console.error(error);
+        }
+    };
+      
+
+        const banned = participants.filter((p) => p.status === 'BAN');
+        // const muted = participants.filter((p) => p.status === 'MUTE');
         const admins = participants.filter((p) => p.role === 'ADMIN');
         const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));
 
@@ -144,7 +191,16 @@ export default function UsersOnChannel(props: any) {
                           {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
                             <RemoveCircleIcon className="ban-icon" onClick={() => banSomeone(props.channelId, p.user.id)} />
                           ) : null}
-                          <MicOffIcon />
+                          <MicOffIcon 
+                            className={`mute ${p.status === 'MUTE' ? 'muted' : ''}`} 
+                            onClick={() => {
+                              if (p.status === 'MUTE') {
+                                unMuteSomeone(props.channelId, p.user.id);
+                              } else {
+                                muteSomeone(props.channelId, p.user.id);
+                              }
+                            }}
+                          />
                         </>
                       )}
                     </li>

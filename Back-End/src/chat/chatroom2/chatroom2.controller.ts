@@ -124,6 +124,22 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 		return unBanSomeone;
 	}
 
+	@Post('/:channelId/mute/:userId')
+	@UseGuards(JwtGuard)
+	async mute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
+		const muted = await this.chatRoomService.mute(parseInt(channelId), parseInt(userId));
+		// console.log("muted", muted)
+		return muted ;
+	}
+
+	@Post('/:channelId/unmute/:userId')
+	@UseGuards(JwtGuard)
+	async unmute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
+		const unmuted = await this.chatRoomService.mute(parseInt(channelId), parseInt(userId));
+		// console.log("muted", muted)
+		return unmuted ;
+	}
+
 	// @Post('/invite_admin')
 	// @UseGuards(JwtGuard)
 	// async receiv

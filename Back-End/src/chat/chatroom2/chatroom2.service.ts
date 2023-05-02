@@ -309,6 +309,68 @@ export class ChatroomService {
 			console.error(error);
 			throw new Error("Failed to unban user from channel.");
 		}
+	}	
+	
+	async mute(channelId: number, userId: number) {
+		try {
+			const userOnChannel = await this.prisma.userOnChannel.findFirst({
+				where: {
+					channelId: channelId,
+					userId: userId,
+				},
+			});
+	
+			if (!userOnChannel) {
+				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
+			}
+	
+			const updatedStatus = await this.prisma.userOnChannel.update({
+				where: {
+					channelId_userId: {
+					  channelId,
+					  userId,
+					},
+				  },
+				data: {
+					status: UserStatusOnChannel.MUTE,
+				},
+			});
+			return `User with ID ${userId} has been muted from channel with ID ${channelId}`;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to unban user from channel.");
+		}
+	}
+
+	async unmute(channelId: number, userId: number) {
+		try {
+			const userOnChannel = await this.prisma.userOnChannel.findFirst({
+				where: {
+					channelId: channelId,
+					userId: userId,
+				},
+			});
+	
+			if (!userOnChannel) {
+				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
+			}
+	
+			const updatedStatus = await this.prisma.userOnChannel.update({
+				where: {
+					channelId_userId: {
+					  channelId,
+					  userId,
+					},
+				  },
+				data: {
+					status: UserStatusOnChannel.CLEAN,
+				},
+			});
+			return `User with ID ${userId} has been muted from channel with ID ${channelId}`;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to unban user from channel.");
+		}
 	}
 	  
 }

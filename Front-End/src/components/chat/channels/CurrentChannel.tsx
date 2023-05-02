@@ -29,7 +29,7 @@ export default function CurrentChannel(props: any) {
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
 	const userBanned = currentChatroom.participants.some((p: any) => p.status === 'BAN');
 
-	console.log("userbanned", userBanned);
+	// console.log("userbanned", userBanned);
 
 
 	const getUser = (userId: number): UserChat | null => {

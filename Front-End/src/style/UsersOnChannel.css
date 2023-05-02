@@ -58,3 +58,12 @@
     color: red;
     cursor: pointer;
   }
+
+  .mute {
+    color: red;
+    cursor: pointer;
+  }
+
+  .mute.muted {
+    color: gray;
+  }
