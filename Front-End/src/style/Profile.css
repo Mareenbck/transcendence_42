@@ -107,7 +107,7 @@
 	border-radius: 27.3758px;
 }
 
-.MuiBadge-root {
+.badge-unstyled.MuiBadge-root {
 	margin-left: 60px;
 	font-size: 40px;
 }
@@ -248,10 +248,36 @@ li {
 	display: inline-block;
 }
 
+.badge-unstyled-sidebar .MuiBadge-root {
+	margin-left: 0px;
+}
+
 .badge-unstyled .badge-notification {
 	position: absolute;
-	top: -5px;
+	top: 4px;
 	right: -10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 20px;
+	height: 20px;
+	background-color: red;
+	color: white;
+	font-size: 12px;
+	font-weight: bold;
+	border-radius: 50%;
+}
+
+.badge-unstyled-sidebar {
+	position: relative;
+	display: inline-block;
+}
+
+.badge-unstyled-sidebar .badge-notification {
+	position: absolute;
+	top: -5px;
+	right: 22px;
+	z-index: 1;
 	display: flex;
 	justify-content: center;
 	align-items: center;
