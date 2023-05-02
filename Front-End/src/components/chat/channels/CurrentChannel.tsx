@@ -11,8 +11,7 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { Box, IconButton, Modal, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorModalPassword from "./ErrorModalPassword";
-
-
+import '../../../style/UsersOnChannel.css'
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -24,12 +23,17 @@ export default function CurrentChannel(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
-	const [isBanned, setIsBanned] = useState<boolean>(currentChatroom.participants.some((p: any) => p.status === 'BAN'));
-	const [showPopUp, setShowPopUp] = useState(true);
-	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
-	const userBanned = currentChatroom.participants.some((p: any) => p.status === 'BAN');
+	const [isBanned, setIsBanned] = useState<boolean>(currentChatroom.participants.some((p: any) => p.status === 'BAN') && parseInt(authCtx.userId));
+	const [isMuted, setIsMuted] = useState<boolean>(currentChatroom.participants.some((p: any) => p.status === 'MUTE'));
 
-	// console.log("userbanned", userBanned);
+	const [showPopUp, setShowPopUp] = useState(true);
+
+	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
+	const userBanned = currentChatroom.participants.some((p: any) => p.status === 'BAN')&& parseInt(authCtx.userId);
+	const userMuted = currentChatroom.participants.some((p: any) => p.status === 'MUTE') && parseInt(authCtx.userId);
+
+	// console.log(currentChatroom.participants.userId)
+	// console.log("isbanned", isBanned)
 
 
 	const getUser = (userId: number): UserChat | null => {
@@ -79,15 +83,6 @@ export default function CurrentChannel(props: any) {
 		}
 	  }, [currentChatroom]);
 
-
-	  useEffect(() => {
-		if (userBanned) {
-			setIsBanned(true)
-		} else {
-			setIsBanned(false)
-		}
-	  }, [currentChatroom]);
-
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
 			authorId: data.authorId,
@@ -129,13 +124,7 @@ export default function CurrentChannel(props: any) {
 
 	  return (
 		<>
-			{isJoined && isBanned && (
-				<div className="popup-container">
-					<div className="popup-content">
-						<span className="popup-text">You have been banned from this chat room.</span>
-					</div>
-				</div>
-			)}
+			
 			{isJoined && !isBanned && (
 				<>
 					<NavbarChannel
@@ -166,7 +155,8 @@ export default function CurrentChannel(props: any) {
 						<FontAwesomeIcon
 							icon={faPaperPlane}
 							onClick={handleSubmit}
-							className="send-btn-chat"
+							className={`send-btn-chat ${isMuted ? 'muted' : ""}`} // ajouter la classe 'muted' si l'utilisateur est mute							
+							disabled={isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
 						/>
 					</div>
 				</>
@@ -180,6 +170,15 @@ export default function CurrentChannel(props: any) {
 						</div>
 					</div>
 				)
+			}
+			{isBanned && (
+				<div className="popup-container">
+					<div className="popup-content">
+						<span className="popup-text">You have been banned from this chat room.</span>
+						<button className="popup-button" onClick={() => setShowPopUp(false)}>OK</button>
+					</div>
+				</div>
+			)
 			}
 		</>
 	);

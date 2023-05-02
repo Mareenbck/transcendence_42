@@ -67,3 +67,9 @@
   .mute.muted {
     color: gray!important ;
   }
+
+  .send-btn-chat.muted {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  

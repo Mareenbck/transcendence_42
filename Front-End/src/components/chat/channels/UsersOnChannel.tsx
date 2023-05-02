@@ -70,7 +70,7 @@ export default function UsersOnChannel(props: any) {
                     },
                 }
                 );
-                console.log("RESPONSE", response);
+                // console.log("RESPONSE", response);
                 if (!response.ok) {
                     throw new Error("Failed to ban user.");
                 }
@@ -150,10 +150,10 @@ export default function UsersOnChannel(props: any) {
         } catch (error) {
             console.error(error);
         }
-    };
-      
+    };      
 
         const banned = participants.filter((p) => p.status === 'BAN');
+        // console.log("banned", banned)
         // const muted = participants.filter((p) => p.status === 'MUTE');
         const admins = participants.filter((p) => p.role === 'ADMIN');
         const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));
