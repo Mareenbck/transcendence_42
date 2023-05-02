@@ -49,7 +49,7 @@ export default function ChannelVisibility(props: any) {
           )} */}
         </div>
       );
-    } else if (props.visibility === "PUBLIC") {
+    }else if (props.visibility === "PUBLIC") { // on vérifie que le timeout n'est pas actif
       icon = (
         <div className="visibility-icon">
           {!isJoined && (
@@ -67,6 +67,8 @@ export default function ChannelVisibility(props: any) {
     }
     return icon;
   }
+
+  // console.log(props.banTimeout)
 
   const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();

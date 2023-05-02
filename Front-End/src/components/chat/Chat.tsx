@@ -359,10 +359,12 @@ useEffect(() => {
 
 
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
-  // console.log("isjoined ????", isJoined)
   const [isJoined, setIsJoined] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isBanned, setIsBanned] = useState(false);
   const [isChannelClicked, setIsChannelClicked] = useState(false);
-
+  
+  // console.log("isjoined ????", isJoined)
 
 return (
   <>
@@ -400,12 +402,14 @@ return (
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 		{currentChat ?
     <>
-			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined}/>
-      <UsersOnChannel
-      currentChatroom={currentChat}
-      channelId={currentChat?.id}
-      channelVisibility={currentChat?.visibility}
-      isChannelClicked={isChannelClicked}/>
+			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined} isBanned={isBanned} setIsBanned={setIsBanned}/>
+        <UsersOnChannel
+        currentChatroom={currentChat}
+        channelId={currentChat?.id}
+        channelVisibility={currentChat?.visibility}
+        channelName={currentChat.name}
+        isChannelClicked={isChannelClicked}
+        />
     </>
       : currentDirect ?
       <>
@@ -436,7 +440,7 @@ return (
               { onlineUsers ? onlineUsers?.map((o) => (
                 +o?.userId.userId !== +id ?
                 <div  key={o?.userId.userId} className={amIBlocked(+o?.userId.userId)}  >
-                    <Link to={'/game/play'} onClick={() => inviteGame(+o?.userId.userId)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+                    <Link to={'/game/'} onClick={() => inviteGame(+o?.userId.userId)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
                     <Link to={`/users/profile/${o?.userId.userId}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                   <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
                     <div className="chatOnlineImgContainer">
@@ -461,7 +465,7 @@ return (
               { otherUsers ? otherUsers?.map((o) => (
                 +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
                 <div  key={o?.id} className={amIBlocked(o?.id)} >
-                    <Link to={'/game/play'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
+                    <Link to={'/game/'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
                     <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                     <div className="fname" onClick={()=> {getDirect(o)}} >
                       <div className="chatOnlineImgContainer">

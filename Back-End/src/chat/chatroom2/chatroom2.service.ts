@@ -112,12 +112,10 @@ export class ChatroomService {
   }
 
   async addAdmin(channelId: number, userId: number) {
-	// console.log("entre dans le service")
 	const users = await this.prisma.userOnChannel.findMany({
 		where: { channelId },
 		include: { user: true },
 	  });
-	// console.log("USERS ON SERVICE", users)
 
 	if (!users || users.length === 0) {
 	  throw new ForbiddenException(`User with ID ${userId} is not on channel with ID ${channelId}`);
@@ -130,7 +128,8 @@ export class ChatroomService {
 	  data: {
 		role: UserRoleInChannel.ADMIN,
 	},
-});
+	});
+
 	return updatedrole;
 }
 
@@ -248,7 +247,131 @@ export class ChatroomService {
 			console.error(error);
 			throw new Error("Failed to kick user from channel.");
 		}
+	}	  
+	
+	async ban(channelId: number, userId: number) {
+		try {
+			const userOnChannel = await this.prisma.userOnChannel.findFirst({
+				where: {
+					channelId: channelId,
+					userId: userId,
+				},
+			});
+	
+			if (!userOnChannel) {
+				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
+			}
+	
+			const updatedStatus = await this.prisma.userOnChannel.update({
+				where: {
+					channelId_userId: {
+					  channelId,
+					  userId,
+					},
+				  },
+				data: {
+					status: UserStatusOnChannel.BAN,
+				},
+			});
+			return `User with ID ${userId} has been banned from channel with ID ${channelId}`;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to ban user from channel.");
+		}
 	}
 	
+	async unBan(channelId: number, userId: number) {
+		try {
+			const userOnChannel = await this.prisma.userOnChannel.findFirst({
+				where: {
+					channelId: channelId,
+					userId: userId,
+				},
+			});
+	
+			if (!userOnChannel) {
+				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
+			}
+	
+			const updatedStatus = await this.prisma.userOnChannel.update({
+				where: {
+					channelId_userId: {
+					  channelId,
+					  userId,
+					},
+				  },
+				data: {
+					status: UserStatusOnChannel.CLEAN,
+				},
+			});
+			return `User with ID ${userId} has been unbanned from channel with ID ${channelId}`;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to unban user from channel.");
+		}
+	}	
+	
+	async mute(channelId: number, userId: number) {
+		try {
+			const userOnChannel = await this.prisma.userOnChannel.findFirst({
+				where: {
+					channelId: channelId,
+					userId: userId,
+				},
+			});
+	
+			if (!userOnChannel) {
+				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
+			}
+	
+			const updatedStatus = await this.prisma.userOnChannel.update({
+				where: {
+					channelId_userId: {
+					  channelId,
+					  userId,
+					},
+				  },
+				data: {
+					status: UserStatusOnChannel.MUTE,
+				},
+			});
+			return `User with ID ${userId} has been muted from channel with ID ${channelId}`;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to mute user from channel.");
+		}
+	}
+
+	async unmute(channelId: number, userId: number) {
+		try {
+			// console.log
+			const userOnChannel = await this.prisma.userOnChannel.findFirst({
+				where: {
+					channelId: channelId,
+					userId: userId,
+				},
+			});
+	
+			if (!userOnChannel) {
+				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
+			}
+	
+			const updatedStatus = await this.prisma.userOnChannel.update({
+				where: {
+					channelId_userId: {
+					  channelId,
+					  userId,
+					},
+				  },
+				data: {
+					status: UserStatusOnChannel.CLEAN,
+				},
+			});
+			return `User with ID ${userId} has been unmuted from channel with ID ${channelId}`;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to unmute user from channel.");
+		}
+	}
 	  
 }
