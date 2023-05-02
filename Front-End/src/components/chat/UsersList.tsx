@@ -21,6 +21,7 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Link } from "react-router-dom";
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2].map((value) =>
@@ -65,11 +66,12 @@ export default function InteractiveList({
         </Typography>
         <Demo>
           <List dense={dense}>
+         
             {onlineUsers?.map((o) => (
               +o?.userId.userId !== +id ? (
                 <ListItem
-                  key={o?.userId.userId}
-                  secondaryAction={
+                key={o?.userId.userId}
+                secondaryAction={
                     <IconButton edge="end" aria-label="Jouer" onClick={() => inviteGame(o?.userId.userId)}> 
                     <Link to={'/game/'} onClick={() => inviteGame(+o?.userId.userId)}>                    
                         <PlayCircleIcon/>                    
@@ -79,10 +81,18 @@ export default function InteractiveList({
                     </Link>
                     </IconButton>
                   }
-                >
+                  >
+                      {isHeBlocked(+o.userId.userId) ?
+                        <button className="chatSubmitButton" onClick={() => {setToBlock(getUser(+o.userId.userId))}} >
+                            <LockIcon/>
+                        </button>
+                       :
+                       <button className="chatSubmitButton2" onClick={() => {setToUnblock(getUser(+o.userId.userId))}} >
+                        <LockOpenIcon/>
+                        </button>
+                      }
                   <ListItemAvatar>
                     <MyAvatar authCtx={user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
-         
                   </ListItemAvatar>
                   <ListItemText
                     primary={o?.userId.username}
@@ -91,7 +101,7 @@ export default function InteractiveList({
                 </ListItem>
               ) : null
             ))}
-            {otherUsers?.map((o) => (
+            {otherUsers?.map((o) => ( 
               +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ? (
                 <ListItem
                   key={o?.id}

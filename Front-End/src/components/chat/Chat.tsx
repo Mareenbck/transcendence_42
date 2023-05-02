@@ -401,7 +401,6 @@ return (
 
     <div className="chatBox">
       <div className="chatBoxW">
-        {/* <div className="title" ><MyAccountMenu authCtx={user}></MyAccountMenu><h4>{user.username}</h4></div> */}
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 		{currentChat ?
     <>
@@ -443,8 +442,6 @@ return (
               { onlineUsers ? onlineUsers?.map((o) => (
                 +o?.userId.userId !== +id ?
                 <div  key={o?.userId.userId} className={amIBlocked(+o?.userId.userId)}  >
-                    <Link to={'/game/'} onClick={() => inviteGame(+o?.userId.userId)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
-                    <Link to={`/users/profile/${o?.userId.userId}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                   <div className="fname" onClick={()=> {getDirect(o?.userId)}} >
                     <div className="chatOnlineImgContainer">
                       <MyAvatar authCtx={user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
@@ -468,8 +465,6 @@ return (
               { otherUsers ? otherUsers?.map((o) => (
                 +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ?
                 <div  key={o?.id} className={amIBlocked(o?.id)} >
-                    <Link to={'/game/'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
-                    <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
                     <div className="fname" onClick={()=> {getDirect(o)}} >
                       <div className="chatOnlineImgContainer">
                         <MyAvatar authCtx={user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>
