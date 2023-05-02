@@ -338,12 +338,13 @@ export class ChatroomService {
 			return `User with ID ${userId} has been muted from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
-			throw new Error("Failed to unban user from channel.");
+			throw new Error("Failed to mute user from channel.");
 		}
 	}
 
 	async unmute(channelId: number, userId: number) {
 		try {
+			// console.log
 			const userOnChannel = await this.prisma.userOnChannel.findFirst({
 				where: {
 					channelId: channelId,
@@ -366,10 +367,10 @@ export class ChatroomService {
 					status: UserStatusOnChannel.CLEAN,
 				},
 			});
-			return `User with ID ${userId} has been muted from channel with ID ${channelId}`;
+			return `User with ID ${userId} has been unmuted from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
-			throw new Error("Failed to unban user from channel.");
+			throw new Error("Failed to unmute user from channel.");
 		}
 	}
 	  

@@ -65,5 +65,5 @@
   }
 
   .mute.muted {
-    color: gray;
+    color: gray!important ;
   }
