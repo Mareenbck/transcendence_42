@@ -169,7 +169,9 @@ export const FriendContextProvider = (props: any) => {
 				console.log("POST error on /friendship/validate");
 				return "error";
 			}
-			setAcceptedDemands([...acceptedDemands, data]);
+			if (res === 'ACCEPTED') {
+				setAcceptedDemands([...acceptedDemands, data]);
+			}
 		} catch (error) {
 			console.log("error", error);
 		}

@@ -166,9 +166,15 @@ console.log("68 handleConnect: client");
 //   };
 
 	@SubscribeMessage('updateDemands')
-	async updateDemands(@MessageBody() updatedDemands: any[]): Promise<void> {
-		const updatedDemand = await this.friendshipService.updateFriendship(updatedDemands);
-		this.server.emit('demandsUpdated', updatedDemand);
+	async updateDemands(@MessageBody() updatedDemands: any): Promise<void> {
+		const { response } = updatedDemands
+		if (response === 'ACCEPTED') {
+			const updatedDemand = await this.friendshipService.updateFriendship(updatedDemands);
+			this.server.emit('demandsUpdated', updatedDemand);
+		} else if (response === 'REFUSED') {
+			// const updatedDemand = await this.friendshipService.updateFriendship(updatedDemands);
+			await this.friendshipService.deleteRefusedFriendship();
+		}
 	}
 
 	@SubscribeMessage('updateFriends')
