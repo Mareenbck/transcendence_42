@@ -8,8 +8,11 @@ import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import { IconButton, Snackbar } from '@mui/material';
+import { Box, IconButton, Modal, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import ErrorModalPassword from "./ErrorModalPassword";
+
+
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -22,8 +25,7 @@ export default function CurrentChannel(props: any) {
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
 	const isBanned = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'BAN');
-	const [showPopUp, setShowPopUp] = useState(false);
-	const [snackbarOpen, setSnackbarOpen] = useState(false);
+	const [showPopUp, setShowPopUp] = useState(true);
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
 
 	const getUser = (userId: number): UserChat | null => {
@@ -112,16 +114,9 @@ export default function CurrentChannel(props: any) {
 		setIsJoined(false);
 	  };
 
-	  const handleCloseSnackbar = (e: FormEvent) => {
-	  e.preventDefault();
-	  
-		setSnackbarOpen(false);
-	  };
-	  
-
 	return (
 		<>
-		  {isJoined && !isBanned (
+		  {isJoined && (
 			<>
 			  <NavbarChannel
 				chatroom={currentChatroom}
@@ -156,31 +151,16 @@ export default function CurrentChannel(props: any) {
 			  </div>
 			</>
 		  )}
-		
-		{!isJoined && (
-		<Snackbar
-			anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-			open={!isJoined} 
-			autoHideDuration={5000}
-			onClose={handleCloseSnackbar}
-			message="You must join the channel to send message"
-			action={
-				<IconButton
-				  size="small"
-				  aria-label="close"
-				  color="inherit"
-				  onClick={(event) => {
-					event.stopPropagation();
-					handleCloseSnackbar(event, 'user');
-				  }}
-				>
-				  <CloseIcon fontSize="small" />
-				</IconButton>
-			  }
-			/>
-			)}
+		  {!isJoined && showPopUp && 
+		  (
+				<div className="popup-container">
+				  <div className="popup-content">
+					<span className="popup-text">You need to join the channel before being able to talk.</span>
+					<button className="popup-button" onClick={() => setShowPopUp(false)}>OK</button>
+				  </div>
+				</div>
+		  )
+		  } 
 		</>
-	  );
-	  
-	  
+	  );	  
 }
