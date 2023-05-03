@@ -23,6 +23,12 @@
     box-shadow: 0px 1px 1px #8b8a8a;
 }
 
+.add-friend.disabled {
+	opacity: 0.5; /* Réduit l'opacité pour donner un aspect désactivé */
+	pointer-events: none; /* Désactive les événements du bouton */
+	cursor: not-allowed; /* Change le curseur pour indiquer qu'il est désactivé */
+  }
+
 .profile-link {
 	color: black;
 	font-weight: 300;

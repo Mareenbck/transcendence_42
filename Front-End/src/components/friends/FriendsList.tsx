@@ -12,11 +12,14 @@ import { Snackbar } from '@mui/material';
 import { faUserPlus, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useSocket from '../../service/socket';
+import { FriendContext } from '../../store/FriendshipContext';
+import Friend from '../interfaces/IFriendship';
 
 
 
 const FriendsList = (props: any) => {
 	const authCtx = useContext(AuthContext);
+	const friendCtx = useContext(FriendContext);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [sendMessage, addListener] = useSocket();
 
@@ -49,11 +52,16 @@ const FriendsList = (props: any) => {
 		}
 	}
 
+	const isFriend = (userId: any) => {
+		return friendCtx.friends.some((friend) => friend.id === userId);
+	  };
+
+
 	return (
 		<>
 			<h2 className="title-users">{props.title} - <span>{props.users.length}</span></h2>
 			{/* <List> */}
-				{props.users.map(user => (
+				{props.users.map((user: Friend) => (
 					<ListItem key={user.id} className='users-list'>
 						<div className='avatar-username-inlist'>
 							<ListItemAvatar>
@@ -63,7 +71,11 @@ const FriendsList = (props: any) => {
 						</div>
 						<br />
 						<div className='btn-inlist'>
-							<FontAwesomeIcon icon={faUserPlus} onClick={(event: FormEvent) => { handleDemand(event, user.id) }} className='add-friend'/>
+							<FontAwesomeIcon
+								icon={faUserPlus}
+								onClick={(event: FormEvent) => { handleDemand(event, user.id) }}
+								className={`add-friend ${isFriend(user.id) ? 'disabled' : ''}`}
+								/>
 							<Snackbar
 								anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
 								open={snackbarOpen}
