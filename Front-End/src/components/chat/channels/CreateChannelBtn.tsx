@@ -17,25 +17,26 @@ export default function CreateChannelButton(props: any) {
       const handleCreateChannel = () => {
         setShowPopUp(true);
       };
-    return (
-		<form onSubmit={handleFormSubmit}>
-		<Tooltip title="Create Channel" placement="left">
-			<Fab color="secondary" aria-label="add">
-				<AddIcon onClick={handleCreateChannel}/>
-			</Fab>
-		</Tooltip>
-            {/* <button className='create-channel-button' onClick={handleCreateChannel}>Create new channel</button> */}
-            {showPopUp && (
-                <PopUp
-                title="Création d'un nouveau channel"
-                message="Choisissez les options de votre channel"
-                onCancel={() => setShowPopUp(false)}
-                onClick={() => setShowPopUp(false)}
-                onSubmit={{handleFormSubmit}}
-                >
-                </PopUp>
 
-            )}
+
+    return (
+    <form onSubmit={handleFormSubmit}>
+    <Tooltip title="Create Channel" placement="left">
+      <Fab color="secondary" aria-label="add">
+        <AddIcon onClick={handleCreateChannel}/>
+      </Fab>
+    </Tooltip>
+        {showPopUp && (
+            <PopUp
+            title="Create a new channel"
+            message="Choose options:"
+            onCancel={() => setShowPopUp(false)}
+            onClick={() => setShowPopUp(false)}
+            onSubmit={{handleFormSubmit}}
+            >
+            </PopUp>
+
+        )}
 
       </form>
     );

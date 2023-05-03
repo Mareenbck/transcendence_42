@@ -31,11 +31,7 @@ function PopUp(props: any) {
 
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
-        // console.log("passwordInputRef--->")
-        // console.log(passwordInputRef.current!.value)
-        // const password = passwordInputRef.current!.value;
-        // console.log("password--->")
-        // console.log(password)
+    
         let idConv: number | undefined = undefined;
         if (channelName === "") { return; }
         const newConv = {
@@ -75,24 +71,16 @@ function PopUp(props: any) {
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
 
-    // console.log("PASSWORD DANS POP UP")
-    // console.log(passwordInputRef)
-
-
-// aller voir le inputRef={usernameInputRef} pour apres IN TEXT FIELDS
 return (
     <div className='popup-overlay'>
         <div className='global-popup'>
             <header className='header-popup'>
                 <h2>{props.title}</h2>
             </header>
-            <label>
-                New channel name:
-                <input type="text" value={channelName} onChange={handleChannelNameChange} />
-            </label>
+                <h5>New channel name:</h5>
+            <TextField id="outlined-basic" label="Outlined" variant="outlined" value={channelName} onChange={handleChannelNameChange}/>
             <div className='content-button'>
-                <p>{props.message}</p>
-
+                <h5>{props.message}</h5>
                 <label className='wrap-circle'>
                     <input
                         className='circle'
@@ -106,17 +94,22 @@ return (
                     />
                     Protected
                 </label>
-                <div>Choose a password for your new channel</div>
-                <TextField
-                    id="password"
-                    className="custom-field"
-                    label="password"
-                    type={showPassword ? 'text' : 'password'}
-                    variant="filled"
-                    placeholder="Type a password..."
-                    inputRef={passwordInputRef}
-                />
-                <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
+                {isProtected && (
+                    <div>
+                        <p>Choose a password for your new channel</p>
+                        <TextField
+                            id="password"
+                            className="custom-field"
+                            label="password"
+                            type={showPassword ? 'text' : 'password'}
+                            variant="filled"
+                            placeholder="Type a password..."
+                            inputRef={passwordInputRef}
+                        />
+                        <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
+                    </div>
+                )
+                }
                <label className='wrap-circle'>
                     <input
                         className='circle'
@@ -143,7 +136,6 @@ return (
                     />
                     Public
                 </label>
-
             </div>
             <footer className='actions'>
                 <button type='submit' onSubmit={handleFormSubmit} onClick={createAndClose}>OK</button>
