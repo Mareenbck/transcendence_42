@@ -19,7 +19,7 @@ import NotificationDemands from './friends/NotificationDemands';
 
 
 export default function MyAccountMenu(props: any) {
-	const [sendMessage, addListener] = useSocket();
+	// const [sendMessage, addListener] = useSocket();
 	const authCtx = React.useContext(AuthContext);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -35,30 +35,6 @@ export default function MyAccountMenu(props: any) {
 			authCtx.fetchAvatar(authCtx.userId);
 		}
 	}, [])
-
-	// const friendCtx = React.useContext(FriendContext);
-	// const [pendingDemands, setPendingDemands] = React.useState(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
-
-	// const [badgeCount, setBadgeCount] = React.useState(0);
-	// React.useEffect(() => {
-	// 	setBadgeCount(pendingDemands.length)
-	// }, [pendingDemands.length]);
-
-
-	// React.useEffect(() => {
-	// 	setPendingDemands(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
-	// }, [friendCtx.demands]);
-
-
-	// React.useEffect(() => {
-	// 	addListener('pendingDemands', (pendingDemands: any[]) => {
-	// 		const receiverDemands = pendingDemands.filter(
-	// 			(demand: Demand) => demand.receiverId === parseInt(props.authCtx.userId)
-	// 		);
-	// 		setPendingDemands(receiverDemands.filter((demand: Demand) => demand.status === 'PENDING'));
-	// 	});
-	// }, [addListener]);
-
 
 	return (
 	<React.Fragment>

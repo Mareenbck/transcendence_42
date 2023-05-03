@@ -14,6 +14,7 @@ const defaultValue = {
 	getFriends: async (token: string, currentId: string) => { },
 	removeFriend: (friendId: number, currentId: string, token: string) => { },
 	updateDemand: (demandId: number, res: string, token: string) => { },
+	setPendingDemandsCount: (demand: any) => { },
 };
 
 export const FriendContext = createContext(defaultValue);
@@ -25,14 +26,13 @@ export const FriendContextProvider = (props: any) => {
 	const [avatarCache, setAvatarCache] = useState<Map<number, string>>(new Map());
 	const [acceptedDemands, setAcceptedDemands] = useState<Demand[]>([]);
 	const authCtx = useContext(AuthContext);
-	const [pendingDemandsCount, setPendingDemandsCount] = useState<number>(demands.filter((demand: Demand) => demand.status === 'PENDING').length);
-
+	const [pendingDemandsCount, setPendingDemandsCount] = useState<number>(0);
 
 	useEffect (() => {
 		if (authCtx.isLoggedIn) {
 			getFriends(authCtx.token, authCtx.userId);
 		}
-	}, [acceptedDemands, friends]);
+	}, [acceptedDemands]);
 
 	useEffect (() => {
 		if (authCtx.isLoggedIn) {
@@ -40,10 +40,11 @@ export const FriendContextProvider = (props: any) => {
 		}
 	}, []);
 
+
 	useEffect(() => {
 		addListener('demandsUpdated', (updatedDemands: Demand[]) => {
-			// Mettre à jour la liste des demandes acceptées
 			setAcceptedDemands(updatedDemands);
+			setPendingDemandsCount(demands.filter((demand: Demand) => demand.status === 'PENDING').length)
 		});
 	}, [addListener]);
 
@@ -190,6 +191,7 @@ export const FriendContextProvider = (props: any) => {
 		demands,
 		friends,
 		pendingDemandsCount,
+		setPendingDemandsCount,
 		fetchAvatar,
 		createDemand,
 		getDemands,
