@@ -2,10 +2,12 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import AuthContext from "./AuthContext";
 import Demand from '../interfaces/IFriendship'
 import Friend from '../interfaces/IFriendship'
+import useSocket from "../service/socket";
 
 const defaultValue = {
 	demands: [] as Demand[],
 	friends: [] as Friend[],
+	pendingDemandsCount: 0,
 	fetchAvatar: async (userId: number) => {},
 	createDemand: async (receiverId: number, token: string, currentId: string) => { },
 	getDemands: async (token: string, currentId: string) => { },
@@ -17,17 +19,39 @@ const defaultValue = {
 export const FriendContext = createContext(defaultValue);
 
 export const FriendContextProvider = (props: any) => {
+	const [sendMessage, addListener] = useSocket();
 	const [demands, setDemands] = useState<Demand[]>([]);
 	const [friends, setFriends] = useState<Friend[]>([]);
-
+	const [avatarCache, setAvatarCache] = useState<Map<number, string>>(new Map());
+	const [acceptedDemands, setAcceptedDemands] = useState<Demand[]>([]);
 	const authCtx = useContext(AuthContext);
+	const [pendingDemandsCount, setPendingDemandsCount] = useState<number>(demands.filter((demand: Demand) => demand.status === 'PENDING').length);
+
+
+	useEffect (() => {
+		if (authCtx.isLoggedIn) {
+			getFriends(authCtx.token, authCtx.userId);
+		}
+	}, [acceptedDemands, friends]);
 
 	useEffect (() => {
 		if (authCtx.isLoggedIn) {
 			getDemands(authCtx.token, authCtx.userId);
-			getFriends(authCtx.token, authCtx.userId);
 		}
 	}, []);
+
+	useEffect(() => {
+		addListener('demandsUpdated', (updatedDemands: Demand[]) => {
+			// Mettre à jour la liste des demandes acceptées
+			setAcceptedDemands(updatedDemands);
+		});
+	}, [addListener]);
+
+	useEffect(() => {
+		addListener('friendsUpdated', (updatedFriends: Friend[]) => {
+			setFriends(updatedFriends);
+		});
+	}, [addListener]);
 
 	const createDemand = async (receiverId: number, token: string, currentId: string) => {
 		try {
@@ -39,7 +63,7 @@ export const FriendContextProvider = (props: any) => {
 				},
 				body: JSON.stringify({ requesterId: currentId, receiverId: receiverId }),
 			});
-			await response.json();
+			const data = await response.json();
 			if (!response.ok) {
 				console.log("POST error on /friendship/create");
 				return "error";
@@ -61,14 +85,15 @@ export const FriendContextProvider = (props: any) => {
 			}
 		)
 		const data = await response.json();
-		const updatedDemands = await Promise.all(data.map(async (demand: Demand) => {
-			const avatar = await fetchAvatar(demand.requester.id);
-			if (!avatar) {
+		const updatedDemands: any[] = await Promise.all(data.map(async (demand: Demand) => {
+			const avatarUrl = avatarCache.get(demand.requester.id) ?? await fetchAvatar(demand.requester.id);
+			if (!avatarUrl) {
 				return demand;
 			}
-			return { ...demand, requester: {...demand.requester, avatar }};
+			return { ...demand, requester: {...demand.requester, avatar: avatarUrl }};
 		}));
 		setDemands(updatedDemands);
+		setPendingDemandsCount(updatedDemands.filter((demand: Demand) => demand.status === 'PENDING').length);
 	}
 
 	const getFriends = async (token: string, currentId: string) => {
@@ -83,11 +108,10 @@ export const FriendContextProvider = (props: any) => {
 			}
 		)
 		const data = await response.json();
-
 		// For each friend in the data array, fetch their avatar
 		const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
-			const avatar = await fetchAvatar(friend.id);
-			return { ...friend, avatar };
+			const avatarUrl = avatarCache.get(friend.id) ?? await fetchAvatar(friend.id);
+			return { ...friend, avatar: avatarUrl };
 		}));
 		setFriends(updatedFriends);
 	}
@@ -102,10 +126,13 @@ export const FriendContextProvider = (props: any) => {
 					return null
 				}
 				const blob = await response.blob();
-				return URL.createObjectURL(blob);
+				const avatarUrl = URL.createObjectURL(blob);
+				avatarCache.set(userId, avatarUrl);
+				setAvatarCache(new Map(avatarCache)); // trigger re-render to update state
+				return avatarUrl;
 			}
 		} catch (error) {
-			return console.log("error", error);
+			console.log("error", error);
 		}
 	}
 
@@ -119,7 +146,8 @@ export const FriendContextProvider = (props: any) => {
 				},
 				body: JSON.stringify({ friendId: friendId, currentId: currentId }),
 			});
-			await response.json();
+			const data = await response.json();
+			setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== friendId));
 			if (!response.ok) {
 				console.log("POST error on /friendship/delete");
 				return "error";
@@ -139,10 +167,19 @@ export const FriendContextProvider = (props: any) => {
 				},
 				body: JSON.stringify({ demandId: demandId, response: res }),
 			});
-			await response.json();
+			const data = await response.json();
+			sendMessage('updateDemands', { demandId: demandId, response: res })
 			if (!response.ok) {
 				console.log("POST error on /friendship/validate");
 				return "error";
+			}
+			if (res === 'ACCEPTED' || res === 'REFUSED') {
+				if (res === 'ACCEPTED') {
+					setAcceptedDemands([...acceptedDemands, data]);
+				}
+				setPendingDemandsCount((prevCount) => {
+					return prevCount - 1;
+				});
 			}
 		} catch (error) {
 			console.log("error", error);
@@ -152,6 +189,7 @@ export const FriendContextProvider = (props: any) => {
 	const contextValue = {
 		demands,
 		friends,
+		pendingDemandsCount,
 		fetchAvatar,
 		createDemand,
 		getDemands,

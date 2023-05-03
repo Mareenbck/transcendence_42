@@ -53,5 +53,11 @@ export class GameController {
 		const user = await this.gameService.updateUserXPAndLevel(parseInt(userId), allGames);
 		return user;
 	}
+
+	@Get('/rank/:id')
+	async getUserRank(@Param('id') id: string): Promise<{ rank: number }> {
+		const rank = await this.gameService.getUserRankByWins(parseInt(id));
+		return { rank };
+	}
 }
 

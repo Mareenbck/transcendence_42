@@ -11,9 +11,15 @@ import MyAvatar from './user/Avatar';
 import { Link } from "react-router-dom";
 import HomeIcon from '@mui/icons-material/Home';
 import AuthContext from '../store/AuthContext';
+import { FriendContext } from '../store/FriendshipContext';
+import BadgeUnstyled from '@mui/base/BadgeUnstyled';
+import Demand from '../interfaces/IFriendship';
+import useSocket from '../service/socket';
+import NotificationDemands from './friends/NotificationDemands';
 
 
 export default function MyAccountMenu(props: any) {
+	const [sendMessage, addListener] = useSocket();
 	const authCtx = React.useContext(AuthContext);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -30,9 +36,32 @@ export default function MyAccountMenu(props: any) {
 		}
 	}, [])
 
+	// const friendCtx = React.useContext(FriendContext);
+	// const [pendingDemands, setPendingDemands] = React.useState(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
+
+	// const [badgeCount, setBadgeCount] = React.useState(0);
+	// React.useEffect(() => {
+	// 	setBadgeCount(pendingDemands.length)
+	// }, [pendingDemands.length]);
+
+
+	// React.useEffect(() => {
+	// 	setPendingDemands(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
+	// }, [friendCtx.demands]);
+
+
+	// React.useEffect(() => {
+	// 	addListener('pendingDemands', (pendingDemands: any[]) => {
+	// 		const receiverDemands = pendingDemands.filter(
+	// 			(demand: Demand) => demand.receiverId === parseInt(props.authCtx.userId)
+	// 		);
+	// 		setPendingDemands(receiverDemands.filter((demand: Demand) => demand.status === 'PENDING'));
+	// 	});
+	// }, [addListener]);
+
+
 	return (
 	<React.Fragment>
-		{/* <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}> */}
 		<Tooltip title="Account settings">
 			<IconButton
 			onClick={handleClick}
@@ -42,10 +71,12 @@ export default function MyAccountMenu(props: any) {
 			aria-haspopup="true"
 			aria-expanded={open ? 'true' : undefined}
 			>
-			<MyAvatar style='m' avatar={authCtx.avatar} authCtx={authCtx} id={authCtx.userId}/>
+			<div className='notif-sidebar'>
+				<NotificationDemands />
+				<MyAvatar style='m' avatar={authCtx.avatar} authCtx={authCtx} id={authCtx.userId}/>
+			</div>
 			</IconButton>
-			</Tooltip>
-      {/* </Box> */}
+		</Tooltip>
 		<Menu
 		anchorEl={anchorEl}
 		id="account-menu"

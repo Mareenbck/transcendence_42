@@ -23,15 +23,9 @@ export function NavbarChannel(props: any) {
 	const [selectedUser, setSelectedUser] = useState<string | null>('');
 	const [openModal, setOpenModal] = useState(false);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
-
-
 	const [showPassword, setShowPassword] = useState(false);
 	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
-	const [showPopUp, setShowPopUp] = useState(true);
 
-
-// console.log("props.chatroom.participants---->");
-// console.log(props.chatroom.participants);
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
 		if (currentUser) {

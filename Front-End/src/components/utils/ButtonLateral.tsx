@@ -7,7 +7,7 @@ const customStyles = `
 	}
 	.custom-button-lat.active  {
 		position: absolute;
-		left: -610px;
+		left: -468px;
 		transform: translateY(-50%) rotate(270deg);
 		background-color: #C7B9FF;
 	}

@@ -8,7 +8,7 @@ import Chat from './components/chat/Chat'
 import Home from './pages/Home'
 import Profile from './pages/Profile';
 import Callback42 from './components/auth/Callback42';
-import Friends from './components/friends/Friends';
+import Friends from './components/friends/FriendsDrawer';
 import Login from './components/auth/Login';
 import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';

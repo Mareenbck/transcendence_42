@@ -195,6 +195,9 @@ console.log("///////// GAME PLAY", player);
 		const newXP = numWins * xpPerWin;
 
 		let newLevel = Math.floor(newXP / 100);
+		if (newLevel < 1) {
+			newLevel = 1;
+		}
 
 		const moduloXp = newXP % 100;
 
@@ -207,4 +210,24 @@ console.log("///////// GAME PLAY", player);
 		});
 		return user;
 	}
-}
+
+	async getUserRankByWins(userId: number): Promise<number> {
+		const result = await this.prisma.user.findMany({
+		  select: {
+			id: true,
+			username: true,
+			xp: true,
+			level: true,
+			winner: {
+			  select: {
+				id: true,
+			  },
+			},
+		  },
+		});
+		const user = result.find((u) => u.id === userId);
+		const userWins = user?.winner.length || 0;
+		const higherRankUsers = result.filter((u) => (u.winner.length || 0) > userWins);
+		return higherRankUsers.length + 1;
+	  }
+	}
