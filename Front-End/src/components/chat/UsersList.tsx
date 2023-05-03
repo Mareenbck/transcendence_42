@@ -5,12 +5,9 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
 import MyAvatar from '../user/Avatar';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import LockIcon from '@mui/icons-material/Lock';
@@ -18,8 +15,6 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Link } from "react-router-dom";
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-
-
 
 
 function generate(element: React.ReactElement) {
@@ -46,9 +41,6 @@ export default function InteractiveList(props: any) {
       );
     }
 
-    
-
-  
     return (
       <Box style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
@@ -62,7 +54,7 @@ export default function InteractiveList(props: any) {
                 <ListItem key={o?.userId.userId} 
                 secondaryAction={
                     <div>
-                        <IconButton className='violet-icon' edge="end" aria-label="Play" onClick={()=> {props.getDirect(o?.userId)}}>
+                        <IconButton className='violet-icon' edge="end" aria-label="Chat" onClick={()=> {props.getDirect(o?.userId)}}>
                           <ChatBubbleIcon />
                         </IconButton>
                       <Link to={`/users/profile/${o?.id}`} className="profile-link">
