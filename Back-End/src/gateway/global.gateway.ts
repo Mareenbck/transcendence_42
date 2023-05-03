@@ -179,7 +179,6 @@ console.log("68 handleConnect: client");
 
 	@SubscribeMessage('updateFriends')
 	async updateFriends(@MessageBody() ids: any, @ConnectedSocket() socket: Socket): Promise<void> {
-
 		const updatedFriends = await this.friendshipService.showFriends(ids);
 		this.server.emit('friendsUpdated', updatedFriends);
 	}

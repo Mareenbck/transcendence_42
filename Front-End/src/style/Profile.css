@@ -107,10 +107,6 @@
 	border-radius: 27.3758px;
 }
 
-.badge-unstyled.MuiBadge-root {
-	margin-left: 60px;
-	font-size: 40px;
-}
 .title-card-m {
     display: flex;
 }
@@ -248,14 +244,12 @@ li {
 	display: inline-block;
 }
 
-.badge-unstyled-sidebar .MuiBadge-root {
-	margin-left: 0px;
+.notif-keyboard {
+	display: flex;
 }
 
-.badge-unstyled .badge-notification {
-	position: absolute;
-	top: 4px;
-	right: -10px;
+.badge-notification {
+	z-index: 1;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -268,25 +262,29 @@ li {
 	border-radius: 50%;
 }
 
-.badge-unstyled-sidebar {
-	position: relative;
-	display: inline-block;
+.notif-keyboard .MuiBadge-root {
+	position: absolute;
+	right: 23px;
+	top: 17px;
 }
 
-.badge-unstyled-sidebar .badge-notification {
+.notif-sidebar .MuiBadge-root {
 	position: absolute;
-	top: -5px;
-	right: 22px;
+	right: 26px;
+	top: 6px;
 	z-index: 1;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 20px;
-	height: 20px;
-	background-color: red;
-	color: white;
-	font-size: 12px;
-	font-weight: bold;
+}
+
+.arrowdown-icon.MuiSvgIcon-root {
+	font-size: 55px;
+	position: absolute;
+	right: 30px;
+}
+
+.arrowdown-icon.MuiSvgIcon-root:hover {
+	color: #212529;
+	cursor: pointer;
+	box-shadow: 1px 1px 7px 2px #c7b9ff;
 	border-radius: 50%;
 }
 

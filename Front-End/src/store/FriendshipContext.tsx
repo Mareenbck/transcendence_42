@@ -7,6 +7,7 @@ import useSocket from "../service/socket";
 const defaultValue = {
 	demands: [] as Demand[],
 	friends: [] as Friend[],
+	pendingDemandsCount: 0,
 	fetchAvatar: async (userId: number) => {},
 	createDemand: async (receiverId: number, token: string, currentId: string) => { },
 	getDemands: async (token: string, currentId: string) => { },
@@ -24,6 +25,8 @@ export const FriendContextProvider = (props: any) => {
 	const [avatarCache, setAvatarCache] = useState<Map<number, string>>(new Map());
 	const [acceptedDemands, setAcceptedDemands] = useState<Demand[]>([]);
 	const authCtx = useContext(AuthContext);
+	const [pendingDemandsCount, setPendingDemandsCount] = useState<number>(demands.filter((demand: Demand) => demand.status === 'PENDING').length);
+
 
 	useEffect (() => {
 		if (authCtx.isLoggedIn) {
@@ -90,6 +93,7 @@ export const FriendContextProvider = (props: any) => {
 			return { ...demand, requester: {...demand.requester, avatar: avatarUrl }};
 		}));
 		setDemands(updatedDemands);
+		setPendingDemandsCount(updatedDemands.filter((demand: Demand) => demand.status === 'PENDING').length);
 	}
 
 	const getFriends = async (token: string, currentId: string) => {
@@ -169,8 +173,13 @@ export const FriendContextProvider = (props: any) => {
 				console.log("POST error on /friendship/validate");
 				return "error";
 			}
-			if (res === 'ACCEPTED') {
-				setAcceptedDemands([...acceptedDemands, data]);
+			if (res === 'ACCEPTED' || res === 'REFUSED') {
+				if (res === 'ACCEPTED') {
+					setAcceptedDemands([...acceptedDemands, data]);
+				}
+				setPendingDemandsCount((prevCount) => {
+					return prevCount - 1;
+				});
 			}
 		} catch (error) {
 			console.log("error", error);
@@ -180,6 +189,7 @@ export const FriendContextProvider = (props: any) => {
 	const contextValue = {
 		demands,
 		friends,
+		pendingDemandsCount,
 		fetchAvatar,
 		createDemand,
 		getDemands,

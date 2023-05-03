@@ -10,17 +10,14 @@ import Face2Icon from '@mui/icons-material/Face2';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { FriendContext } from "../../store/FriendshipContext";
 import useSocket from "../../service/socket";
+import NotificationDemands from "./NotificationDemands";
 
 const FriendsDemands = (props: any) => {
 	const [sendMessage, addListener] = useSocket();
 	const friendCtx = useContext(FriendContext);
-	const [prendingDemands, setPendingDemands] = useState(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
-	// const prendingDemands = friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING');
-
+	const [pendingDemands, setPendingDemands] = useState(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
-	const [badgeCount, setBadgeCount] = useState(0);
-
 
 	const handleClick = (event: any) => {
 		setAnchorEl(event.currentTarget);
@@ -42,14 +39,9 @@ const FriendsDemands = (props: any) => {
 		friendCtx.updateDemand(demandId, res, props.token)
 		if (res === 'ACCEPTED') {
 			setSnackbarOpen(true);
-			// sendMessage('updateFriends', { demandId: demandId })
 		}
 		setPendingDemands(prevDemands => prevDemands.filter(demand => demand.id !== demandId));
 	}
-
-	useEffect(() => {
-	  setBadgeCount(prendingDemands.length)
-	}, [prendingDemands.length]);
 
 	useEffect(() => {
 		setPendingDemands(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
@@ -66,12 +58,10 @@ const FriendsDemands = (props: any) => {
 
 	return (
 		<>
-			<BadgeUnstyled className="badge-unstyled">
-				<KeyboardArrowDownIcon onClick={handleClick} fontSize="80px"/>
-				{badgeCount > 0 && (
-					<span className="badge-notification">{badgeCount}</span>
-				)}
-			</BadgeUnstyled>
+			<div className="notif-keyboard">
+				<KeyboardArrowDownIcon onClick={handleClick} className="arrowdown-icon"/>
+				<NotificationDemands />
+			</div>
 			<Popover
 				id={id}
 				open={open}
@@ -87,7 +77,7 @@ const FriendsDemands = (props: any) => {
 				}}
 			>
 				<ul>
-					{prendingDemands.map((demand: Demand) => (
+					{pendingDemands.map((demand: Demand) => (
 						<li key={demand.id} className='friend'>
 							<MyAvatar style='xs' authCtx={props.authCtx} id={demand.requester.id} avatar={demand.requester.avatar} ftAvatar={demand.requester.ftAvatar}></MyAvatar>
 							<span className='demand-username'>{demand.requester.username}</span>
