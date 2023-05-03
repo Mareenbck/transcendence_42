@@ -2,6 +2,7 @@ import { IsNotEmpty, IsString, IsNumber, MaxLength } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import { DirMessDto } from './../../chat/dir-mess/dir-mess.dto';
 import { FriendsDto } from 'src/friendship/dto/friends.dto';
+import { GameDto } from 'src/game/dto/game.dto';
 
 export class UserDto {
 	//Data transfer object
@@ -33,4 +34,8 @@ export class UserDto {
   blockedFrom: UserDto[];
 
 	dirMessEmited: DirMessDto[];
+
+	xp: number;
+	level: number;
+	winner: GameDto[];
 }

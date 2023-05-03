@@ -236,29 +236,28 @@ export class UserService {
 	}
 
 	async removeFriendOnTable(id1: number, id2: number) {
-		try {
-			const user = await this.prisma.user.findUnique({
-				where: { id: id1 },
-				include: { friends: true, friendOf: true }
-				});
-			if (!user) {
-				throw new Error(`User with id ${id1} not found.`);
-			}
-			const updatedFriends = user.friends.filter((friend) => friend.id !== id2);
-			const updatedFriendOf = user.friendOf.filter((friend) => friend.id !== id2);
-			const updatedUser = await this.prisma.user.update({
-					where: { id: id1 },
-					data: {
-						friends: { set: updatedFriends },
-						friendOf: { set: updatedFriendOf }
-					},
-					include: { friends: true, friendOf: true }
-				  });
-				  return updatedUser;
-		} catch (error) {
-			console.error(error);
+		const user = await this.prisma.user.findUnique({
+			where: { id: id1 },
+			include: { friends: true, friendOf: true },
+		  });
+
+		  if (!user) {
+			throw new Error(`User with id ${id1} not found`);
+		  }
+		  const updatedUser = await this.prisma.user.update({
+			where: { id: id1 },
+			data: {
+			  friends: {
+				disconnect: { id: id2 },
+			  },
+			  friendOf: {
+				disconnect: { id: id2 },
+			  },
+			},
+			include: { friends: true, friendOf: true },
+		  });
+		  return updatedUser;
 		}
-	}
 
 	async getUserAchievements(id: number) {
 		if (id === undefined) {

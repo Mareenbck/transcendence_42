@@ -1,13 +1,18 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Friendship } from '@prisma/client';
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import path = require('path');
 import { Response } from 'express';
+import { Server, Socket } from "socket.io";
+import UsersSockets from "src/gateway/socket.class";
 
 
 @Injectable()
 export class FriendshipService {
+	public server: Server = null;
+	private readonly logger = new Logger(FriendshipService.name);
+	public userSockets: UsersSockets;
 	constructor(private readonly prisma: PrismaService,
 				private userService: UserService) { }
 
@@ -88,10 +93,21 @@ export class FriendshipService {
 		return friendship;
 	}
 
+	async findFriendshipById(demandId: number) {
+		const friendship = await this.prisma.friendship.findUniqueOrThrow({
+			where: {
+				id: demandId,
+			},
+		});
+		return friendship;
+	}
+
 	async findAndDeleteFriendship(userOne: number, userTwo: number) {
 		const friendship = await this.findFriendship(userOne, userTwo);
+		console.log("friendship-------------->")
+		console.log(friendship)
 		if (!friendship) {
-			throw new BadRequestException('getReceivedFriendships error : ');
+			throw new BadRequestException('findAndDeleteFriendship error : ');
 		}
 		await this.prisma.friendship.delete({
 		  where: { id: friendship.id },
@@ -107,7 +123,6 @@ export class FriendshipService {
 	async removeFriend(usersId: any) {
 		const { friendId, currentId } = usersId;
 		const updatedCurrent = await this.userService.removeFriendOnTable(parseInt(currentId), friendId)
-		await this.userService.removeFriendOnTable(friendId, parseInt(currentId))
 		await this.findAndDeleteFriendship(friendId, parseInt(currentId));
 		return updatedCurrent;
 	}

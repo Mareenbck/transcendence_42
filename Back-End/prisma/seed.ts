@@ -9,69 +9,69 @@ import { create_friendship } from './friendships';
 export const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.$connect();
-    console.log(`Start seeding ...`);
-    const usrsSize: number = (
-      await prisma.user.findMany({
-        select: {
-          id: true,
-        },
-      })
-    ).length;
-    const sizeGames: number = (
-      await prisma.game.findMany({
-        select: {
-          id: true,
-        },
-      })
-    ).length;
-    const sizeAchievements: number = (
-      await prisma.achievement.findMany({
-        select: {
-          id: true,
-        },
-      })
-    ).length;
-    const sizeDM: number = (
-      await prisma.directMessage.findMany({
-        select: {
-          id: true,
-        },
-      })
-    ).length;
-    const sizeFriend: number = (
-      await prisma.friendship.findMany({
-        select: {
-          id: true,
-        },
-      })
-    ).length;
-    if (usrsSize == 0) {
-      await insert_users();
-    }
-    if (sizeAchievements == 0) {
-      await insert_achievements();
-    }
-    if (sizeGames == 0) {
-      await insert_games();
-    }
-    if (sizeDM == 0) {
-      await insert_direct_messages();
-    }
-    if (sizeFriend == 0) {
-      await create_friendship();
-    }
-    console.log(`Seeding finished.`);
+await prisma.$connect();
+	console.log(`Start seeding ...`);
+	const usrsSize: number = (
+		await prisma.user.findMany({
+			select: {
+			id: true,
+			},
+		})
+	).length;
+	const sizeGames: number = (
+		await prisma.game.findMany({
+			select: {
+			id: true,
+			},
+		})
+	).length;
+	const sizeAchievements: number = (
+		await prisma.achievement.findMany({
+			select: {
+			id: true,
+			},
+		})
+	).length;
+	const sizeDM: number = (
+		await prisma.directMessage.findMany({
+			select: {
+			id: true,
+			},
+		})
+	).length;
+	const sizeFriend: number = (
+		await prisma.friendship.findMany({
+			select: {
+			id: true,
+			},
+		})
+	).length;
+	if (usrsSize == 0) {
+		await insert_users();
+	}
+	if (sizeAchievements == 0) {
+		await insert_achievements();
+	}
+	if (sizeGames == 0) {
+		await insert_games();
+	}
+	if (sizeDM == 0) {
+		await insert_direct_messages();
+	}
+	if (sizeFriend == 0) {
+		await create_friendship();
+	}
+	console.log(`Seeding finished.`);
 }
 
 // Call the seed function
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+.then(async () => {
+	await prisma.$disconnect();
+})
+.catch(async (e) => {
+	console.error(e);
+	await prisma.$disconnect();
+	process.exit(1);
+});
 

@@ -9,12 +9,14 @@ import { Server, Socket } from 'socket.io';
 import { GlobalService } from './global.service';
 import { ChatService } from '../chat/chat.service';
 import { GameService } from '../game/game.service';
+import { FriendshipService } from '../friendship/friendship.service';
 import { Logger } from "@nestjs/common";
 import UsersSockets from "./socket.class";
 import { AuthService } from 'src/auth/auth.service';
 import { UserService } from "src/user/user.service";
 import { UserDto } from 'src/user/dto/user.dto';
 import { CreateChatMessDto } from 'src/chat/chat-mess/dto/create-chatMess.dto';
+import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
 
 @WebSocketGateway(
 8001, { cors: {origin: "http://localhost:8080",}, }
@@ -33,6 +35,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       private readonly chatService: ChatService,
       private readonly globalService: GlobalService,
       private readonly authService: AuthService,
+	  private readonly friendshipService: FriendshipService,
   ) {
       this.userSockets = new UsersSockets();
   }
@@ -44,9 +47,11 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       this.globalService.server = this.server;
       this.gameService.server = this.server;
       this.chatService.server = this.server;
+	  this.friendshipService.server = this.server;
       this.globalService.userSockets = this.userSockets;
       this.chatService.userSockets = this.userSockets;
-      this.gameService.userSockets = this.userSockets;
+	  this.gameService.userSockets = this.userSockets;
+	  this.friendshipService.userSockets = this.userSockets;
       this.logger.verbose("globalGateway Initialized");
   }
 
@@ -159,5 +164,31 @@ console.log("68 handleConnect: client");
 //     let user = this.userSockets.getUserBySocket(socket.id);
 //     if(user) this.gameService.checkPlayerInRooms(user);
 //   };
+
+	@SubscribeMessage('updateDemands')
+	async updateDemands(@MessageBody() updatedDemands: any): Promise<void> {
+		const { response } = updatedDemands
+		if (response === 'ACCEPTED') {
+			const updatedDemand = await this.friendshipService.updateFriendship(updatedDemands);
+			this.server.emit('demandsUpdated', updatedDemand);
+		} else if (response === 'REFUSED') {
+			// const updatedDemand = await this.friendshipService.updateFriendship(updatedDemands);
+			await this.friendshipService.deleteRefusedFriendship();
+		}
+	}
+
+	@SubscribeMessage('updateFriends')
+	async updateFriends(@MessageBody() ids: any, @ConnectedSocket() socket: Socket): Promise<void> {
+		const updatedFriends = await this.friendshipService.showFriends(ids);
+		this.server.emit('friendsUpdated', updatedFriends);
+	}
+
+	@SubscribeMessage('createDemand')
+	async createDemand(@MessageBody() receiverId: any ): Promise<void> {
+		// Récupérer les demandes mises à jour
+		const pendingDemands = await this.friendshipService.getReceivedFriendships(receiverId);
+		// Envoyer les demandes mises à jour à tous les clients connectés
+		this.server.emit('pendingDemands', pendingDemands);
+	}
 
 }

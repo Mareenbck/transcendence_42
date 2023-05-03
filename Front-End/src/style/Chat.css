@@ -195,6 +195,7 @@
   font-size: 50px;
   color: rgb(224, 220, 220);
   cursor: default;
+  z-index: -10;
 }
 
 .noConversationText2 {

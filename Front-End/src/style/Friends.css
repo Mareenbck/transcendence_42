@@ -9,14 +9,18 @@
 }
 
 .title-users {
-    width: 704px;
-    height: 56px;
-    font-weight: 700;
-    font-size: 31px;
-    line-height: 80px;
-    font-family: 'Noto Sans', sans-serif;
-    color: #000000;
-    text-align: initial;
+	width: 410px;
+	height: 61px;
+	font-weight: 500;
+	font-size: 20px;
+	line-height: 110px;
+	font-family: 'Noto Sans', sans-serif;
+	color: #5c5c5c;
+	text-align: initial;
+}
+
+.title-users span{
+	font-size: 17px;
 }
 
 .h1 {
@@ -95,4 +99,42 @@
     border: 3px solid #000000;
     border-radius: 4px;
 }
+
+.title-drawer {
+	height: 100px;
+	display: flex;
+	width: 100%;
+    border-bottom: 3px solid #699bf7;
+	align-items: center;
+}
+
+.title-drawer h2 {
+	font-family: 'Inter';
+	margin-left: 27px;
+	font-weight: 700;
+	font-size: 28px;
+	line-height: 28px;
+	margin-top: 10px;
+}
+
+.avatar-username-inlist {
+	display: flex;
+	align-items: center;
+	padding-left: 15px;
+}
+
+.users-list.MuiListItem-root {
+	width: 112%;
+	margin-left: -24px;
+	display: flex;
+	justify-content: space-between;
+	height: 62px;
+}
+
+.btn-inlist {
+	display: flex;
+	width: 135px;
+	justify-content: space-around;
+}
+
 

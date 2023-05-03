@@ -35,11 +35,14 @@ const MatchHistory = (props: any) => {
 
 	if (!games) {
 		return <div>Loading...</div>;
-	  }
+	}
+
+	const lastFiveGames = games.slice(0, 5);
+
 
 	return (
 		<>
-		  {games.map((game) => (
+		  {lastFiveGames.map((game) => (
 			<ListItem key={game.id}>
 				<div className="container-match">
 					<PlayerOne player={game.playerOne} winner={game.winner} score={game.score1} />
