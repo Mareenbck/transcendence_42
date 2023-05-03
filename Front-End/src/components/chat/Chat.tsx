@@ -1,5 +1,4 @@
 import { useEffect, useContext, useState, useRef, FormEvent, RefObject } from 'react'
-import { Link } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
 import useSocket from '../../service/socket';
 import MessageReq from "./message/message.req"
@@ -9,24 +8,16 @@ import '../../style/Chat.css'
 import '../../style/Friends.css';
 import React from 'react';
 import PopupChallenge from './PopupChallenge';
-import MyAvatar from '../user/Avatar';
 import {DirectMessage, UserChat, ChatRoom, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
-import MyAccountMenu from "./../AccountMenu";
 import { Tab, useThemeProps } from '@mui/material';
 import { Tabs } from '@mui/material';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import MailIcon from '@mui/icons-material/Mail';
 import CurrentChannel from './channels/CurrentChannel';
 import UsersOnChannel from './channels/UsersOnChannel';
-import NavbarChannel from './channels/NavbarChannel';
-import UserChart from '../scores/UserChart';
 import UsersWithDirectMessage from './message/usersWithMessages';
-import ChatInChatroom from './channels/ChatInChatroom';
-import Conversation from './channels/Conversation';
-import UsersList from './UsersList';
 import InteractiveList from './UsersList';
-import InteractiveListe from './channels/u';
 
 function Chat(props: any) {
   const user = useContext(AuthContext);
@@ -367,6 +358,17 @@ useEffect(() => {
   const [isMuted, setIsMuted] = useState(false);
   const [isBanned, setIsBanned] = useState(false);
   const [isChannelClicked, setIsChannelClicked] = useState(false);
+  const [isChannelSelected, setIsChannelSelected] = useState(true);
+
+
+ const onChange= (e: any, newValue: string) => {
+    setActiveTab(newValue);
+    if (newValue === "Channels") {
+      setIsChannelSelected(true);
+    } else {
+      setIsChannelSelected(false);
+    }
+  }
   
 
 return (
@@ -404,20 +406,7 @@ return (
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
       {currentChat && (
       <>
-        <CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined} isBanned={isBanned} setIsBanned={setIsBanned}/>
-          {/* <UsersOnChannel
-          currentChatroom={currentChat}
-          channelId={currentChat?.id}
-          channelVisibility={currentChat?.visibility}
-          channelName={currentChat.name}
-          isChannelClicked={isChannelClicked}
-          /> */}
-          <InteractiveListe
-          currentChatroom={currentChat}
-          channelId={currentChat?.id}
-          channelVisibility={currentChat?.visibility}
-          channelName={currentChat.name}
-          isChannelClicked={isChannelClicked}/>
+        <CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined} isBanned={isBanned} setIsBanned={setIsBanned} />
       </>
       )}
         {currentDirect ?
@@ -444,23 +433,36 @@ return (
         </div>
         </div>
         <div className="chatOnline">
-          <div className="chatOnlineW">
-            <div className="chatOnline">
-            </div>
-            <InteractiveList
-              onlineUsers={onlineUsers}
-              otherUsers={otherUsers}
-              id={id}
-              getUser={getUser}
-              amIBlocked={amIBlocked}
-              inviteGame={inviteGame}
-              setToBlock={setToBlock}
-              setToUnblock={setToUnblock}
-              isHeBlocked={isHeBlocked}
-              getDirect={getDirect}
-              user={user}
-            />
-          </div>
+        <div className="chatOnlineW">
+        <div className="chatOnline" style={{ display: isChannelSelected ? "none" : "block" }}>
+        </div>
+        {!currentChat && (
+          <InteractiveList
+            onlineUsers={onlineUsers}
+            otherUsers={otherUsers}
+            id={id}
+            getUser={getUser}
+            amIBlocked={amIBlocked}
+            inviteGame={inviteGame}
+            setToBlock={setToBlock}
+            setToUnblock={setToUnblock}
+            isHeBlocked={isHeBlocked}
+            getDirect={getDirect}
+            user={user}
+          />
+        )}
+        {currentChat && (
+          <UsersOnChannel
+            currentChatroom={currentChat}
+            channelId={currentChat?.id}
+            channelVisibility={currentChat?.visibility}
+            channelName={currentChat?.name}
+            isChannelClicked={isChannelClicked}
+          />
+        )}
+      </div>
+
+
         </div>
       </div>
 

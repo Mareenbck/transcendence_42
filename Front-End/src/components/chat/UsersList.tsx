@@ -9,12 +9,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import FolderIcon from '@mui/icons-material/Folder';
+import DeleteIcon from '@mui/icons-material/Delete';
 import MyAvatar from '../user/Avatar';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Link } from "react-router-dom";
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 
 
 
@@ -56,9 +59,12 @@ export default function InteractiveList(props: any) {
 
           {props.onlineUsers?.map((o: any) => (
             +o?.userId.userId !== +props.id ? (
-                <ListItem key={o?.userId.userId} onClick={()=> {props.getDirect(o?.userId)}}
+                <ListItem key={o?.userId.userId} 
                 secondaryAction={
                     <div>
+                        <IconButton className='violet-icon' edge="end" aria-label="Play" onClick={()=> {props.getDirect(o?.userId)}}>
+                          <ChatBubbleIcon />
+                        </IconButton>
                       <Link to={`/users/profile/${o?.id}`} className="profile-link">
                           <IconButton  className='violet-icon' edge="end" aria-label="Profil">
                           <AccountBoxIcon />
@@ -95,10 +101,12 @@ export default function InteractiveList(props: any) {
             {props.otherUsers?.map((o: any) => ( 
               +o?.id !== +props.id && !props.onlineUsers.find(u => +u.userId.userId === +o?.id) ? (
                 <ListItem
-                    key={o?.id} onClick={()=> {props.getDirect(o)}}
+                    key={o?.id}
                     secondaryAction={
                         <div>
-                      
+                      <IconButton className='violet-icon' edge="end" aria-label="Play" onClick={()=> {props.getDirect(o)}}>
+                          <ChatBubbleIcon />
+                      </IconButton>
                         <Link to={`/users/profile/${o?.id}`}>  
                         <IconButton className='violet-icon' edge="end" aria-label="Profil">         
                             <AccountBoxIcon/>
