@@ -68,17 +68,17 @@ export default function InteractiveList(props: any) {
         <Demo style={{ backgroundColor: '#f2f2f2' }}>
           <List dense={dense}>
 
-          {props.onlineUsers?.map((o) => (
+          {props.onlineUsers?.map((o: any) => (
             +o?.userId.userId !== +props.id ? (
                 <ListItem key={o?.userId.userId} onClick={()=> {props.getDirect(o?.userId)}}
                 secondaryAction={
                     <div>
                       
-                    <Link to={'/game/'} onClick={() => props.inviteGame(+o?.userId.userId)}>
+                    {/* <Link to={'/game/'} onClick={() => props.inviteGame(+o?.userId.userId)}>
                         <IconButton className='violet-icon' edge="end" aria-label="Play">
                         <PlayCircleIcon/>
                         </IconButton>
-                    </Link>
+                    </Link> */}
                     <Link to={`/users/profile/${o?.id}`} className="profile-link">
                         <IconButton  className='violet-icon' edge="end" aria-label="Profil">
                         <AccountBoxIcon />
@@ -87,12 +87,18 @@ export default function InteractiveList(props: any) {
                     {props.isHeBlocked(+o.userId.userId) ?
                         <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {props.setToBlock(props.getUser(+o.userId.userId))}}>
                         <LockOpenIcon />
+                          <Link to={'/game/'} onClick={() => props.inviteGame(+o?.userId.userId)}>
+                            <IconButton className='violet-icon' edge="end" aria-label="Play">
+                              <PlayCircleIcon/>
+                            </IconButton>
+                          </Link>
                         </IconButton>
                         :
                         <IconButton edge="end" aria-label="Block" onClick={() => {props.setToUnblock(props.getUser(+o.userId.userId))}}>
-                        <LockIcon />
+                          <LockIcon />
                         </IconButton>
                     }
+                   
                     </div>
                 }
                 >
@@ -107,7 +113,7 @@ export default function InteractiveList(props: any) {
             ) : null
             ))}
 
-            {props.otherUsers?.map((o) => ( 
+            {props.otherUsers?.map((o: any) => ( 
               +o?.id !== +props.id && !props.onlineUsers.find(u => +u.userId.userId === +o?.id) ? (
                 <ListItem
                     key={o?.id} onClick={()=> {props.getDirect(o)}}
