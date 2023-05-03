@@ -35,7 +35,6 @@ export default function CreateChannelButton(props: any) {
             onSubmit={{handleFormSubmit}}
             >
             </PopUp>
-
         )}
 
       </form>

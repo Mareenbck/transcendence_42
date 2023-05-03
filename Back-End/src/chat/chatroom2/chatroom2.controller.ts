@@ -30,6 +30,14 @@ export class Chatroom2Controller {
 		return newUserTable;
 	}
 
+	@Post('/:channelId/delete')
+	async delete(@Param('channelId') channelId: string) {
+		console.log("controlleeeeeer")
+		const deleted = await this.chatRoomService.delete(parseInt(channelId));
+		console.log("deleted", deleted)
+		return deleted;
+	}
+
   @Get()
   @UseGuards(JwtGuard)
   async findAll(): Promise<CreateChatroomDto[]> {
@@ -140,9 +148,7 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 		return unmuted ;
 	}
 
-	// @Post('/invite_admin')
-	// @UseGuards(JwtGuard)
-	// async receiv
+	
 
 }
 

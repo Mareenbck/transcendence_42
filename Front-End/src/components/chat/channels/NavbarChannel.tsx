@@ -14,6 +14,9 @@ import Avatar from '@mui/material/Avatar';
 import '../../../style/NavbarChannel.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { isAnyArrayBuffer } from "util/types";
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteChannel from "./DeleteChannel";
 
 
 
@@ -164,7 +167,8 @@ export function NavbarChannel(props: any) {
 						onInvite={handleInviteUser}
 						onAddAdmin={handleAddAdmin}
 						type="invite-admin"
-						/>
+					/>
+					<DeleteChannel role={isAdmin} channelId={props.chatroom.id}/>
 					{props.chatroom.visibility === 'PRIVATE' &&
 						<SelectDialog
 						onSelect={(userId: string) => setSelectedUser(userId)}
@@ -178,7 +182,9 @@ export function NavbarChannel(props: any) {
 					}
 				</div>
 			}
-			<FontAwesomeIcon onClick={() => leaveChannel(props.chatroom.id)} icon={faArrowRightFromBracket} className="btn-dialog-navbar-leave"/>
+			{isAdmin === 'USER' &&
+				<FontAwesomeIcon onClick={() => leaveChannel(props.chatroom.id)} icon={faArrowRightFromBracket} className="btn-dialog-navbar-leave"/>
+			}
 			 {/* <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button> */}
 				<>
 			<Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>

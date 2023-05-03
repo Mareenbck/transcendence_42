@@ -64,7 +64,6 @@ export default function UpdateChannelsInList(props: any) {
 					</div>
 				</div>
 			))}
-
 			<ChannelInvitations />
 			<div className="create-channel-position">
 				<CreateChannelButton />

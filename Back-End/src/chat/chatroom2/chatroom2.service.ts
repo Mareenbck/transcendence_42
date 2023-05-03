@@ -223,41 +223,15 @@ export class ChatroomService {
 		return updatedChatroom;
 	  }
 
-	  async kick(channelId: number, userId: number) {
-		try {
+	  async ban(channelId: number, userId: number) {
+		  try {
 			const userOnChannel = await this.prisma.userOnChannel.findFirst({
 				where: {
 					channelId: channelId,
 					userId: userId,
 				},
 			});
-	
-			if (!userOnChannel) {
-				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
-			}
-	
-			const deletedUserOnChannel = await this.prisma.userOnChannel.delete({
-				where: {
-					id: userOnChannel.id,
-				},
-			});
-	
-			return `User with ID ${userId} has been kicked from channel with ID ${channelId}`;
-		} catch (error) {
-			console.error(error);
-			throw new Error("Failed to kick user from channel.");
-		}
-	}	  
-	
-	async ban(channelId: number, userId: number) {
-		try {
-			const userOnChannel = await this.prisma.userOnChannel.findFirst({
-				where: {
-					channelId: channelId,
-					userId: userId,
-				},
-			});
-	
+			
 			if (!userOnChannel) {
 				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
 			}
@@ -288,18 +262,18 @@ export class ChatroomService {
 					userId: userId,
 				},
 			});
-	
+			
 			if (!userOnChannel) {
 				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
 			}
-	
+			
 			const updatedStatus = await this.prisma.userOnChannel.update({
 				where: {
 					channelId_userId: {
-					  channelId,
+						channelId,
 					  userId,
 					},
-				  },
+				},
 				data: {
 					status: UserStatusOnChannel.CLEAN,
 				},
@@ -319,18 +293,18 @@ export class ChatroomService {
 					userId: userId,
 				},
 			});
-	
+			
 			if (!userOnChannel) {
 				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
 			}
-	
+			
 			const updatedStatus = await this.prisma.userOnChannel.update({
 				where: {
 					channelId_userId: {
-					  channelId,
-					  userId,
+						channelId,
+						userId,
 					},
-				  },
+				},
 				data: {
 					status: UserStatusOnChannel.MUTE,
 				},
@@ -341,7 +315,7 @@ export class ChatroomService {
 			throw new Error("Failed to mute user from channel.");
 		}
 	}
-
+	
 	async unmute(channelId: number, userId: number) {
 		try {
 			// console.log
@@ -351,16 +325,16 @@ export class ChatroomService {
 					userId: userId,
 				},
 			});
-	
+			
 			if (!userOnChannel) {
 				throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
 			}
-	
+			
 			const updatedStatus = await this.prisma.userOnChannel.update({
 				where: {
 					channelId_userId: {
-					  channelId,
-					  userId,
+						channelId,
+						userId,
 					},
 				  },
 				data: {
@@ -373,5 +347,52 @@ export class ChatroomService {
 			throw new Error("Failed to unmute user from channel.");
 		}
 	}
+	
+	async delete(id: number) {
+		try {
+			console.log("entre dans le service")
+			const channel = await this.prisma.chatroom.findUnique({where: {id: id}});
+			const userOnChannel = await this.prisma.userOnChannel.findFirst({
+				where: {
+					channelId: id,
+				},
+
+			})
+			console.log("channel in service", channel)
+			
+			const response = await this.prisma.userOnChannel.delete({
+				where: {id: userOnChannel.id},
+			});
+			console.log("response in service", response)
+		} catch(error) {
+			console.log(error);
+		}
+	}
 	  
-}
+	async kick(channelId: number, userId: number) {
+	  try {
+		  const userOnChannel = await this.prisma.userOnChannel.findFirst({
+			  where: {
+				  channelId: channelId,
+				  userId: userId,
+			  },
+		  });
+	
+		  if (!userOnChannel) {
+			  throw new Error(`User with ID ${userId} is not a member of the channel with ID ${channelId}`);
+		  }
+	
+		  const deletedUserOnChannel = await this.prisma.userOnChannel.delete({
+			  where: {
+				  id: userOnChannel.id,
+			  },
+		  });
+	
+		  return `User with ID ${userId} has been kicked from channel with ID ${channelId}`;
+	  } catch (error) {
+		  console.error(error);
+		  throw new Error("Failed to kick user from channel.");
+	  }
+	}	  
+
+}	

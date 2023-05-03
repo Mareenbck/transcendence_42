@@ -46,24 +46,6 @@
 	margin: 40px;
 }
 
-.form-input input {
-	height: 50px;
-	width: 430px;
-	background-color: #C7B9FF;
-	border-radius: 4px;
-	border: 2px solid black;
-	font-family: 'Noto Sans', sans-serif;
-	font-weight: 300;
-	font-size: 14px;
-}
-
-.form-input label {
-	font-family: 'Noto Sans', sans-serif;
-	font-weight: 800;
-	font-size: 14px;
-	text-align: initial;
-}
-
 .body {
 	font-family: none;
 }

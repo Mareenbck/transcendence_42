@@ -39,7 +39,7 @@ function PopUp(props: any) {
             isPublic: isPublic,
             isPrivate: isPrivate,
             isProtected: isProtected,
-            password:  passwordInputRef.current!.value,
+            password:  passwordInputRef.current?.value,
         };
         try {
             idConv = await ConversationReq.postRoom(user, newConv);
@@ -58,6 +58,7 @@ function PopUp(props: any) {
 
     const createAndClose = async (e:FormEvent) => {
         try {
+            console.log("HELLOOOO")
             await createNewChannel(e);
             setShowPopUp(false);
             props.onClick();

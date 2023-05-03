@@ -120,7 +120,6 @@ export default function CurrentChannel(props: any) {
 
 	  return (
 		<>
-			
 			{isJoined && !isBanned && (
 				<>
 					<NavbarChannel
@@ -157,16 +156,6 @@ export default function CurrentChannel(props: any) {
 					</div>
 				</>
 			)}
-			{!isJoined && showPopUp &&
-				(
-					<div className="popup-container">
-						<div className="popup-content">
-							<span className="popup-text">You need to join the channel before being able to talk.</span>
-							<button className="popup-button" onClick={() => setShowPopUp(false)}>OK</button>
-						</div>
-					</div>
-				)
-			}
 			{isBanned && (
 				<div className="popup-container">
 					<div className="popup-content">

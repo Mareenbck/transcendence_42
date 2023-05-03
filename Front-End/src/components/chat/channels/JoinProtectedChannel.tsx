@@ -10,25 +10,18 @@ export default function JoinProtectedChannel(props: any) {
     const [icon, setIcon] = useState<any>();
 
     useEffect(() => {
-
-        // if (props.role === "USER") {
-        //     setIcon(<AddBoxIcon style={{ opacity: 0 }} />);
-        // } else {
-            setIcon(<AddBoxIcon />);
-        // }
+      setIcon(<AddBoxIcon />);
       }, []);
 
     const handleOpenJoinModal = () => {
-            props.onOpenJoinModal();
-      };
+        props.onOpenJoinModal();
+    };
 
     return (
       <>
-      {/* {props.role && ( */}
         <IconButton onClick={handleOpenJoinModal}>
             {icon}
         </IconButton>
-      {/* )} */}
       </> 
     );
 }
