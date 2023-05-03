@@ -27,7 +27,7 @@ import Conversation from './channels/Conversation';
 import UsersList from './UsersList';
 import InteractiveList from './UsersList';
 
-function Chat() {
+function Chat(props: any) {
   const user = useContext(AuthContext);
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<OnlineU[]> ([]);

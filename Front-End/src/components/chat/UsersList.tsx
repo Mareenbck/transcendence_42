@@ -46,20 +46,7 @@ const Demo = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
-export default function InteractiveList({
-    onlineUsers,
-    otherUsers,
-    id,
-    getUser,
-    amIBlocked,
-    inviteGame,
-    setToBlock,
-    setToUnblock,
-    isHeBlocked,
-    getDirect,
-    user,
-  
-  }) {
+export default function InteractiveList(props: any) {
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
   
@@ -81,13 +68,13 @@ export default function InteractiveList({
         <Demo style={{ backgroundColor: '#f2f2f2' }}>
           <List dense={dense}>
 
-          {onlineUsers?.map((o) => (
-            +o?.userId.userId !== +id ? (
-                <ListItem key={o?.userId.userId} onClick={()=> {getDirect(o?.userId)}}
+          {props.onlineUsers?.map((o) => (
+            +o?.userId.userId !== +props.id ? (
+                <ListItem key={o?.userId.userId} onClick={()=> {props.getDirect(o?.userId)}}
                 secondaryAction={
                     <div>
                       
-                    <Link to={'/game/'} onClick={() => inviteGame(+o?.userId.userId)}>
+                    <Link to={'/game/'} onClick={() => props.inviteGame(+o?.userId.userId)}>
                         <IconButton className='violet-icon' edge="end" aria-label="Play">
                         <PlayCircleIcon/>
                         </IconButton>
@@ -97,12 +84,12 @@ export default function InteractiveList({
                         <AccountBoxIcon />
                         </IconButton>
                     </Link>
-                    {isHeBlocked(+o.userId.userId) ?
-                        <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {setToBlock(getUser(+o.userId.userId))}}>
+                    {props.isHeBlocked(+o.userId.userId) ?
+                        <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {props.setToBlock(props.getUser(+o.userId.userId))}}>
                         <LockOpenIcon />
                         </IconButton>
                         :
-                        <IconButton edge="end" aria-label="Block" onClick={() => {setToUnblock(getUser(+o.userId.userId))}}>
+                        <IconButton edge="end" aria-label="Block" onClick={() => {props.setToUnblock(props.getUser(+o.userId.userId))}}>
                         <LockIcon />
                         </IconButton>
                     }
@@ -110,7 +97,7 @@ export default function InteractiveList({
                 }
                 >
                 <ListItemAvatar>
-                    <MyAvatar authCtx={user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
+                    <MyAvatar authCtx={props.user} id={o?.userId.userId} style="xs" avatar={o?.userId.avatar} ftAvatar={o?.userId.ftAvatar}/>
                 </ListItemAvatar>
                 <ListItemText
                     primary={o?.userId.username}
@@ -120,13 +107,13 @@ export default function InteractiveList({
             ) : null
             ))}
 
-            {otherUsers?.map((o) => ( 
-              +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ? (
+            {props.otherUsers?.map((o) => ( 
+              +o?.id !== +props.id && !props.onlineUsers.find(u => +u.userId.userId === +o?.id) ? (
                 <ListItem
-                    key={o?.id} onClick={()=> {getDirect(o)}}
+                    key={o?.id} onClick={()=> {props.getDirect(o)}}
                     secondaryAction={
                         <div>
-                        <Link to={'/game/'}  className='violet-icon' onClick={() => inviteGame(+o?.id)}>                    
+                        <Link to={'/game/'}  className='violet-icon' onClick={() => props.inviteGame(+o?.id)}>                    
                             <IconButton  edge="end" aria-label="Play"> 
                             <PlayCircleIcon className='violet-icon'/>
                             </IconButton>                  
@@ -136,20 +123,20 @@ export default function InteractiveList({
                             <AccountBoxIcon/>
                         </IconButton>
                         </Link>
-                        {isHeBlocked(+o.id) ?
-                        <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {setToBlock(getUser(+o.id))}}>
+                        {props.isHeBlocked(+o.id) ?
+                        <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {props.setToBlock(props.getUser(+o.id))}}>
                             <LockOpenIcon/>
                             </IconButton>
                             :
-                        <IconButton className='violet-icon' edge="end" aria-label="Block" onClick={() => {setToUnblock(getUser(+o.id))}}>
-                            <LockIcon onClick={() => {setToUnblock(getUser(+o.id))}}/>
+                        <IconButton className='violet-icon' edge="end" aria-label="Block" onClick={() => {props.setToUnblock(props.getUser(+o.id))}}>
+                            <LockIcon onClick={() => {props.setToUnblock(props.getUser(+o.id))}}/>
                             </IconButton>
                         }
                         </div>
                     }
                     >
                   <ListItemAvatar>
-                    <MyAvatar authCtx={user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>
+                    <MyAvatar authCtx={props.user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>
                   </ListItemAvatar>
                   <ListItemText
                     primary={o?.username}
