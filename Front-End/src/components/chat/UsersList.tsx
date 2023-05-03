@@ -7,30 +7,15 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
 import MyAvatar from '../user/Avatar';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Link } from "react-router-dom";
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import CurrentChannel from './channels/CurrentChannel';
-import UsersOnChannel from './channels/UsersOnChannel';
-import MessageD from './message/messageD';
-import UsersWithDirectMessage from './message/usersWithMessages';
-import { Tab, useThemeProps } from '@mui/material';
-import { Tabs } from '@mui/material';
-import UpdateChannelsInList from './channels/UpdateChannelsInList';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-import MailIcon from '@mui/icons-material/Mail';
+
 
 
 
@@ -58,6 +43,7 @@ export default function InteractiveList(props: any) {
       );
     }
 
+    
 
   
     return (
@@ -73,32 +59,25 @@ export default function InteractiveList(props: any) {
                 <ListItem key={o?.userId.userId} onClick={()=> {props.getDirect(o?.userId)}}
                 secondaryAction={
                     <div>
-                      
-                    {/* <Link to={'/game/'} onClick={() => props.inviteGame(+o?.userId.userId)}>
-                        <IconButton className='violet-icon' edge="end" aria-label="Play">
-                        <PlayCircleIcon/>
-                        </IconButton>
-                    </Link> */}
-                    <Link to={`/users/profile/${o?.id}`} className="profile-link">
-                        <IconButton  className='violet-icon' edge="end" aria-label="Profil">
-                        <AccountBoxIcon />
-                        </IconButton>
-                    </Link>
-                    {props.isHeBlocked(+o.userId.userId) ?
+                      <Link to={`/users/profile/${o?.id}`} className="profile-link">
+                          <IconButton  className='violet-icon' edge="end" aria-label="Profil">
+                          <AccountBoxIcon />
+                          </IconButton>
+                      </Link>
+                      {props.isHeBlocked(+o.userId.userId) ?
                         <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {props.setToBlock(props.getUser(+o.userId.userId))}}>
-                        <LockOpenIcon />
-                          <Link to={'/game/'} onClick={() => props.inviteGame(+o?.userId.userId)}>
-                            <IconButton className='violet-icon' edge="end" aria-label="Play">
-                              <PlayCircleIcon/>
-                            </IconButton>
-                          </Link>
+                          <LockOpenIcon />
+                            <Link to={'/game/'} onClick={() => props.inviteGame(+o?.userId.userId)}>
+                              <IconButton className='violet-icon' edge="end" aria-label="Play">
+                                <PlayCircleIcon/>
+                              </IconButton>
+                            </Link>
                         </IconButton>
-                        :
+                          :
                         <IconButton edge="end" aria-label="Block" onClick={() => {props.setToUnblock(props.getUser(+o.userId.userId))}}>
-                          <LockIcon />
+                            <LockIcon />
                         </IconButton>
-                    }
-                   
+                      }
                     </div>
                 }
                 >
@@ -119,24 +98,25 @@ export default function InteractiveList(props: any) {
                     key={o?.id} onClick={()=> {props.getDirect(o)}}
                     secondaryAction={
                         <div>
-                        <Link to={'/game/'}  className='violet-icon' onClick={() => props.inviteGame(+o?.id)}>                    
-                            <IconButton  edge="end" aria-label="Play"> 
-                            <PlayCircleIcon className='violet-icon'/>
-                            </IconButton>                  
-                        </Link>
+                      
                         <Link to={`/users/profile/${o?.id}`}>  
                         <IconButton className='violet-icon' edge="end" aria-label="Profil">         
                             <AccountBoxIcon/>
                         </IconButton>
                         </Link>
                         {props.isHeBlocked(+o.id) ?
-                        <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {props.setToBlock(props.getUser(+o.id))}}>
+                          <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {props.setToBlock(props.getUser(+o.id))}}>
                             <LockOpenIcon/>
-                            </IconButton>
+                            <Link to={'/game/'}  className='violet-icon' onClick={() => props.inviteGame(+o?.id)}>                    
+                              <IconButton  edge="end" aria-label="Play"> 
+                                <PlayCircleIcon className='violet-icon'/>
+                            </IconButton>                  
+                            </Link>
+                          </IconButton>
                             :
-                        <IconButton className='violet-icon' edge="end" aria-label="Block" onClick={() => {props.setToUnblock(props.getUser(+o.id))}}>
+                          <IconButton className='violet-icon' edge="end" aria-label="Block" onClick={() => {props.setToUnblock(props.getUser(+o.id))}}>
                             <LockIcon onClick={() => {props.setToUnblock(props.getUser(+o.id))}}/>
-                            </IconButton>
+                          </IconButton>
                         }
                         </div>
                     }

@@ -1,12 +1,5 @@
+import * as React from 'react';
 import { useEffect, useContext, useState, useRef, FormEvent, RefObject } from 'react'
-import React from 'react';
-import AuthContext from '../../../store/AuthContext';
-import '../../../style/UsersOnChannel.css'
-import { FaCrown } from "react-icons/fa";
-import MyAvatar from '../../user/Avatar';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import MicOffIcon from '@mui/icons-material/MicOff';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -23,6 +16,17 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MyAvatar from '../../user/Avatar';
+import AuthContext from '../../../store/AuthContext';
+import { Link } from "react-router-dom";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+
+
+
+
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2].map((value) =>
@@ -36,15 +40,16 @@ const Demo = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
-
-export default function UsersOnChannel(props: any) {
-  
+export default function InteractiveListe(props: any) {
+  const [dense, setDense] = React.useState(false);
+  const [secondary, setSecondary] = React.useState(false);
   const authCtx = useContext(AuthContext);
   const [isBanned, setIsBanned] = useState(false);
   const [participants, setParticipants] = useState([]);
   const banned = participants.filter((p) => p.status === 'BAN');
   const admins = participants.filter((p) => p.role === 'ADMIN');
-  const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));        
+  const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));     
+  
   
     
     const showParticipants = async (channelId: string) => {
@@ -189,30 +194,101 @@ export default function UsersOnChannel(props: any) {
         }, [props.channelId, kickSomeone]);
 
 
-        return (
-            <>
-          
-                <h4 className='name-participants'>Users:</h4>
-                
-                <h4 className='name-participants'>Users Banned:</h4>
-                <ul className='ul-participants'>
-                  {banned.map((p) => (
-                    <li className='username-participants' key={p.id}>
-                      <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
-                      {p.user.username} 
-                      {admins.some(admin => admin.user.id === authCtx.userId) && (
-                        <>
-                          <i className="fa-solid fa-trash" onClick={() => kickSomeone(props.channelId, p.user.id)}></i>
-                          {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                            <RemoveCircleOutlineIcon  onClick={() => unBanSomeone(props.channelId, p.user.id)} />
-                          ) : null}
-                        </>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-            </>
-          );
-          
-          
+
+return (
+    <Box style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
+        <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+        Participants of {props.name}
+        </Typography>
+        <Demo style={{ backgroundColor: '#f2f2f2' }}>
+        <List dense={dense}>
+        <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+             Admins
+        </Typography>
+        {admins.map((p: any) => (
+            <ListItem key={p.user.username}
+            secondaryAction={
+                <div>
+                <Link to={`/users/profile/${p?.user.userId}`} className="profile-link">
+                    <IconButton  className='violet-icon' edge="end" aria-label="Profil">
+                    <AccountBoxIcon />
+                    </IconButton>
+                </Link>
+                <i className="fa-sharp fa-solid fa-crown"></i>
+                </div>
+            }
+            >
+            <ListItemAvatar>
+                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+            </ListItemAvatar>
+            <ListItemText
+                primary={p?.user.username}
+                secondary={secondary ? 'Secondary text' : null}
+            />
+            </ListItem>    
+        ))}
+        <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+            Users
+            </Typography>
+        {users.map((p: any) => ( 
+            <ListItem key={p.user.username}
+            secondaryAction={
+                <div>
+                <Link to={`/users/profile/${p?.user.userId}`} className="profile-link">
+                    <IconButton  className='violet-icon' edge="end" aria-label="Profil">
+                    <AccountBoxIcon />
+                    </IconButton>
+                </Link>
+                </div>
+            }
+            >
+            <ListItemAvatar>
+                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+            </ListItemAvatar>
+            <ListItemText
+                primary={p?.user.username}
+                secondary={secondary ? 'Secondary text' : null}
+            />
+            {admins.some(admin => admin.user.id === authCtx.userId) && (
+                <>
+                <DeleteIcon onClick={() => kickSomeone(props.channelId, p.user.id)}/>
+                {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
+                    <RemoveCircleIcon className="ban-icon" onClick={() => banSomeone(props.channelId, p.user.id)} />
+                    ) : null
+                }
+                <MicOffIcon 
+                className={`mute ${p.status === 'MUTE' ? 'muted' : ''}`} 
+                onClick={() => {
+                    if (p.status === 'MUTE') {
+                    unMuteSomeone(props.channelId, p.user.id);
+                    } else {
+                    muteSomeone(props.channelId, p.user.id);
+                    }
+                }}
+                />
+                </>
+            )}
+            </ListItem>  
+        ))}
+        <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+            Banned Users
+        </Typography>
+        {banned.map((p) => (
+            <li className='username-participants' key={p.id}>
+                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                {p.user.username} 
+                {admins.some(admin => admin.user.id === authCtx.userId) && (
+                <>
+                    <DeleteIcon onClick={() => kickSomeone(props.channelId, p.user.id)}/>
+                    {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
+                    <RemoveCircleOutlineIcon  onClick={() => unBanSomeone(props.channelId, p.user.id)} />
+                    ) : null}
+                </>
+                )}
+            </li>
+        ))}
+        </List>
+        </Demo>
+    </Box>
+    );
 }

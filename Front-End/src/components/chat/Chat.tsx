@@ -26,6 +26,7 @@ import ChatInChatroom from './channels/ChatInChatroom';
 import Conversation from './channels/Conversation';
 import UsersList from './UsersList';
 import InteractiveList from './UsersList';
+import InteractiveListe from './channels/u';
 
 function Chat(props: any) {
   const user = useContext(AuthContext);
@@ -404,13 +405,19 @@ return (
       {currentChat && (
       <>
         <CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined} isBanned={isBanned} setIsBanned={setIsBanned}/>
-          <UsersOnChannel
+          {/* <UsersOnChannel
           currentChatroom={currentChat}
           channelId={currentChat?.id}
           channelVisibility={currentChat?.visibility}
           channelName={currentChat.name}
           isChannelClicked={isChannelClicked}
-          />
+          /> */}
+          <InteractiveListe
+          currentChatroom={currentChat}
+          channelId={currentChat?.id}
+          channelVisibility={currentChat?.visibility}
+          channelName={currentChat.name}
+          isChannelClicked={isChannelClicked}/>
       </>
       )}
         {currentDirect ?
