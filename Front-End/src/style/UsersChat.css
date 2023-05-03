@@ -1,0 +1,58 @@
+
+.contain-users {
+	background-color: #F0F0F0;
+	height: 100vh;
+	padding: 15px;
+	width: 25%;
+}
+
+.btn-chatlist {
+	color: #081a3b;
+	cursor: pointer;
+	height: 20px;
+	/* color: black; */
+	padding: 11px;
+	border: solid 1px #80808024;
+	border-radius: 8px;
+	width: 25px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.btn-chatlist:hover {
+    /* color: #C7B9FF; */
+	background-color: #c7b9ff1f;
+    box-shadow: 0px 1px 1px #8b8a8a;
+}
+
+.btn-chatlist-clicked {
+	color: #fa2929;
+	cursor: pointer;
+	height: 20px;
+	/* color: black; */
+	padding: 11px;
+	border: solid 2px #80808024;
+	border-radius: 8px;
+	width: 25px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.users-chatlist-avatar.MuiAvatar-root {
+	color: rgb(241, 234, 241);
+	background-color: black;
+	border-radius: 25px;
+	margin-left: 15px;
+	margin-right: 10px;
+}
+
+.dicuss-link {
+	color: black;
+	font-weight: 300;
+}
+
+.dicuss-link:hover {
+	color: rgb(147, 160, 196);
+	font-weight: 300;
+	cursor: pointer;
+}

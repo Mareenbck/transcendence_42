@@ -18,6 +18,9 @@ import CurrentChannel from './channels/CurrentChannel';
 import UsersOnChannel from './channels/UsersOnChannel';
 import UsersWithDirectMessage from './message/usersWithMessages';
 import InteractiveList from './UsersList';
+import CurrentDirectMessages from './message/CurrentDirectMessages';
+import Friends from '../friends/FriendsDrawer';
+import UsersChat from './message/UsersChat';
 
 function Chat(props: any) {
   const user = useContext(AuthContext);
@@ -45,14 +48,14 @@ function Chat(props: any) {
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////
 
-  useEffect(() => {
-    addListener("getMessageDirect", (data)=> setAMessageD({
-      content: data.content,
-      author: data.author,
-      receiver: data.receiver,
-      createdAt: new Date(Date.now()),
-    }));
-  });
+//   useEffect(() => {
+//     addListener("getMessageDirect", (data)=> setAMessageD({
+//       content: data.content,
+//       author: data.author,
+//       receiver: data.receiver,
+//       createdAt: new Date(Date.now()),
+//     }));
+//   });
 
   useEffect(() => {
     sendMessage("addUserChat", user as any);
@@ -101,16 +104,16 @@ function Chat(props: any) {
   });
 
 
-  useEffect(() => {
-    AMessageD && currentDirect && +currentDirect?.id === +AMessageD.author &&
-    setMessagesD(prev => {
-      const isDuplicate = prev.some(message => (message.createdAt === AMessageD.createdAt && message.content === AMessageD.content));
-      if (!isDuplicate) {
-        return [...prev, AMessageD];
-      }
-      return prev;
-    });
-  },[AMessageD, currentDirect])
+//   useEffect(() => {
+//     AMessageD && currentDirect && +currentDirect?.id === +AMessageD.author &&
+//     setMessagesD(prev => {
+//       const isDuplicate = prev.some(message => (message.createdAt === AMessageD.createdAt && message.content === AMessageD.content));
+//       if (!isDuplicate) {
+//         return [...prev, AMessageD];
+//       }
+//       return prev;
+//     });
+//   },[AMessageD, currentDirect])
 
 
 ////////////////////////////////////////////////
@@ -122,22 +125,22 @@ function Chat(props: any) {
     setAllUsers(response);
     setOtherUsers(response.filter((u: {id: string;})  => !(onlineUsers.some(e => +e.userId.userId === +u.id))));
   };
-  
+
   useEffect(() => {
     getAllUsersWithBlocked(user.token);
   }, []);
 
-  async function getDirMess() {
-    try {
-      setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.id));
-    } catch(err) {
-      console.log(err);
-    }
-  };
-  useEffect(() => {
-    if (currentDirect)
-    { getDirMess(); }
-  }, [currentDirect]);
+//   async function getDirMess() {
+//     try {
+//       setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.id));
+//     } catch(err) {
+//       console.log(err);
+//     }
+//   };
+//   useEffect(() => {
+//     if (currentDirect)
+//     { getDirMess(); }
+//   }, [currentDirect]);
 
 
 ////////////////////////////////////////////////
@@ -245,7 +248,7 @@ function Chat(props: any) {
       const j = getUser(+id);
       const k = allUsers.find(userX => +userX.id === +blockForMe);
       if (j && k)
-      { 
+      {
         k.blockedFrom.push(j);
         const NewAll = allUsers;
         NewAll.splice(i, 1, k);
@@ -253,7 +256,7 @@ function Chat(props: any) {
     }
     setBlockForMe(null);
   }, [blockForMe]);
-     
+
   useEffect(() => {
     if (unblockForMe && allUsers && user.userId && unblockForMe !== (undefined || null) && unblockForMe !== +user.userId) {
       const i = allUsers.findIndex(userX => +userX.id === +unblockForMe);
@@ -265,7 +268,7 @@ function Chat(props: any) {
         setAllUsers([...NewAll]);};
     }
     setBlockForMe(null);
-  }, [unblockForMe]);  
+  }, [unblockForMe]);
 
 ////////////////////////////////////////////////
 // Partie IV : fonctions ...
@@ -294,8 +297,12 @@ function Chat(props: any) {
   }
 
   const getDirect = (userX: any): void => {
+	console.log("userX ---> ", userX)
     const gUser = getUser(+id);
+	console.log("gUser ---> ", gUser)
+
     const dUser = userX.userId ? getUser(userX.userId) : userX;
+	console.log("dUser ---> ", dUser)
     if (dUser && gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +dUser.id) === undefined ))
     {
       if (dUser.blockedFrom.find((u: UserChat) => +u.id === +id) === undefined)
@@ -321,27 +328,27 @@ function Chat(props: any) {
 
 
 // Direct message
-  const handleSubmitD = async (e: FormEvent)=> {
-    e.preventDefault();
-    if (currentDirect?.id)
-    {
-      const messageD = {
-      author: +id,
-      content: newMessageD,
-      receiver: currentDirect?.id,
-      };
-        sendMessage("sendMessageDirect", {
-        author: +id,
-        receiver: +currentDirect?.id,
-        content: newMessageD,
-      } as any)
-      try {
-        const res2 = await MessageReq.postDirMess(user, messageD);
-        setMessagesD([...messagesD, res2]);
-        setNewMessageD("");
-      } catch(err) {console.log(err)}
-    }
-  }
+//   const handleSubmitD = async (e: FormEvent)=> {
+//     e.preventDefault();
+//     if (currentDirect?.id)
+//     {
+//       const messageD = {
+//       author: +id,
+//       content: newMessageD,
+//       receiver: currentDirect?.id,
+//       };
+//         sendMessage("sendMessageDirect", {
+//         author: +id,
+//         receiver: +currentDirect?.id,
+//         content: newMessageD,
+//       } as any)
+//       try {
+//         const res2 = await MessageReq.postDirMess(user, messageD);
+//         setMessagesD([...messagesD, res2]);
+//         setNewMessageD("");
+//       } catch(err) {console.log(err)}
+//     }
+//   }
 
 
 ////////////////////////////////////////////////
@@ -362,82 +369,66 @@ useEffect(() => {
 return (
   <>
   {" "}
+	<div className="messenger">
+		<div className="chatMenu">
+			<Tabs
+				value={activeTab}
+				onChange={(e: any, newValue: string) => setActiveTab(newValue)}
+				aria-label="icon position tabs example"
+				>
+				<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
+				<Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
+			</Tabs>
+			{activeTab === 'Channels' && (
+				<UpdateChannelsInList currentChat={currentChat} setCurrentChat={setCurrentChat} />
+			)}
+			{activeTab === "Direct messages" && (
+				<UsersWithDirectMessage
+					currentDirect={currentDirect}
+					setCurrentDirect={setCurrentDirect}
+					currentChat={currentChat}
+					setCurrentChat={setCurrentChat}
+					/>
+			)}
+		</div>
+		<div className="chatBox">
+			<div className="chatBoxW">
+				<PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
+				{currentChat && (
+					<CurrentChannel
+						currentChatroom={currentChat}
+						allUsers={allUsers}
+						isJoined={isJoined}
+						setIsJoined={setIsJoined}
+						isBanned={isBanned}
+						setIsBanned={setIsBanned} />
+				)}
+				{currentDirect ?
+					<CurrentDirectMessages currentDirect={currentDirect} allUsers={allUsers}/>
+				: <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
+				}
+			</div>
+		</div>
 
-  <div className="messenger">
-	  <div className="chatMenu">
-		  <Tabs
-			  value={activeTab}
-			  onChange={(e: any, newValue: string) => setActiveTab(newValue)}
-			  aria-label="icon position tabs example"
-		  >
-		  	<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
-			  <Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
-		  </Tabs>
-		  {activeTab === 'Channels' && (
-			  <UpdateChannelsInList
-			  currentChat={currentChat}
-			  setCurrentChat={setCurrentChat}
-			  />
-		  )}
-      {activeTab === "Direct messages" && (
-        <UsersWithDirectMessage
-			  currentDirect={currentDirect}
-			  setCurrentDirect={setCurrentDirect}
-        currentChat={currentChat}
-			  setCurrentChat={setCurrentChat}
-			  />
-        )}
-	  </div>
-
-    <div className="chatBox">
-      <div className="chatBoxW">
-          <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
-      {currentChat && (
-      <>
-        <CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined} isBanned={isBanned} setIsBanned={setIsBanned} />
-      </>
-      )}
-        {currentDirect ?
-        <>
-            <div>chat with {currentDirect.username} </div>
-            <div className="chatBoxTop">
-              { messagesD.length ?
-                messagesD?.map((m) => (
-                  <div key={m?.createdAt instanceof Date ? m.createdAt.getTime() : m.createdAt } ref={scrollRef}>
-                    <MessageD messageD={m} user={getUser(m.author)} authCtx={user} own={m?.author === +id} />
-                  </div>
-                )) : <span className="noConversationText2" > No message with this friend yet. </span>
-              }
-            </div>
-                <div className="chatBoxBottom">
-                  <textarea className="chatMessageInput" placeholder="write something..."
-                      onChange={(e) => setNewMessageD(e.target.value)} value={newMessageD}
-                  ></textarea>
-          <><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></>
-                </div>
-            </>
-            : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
-          }
-        </div>
-        </div>
-        <div className="chatOnline">
-        <div className="chatOnlineW">
+        {/* <div className="chatOnline">
+        <div className="chatOnlineW"> */}
         <div className="chatOnline" style={{ display: isChannelSelected ? "none" : "block" }}>
         </div>
         {!currentChat && (
-          <InteractiveList
-            onlineUsers={onlineUsers}
-            otherUsers={otherUsers}
-            id={id}
-            getUser={getUser}
-            amIBlocked={amIBlocked}
-            inviteGame={inviteGame}
-            setToBlock={setToBlock}
-            setToUnblock={setToUnblock}
-            isHeBlocked={isHeBlocked}
-            getDirect={getDirect}
-            user={user}
-          />
+			<UsersChat isHeBlocked={isHeBlocked} getDirect={getDirect} getUser={getUser} inviteGame={inviteGame} setToBlock={setToBlock} setToUnblock={setToUnblock}/>
+        //   <InteractiveList
+        //     onlineUsers={onlineUsers}
+        //     otherUsers={otherUsers}
+        //     id={id}
+        //     getUser={getUser}
+        //     amIBlocked={amIBlocked}
+        //     inviteGame={inviteGame}
+        //     setToBlock={setToBlock}
+        //     setToUnblock={setToUnblock}
+        //     isHeBlocked={isHeBlocked}
+        //     getDirect={getDirect}
+        //     user={user}
+        //   />
         )}
         {currentChat && (
           <UsersOnChannel
@@ -451,8 +442,8 @@ return (
       </div>
 
 
-        </div>
-      </div>
+        {/* </div>
+      </div> */}
 
     </>
   )

@@ -43,15 +43,14 @@ const Friends = () => {
 	return (
 		<>
 		<div className='contain-drawer'>
-
-		<div className='title-drawer'>
-			<h2>Members</h2>
-		</div>
-		<Container maxWidth="sm">
-			<FriendsList title="Online" users={onlineFriends} />
-			<FriendsList title="Offline" users={offlineFriends} />
-			<FriendsList title="Playing" users={playingFriends} />
-		</Container>
+			<div className='title-drawer'>
+				<h2>Members</h2>
+			</div>
+			<Container maxWidth="sm">
+				<FriendsList title="Online" users={onlineFriends} />
+				<FriendsList title="Offline" users={offlineFriends} />
+				<FriendsList title="Playing" users={playingFriends} />
+			</Container>
 		</div>
 		</>
 	  );

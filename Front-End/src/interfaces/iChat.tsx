@@ -1,4 +1,4 @@
-export interface DirectMessage 
+export interface DirectMessage
 {
   //  id: number;
     content  : string;
@@ -37,6 +37,7 @@ export interface UserChat {
 	email: string;
 	avatar: string;
 	ftAvatar: string;
+  status: string;
   blockedTo: UserChat[];
   blockedFrom: UserChat[];
 	dirMessEmited: DirectMessage[];
@@ -65,7 +66,7 @@ export interface UserCtx {
 
 export interface OnlineU {
   socketId: string;
-  userId: UserCtx; 
+  userId: UserCtx;
 }
 
 export interface Invite {
