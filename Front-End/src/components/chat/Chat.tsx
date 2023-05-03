@@ -401,38 +401,39 @@ return (
     <div className="chatBox">
       <div className="chatBoxW">
           <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
-		{currentChat ?
-    <>
-			<CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined} isBanned={isBanned} setIsBanned={setIsBanned}/>
-        <UsersOnChannel
-        currentChatroom={currentChat}
-        channelId={currentChat?.id}
-        channelVisibility={currentChat?.visibility}
-        channelName={currentChat.name}
-        isChannelClicked={isChannelClicked}
-        />
-    </>
-      : currentDirect ?
+      {currentChat && (
       <>
-          <div>chat with {currentDirect.username} </div>
-          <div className="chatBoxTop">
-            { messagesD.length ?
-              messagesD?.map((m) => (
-                <div key={m?.createdAt instanceof Date ? m.createdAt.getTime() : m.createdAt } ref={scrollRef}>
-                  <MessageD messageD={m} user={getUser(m.author)} authCtx={user} own={m?.author === +id} />
+        <CurrentChannel currentChatroom={currentChat} allUsers={allUsers} isJoined={isJoined} setIsJoined={setIsJoined} isBanned={isBanned} setIsBanned={setIsBanned}/>
+          <UsersOnChannel
+          currentChatroom={currentChat}
+          channelId={currentChat?.id}
+          channelVisibility={currentChat?.visibility}
+          channelName={currentChat.name}
+          isChannelClicked={isChannelClicked}
+          />
+      </>
+      )}
+        {currentDirect ?
+        <>
+            <div>chat with {currentDirect.username} </div>
+            <div className="chatBoxTop">
+              { messagesD.length ?
+                messagesD?.map((m) => (
+                  <div key={m?.createdAt instanceof Date ? m.createdAt.getTime() : m.createdAt } ref={scrollRef}>
+                    <MessageD messageD={m} user={getUser(m.author)} authCtx={user} own={m?.author === +id} />
+                  </div>
+                )) : <span className="noConversationText2" > No message with this friend yet. </span>
+              }
+            </div>
+                <div className="chatBoxBottom">
+                  <textarea className="chatMessageInput" placeholder="write something..."
+                      onChange={(e) => setNewMessageD(e.target.value)} value={newMessageD}
+                  ></textarea>
+          <><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></>
                 </div>
-              )) : <span className="noConversationText2" > No message with this friend yet. </span>
-            }
-          </div>
-              <div className="chatBoxBottom">
-                <textarea className="chatMessageInput" placeholder="write something..."
-                    onChange={(e) => setNewMessageD(e.target.value)} value={newMessageD}
-                ></textarea>
-				<><button className="chatSubmitButton" onClick={handleSubmitD}>Send </button></>
-              </div>
-          </>
-          : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
-        }
+            </>
+            : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
+          }
         </div>
         </div>
         <div className="chatOnline">

@@ -165,13 +165,12 @@
 .chatOnline {
   flex: 3;
   background-color: #f2f2f2;
-
 }
 
 
 .chatBoxW,
 .chatOnlineW {
-  height: 100%;
+  height: 100vh;
 }
 
 .chatMenu {

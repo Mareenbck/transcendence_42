@@ -26,6 +26,13 @@ import CurrentChannel from './channels/CurrentChannel';
 import UsersOnChannel from './channels/UsersOnChannel';
 import MessageD from './message/messageD';
 import UsersWithDirectMessage from './message/usersWithMessages';
+import { Tab, useThemeProps } from '@mui/material';
+import { Tabs } from '@mui/material';
+import UpdateChannelsInList from './channels/UpdateChannelsInList';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import MailIcon from '@mui/icons-material/Mail';
+
+
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2].map((value) =>
@@ -63,6 +70,8 @@ export default function InteractiveList({
         }),
       );
     }
+
+
   
     return (
       <Box style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
@@ -71,13 +80,15 @@ export default function InteractiveList({
         </Typography>
         <Demo style={{ backgroundColor: '#f2f2f2' }}>
           <List dense={dense}>
+
           {onlineUsers?.map((o) => (
             +o?.userId.userId !== +id ? (
-                <ListItem key={o?.userId.userId}
+                <ListItem key={o?.userId.userId} onClick={()=> {getDirect(o?.userId)}}
                 secondaryAction={
                     <div>
+                      
                     <Link to={'/game/'} onClick={() => inviteGame(+o?.userId.userId)}>
-                        <IconButton className='violet-icon' edge="end" aria-label="Jouer">
+                        <IconButton className='violet-icon' edge="end" aria-label="Play">
                         <PlayCircleIcon/>
                         </IconButton>
                     </Link>
@@ -87,11 +98,11 @@ export default function InteractiveList({
                         </IconButton>
                     </Link>
                     {isHeBlocked(+o.userId.userId) ?
-                        <IconButton className='violet-icon' edge="end" aria-label="Débloquer" onClick={() => {setToBlock(getUser(+o.userId.userId))}}>
+                        <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {setToBlock(getUser(+o.userId.userId))}}>
                         <LockOpenIcon />
                         </IconButton>
                         :
-                        <IconButton edge="end" aria-label="Bloquer" onClick={() => {setToUnblock(getUser(+o.userId.userId))}}>
+                        <IconButton edge="end" aria-label="Block" onClick={() => {setToUnblock(getUser(+o.userId.userId))}}>
                         <LockIcon />
                         </IconButton>
                     }
@@ -112,11 +123,11 @@ export default function InteractiveList({
             {otherUsers?.map((o) => ( 
               +o?.id !== +id && !onlineUsers.find(u => +u.userId.userId === +o?.id) ? (
                 <ListItem
-                    key={o?.id}
+                    key={o?.id} onClick={()=> {getDirect(o)}}
                     secondaryAction={
                         <div>
                         <Link to={'/game/'}  className='violet-icon' onClick={() => inviteGame(+o?.id)}>                    
-                            <IconButton  edge="end" aria-label="Jouer"> 
+                            <IconButton  edge="end" aria-label="Play"> 
                             <PlayCircleIcon className='violet-icon'/>
                             </IconButton>                  
                         </Link>
@@ -126,11 +137,11 @@ export default function InteractiveList({
                         </IconButton>
                         </Link>
                         {isHeBlocked(+o.id) ?
-                        <IconButton className='violet-icon' edge="end" aria-label="Débloquer" onClick={() => {setToBlock(getUser(+o.id))}}>
+                        <IconButton className='violet-icon' edge="end" aria-label="Unblock" onClick={() => {setToBlock(getUser(+o.id))}}>
                             <LockOpenIcon/>
                             </IconButton>
                             :
-                        <IconButton className='violet-icon' edge="end" aria-label="Bloquer"onClick={() => {setToUnblock(getUser(+o.id))}}>
+                        <IconButton className='violet-icon' edge="end" aria-label="Block" onClick={() => {setToUnblock(getUser(+o.id))}}>
                             <LockIcon onClick={() => {setToUnblock(getUser(+o.id))}}/>
                             </IconButton>
                         }
