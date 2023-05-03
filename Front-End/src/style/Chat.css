@@ -5,7 +5,7 @@
   font-weight: 500;
   cursor: pointer;
   margin-top: 10px;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .chatOnlineNotFriend {
@@ -94,7 +94,7 @@
 }
 
 .chatBox {
-	flex: 5.5;
+	flex: 8;
 	height: 100vh;
 	padding-bottom: 10px;
 }
@@ -164,12 +164,12 @@
 
 .chatOnline {
   flex: 3;
+  background-color: #f2f2f2;
 }
 
 
-.chatBoxW,
-.chatOnlineW {
-  height: 100%;
+.chatBoxW {
+  height: 100vh;
 }
 
 .chatMenu {

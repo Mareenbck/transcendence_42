@@ -9,6 +9,7 @@
 }
 
 .global-popup {
+    padding: 4px;
     border-radius: 17px;
     background-color: #C7B9FF;
     position: absolute;
@@ -35,6 +36,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 5px;
 }
 
 

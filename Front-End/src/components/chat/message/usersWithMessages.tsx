@@ -1,10 +1,40 @@
-import React, { useContext, useEffect, useState, useRef, RefObject } from "react";
+import * as React from 'react';
+import { useEffect, useContext, useState, useRef, FormEvent, RefObject } from 'react'
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import useSocket from '../../../service/socket';
 import AuthContext from "../../../store/AuthContext";
 import Fetch from "../../../interfaces/Fetch"
 import { UserChat } from "../../../interfaces/iChat";
 import { Link } from "react-router-dom";
 import MyAvatar from '../../user/Avatar';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockIcon from '@mui/icons-material/Lock';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+
+
+
+
+
+const Demo = styled('div')(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+}));
+
+function generate(element: React.ReactElement) {
+  return [0, 1, 2].map((value) =>
+    React.cloneElement(element, {
+      key: value,
+    }),
+  );
+}
 
 export default function UsersWithDirectMessage(props: any) {
   const {currentDirect, setCurrentDirect, setCurrentChat} = props;
@@ -20,7 +50,10 @@ export default function UsersWithDirectMessage(props: any) {
   const [unfromBlock, setUnfromBlock] = useState<number | null>();
   const [blockForMe, setBlockForMe] = useState<number | null>();
   const [unblockForMe, setUnblockForMe] = useState<number | null>();
+  const [dense, setDense] = React.useState(false);
+  const [secondary, setSecondary] = React.useState(false);
 
+  
   // en cas de nouveau en route
   useEffect(() => {
     addListener("getNewDirectUser", data => setAUsersWith(data));
@@ -86,17 +119,6 @@ export default function UsersWithDirectMessage(props: any) {
     scrollRef.current?.scrollIntoView({behavior: "smooth"})
   }, [usersWith]);
 
-  // set direct message if not blocked
-  // const getDirect = (userX: UserChat): void => {
-  //   if (userX && (userX.blockedTo.find((u: UserChat) => +u.id === +userX.id) === undefined ))
-  //   {
-  //     if (userX.blockedFrom.find((u: UserChat) => +u.id === +user.userId) === undefined)
-  //     { 
-  //       setCurrentDirect(userX);
-  //       setCurrentChat(null);
-  //     }
-  //   }
-  // }
 
   const getDirect = (userX: UserChat): void => {
     if (me && (me.blockedTo.find((u: UserChat) => +u.id === +userX.id) === undefined ))
@@ -109,9 +131,6 @@ export default function UsersWithDirectMessage(props: any) {
     }
   }
 
-
-  /// Block & Unblock mechanism
-  // to get the info to change the icon, additional message because of the second list
   useEffect(() => {
     addListener("blockForMe", data => {
       if (+data.id !== +user.userId)
@@ -227,31 +246,54 @@ export default function UsersWithDirectMessage(props: any) {
   }, [toUnblock]);
 
     return (
-        <>
-        <div className="userWith">
-           { usersWith && usersWith.map((o) => (
-            // +o?.id !== +user.userId ?
-            <div  key={o.id} className={amIBlocked(+o?.id)} >
-                <Link to={'/game/play'} onClick={() => inviteGame(o?.id)}> <i className="fa fa-gamepad" aria-hidden="true"  ></i></Link>
-                <Link to={`/users/profile/${o?.id}`} className="profile-link"> <i className="fa fa-address-card-o" aria-hidden="true"></i>   </Link>
-                <div className="fname" onClick={()=> {getDirect(o)}} >
-                    <div className="chatOnlineImgContainer">
-                        <MyAvatar authCtx={user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>
-                    </div>
-                    <span className="chatOnlineName"> {o?.username} </span>
-                </div>
+
+      <Box style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
+        <Demo style={{ backgroundColor: '#f2f2f2' }}>
+        <List dense={dense}>
+
+         {usersWith && usersWith.map((o) => (
+            <ListItem  key={o.id} className={amIBlocked(+o?.id)}
+              secondaryAction={
+              <div>
+             <IconButton className='violet-icon' edge="end" aria-label="Chat" onClick={()=> {getDirect(o)}}>
+                <ChatBubbleIcon />
+              </IconButton>   
+                <Link to={`/users/profile/${o?.id}`} className="profile-link">
+                  <IconButton  className='violet-icon' edge="end" aria-label="Profil">
+                    <AccountBoxIcon />
+                  </IconButton>
+                </Link>
                 { !me?.blockedTo.find((u: UserChat)=>(+o?.id === +u?.id)) ?
-                <button className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
-                    <i className="fa fa-unlock" aria-hidden="true"></i>
-                </button>
+                <IconButton className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
+                  <LockOpenIcon /> 
+                  <Link to={'/game/'} onClick={() => inviteGame(o?.id)}> 
+                    <IconButton className='violet-icon' edge="end" aria-label="Play">
+                      <PlayCircleIcon/>
+                    </IconButton>
+                  </Link>                  
+                </IconButton>
                 :
-                <button className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
-                    <i className="fa fa-lock" aria-hidden="true"></i>
-                </button>}
-            </div>
-            // : <span className="noConversationText2" > New here ?... </span>
+                <IconButton className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
+                    <LockIcon />                    
+                </IconButton>}
+
+              </div>
+              }
+              >
+              <ListItemAvatar>
+                <MyAvatar authCtx={user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>
+              </ListItemAvatar>
+              <ListItemText
+                  primary={o?.username}
+                  secondary={secondary ? 'Secondary text' : null}
+              />
+            </ListItem>
             ))}
-        </div>
-        </>
+        </List>
+        </Demo>
+      </Box>
+
     );
 }
+
+       

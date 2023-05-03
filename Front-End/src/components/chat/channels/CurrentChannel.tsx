@@ -32,10 +32,6 @@ export default function CurrentChannel(props: any) {
 	const userBanned = currentChatroom.participants.some((p: any) => p.status === 'BAN')&& parseInt(authCtx.userId);
 	const userMuted = currentChatroom.participants.some((p: any) => p.status === 'MUTE') && parseInt(authCtx.userId);
 
-	// console.log(currentChatroom.participants.userId)
-	// console.log("isbanned", isBanned)
-
-
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
 		if (author !== undefined) { return (author) }

@@ -1,0 +1,17 @@
+.btn-list-user {
+    border-radius: 0;
+    background-color: white;
+}
+
+.btn-list-user:hover {
+    color: white;
+}
+
+.blue-icon{
+    color: #699BF7;
+    color: red;
+}
+
+.violet-icon:hover {
+    color: violet;
+}

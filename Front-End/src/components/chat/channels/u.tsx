@@ -5,9 +5,16 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MyAvatar from '../../user/Avatar';
 import AuthContext from '../../../store/AuthContext';
@@ -16,7 +23,10 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import "../../../style/UsersOnChannel.css"
+
+
+
+
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2].map((value) =>
@@ -39,7 +49,9 @@ export default function InteractiveListe(props: any) {
   const banned = participants.filter((p) => p.status === 'BAN');
   const admins = participants.filter((p) => p.role === 'ADMIN');
   const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));     
-   
+  
+  
+    
     const showParticipants = async (channelId: string) => {
         try {
             const response = await fetch(
@@ -184,7 +196,7 @@ export default function InteractiveListe(props: any) {
 
 
 return (
-    <Box className="participants-container" style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
+    <Box style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
         Participants of {props.name}
         </Typography>

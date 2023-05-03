@@ -23,7 +23,6 @@ export default function UpdateChannelsInList(props: any) {
 			id: data.channelId,
 			name: data.name,
 			visibility: data.visibility,
-			// isJoined: data.isJoined,
 		}));
 	});
 
