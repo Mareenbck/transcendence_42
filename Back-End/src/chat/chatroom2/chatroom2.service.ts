@@ -350,24 +350,29 @@ export class ChatroomService {
 	
 	async delete(id: number) {
 		try {
-			console.log("entre dans le service")
-			const channel = await this.prisma.chatroom.findUnique({where: {id: id}});
-			const userOnChannel = await this.prisma.userOnChannel.findFirst({
-				where: {
-					channelId: id,
-				},
-
-			})
-			console.log("channel in service", channel)
-			
-			const response = await this.prisma.userOnChannel.delete({
-				where: {id: userOnChannel.id},
-			});
-			console.log("response in service", response)
-		} catch(error) {
-			console.log(error);
+		  const channel = await this.prisma.chatroom.findUnique({
+			where: { id },
+			include: { participants: true },
+		  });
+	
+		  if (!channel) {
+			throw new Error('Channel not found');
+		  }
+	
+		  await this.prisma.userOnChannel.deleteMany({
+			where: { channelId: id },
+		  });
+	
+		  const response = await this.prisma.chatroom.delete({
+			where: { id },
+		  });
+	
+		  return response;
+		} catch (error) {
+		  console.log(error);
+		  throw error;
 		}
-	}
+	  }
 	  
 	async kick(channelId: number, userId: number) {
 	  try {

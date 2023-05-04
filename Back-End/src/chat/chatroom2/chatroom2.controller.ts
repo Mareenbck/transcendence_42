@@ -32,11 +32,10 @@ export class Chatroom2Controller {
 
 	@Post('/:channelId/delete')
 	async delete(@Param('channelId') channelId: string) {
-		console.log("controlleeeeeer")
-		const deleted = await this.chatRoomService.delete(parseInt(channelId));
-		console.log("deleted", deleted)
-		return deleted;
-	}
+		const response = await this.chatRoomService.delete(parseInt(channelId));
+		// console.log('deleted', response);
+		return response;
+	  }
 
   @Get()
   @UseGuards(JwtGuard)

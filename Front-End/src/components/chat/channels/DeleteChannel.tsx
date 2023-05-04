@@ -35,7 +35,16 @@ export default function DeleteChannel(props:any) {
                 body: JSON.stringify({channelId: props.channelId}),
             });
             console.log("response in fetch", response)
-            const data = await response.json();
+            const text = await response.text();
+            let data;
+            if(text) {
+                try {
+                    data = JSON.parse(text);
+                } catch (error) {
+                    console.error(error);
+                    return;
+                }
+            }
             console.log("data in fetch", data)
             if (!response.ok) {
                 console.log("can't remove the channel")
@@ -45,6 +54,9 @@ export default function DeleteChannel(props:any) {
             console.log("error", error)
         }
     }
+
+
+
     return (
         <>
             {button}    
