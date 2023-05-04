@@ -28,14 +28,13 @@ export class GameService {
 
 //connected users> random game >:  MAX length = 2 and after paring, cleared
 	private players: any[] = [];
-//all connected spectateurs
-	private spectateurs: any [] = [];
 //all connected paires [invitation author + invited] 
-	private invited: invited [] = [];
+	private invited: invited[] = [];
 //map of the games [key: N_room; game]
-	private gameMap: Map<number, GameRoom> = new  Map<number, GameRoom>();
+	private gameMap: GameRoom[] = [];
 //array of the active rooms: roomN, playerR, playerL, scoreR, scoreL
-	private roomArray: roomsList[]= [];
+	private roomArray: roomsList[] = [];
+	private roomN: number = 0;
 
 	// getPlayer:any = (username: string) => {
     //     return this.players.find(u => +u.user.username === +username);
@@ -69,40 +68,36 @@ export class GameService {
 
 // creating rooms for a pair of players and game launch
 	addNewRoom = (playerR: UserDto, playerL: UserDto): void => {
-		let roomN: number = 0;
-		while (this.gameMap.has(roomN)){
-			roomN++;
-	    }
-		const room = `room${roomN}`;
+		const room = `room${this.roomN}`;
 		this.userSockets.joinToRoom(playerR.username, room);
 		this.userSockets.joinToRoom(playerL.username, room);
 //game initialization 
-		let game = new GameRoom (this.server, roomN, this.prisma, this, this.userSockets);
-		game.init(playerR);
-		game.init(playerL);
-		this.gameMap.set(roomN, game);
-		game.setPlayers(playerR, playerL);
-		game.initMoveEvents();
-		this.roomArray.push({roomN, playerR, playerL, scoreR: 0, scoreL: 0});
-		this.players = [];
-		this.sendListRooms();
-		game.run();
+		let game = new GameRoom (this.server, this.roomN, this, this.userSockets);
+		if(game){
+			game.init(playerR);
+			game.init(playerL);
+			game.setPlayers(playerR, playerL);
+			game.initMoveEvents();
+			this.gameMap.push(game);
+			this.roomArray.push({roomN: this.roomN, playerR: playerR, playerL: playerL, scoreR: 0, scoreL: 0});
+			this.players = [];
+			this.sendListRooms();
+			game.run();
+			this.roomN++;
+		}
 	}
 
 // removing room in gameMap and roomArray
 	removeRoom = (roomN: number): void => {
 		const room = `room${roomN}`;
 		this.userSockets.leaveRoom(room);
-		let game = this.gameMap[roomN];
-		game = [];
-		this.gameMap.delete(roomN);
+		this.gameMap = this.gameMap.filter(i => i.roomN != roomN);
 		this.roomArray = this.roomArray.filter(i => i.roomN != roomN);
 		this.sendListRooms();
-
-	console.log("gameMap", this.gameMap);	
-	console.log("roomArray", this.roomArray);	
-
+console.log("102 gameMap", this.gameMap);	
+console.log("103 roomArray", this.roomArray);	
 	}
+
 // emit to all users in all rooms that play
 	sendListRooms = () => {
 		this.server.emit("gameRooms", this.roomArray); // send to Front
@@ -111,10 +106,10 @@ export class GameService {
 	checkPlayerInRooms = async (player: any) => {
 		const playerDto: UserDto = await this.userService.getUser(player.userId);
 // find Nroom by user Dto
-		const [roomN, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
-		if (roomN) {
+		let game = this.gameMap.find(game => game.checkPlayer(playerDto) );
+		if (game) {
 			// if exist send init
-			this.playGame(playerDto, roomN);
+			this.playGame(playerDto, game.roomN);
 		}
 		else{
 			// or new game
@@ -141,7 +136,7 @@ export class GameService {
 		}
 //if spectator comes to watch
 		else {
-			let game = this.gameMap[roomN];
+			let game = this.gameMap.find(i => i.roomN == roomN);
 			const playerDto: UserDto = await this.userService.getUser(player.userId);
 			game.init(playerDto);
 			game.initMoveEvents();

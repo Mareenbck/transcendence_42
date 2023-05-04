@@ -15,7 +15,6 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import SelectColor from './SelectColor';
 import Card from "../utils/Card";
-//import { start } from 'repl';
 import PlayerOne from './PlayerOne';
 import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
@@ -36,7 +35,6 @@ function Game() {
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
     useEffect(() => {
         const handleGameRooms = (games: gamesList[]) => {
-        //console.log('gameRooms ', games);
             if(curroom == -1){
                 const index = games.findIndex(room => room.playerL.username == user.username || room.playerR.username == user.username);
                 if (index != -1) {   
@@ -50,25 +48,59 @@ function Game() {
         sendMessage('listRooms');
     }, []);
 
-//event when user leaves the page   
-    useEffect(() => {
-        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-          // Do something before the page is unloaded
-          alert("you leave page");
-        }
-    
-        window.addEventListener('beforeunload', handleBeforeUnload);
+/////////////////////////////////////////////////leave the page////////////////////////////////////
+//event when user leaves the page
+    const handleUnload = () => {
+        // Do something before the page is unloaded
+        alert("you leave page");
+    }
 
+    useEffect(() => {
+
+        window.addEventListener('unload',  (event) => {
+            event.preventDefault();
+            alert("you leave page| unload");
+        })
+        window.addEventListener('beforeunload',  (event) => {
+            event.preventDefault();
+            alert("you leave page| beforeunload");
+        })
+
+      
+    //   window.onbeforeunload = null;
+
+    //   window.onbeforeunload = (event: BeforeUnloadEvent) => handleUnload(event);
+  
+    //   window.addEventListener('beforeunload', (event) => {             //When they leave the site
+    //     event.preventDefault();                                     // Cancel the event as stated by the standard.
+    //     handleUnload();
+    // });
+  
         return () => {
-          window.removeEventListener('beforeunload', handleBeforeUnload);
+            document.removeEventListener('beforeunload', handleUnload);
         };
-      }, []);
+    }, []);
+     
+    // useEffect(() => {
+    //     const handleUnload = (event: BeforeUnloadEvent) => {
+    //       // Do something before the page is unloaded
+    //       event.preventDefault(); 
+    //       alert("you leave page");
+    //     }
+    
+    //     window.addEventListener('beforeunload', handleUnload);
+
+    //     return () => {
+    //       window.removeEventListener('beforeunload', handleUnload);
+    //     };
+    //   }, []);
     
 //     useBeforeUnload(() => {
 //     // Execute code before the user navigates away from the page
 // alert('Leaving the page...');
 //     });    
-   
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 // onKeyDown handler function
 
     const onkeyPress = (event: KeyboardEvent) => {
@@ -91,29 +123,8 @@ function Game() {
         }
     }, []);
 
-    // useEffect(() => {
-    //     const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    //         event.preventDefault();
-    //         if (event.code === "ArrowUp") {
-    //             sendMessage('move', "up" as any)
-    //         }
-    //         if (event.code === "ArrowDown") {
-    //             sendMessage('move', "down" as any)
-    //         }
-    //     };
 
-    //     if (gamestatus.status == "game") {
-    //         // Attach the event listener to the window object
-    //     window.addEventListener('keydown', keyDownHandler);
-    //     }
-    //     else{
-    //     // Remove the event listener when the component unmounts
-    //         window.removeEventListener('keydown', keyDownHandler);
-    //     }
-    // }, [gamestatus]);
-
-
-    // Pour partis de Modal select Color,
+// Pour partis de Modal select Color,
 
     const [ShowColorModal, setShowColorModal] = useState(false);
     const handleColorModal = () => {
@@ -159,9 +170,9 @@ function Game() {
         {
             table_width: 800,
             table_height: 400,
-            ballR: 15,
-            racket_width: 10,
-            racket_height: 100,
+            ballR: 0.015,
+            racket_width: 0.010,
+            racket_height: 0.100,
             scoreR: 0,
             scoreL: 0,
             winner: null,
@@ -171,20 +182,52 @@ function Game() {
 // game parameters update (coordinates ball and racket)
     const [gamestate, setGameState] = useState<gameState>(
         {
-            ball: {x: 400, y: 200},
-            racket1: {x: 10, y: 150},
-            racket2: {x: 790 - gameinit.racket_width , y: 150},
+            ball: {x: 0.400, y: 0.200},
+            racket1: {x: 0.010, y: 0.150},
+            racket2: {x: 0.790 - gameinit.racket_width , y: 0.150},
             scoreR: 0,
             scoreL: 0,
         }
     );
-     
+
+    
+// the responsive game
+    useEffect(() => {
+        const updateWidth = () => {
+            // window.screen.width
+            const width = Math.floor(0.6 * window.innerWidth);
+            if(width){
+                gameinit.table_width = width;
+                setGameInit({
+                    table_width: width,
+                    table_height: gameinit.table_height,
+                    ballR: gameinit.ballR,
+                    racket_width: gameinit.racket_width,
+                    racket_height: gameinit.racket_height,
+                    scoreR: gameinit.scoreR,
+                    scoreL: gameinit.scoreL,
+                    winner: gameinit.winner});
+            }
+        };
+        window.addEventListener("resize", updateWidth);
+        return () => window.removeEventListener("resize", updateWidth);
+      });
+
     const initListener = (data: gameInit)=>{
-          setGameInit(data);
+        const width = Math.floor(0.6 * window.innerWidth);
+        if(width){
+            data.table_width = width;
+        }
+        else{
+            data.table_width = 600;
+        }
+        setGameInit(data);
     }
+
     const updateListener = (data: gameState)=>{
         setGameState(data);
     }
+
     const updateStatus = (data: gameStatus)=>{
         setGameStatus(data);
     }
@@ -194,12 +237,6 @@ function Game() {
         addListener('init-pong', initListener);
         addListener('pong', updateListener);
         addListener('status', updateStatus);
-        // return () => {
-        //     socket?.off('init-pong', initListener);
-        //     socket?.off('pong', updateListener);
-        //     socket?.off('pong', initWinner);
-        // }
-//        sendMessage('doIplay');
     }, [initListener, updateListener, updateStatus]);
 
     const isInPlay = (): boolean => {
@@ -275,7 +312,7 @@ function Game() {
                                 </div>
                             ):(   
 
-                             <div >                   
+                             <div>                   
                                 {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
                                 {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
                                                                                             changColorToBlue={changColorToBlue}

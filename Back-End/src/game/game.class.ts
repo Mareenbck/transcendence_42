@@ -1,9 +1,7 @@
-import {Server, Socket} from 'socket.io'
-import { PrismaService} from '../prisma/prisma.service';
+import {Server} from 'socket.io'
 import { GameService } from 'src/game/game.service';
 import { player,
 		 ball,
-		 gameInit,
 		 GameParams,
 		 status } from './game.interfaces';
 import UsersSockets from 'src/gateway/socket.class';
@@ -12,14 +10,16 @@ import { UserDto } from 'src/user/dto/user.dto';
 
 
 var ballSpeed = GameParams.BALL_DEFAULT_SPEED;
-const MAX_SCORE = 3;
+const ballDeltaSpeed = GameParams.BALL_DELTA_SPEED;
 const width = GameParams.GAME_WIDTH;
 const height = GameParams.GAME_HEIGHT;
 const racket_height = GameParams.RACKET_HEIGHT;
 const racket_width = GameParams.RACKET_WIDTH;
+const racket_xboard = GameParams.RACKET_XBOARD;
 const racketSpeedY = GameParams.RACKET_SPEED_Y;
 const ballR = GameParams.BALL_RADIUS;
-let period = GameParams.PERIOD
+const MAX_SCORE = 3;
+const period = GameParams.PERIOD
 
 
 export class GameRoom {
@@ -27,40 +27,36 @@ export class GameRoom {
 // initialization of players (L - left, R - right)
 	private playerL: player = {
 		user: {} as UserDto,
-		racket: {x: 10, y: (height - racket_height)/2},
+		racket: {x: racket_xboard, y: (height - racket_height)/2},
 		score: 0,
 	};
 	private playerR: player = {
 		user: {} as UserDto,
-		racket: {x: width - racket_width - 10, y: (height - racket_height)/2},
-		score: 0,
+		racket: {x: width - racket_width - racket_xboard, y: (height - racket_height)/2},		score: 0,
 	};
 
-	private isrunning: boolean = false; 
 	private interval: NodeJS.Timeout; // define the interval property
-	private leave: boolean = false;
 	private status: status = {
 		winner: null,
 		status: null};
 
-	private ballSpeedX = GameParams.BALL_DEFAULT_SPEED;
-	private ballSpeedY = GameParams.BALL_DEFAULT_SPEED;
+	private ballSpeedX: number = ballSpeed;
+	private ballSpeedY: number = ballSpeed;
 	private ball: ball = {x: width/2, y: height/2};
 	private rackets_ypos : [number, number] = [0, 0];
 	private rackets_acel : [number, number] = [0, 0];
   
 	private server: Server;
 	private room: string;
-	private roomN: number;
-	private prisma: PrismaService;
+	public roomN: number;
 	private gameService: GameService;
 	public userSockets: UsersSockets; 
+	public isrunning: boolean = false;
 
 
 	constructor(
 		server: Server,
 		roomN: number,
-		prisma: PrismaService,
 		gameService: GameService,
 		userSockets: UsersSockets,
 	) {
@@ -68,9 +64,10 @@ console.log("constructor Class.game");
 		this.server = server;
 		this.roomN = roomN;
 		this.room = `room${roomN}`;
-		this.prisma = prisma;
 		this.userSockets = userSockets;
 		this.gameService = gameService;
+		this.playerL.score = 0;
+		this.playerR.score = 0;
 	}
 
 // function: emit game - tacking the changing coordinates of rackets and ball> sends message to the room
@@ -131,7 +128,7 @@ console.log("constructor Class.game");
 	// left racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
 //			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
-			this.ballSpeedY = Math.floor(0.4*this.rackets_acel[0] + this.ballSpeedY + 0.001*(1 - 2 * Math.random()) * ballSpeed);
+			this.ballSpeedY = 0.4*this.rackets_acel[0] + this.ballSpeedY + 0.001*(1 - 2 * Math.random()) * ballSpeed;
 		}
 		else if (this.ball.y > this.playerR.racket.y
 			&& this.ball.y < this.playerR.racket.y + racket_height
@@ -140,7 +137,7 @@ console.log("constructor Class.game");
 	// right racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
 //			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
-			this.ballSpeedY = Math.floor(0.4*this.rackets_acel[1] + this.ballSpeedY + 0.001*(1 - 2 * Math.random()) * ballSpeed);
+			this.ballSpeedY = 0.4*this.rackets_acel[1] + this.ballSpeedY + 0.001*(1 - 2 * Math.random()) * ballSpeed;
 		}
 		if(Math.abs(this.ballSpeedY)>1.6*ballSpeed)
       		this.ballSpeedY = Math.sign(this.ballSpeedY)*1.6*ballSpeed;
@@ -151,18 +148,18 @@ console.log("constructor Class.game");
 			this.gameService.changeScore(this.roomN, this.playerR.score, this.playerL.score);
 
 			this.ball.x = width / 2 - this.ballSpeedX;
-			this.ball.y = Math.floor(Math.random() * height);
+			this.ball.y = (0.25 + 0.5*Math.random()) * height;
 			// this.ball.y = height / 2;
-			++ballSpeed;
+			ballSpeed += ballDeltaSpeed;
 			this.ballSpeedX = ballSpeed;
 		} else if (this.ball.x > width - ballR) {
 			this.ballSpeedX = -this.ballSpeedX;
 			++this.playerL.score;
 			this.gameService.changeScore(this.roomN, this.playerR.score, this.playerL.score);
 			this.ball.x = width / 2 - this.ballSpeedX;
-			this.ball.y = Math.floor(Math.random() * height);
+			this.ball.y = (0.25 + 0.5*Math.random()) * height;
 			// this.ball.y = height / 2 - this.ballSpeedX;
-			++ballSpeed;
+			ballSpeed += ballDeltaSpeed;
 			this.ballSpeedX = -ballSpeed;
 //console.log('ballSpeed = ', ballSpeed);
 		} else if ((this.ball.y < ballR && this.ballSpeedY < 0)
@@ -203,45 +200,50 @@ console.log("constructor Class.game");
 				this.emit2all();
 			}
 		});
-
 	}
 
-	private player_disconect = (user: UserDto) => {
+	private async save_results2DB() {
+		const game: GameDto = await this.gameService.create({
+			playerOneId: this.playerR.user.id,
+			playerTwoId: this.playerL.user.id,
+			winnerId: this.status.winner.id,
+			score1: this.playerR.score,
+			score2: this.playerL.score,
+		});
+	}
+
+	private destroy_game(): void{
 		this.isrunning = false;
-		this.status.winner = user;
-		this.server.to(this.room).emit('status', {winner: this.status.winner, status: 'winner',}); //room
+
+		clearInterval(this.interval);
+		
+		// disconnect Move Events
+		this.userSockets.offFromUser(this.playerR.user.username, 'move', (message: string)=>{});
+		this.userSockets.offFromUser(this.playerL.user.username, 'move', (message: string)=>{});
+
+		// player disconect
+		this.server.to(this.room).emit('status', {winner: this.status.winner, status: 'winner',});
+		
+		this.gameService.removeRoom(this.roomN);
 	}
 
 // function: run game
 	public run(): void {
+		this.isrunning = true;
 console.log("game.class.run");
 	//interval function: update the game at the certain period until the score reaches MAX
-		this.interval = setInterval(async () => {
+		this.interval = setInterval(() => {
 			this.updatePositions();
 // console.log("162_game_class", this.playerR.user.username, this.playerR.score , "vs", this.playerL.user.username, this.playerL.score )
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
 			//score MAX - change here
 			if ((this.playerL.score >= MAX_SCORE || this.playerR.score >= MAX_SCORE)){ 
-				this.isrunning = false;
 				this.status.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
-
-////////////////////////////////////////////////////
-
-	const game: GameDto = await this.gameService.create({
-					playerOneId: this.playerR.user.id,
-					playerTwoId: this.playerL.user.id,
-					winnerId: this.status.winner.id,
-					score1: this.playerR.score,
-					score2: this.playerL.score,
-				});
-
+//////////////////// to DB /////////////////////////
+				this.save_results2DB();
 ////////////////////////////////////////////////////		
-				this.player_disconect(this.status.winner);
-				clearInterval(this.interval);
-				this.playerL.score = 0;
-				this.playerR.score = 0;
-				this.gameService.removeRoom(this.roomN);
+				this.destroy_game();
 			}
 		}, period);
 	}
