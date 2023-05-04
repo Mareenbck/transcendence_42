@@ -1,82 +1,164 @@
+// import React, {useRef, useEffect, useState} from 'react'
+// import './Game.css'
+// import type {gameInit, gameState} from './interface_game'
+
+// const Canvas = (props: {gamestate: gameState, gameinit: gameInit, backColorGame: backColorGame} ): JSX => {
+//     const gamestate = props.gamestate;
+//     const gameinit = props.gameinit;
+//     // const gamewinner = props.gamewinner;
+//     const backColorGame = props.backColorGame;
+//     const canvasRef = useRef<HTMLCanvasElement>(null);
+    
+//     const [canvasWidth, setCanvasWidth] = useState<number>(null);
+//     const [canvasHeight, setCanvasHeight] = useState<number>(700);
+//     const [racketwidth, setRacketwidth] = useState<number>(10);
+//     const [racketheight, setRacketheight] = useState<number>(100);
+//     const [ballRadius, setBallRadius] = useState<number>(15);
+
+//     useEffect(() => {
+//         if (canvasRef.current){
+//             const context = canvasRef.current.getContext('2d');
+// //            setCanvasWidth(canvasRef.current.width);
+
+//             if (context ) {
+//                 setCanvasWidth(gameinit.table_width);
+// //                setCanvasHeight(canvasWidth * gameinit.table_height/gameinit.table_width);
+//                 setCanvasHeight(Math.floor(gameinit.table_height*canvasWidth));
+//                 setRacketwidth(gameinit.racket_width * canvasWidth);
+//                 setRacketheight(gameinit.racket_height * canvasWidth);
+//                 setBallRadius(gameinit.ballR * canvasWidth);
+
+//                 // Draw the table
+//                 context.beginPath();
+//                 //context.fillStyle = "black";
+//                 context.fillStyle = backColorGame;
+//                 // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
+//                 context.fillRect(0, 0, canvasWidth, canvasHeight);
+//                 context.closePath();
+
+//                 // center dotted line
+//                 context.setLineDash([5, 5]);
+//                 context.beginPath();
+//                 // context.moveTo(gameinit.table_width/2, 0);
+//                 // context.lineTo(gameinit.table_width/2, gameinit.table_height);
+//                 context.moveTo(canvasWidth/2, 0);
+//                 context.lineTo(canvasWidth/2, canvasHeight);
+//                 context.strokeStyle = "white";
+//                 context.stroke();
+
+//                 // Draw the ball
+//                 context.beginPath();
+// //                context.arc(gamestate.ball.x, gamestate.ball.y, gameinit.ballR, 0, Math.PI * 2);
+//                 context.arc(
+//                     gamestate.ball.x * canvasWidth,
+//                     gamestate.ball.y * canvasWidth,
+//                     ballRadius, 0, Math.PI * 2);
+//                 context.fillStyle = "white";
+//                 context.fill();
+//                 context.closePath();
+
+//                 // Draw the rackets
+//                 context.fillStyle = "white";
+//                 // context.fillRect(gamestate.racket1.x, gamestate.racket1.y, gameinit.racket_width, gameinit.racket_height);
+//                 // context.fillRect(gamestate.racket2.x, gamestate.racket2.y, gameinit.racket_width, gameinit.racket_height);
+//                 context.fillRect(
+//                     gamestate.racket1.x * canvasWidth,
+//                     gamestate.racket1.y * canvasWidth,
+//                     racketwidth, racketheight);
+//                 context.fillRect(
+//                     gamestate.racket2.x * canvasWidth,
+//                     gamestate.racket2.y * canvasWidth,
+//                     racketwidth, racketheight);
+                
+//                 //Score
+//                 context.font = "40px Verdana";
+//                 context.lineWidth = 2;
+//                 // context.fillText(`${gamestate.scoreL}`, gameinit.table_width/2 - 80, 50);
+//                 // context.fillText(`${gamestate.scoreR }`, gameinit.table_width/2 + 50, 50);
+//                 context.fillText(`${gamestate.scoreL}`, canvasWidth/2 - 80, 50);
+//                 context.fillText(`${gamestate.scoreR }`, canvasWidth/2 + 50, 50);
+
+//                 // if (gamewinner.leave){
+//                 //     // context.fillStyle = "#FDD9";
+//                 //     // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
+//                 //     // context.closePath();
+
+//                 //     context.font = "40px Verdana";
+//                 //     context.lineWidth = 2;
+//                 //     context.fillText(`${gamewinner.leave}`, 100, gameinit.table_height/2);
+//                 //     context.fillText("scoreL the game" , gameinit.table_width/2 + 100, gameinit.table_height/2);
+//                 // }
+//                 //if winner
+//                 // if (gamewinner.winner){
+//                 //     // context.fillStyle = "#FDD9";
+//                 //     // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
+//                 //     // context.closePath();
+
+//                 //     context.font = "40px Verdana";
+//                 //     context.lineWidth = 2;
+//                 //     context.fillText("WINNER:", 100, gameinit.table_height - 100);
+//                 //     context.fillText(`${gamewinner.winner}`, gameinit.table_width/2 + 100, gameinit.table_height - 100);
+//                 // }
+//             }
+//         }
+
+//     }, [gameinit, gamestate]);
+     
+//     // return (<canvas className='canvas' ref={canvasRef} width={gameinit.table_width} height={gameinit.table_height} />)
+//     return (<canvas className='canvas' ref={canvasRef} width={canvasWidth} height={canvasHeight} />)
+// }
+// export default Canvas
+
+
+
 import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
-import type {gameInit, gameState} from './interface_game'
+import type {gameInit, gameState, backColorGame} from './interface_game'
 
-const Canvas = (props: {gamestate: gameState, gameinit: gameInit, backColorGame: backColorGame} ): JSX => {
+const Canvas = (props: {gamestate: gameState, gameinit: gameInit, backColorGame: backColorGame} ) => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
-    // const gamewinner = props.gamewinner;
     const backColorGame = props.backColorGame;
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);  
     
-    const [canvasWidth, setCanvasWidth] = useState<number>(null);
-    const [canvasHeight, setCanvasHeight] = useState<number>(700);
-    const [racketwidth, setRacketwidth] = useState<number>(10);
-    const [racketheight, setRacketheight] = useState<number>(100);
-    const [ballRadius, setBallRadius] = useState<number>(15);
-
     useEffect(() => {
         if (canvasRef.current){
             const context = canvasRef.current.getContext('2d');
-//            setCanvasWidth(canvasRef.current.width);
 
             if (context ) {
-                setCanvasWidth(gameinit.table_width);
-//                setCanvasHeight(canvasWidth * gameinit.table_height/gameinit.table_width);
-                setCanvasHeight(Math.floor(gameinit.table_height*canvasWidth));
-                setRacketwidth(gameinit.racket_width * canvasWidth);
-                setRacketheight(gameinit.racket_height * canvasWidth);
-                setBallRadius(gameinit.ballR * canvasWidth);
-
                 // Draw the table
                 context.beginPath();
                 //context.fillStyle = "black";
                 context.fillStyle = backColorGame;
-                // context.fillRect(0, 0, gameinit.table_width, gameinit.table_height);
-                context.fillRect(0, 0, canvasWidth, canvasHeight);
+                context.fillRect(0, 0, gameinit.table_width, gameinit.table_height * gameinit.table_width);
                 context.closePath();
 
                 // center dotted line
                 context.setLineDash([5, 5]);
                 context.beginPath();
-                // context.moveTo(gameinit.table_width/2, 0);
-                // context.lineTo(gameinit.table_width/2, gameinit.table_height);
-                context.moveTo(canvasWidth/2, 0);
-                context.lineTo(canvasWidth/2, canvasHeight);
+                context.moveTo(gameinit.table_width/2, 0);
+                context.lineTo(gameinit.table_width/2, gameinit.table_height * gameinit.table_width);
                 context.strokeStyle = "white";
                 context.stroke();
 
                 // Draw the ball
                 context.beginPath();
-//                context.arc(gamestate.ball.x, gamestate.ball.y, gameinit.ballR, 0, Math.PI * 2);
-                context.arc(
-                    gamestate.ball.x * canvasWidth,
-                    gamestate.ball.y * canvasWidth,
-                    ballRadius, 0, Math.PI * 2);
+                context.arc((gamestate.ball.x * gameinit.table_width), (gamestate.ball.y * gameinit.table_width), (gameinit.ballR * gameinit.table_width), 0, Math.PI * 2);
                 context.fillStyle = "white";
                 context.fill();
                 context.closePath();
 
                 // Draw the rackets
                 context.fillStyle = "white";
-                // context.fillRect(gamestate.racket1.x, gamestate.racket1.y, gameinit.racket_width, gameinit.racket_height);
-                // context.fillRect(gamestate.racket2.x, gamestate.racket2.y, gameinit.racket_width, gameinit.racket_height);
-                context.fillRect(
-                    gamestate.racket1.x * canvasWidth,
-                    gamestate.racket1.y * canvasWidth,
-                    racketwidth, racketheight);
-                context.fillRect(
-                    gamestate.racket2.x * canvasWidth,
-                    gamestate.racket2.y * canvasWidth,
-                    racketwidth, racketheight);
-                
+                context.fillRect(gamestate.racket1.x * gameinit.table_width, gamestate.racket1.y * gameinit.table_width, gameinit.racket_width * gameinit.table_width, gameinit.racket_height * gameinit.table_width);
+                context.fillRect(gamestate.racket2.x * gameinit.table_width, gamestate.racket2.y * gameinit.table_width, gameinit.racket_width * gameinit.table_width, gameinit.racket_height * gameinit.table_width);
+
                 //Score
                 context.font = "40px Verdana";
                 context.lineWidth = 2;
-                // context.fillText(`${gamestate.scoreL}`, gameinit.table_width/2 - 80, 50);
-                // context.fillText(`${gamestate.scoreR }`, gameinit.table_width/2 + 50, 50);
-                context.fillText(`${gamestate.scoreL}`, canvasWidth/2 - 80, 50);
-                context.fillText(`${gamestate.scoreR }`, canvasWidth/2 + 50, 50);
+                context.fillText(`${gamestate.scoreL}`, gameinit.table_width/2 - 80, 50);
+                context.fillText(`${gamestate.scoreR }`, gameinit.table_width/2 + 50, 50);
+            
 
                 // if (gamewinner.leave){
                 //     // context.fillStyle = "#FDD9";
@@ -104,10 +186,11 @@ const Canvas = (props: {gamestate: gameState, gameinit: gameInit, backColorGame:
 
     }, [gameinit, gamestate]);
      
-    // return (<canvas className='canvas' ref={canvasRef} width={gameinit.table_width} height={gameinit.table_height} />)
-    return (<canvas className='canvas' ref={canvasRef} width={canvasWidth} height={canvasHeight} />)
+    return (<canvas className='canvas' ref={canvasRef} width={gameinit.table_width} height={(gameinit.table_height * gameinit.table_width)} />)
 }
 export default Canvas
+
+
 
 
 // interface game {
