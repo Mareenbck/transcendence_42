@@ -234,15 +234,7 @@ function Game() {
                                                                              borderBlockColor:"black" } } >
                                         
                                         <PlayerOne  style={{backgroundColor: "white"}} player={game.playerR} winner={game.scoreR} sizeAvatar={"l"} />
-                                           {/* {game.playerR.username}
-                                            <MyAvatar  id={game.playerR.id} style="l" avatar={game.playerR.avatar} ftAvatar={game.playerR.ftAvatar}/>
-                                            {game.scoreR }  VS    { game.scoreL}
 
-                                             
-                                           <MyAvatar  id={game.playerL.id} style="l" avatar={game.playerL.avatar} ftAvatar={game.playerL.ftAvatar}/>
-                                           {game.playerL.username} */}
-                                        {/* <ScoresMatch score1={game.scoreR} score2={game.scoreL} sizeAvatar={"l"}/> */}
-                                        {/* <ScoresMatch sizeAvatar={"l"}/> */}
                                         <p className='vs'> VS</p>
                                         <PlayerTwo player={game.playerL} winner={""}  sizeAvatar={"l"} />
                                     </div>
@@ -286,11 +278,7 @@ function Game() {
                                             <button className="btn"  style={{ alignSelf: "flex-end"}}>Menu</button>
                                         </Link>
                                     )}
-                                     {!isInPlay() && (
-                                        <div >
-                                            <button className="btn" /*onClick={(() => handleLinkClick(link.path)}*/ >View Game</button>
-                                        </div>
-                                    )}
+                                     
                                 </div>
 
                             </div>)}

@@ -7,7 +7,7 @@ import AuthContext from "../../store/AuthContext";
 const UserChart= (props: any) => {
     let h = props.h
 
-    h = (props.h) * (100) / 20
+    h = (props.h) * (100) / 18
 
     // if(h <= 50)
     //     h = (props.h) * (100) / 10

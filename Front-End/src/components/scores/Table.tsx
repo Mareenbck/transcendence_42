@@ -1,14 +1,11 @@
 import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
-import SideBar from '../SideBar';
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
 import {UserScore, Game} from "../interfaces/iChat";
-import Card from "../../components/utils/Card";
 import { ListItem } from '@mui/material';
 import '../../style/Profile.css'
 import '../../style/Table.css'
@@ -88,9 +85,7 @@ const Table = (props: any) => {
       <form onSubmit={(event) => handleNewGame(event)}></form>
              
 
-                <div >
-
-
+                <div className='scr'>
                   <ListItem  className="headTable">
                       <p className='tdd'>Name</p>
                       <p>Games</p>

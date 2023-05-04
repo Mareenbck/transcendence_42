@@ -17,7 +17,7 @@
     
 } */
 
-.headTable{
+ .src .headTable{ 
     align-items: center;
     background-color:rgb(248, 221, 124);
     padding-top: 0;
@@ -32,6 +32,8 @@
     border-radius: 10.9501px;
 
 }
+
+
 
 .headTable p{
     padding-left: 30px;
