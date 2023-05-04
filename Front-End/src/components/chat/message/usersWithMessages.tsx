@@ -253,32 +253,32 @@ export default function UsersWithDirectMessage(props: any) {
 
          {usersWith && usersWith.map((o) => (
             <ListItem  key={o.id} className={amIBlocked(+o?.id)}
-              secondaryAction={
-              <div>
-             <IconButton className='violet-icon' edge="end" aria-label="Chat" onClick={()=> {getDirect(o)}}>
-                <ChatBubbleIcon />
-              </IconButton>   
-                <Link to={`/users/profile/${o?.id}`} className="profile-link">
-                  <IconButton  className='violet-icon' edge="end" aria-label="Profil">
-                    <AccountBoxIcon />
-                  </IconButton>
-                </Link>
-                { !me?.blockedTo.find((u: UserChat)=>(+o?.id === +u?.id)) ?
-                <IconButton className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
-                  <LockOpenIcon /> 
-                  <Link to={'/game/'} onClick={() => inviteGame(o?.id)}> 
-                    <IconButton className='violet-icon' edge="end" aria-label="Play">
-                      <PlayCircleIcon/>
-                    </IconButton>
-                  </Link>                  
-                </IconButton>
-                :
-                <IconButton className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
-                    <LockIcon />                    
-                </IconButton>}
+            //   secondaryAction={
+            //   <div>
+            //  <IconButton className='violet-icon' edge="end" aria-label="Chat" onClick={()=> {getDirect(o)}}>
+            //     <ChatBubbleIcon />
+            //   </IconButton>   
+            //     <Link to={`/users/profile/${o?.id}`} className="profile-link">
+            //       <IconButton  className='violet-icon' edge="end" aria-label="Profil">
+            //         <AccountBoxIcon />
+            //       </IconButton>
+            //     </Link>
+            //     { !me?.blockedTo.find((u: UserChat)=>(+o?.id === +u?.id)) ?
+            //     <IconButton className="chatSubmitButton" onClick={() => {setToBlock(o)}} >
+            //       <LockOpenIcon /> 
+            //       <Link to={'/game/'} onClick={() => inviteGame(o?.id)}> 
+            //         <IconButton className='violet-icon' edge="end" aria-label="Play">
+            //           <PlayCircleIcon/>
+            //         </IconButton>
+            //       </Link>                  
+            //     </IconButton>
+            //     :
+            //     <IconButton className="chatSubmitButton2" onClick={() => {setToUnblock(o)}} >
+            //         <LockIcon />                    
+            //     </IconButton>}
 
-              </div>
-              }
+            //   </div>
+            //   }
               >
               <ListItemAvatar>
                 <MyAvatar authCtx={user} id={o?.id} style="xs" avatar={o?.avatar} ftAvatar={o?.ftAvatar}/>

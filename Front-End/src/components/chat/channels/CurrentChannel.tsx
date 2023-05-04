@@ -122,10 +122,11 @@ export default function CurrentChannel(props: any) {
 	};
 
 	const handleDeleteChannel = () => {
+		props.setShowList(false);
+		props.setUsersList(true);
 		setIsJoined(false);
 	};
-
-
+	
 	  
 	return (
 		<>
