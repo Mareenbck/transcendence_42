@@ -31,27 +31,15 @@ export default function CurrentChannel(props: any) {
 	const [isMuted, setIsMuted] = useState(false);
 	const [isBanned, setIsBanned] = useState(false);
 
-	console.log("current", currentChatroom.participants)
 
 	useEffect(() => {
 		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
-		if (participant.status === 'MUTE')
-			setIsMuted(true)
-		if (participant.status === 'CLEAN')
-			setIsMuted(false)
-	}, [])
-
-	useEffect(() => {
-		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
-		if (participant.status === 'BAN')
-			setIsBanned(true)
-		if (participant.status === 'CLEAN')
-			setIsBanned(false)
-	}, [])
-
-
-	// console.log("is joined ?? ", isJoined)
-	// console.log("user joined", userJoined)
+		if (participant) {
+		  setIsMuted(participant.status === 'MUTE');
+		  setIsBanned(participant.status === 'BAN');
+		}
+	  }, [currentChatroom.participants, authCtx.userId]);
+	  
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -144,10 +132,6 @@ export default function CurrentChannel(props: any) {
 		props.setUsersList(true);
 		setIsJoined(false);
 	};
-
-	// const [isMuted, setIsMuted] = useState<boolean>(false)
-
-	//   console.log("props.mute", props.isMuted)
 	
 	return (
 		<>
@@ -180,7 +164,6 @@ export default function CurrentChannel(props: any) {
 							value={newMessage2}
 						></input>
 						{!isMuted && 
-
 							<FontAwesomeIcon
 								icon={faPaperPlane}
 								onClick={handleSubmit}
