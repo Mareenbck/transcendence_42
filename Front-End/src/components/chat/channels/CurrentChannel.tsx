@@ -118,6 +118,14 @@ export default function CurrentChannel(props: any) {
 		setIsJoined(false);
 	  };
 
+
+	const handleDeleteChannel = () => {
+		setIsJoined(false);
+	  };
+	  
+	  
+	  console.log("props deleted--->", props.setIsDeleteChannel)
+
 	  return (
 		<>
 			{isJoined && !isBanned && (
@@ -128,6 +136,7 @@ export default function CurrentChannel(props: any) {
 						onClick={() => setShowPopUp(false)}
 						onSubmit={handleFormSubmit}
 						onLeaveChannel={handleLeaveChannel}
+						onDeleteChannel={handleDeleteChannel}
 					/>
 					<div className="chatBoxTop">
 						{messages2.length ? (

@@ -58,7 +58,6 @@ function PopUp(props: any) {
 
     const createAndClose = async (e:FormEvent) => {
         try {
-            console.log("HELLOOOO")
             await createNewChannel(e);
             setShowPopUp(false);
             props.onClick();
