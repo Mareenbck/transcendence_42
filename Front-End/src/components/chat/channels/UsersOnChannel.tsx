@@ -262,9 +262,24 @@ return (
             Banned Users
         </Typography>
         {banned.map((p) => (
-            <li className='username-participants' key={p.id}>
+             <ListItem key={p.user.username}
+             secondaryAction={
+                 <div>
+                 <Link to={`/users/profile/${p?.user.userId}`} className="profile-link">
+                     <IconButton  className='violet-icon' edge="end" aria-label="Profil">
+                     <AccountBoxIcon />
+                     </IconButton>
+                 </Link>
+                 </div>
+             }
+             >
+            <ListItemAvatar>
                 <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
-                {p.user.username} 
+            </ListItemAvatar>
+            <ListItemText
+                primary={p?.user.username}
+                secondary={secondary ? 'Secondary text' : null}
+            />
                 {admins.some(admin => admin.user.id === authCtx.userId) && (
                 <>
                     <DeleteIcon onClick={() => kickSomeone(props.channelId, p.user.id)}/>
@@ -273,7 +288,7 @@ return (
                     ) : null}
                 </>
                 )}
-            </li>
+            </ListItem>
         ))}
         </List>
         </Demo>

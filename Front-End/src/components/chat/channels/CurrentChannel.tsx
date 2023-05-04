@@ -8,7 +8,7 @@ import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import { Box, IconButton, Modal, Snackbar } from '@mui/material';
+import { Alert, Box, IconButton, Modal, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorModalPassword from "./ErrorModalPassword";
 import '../../../style/UsersOnChannel.css'
@@ -31,6 +31,9 @@ export default function CurrentChannel(props: any) {
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
 	const userBanned = currentChatroom.participants.some((p: any) => p.status === 'BAN')&& parseInt(authCtx.userId);
 	const userMuted = currentChatroom.participants.some((p: any) => p.status === 'MUTE') && parseInt(authCtx.userId);
+
+	// console.log("is joined ?? ", isJoined)
+	// console.log("user joined", userJoined)
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -116,17 +119,15 @@ export default function CurrentChannel(props: any) {
 
 	const handleLeaveChannel = () => {
 		setIsJoined(false);
-	  };
-
+	};
 
 	const handleDeleteChannel = () => {
 		setIsJoined(false);
-	  };
-	  
-	  
-	  console.log("props deleted--->", props.setIsDeleteChannel)
+	};
 
-	  return (
+
+	  
+	return (
 		<>
 			{isJoined && !isBanned && (
 				<>
@@ -174,6 +175,7 @@ export default function CurrentChannel(props: any) {
 				</div>
 			)
 			}
+
 		</>
 	);
 	
