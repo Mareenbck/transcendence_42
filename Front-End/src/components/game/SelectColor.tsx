@@ -27,9 +27,9 @@ const SelectColor = (props: any) => {
 
             <div className="card-option">
                         <div className="poslogo">
-                            <a herf="#">
+                            {/* <a herf="#">
                                 Logo
-                            </a>
+                            </a> */}
                             <h2 >Select your favorite color for...</h2>
                          </div>
                          <div className="posColor" style={{"cursor": "prompt"}}>

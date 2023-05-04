@@ -168,3 +168,16 @@ th ,td{
  tr:hover{background-color: #d6d5d5;}
 
 tr:nth-child(even) {background-color: #d4dcf7;}
+
+.rangAvatar:first-of-type .cadre {
+    background:linear-gradient(0deg, #7862f7, #f2def3);
+   
+}
+
+.rangAvatar:nth-of-type(2) .cadre {
+    background: linear-gradient(0deg, #003ba5, #84c4e9);
+}
+
+.rangAvatar:last-of-type .cadre {
+    background: linear-gradient(0deg, #f1f52e, #e9c984);
+}

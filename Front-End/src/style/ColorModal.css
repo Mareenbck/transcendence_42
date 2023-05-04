@@ -1,6 +1,6 @@
 .back {
 	position: fixed;
-	background-color: rgba(0, 0, 0, 0.50);
+	background-color: rgba(24, 46, 86, 0.750);
 	width: 100%;
 	height: 100%;
 }
@@ -15,7 +15,7 @@
 	overflow: hidden;
 	background-color: #ffffff;
 	border-radius: 15px;
-	/*box-shadow: 1px 1px 5px 0px #182e56;*/
+	box-shadow: 1px 1px 5px 0px #182e56;
 	
 }
 
@@ -38,48 +38,43 @@
 	justify-content:  flex-end;
 	padding: 1rem;
 }
-
-.btm-contain{
-	display: flexbox;
-	flex-direction: row;
-}
-
-.btn
-{	
-	color: black;
-    box-shadow: 3.65002px 3.65002px 0px #000000;
-    font-family: 'Inter';
-    text-transform: none;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 19px;
-    background: #FFFFFF;
-    border: 3.19377px solid #000000;
-    box-shadow: 3.65002px 3.65002px 0px #000000;
-    border-radius: 10.9501px;
-    width: 117px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    margin-right: 30px;
-	
-		/* border-radius: 0px;
-		border: 1px solid transparent;
-		padding: 0.6em 1.2em;
-		font-size: 1em;
-		font-weight: 500;
-		font-family: inherit;
-		background-color: #979494;
-		cursor: pointer;
-		transition: border-color 0.25s; */
-
-}
-
 @media(min-width: 600px){
 	.modal-contain{
 		width: 30rem;
 		left: calc(50% - 15rem);
 	}
+
+}
+
+/* .btm-contain{
+	display: flexbox;
+	flex-direction: row;
+} */
+
+.btn
+{	
+	
+		margin: 10px;
+		background: #699BF7;
+		border: 3px solid #000000;
+		border-radius: 4px;
+		margin: 10px;
+		color: black;
+		box-shadow: 3.65002px 3.65002px 0px #000000;
+		font-family: 'Inter';
+		text-transform: none;
+		font-weight: 500;
+		font-size: 16px;
+		line-height: 19px; 
+		background: #FFFFFF;
+		 border: 3.19377px solid #000000;
+		box-shadow: 3.65002px 3.65002px 0px #000000;
+		border-radius: 10.9501px;
+		width: 117px;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		padding: 16px;
+
 
 }
