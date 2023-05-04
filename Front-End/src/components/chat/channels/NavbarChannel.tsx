@@ -187,7 +187,7 @@ export function NavbarChannel(props: any) {
 						onAddAdmin={handleAddAdmin}
 						type="invite-admin"
 					/>
-					<FontAwesomeIcon className="btn-dialog-navbar" icon={faTrash} onClick={() => deleteChannel(props.chatroom.id)} role={isAdmin} channelId={props.chatroom.id} isDeleteChannel={props.isDeleteChannel} setIsDeleteChannel={props.setIsDeleteChannel}/>
+					<FontAwesomeIcon className="btn-dialog-navbar" icon={faTrash} onClick={() => deleteChannel(props.chatroom.id)} role={isAdmin}/>
 					{props.chatroom.visibility === 'PRIVATE' &&
 						<SelectDialog
 						onSelect={(userId: string) => setSelectedUser(userId)}

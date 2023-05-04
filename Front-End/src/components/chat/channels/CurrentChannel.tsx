@@ -166,15 +166,6 @@ export default function CurrentChannel(props: any) {
 					</div>
 				</>
 			)}
-			{isBanned && (
-				<div className="popup-container">
-					<div className="popup-content">
-						<span className="popup-text">You have been banned from this chat room.</span>
-						<button className="popup-button" onClick={() => setShowPopUp(false)}>OK</button>
-					</div>
-				</div>
-			)
-			}
 
 		</>
 	);

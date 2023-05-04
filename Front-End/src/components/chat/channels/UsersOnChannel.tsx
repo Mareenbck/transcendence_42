@@ -182,11 +182,10 @@ export default function InteractiveListe(props: any) {
         }, [props.channelId, kickSomeone]);
 
 
-
 return (
     <Box className="participants-container" style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-        Participants of {props.name}
+        Participants of {props.channelName}
         </Typography>
         <Demo style={{ backgroundColor: '#f2f2f2' }}>
         <List dense={dense}>
