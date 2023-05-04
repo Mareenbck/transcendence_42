@@ -66,6 +66,16 @@
 	margin-right: 10px;
 }
 
+.users-msgD-avatar.MuiAvatar-root {
+	color: rgb(241, 234, 241);
+	background-color: black;
+	border-radius: 25px;
+	margin-left: 15px;
+	margin-right: 10px;
+	height: 30px;
+	width: 31px;
+}
+
 .dicuss-link {
 	color: black;
 	font-weight: 300;

@@ -22,7 +22,9 @@ export default function CurrentDirectMessages(props: any) {
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
-		if (author !== undefined) { return (author) }
+		if (author !== undefined) {
+			return (author)
+		}
 		return (null);
 	};
 
@@ -90,7 +92,12 @@ export default function CurrentDirectMessages(props: any) {
 
 	  return (
 		<>
-			<NavbarDirectMessages currentDirect={currentDirect} />
+			<NavbarDirectMessages
+				currentDirect={currentDirect}
+				getUser={getUser}
+				setToBlock={props.setToBlock}
+				inviteGame={props.inviteGame}
+				/>
 			<div className="chatBoxTop">
 				{ messagesD.length ? (
 					messagesD.map((m) => (

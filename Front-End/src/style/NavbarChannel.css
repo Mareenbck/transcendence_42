@@ -7,8 +7,11 @@
 
 .navbar-channel {
 	display: flex;
+	height: 85px;
 	padding: 10px;
 	background-color: #F0F0F0;
+	border-bottom: 1px solid #80808038;
+	align-items: center;
 }
 
 .name-channel h4 {
@@ -31,7 +34,8 @@
 	font-size: 11px;
 	line-height: 16px;
 	color: #8F9BB3;
-	margin-top: -10px;
+	margin-left: 5px;
+	/* margin-top: -10px; */
 }
 
 .btn-dialog-navbar {
@@ -96,5 +100,11 @@
 .btn-admin-channel {
 	display: flex;
 	justify-content: space-evenly;
-	width: 16rem;
+	width: 20rem;
+}
+
+.status-navbar {
+	display: flex;
+	flex-direction: row;
+	margin-top: -10px;
 }
