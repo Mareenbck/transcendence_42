@@ -38,6 +38,26 @@
 	margin-right: 10px;
 }
 
+.btn-chatlist-disable {
+	color: #fa2929;
+	height: 20px;
+	/* color: black; */
+	padding: 11px;
+	z-index: 1;
+	border-radius: 8px;
+	width: 25px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 2px;
+
+}
+
+.btn-chatlist-clicked:hover {
+    /* color: #C7B9FF; */
+	background-color: #adadad1f;
+    box-shadow: 0px 1px 1px #8b8a8a;
+}
+
 .users-chatlist-avatar.MuiAvatar-root {
 	color: rgb(241, 234, 241);
 	background-color: black;
@@ -49,10 +69,60 @@
 .dicuss-link {
 	color: black;
 	font-weight: 300;
+	/* margin-left: 5px; */
+}
+
+.dicuss-link.MuiListItemText-root {
+	margin-bottom: 0px;
+}
+
+.dicuss-link .MuiTypography-root {
+	font-weight: 300;
+	font-family: 'Noto Sans', sans-serif;
 }
 
 .dicuss-link:hover {
 	color: rgb(147, 160, 196);
 	font-weight: 300;
 	cursor: pointer;
+}
+
+.statusChat-online {
+	font-size: 10px;
+	color: rgb(64, 255, 47);
+	margin-top: 3px;
+}
+
+.statusChat-offline {
+	font-size: 10px;
+	color: #fa2929;
+	margin-top: 3px;
+}
+
+.statusChat-playing {
+	font-size: 10px;
+	color: orange;
+	margin-top: 3px;
+}
+
+.directMess-info {
+	display: flex;
+	flex-direction: column;
+	margin-right: 10px;
+	margin-left: 5px;
+}
+
+.directMess-info p {
+	font-family: 'Noto Sans', sans-serif;
+	/* font-style: normal; */
+	font-weight: 300;
+	font-size: 12px;
+	margin-bottom: 0px;
+}
+
+.msg-content {
+	/* font-family: 'Inter', sans-serif; */
+    font-weight: 300;
+    font-size: 11px;
+    color: grey;
 }

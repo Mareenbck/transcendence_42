@@ -26,11 +26,11 @@ function Chat(props: any) {
   const user = useContext(AuthContext);
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<OnlineU[]> ([]);
-  const [AMessageD, setAMessageD] = useState<DirectMessage | null> (null);
+//   const [AMessageD, setAMessageD] = useState<DirectMessage | null> (null);
   const [currentChat, setCurrentChat] = useState<ChatRoom | null> (null);
   const [currentDirect, setCurrentDirect] = useState<UserChat | null> (null);
-  const [messagesD, setMessagesD] = useState<DirectMessage[]> ([]);
-  const [newMessageD, setNewMessageD] = useState<string> ("");
+//   const [messagesD, setMessagesD] = useState<DirectMessage[]> ([]);
+//   const [newMessageD, setNewMessageD] = useState<string> ("");
   const [otherUsers, setOtherUsers] = useState <UserChat[]> ([]);
   const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
   const [toBlock, setToBlock] = useState<UserChat | null>(null);
@@ -39,7 +39,7 @@ function Chat(props: any) {
   const [unfromBlock, setUnfromBlock] = useState<number | null>();
   const [invited, setInvited] = useState<UserChat | null> (null);
   const [sendMessage, addListener] = useSocket()
-  const scrollRef: RefObject<HTMLDivElement> = useRef(null);
+//   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
   const [blockForMe, setBlockForMe] = useState<number | null>();
   const [unblockForMe, setUnblockForMe] = useState<number | null>();
 
@@ -281,13 +281,13 @@ function Chat(props: any) {
     return (null);
   };
 
-  const amIBlocked = (userXid: number): string => {
-    const u = getUser(+id)?.blockedFrom.find((u: UserChat) => +u.id === +userXid);
-    if (u)
-      { return "chatOnlineNotFriend"; }
-    else
-      {return "chatOnlineFriend";}
-  };
+//   const amIBlocked = (userXid: number): string => {
+//     const u = getUser(+id)?.blockedFrom.find((u: UserChat) => +u.id === +userXid);
+//     if (u)
+//       { return "chatOnlineNotFriend"; }
+//     else
+//       {return "chatOnlineFriend";}
+//   };
 
   function isHeBlocked(userXid: number): true | undefined {
     const i = getUser(userXid);
@@ -297,12 +297,8 @@ function Chat(props: any) {
   }
 
   const getDirect = (userX: any): void => {
-	console.log("userX ---> ", userX)
     const gUser = getUser(+id);
-	console.log("gUser ---> ", gUser)
-
     const dUser = userX.userId ? getUser(userX.userId) : userX;
-	console.log("dUser ---> ", dUser)
     if (dUser && gUser && (gUser.blockedFrom.find((u: UserChat) => +u.id === +dUser.id) === undefined ))
     {
       if (dUser.blockedFrom.find((u: UserChat) => +u.id === +id) === undefined)
@@ -355,9 +351,9 @@ function Chat(props: any) {
 // Partie VI : Scroll to view
 ////////////////////////////////////////////////
 
-useEffect(() => {
-  scrollRef.current?.scrollIntoView({behavior: "smooth"})
-}, [messagesD]);
+// useEffect(() => {
+//   scrollRef.current?.scrollIntoView({behavior: "smooth"})
+// }, [messagesD]);
 
 
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
@@ -380,14 +376,19 @@ return (
 				<Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
 			</Tabs>
 			{activeTab === 'Channels' && (
-				<UpdateChannelsInList currentChat={currentChat} setCurrentChat={setCurrentChat} />
+				<UpdateChannelsInList
+					currentChat={currentChat}
+					setCurrentChat={setCurrentChat}
+					/>
 			)}
 			{activeTab === "Direct messages" && (
 				<UsersWithDirectMessage
 					currentDirect={currentDirect}
 					setCurrentDirect={setCurrentDirect}
-					currentChat={currentChat}
-					setCurrentChat={setCurrentChat}
+					isHeBlocked={isHeBlocked}
+					getDirect={getDirect}
+					getUser={getUser}
+					setToUnblock={setToUnblock}
 					/>
 			)}
 		</div>
@@ -401,50 +402,40 @@ return (
 						isJoined={isJoined}
 						setIsJoined={setIsJoined}
 						isBanned={isBanned}
-						setIsBanned={setIsBanned} />
+						setIsBanned={setIsBanned}
+						/>
 				)}
 				{currentDirect ?
-					<CurrentDirectMessages currentDirect={currentDirect} allUsers={allUsers}/>
+					<CurrentDirectMessages
+						currentDirect={currentDirect}
+						allUsers={allUsers}
+						/>
 				: <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
 				}
 			</div>
 		</div>
-
-        {/* <div className="chatOnline">
-        <div className="chatOnlineW"> */}
         <div className="chatOnline" style={{ display: isChannelSelected ? "none" : "block" }}>
         </div>
-        {!currentChat && (
-			<UsersChat isHeBlocked={isHeBlocked} getDirect={getDirect} getUser={getUser} inviteGame={inviteGame} setToBlock={setToBlock} setToUnblock={setToUnblock}/>
-        //   <InteractiveList
-        //     onlineUsers={onlineUsers}
-        //     otherUsers={otherUsers}
-        //     id={id}
-        //     getUser={getUser}
-        //     amIBlocked={amIBlocked}
-        //     inviteGame={inviteGame}
-        //     setToBlock={setToBlock}
-        //     setToUnblock={setToUnblock}
-        //     isHeBlocked={isHeBlocked}
-        //     getDirect={getDirect}
-        //     user={user}
-        //   />
-        )}
-        {currentChat && (
-          <UsersOnChannel
-            currentChatroom={currentChat}
-            channelId={currentChat?.id}
-            channelVisibility={currentChat?.visibility}
-            channelName={currentChat?.name}
-            isChannelClicked={isChannelClicked}
-          />
-        )}
-      </div>
-
-
-        {/* </div>
-      </div> */}
-
+		{!currentChat && (
+			<UsersChat
+				isHeBlocked={isHeBlocked}
+				getDirect={getDirect}
+				getUser={getUser}
+				inviteGame={inviteGame}
+				setToBlock={setToBlock}
+				setToUnblock={setToUnblock}
+				/>
+		)}
+		{currentChat && (
+			<UsersOnChannel
+				currentChatroom={currentChat}
+				channelId={currentChat?.id}
+				channelVisibility={currentChat?.visibility}
+				channelName={currentChat?.name}
+				isChannelClicked={isChannelClicked}
+			/>
+		)}
+	</div>
     </>
   )
 }

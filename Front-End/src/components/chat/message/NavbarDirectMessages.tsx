@@ -1,14 +1,23 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import { useContext, useEffect, useState } from "react";
 import Avatar from '@mui/material/Avatar';
 import '../../../style/NavbarChannel.css';
 import { FriendContext } from "../../../store/FriendshipContext";
-
-
+import AuthContext from "../../../store/AuthContext";
+import { faUserPlus, faAddressCard } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Snackbar, Tooltip } from '@mui/material';
+import { Link } from "react-router-dom";
 
 export function NavbarChannel(props: any) {
 	const friendCtx = useContext(FriendContext);
+	const authCtx = useContext(AuthContext);
 	const [icon, setIcon] = useState<any>();
+	const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+	const handleCloseSnackbar = () => {
+		setSnackbarOpen(false);
+	}
 
 	const fetchAvatar = async (id: string) => {
 		const avat: any = await friendCtx.fetchAvatar(parseInt(id));
@@ -25,9 +34,15 @@ export function NavbarChannel(props: any) {
 		}
 	}, [props.currentDirect])
 
+	const handleDemand = async (event: FormEvent, receiverId: number) => {
+		event.preventDefault();
+		friendCtx.createDemand(receiverId, authCtx.userId)
+		setSnackbarOpen(true);
+	}
 
-	console.log("props.currentDirect ----> ")
-	console.log(props.currentDirect)
+	const isFriend = (userId: any) => {
+		return friendCtx.friends.some((friend) => friend.id === userId);
+	  };
 
 	return (
 		<div className="navbar-channel">
@@ -36,30 +51,27 @@ export function NavbarChannel(props: any) {
 				<h4>{props.currentDirect.username}</h4>
 				<p>{props.currentDirect.status}</p>
 			</div>
-
-			{/* {isAdmin === 'ADMIN' &&
-				<div className="btn-admin-channel">
-					<SelectDialog
-						onSelect={(userId: string) => setSelectedUser(userId)}
-						onInvite={handleInviteUser}
-						onAddAdmin={handleAddAdmin}
-						type="invite-admin"
+			<div className="btn-admin-channel">
+				<Tooltip title="Add Friend">
+					<FontAwesomeIcon
+						icon={faUserPlus}
+						onClick={(event: FormEvent) => { handleDemand(event, props.currentDirect.id) }}
+						className={`add-friend-navbar-chat ${isFriend(props.currentDirect.id) ? 'disabled' : ''}`}
 						/>
-					{props.chatroom.visibility === 'PRIVATE' &&
-						<SelectDialog
-						onSelect={(userId: string) => setSelectedUser(userId)}
-						onInvite={handleInviteUser}
-						onAddAdmin={handleAddAdmin}
-						type="invite-user"
-						/>
-					}
-					{props.chatroom.visibility === 'PWD_PROTECTED' &&
-						<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
-					}
-				</div>
-			} */}
-			{/* <FontAwesomeIcon onClick={() => leaveChannel(props.chatroom.id)} icon={faArrowRightFromBracket} className="btn-dialog-navbar-leave"/> */}
-			 {/* <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button> */}
+				</Tooltip>
+				<Snackbar
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+					open={snackbarOpen}
+					autoHideDuration={1000}
+					onClose={handleCloseSnackbar}
+					message="Request sent"
+					/>
+				<Tooltip title="Profile page">
+					<Link to={`/users/profile/${props.currentDirect.id}`}>
+						<FontAwesomeIcon icon={faAddressCard} className={`add-friend-navbar-chat`} />
+					</Link>
+				</Tooltip>
+			</div>
 		</div>
 	);
 }

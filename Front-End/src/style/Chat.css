@@ -3,15 +3,24 @@
   display: flex;
   align-items: center;
   font-weight: 500;
-  cursor: pointer;
   margin-top: 10px;
   justify-content: space-evenly;
 }
 
+.chatOnlineFriend.MuiListItem-root {
+  height: 80px;
+  border-bottom: 1px solid rgb(180 180 180 / 41%);
+  margin-top: 0;
+}
+
 .chatOnlineNotFriend {
-  filter: grayscale(80%);
   background-color: lightgrey;
-  border-radius: 10px;
+  border-radius: 8px;
+}
+
+.chatOnlineNotFriend .MuiListItemAvatar-root {
+  filter: grayscale(80%);
+
 }
 
 .line-chat {
@@ -80,7 +89,7 @@
 
 
 .messenger {
-  height: calc(100vh - 70px);
+  height: calc(100vh - 15px);
   display: flex;
 }
 
@@ -180,7 +189,7 @@
 	text-align: center;
 	width: 350px;
 	height: 100vh;
-	padding: 2px;
+  border-right: 1px solid #8b8a8a45;
 }
 
 

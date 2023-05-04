@@ -4,7 +4,6 @@ import { DirectMessage, UserChat } from "../../../interfaces/iChat";
 import useSocket from "../../../service/socket";
 import AuthContext from "../../../store/AuthContext";
 import MessageReq from "../message/message.req";
-import NavbarChannel from "./NavbarChannel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import '../../../style/UsersOnChannel.css'
@@ -89,21 +88,9 @@ export default function CurrentDirectMessages(props: any) {
 		}
 	  }
 
-	// const handleFormSubmit = (e: FormEvent) => {
-	// 	e.preventDefault();
-	// 	setShowPopUp(true);
-	// };
-
 	  return (
 		<>
-			<NavbarDirectMessages
-				// user={getUser(m.author)}
-				currentDirect={currentDirect}
-				// onCancel={() => setShowPopUp(false)}
-				// onClick={() => setShowPopUp(false)}
-				// onSubmit={handleFormSubmit}
-				// onLeaveChannel={handleLeaveChannel}
-			/>
+			<NavbarDirectMessages currentDirect={currentDirect} />
 			<div className="chatBoxTop">
 				{ messagesD.length ? (
 					messagesD.map((m) => (

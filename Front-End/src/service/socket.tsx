@@ -22,13 +22,13 @@ export default function useSocket() {
 	//     if (socket)
 	//       { socket.on(signal, message)} ;
 	//   }, [socket])
-	//
-	// const sendMessage = useMemo<(signal: string, message: any) => void>
-	// (() => (signal, message) => {
-	//   if (socket) {
-	//   socket.emit(signal, message)};
-	// }, [socket])
-	//
+
+	// // const sendMessage = useMemo<(signal: string, message: any) => void>
+	// // (() => (signal, message) => {
+	// //   if (socket) {
+	// //   socket.emit(signal, message)};
+	// // }, [socket])
+
 	//   const sendMessage = useMemo<(signal: string, message: any) => void>
 	//   (() => {
 	//       return (signal:any, message:any) => {
