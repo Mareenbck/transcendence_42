@@ -18,6 +18,7 @@ import UsersWithDirectMessage from './message/usersWithMessages';
 import CurrentDirectMessages from './message/CurrentDirectMessages';
 import UsersChat from './message/UsersChat';
 import { FriendContext } from '../../store/FriendshipContext';
+import PersonnalInfoChat from './PersonnalInfoChat';
 
 function Chat(props: any) {
   const user = useContext(AuthContext);
@@ -415,6 +416,7 @@ return (
 		</div>
         {/* <div className="chatOnline" style={{ display: isChannelSelected ? "none" : "block" }}>
         </div> */}
+		{/* <PersonnalInfoChat /> */}
 		{!currentChat && (
 			<UsersChat
 				isHeBlocked={isHeBlocked}

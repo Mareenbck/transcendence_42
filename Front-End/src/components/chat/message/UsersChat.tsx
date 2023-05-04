@@ -7,6 +7,7 @@ import Friend from '../../interfaces/IFriendship'
 import '../../../style/UsersChat.css';
 import UsersAction from './UsersActions';
 import { UserChat } from '../../../interfaces/iChat';
+import PersonnalInfoChat from '../PersonnalInfoChat';
 
 
 const UsersChat = (props: any) => {
@@ -45,6 +46,7 @@ const UsersChat = (props: any) => {
 	return (
 		<>
 		<div className='contain-users'>
+		<PersonnalInfoChat />
 			{/* <div className='title-drawer'>
 				<h2>Members</h2>
 			</div> */}

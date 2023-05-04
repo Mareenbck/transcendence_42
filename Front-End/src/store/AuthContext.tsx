@@ -9,6 +9,7 @@ const defaultValue = {
 	isLoggedIn: false,
 	avatar: '',
 	ftAvatar: '',
+	email: '',
 	is2FA: false,
 	updateAvatar: (avatarUrl: string) => {},
 	updateUsername: (newUsername: string) => {},
@@ -30,6 +31,7 @@ export const AuthContextProvider = (props: any) => {
 	const [userId, setUserId] = useState<string | null>(localStorage.getItem("userId"));
 	const [username, setUsername] = useState<string | null>(usernameLocalStorage);
 	const [avatar, setAvatar] = useState<string | null>('');
+	const [email, setEmail] = useState<string | null>('');
 	const [ftAvatar, setftAvatar] = useState<string | null>(ftAvatarLocalStorage);
 	const [is2FA, setIs2FA] = useState<boolean>();
 
@@ -101,6 +103,7 @@ export const AuthContextProvider = (props: any) => {
 			setUserId(data.id);
 			setUsername(data.username);
 			setftAvatar(data.ftAvatar);
+			setEmail(data.email);
 			localStorage.setItem('username', data.username);
 			return data
 		} catch (error) {
@@ -148,6 +151,7 @@ export const AuthContextProvider = (props: any) => {
 				setUserId("");
 				setUsername("");
 				setAvatar("");
+				setEmail("");
 				localStorage.clear();
 			}
 			return "success";
@@ -179,6 +183,7 @@ export const AuthContextProvider = (props: any) => {
 		username: username,
 		avatar: avatar,
 		ftAvatar: ftAvatar,
+		email: email,
 		isLoggedIn: userIsLoggedIn,
 		setAvatar: setAvatar,
 		is2FA: is2FA,
