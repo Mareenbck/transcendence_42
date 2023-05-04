@@ -42,10 +42,10 @@ function Game() {
                 }
             }
             setOnlinePlayers(games);
-        }
-
+         }
         addListener("gameRooms", handleGameRooms);
         sendMessage('listRooms');
+
     }, []);
 
 /////////////////////////////////////////////////leave the page////////////////////////////////////
@@ -168,8 +168,8 @@ function Game() {
 //initialization of the initial parameters of the game
     const [gameinit, setGameInit] = useState<gameInit>(
         {
-            table_width: 800,
-            table_height: 400,
+            table_width: Math.floor(0.6 * window.innerWidth),
+            table_height: 0.5,
             ballR: 0.015,
             racket_width: 0.010,
             racket_height: 0.100,
@@ -182,9 +182,9 @@ function Game() {
 // game parameters update (coordinates ball and racket)
     const [gamestate, setGameState] = useState<gameState>(
         {
-            ball: {x: 0.400, y: 0.200},
+            ball: {x: 0.500, y: 0.250},
             racket1: {x: 0.010, y: 0.150},
-            racket2: {x: 0.790 - gameinit.racket_width , y: 0.150},
+            racket2: {x: 0.990 - gameinit.racket_width , y: 0.150},
             scoreR: 0,
             scoreL: 0,
         }
@@ -217,9 +217,9 @@ function Game() {
         const width = Math.floor(0.6 * window.innerWidth);
         if(width){
             data.table_width = width;
-        }
-        else{
-            data.table_width = 600;
+        // }
+        // else{
+        //     data.table_width = 600;
         }
         setGameInit(data);
     }
@@ -270,32 +270,18 @@ function Game() {
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                             
                             // head Game***********
-                               (<div >
-                                {games.map((game: gamesList) => (
-                                    
-                                    
+                               (
+                               <div >
                                     <div className="container-matchh">
                                         
-                                        <PlayerOne  style={{backgroundColor: "white"}} player={game.playerL} winner={0} score={game.scoreL} sizeAvatar={"l"} />
+                                        {/* <PlayerOne  style={{backgroundColor: "white"}} player={games[curroom].playerL} winner={0} score={games[curroom].scoreL} sizeAvatar={"l"} /> */}
                                            <p> VS </p>
-                                           {/* {game.playerR.username}
-                                            <MyAvatar  id={game.playerR.id} style="l" avatar={game.playerR.avatar} ftAvatar={game.playerR.ftAvatar}/>
-                                            {game.scoreR }  VS    { game.scoreL}
-
-                                             
-                                           <MyAvatar  id={game.playerL.id} style="l" avatar={game.playerL.avatar} ftAvatar={game.playerL.ftAvatar}/>
-                                           {game.playerL.username} */}
-                                        {/* <ScoresMatch score1={game.scoreR} score2={game.scoreL} sizeAvatar={"l"}/> */}
-                                        <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} sizeAvatar={"l"} />
+                                        {/* <PlayerTwo player={games[curroom].playerR} winner={0} score={games[curroom].scoreR} sizeAvatar={"l"} /> */}
                                     </div>
-
-                                    
-                                ))}
                                 </div>    
                                )
                             //head Game************
-                            :
-                                
+                            :  
                             (
                                 <SelectColor changColorToRed={changColorToRed}
                                             changColorToBlue={changColorToBlue}
