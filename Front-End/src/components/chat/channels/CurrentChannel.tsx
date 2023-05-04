@@ -23,14 +23,32 @@ export default function CurrentChannel(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
-	const [isBanned, setIsBanned] = useState<boolean>(currentChatroom.participants.some((p: any) => p.status === 'BAN') && parseInt(authCtx.userId));
-	const [isMuted, setIsMuted] = useState<boolean>(currentChatroom.participants.some((p: any) => p.status === 'MUTE'));
-
+	
+	
 	const [showPopUp, setShowPopUp] = useState(true);
-
+	
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
-	const userBanned = currentChatroom.participants.some((p: any) => p.status === 'BAN')&& parseInt(authCtx.userId);
-	const userMuted = currentChatroom.participants.some((p: any) => p.status === 'MUTE') && parseInt(authCtx.userId);
+	const [isMuted, setIsMuted] = useState(false);
+	const [isBanned, setIsBanned] = useState(false);
+
+	console.log("current", currentChatroom.participants)
+
+	useEffect(() => {
+		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
+		if (participant.status === 'MUTE')
+			setIsMuted(true)
+		if (participant.status === 'CLEAN')
+			setIsMuted(false)
+	}, [])
+
+	useEffect(() => {
+		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
+		if (participant.status === 'BAN')
+			setIsBanned(true)
+		if (participant.status === 'CLEAN')
+			setIsBanned(false)
+	}, [])
+
 
 	// console.log("is joined ?? ", isJoined)
 	// console.log("user joined", userJoined)
@@ -126,8 +144,11 @@ export default function CurrentChannel(props: any) {
 		props.setUsersList(true);
 		setIsJoined(false);
 	};
+
+	// const [isMuted, setIsMuted] = useState<boolean>(false)
+
+	//   console.log("props.mute", props.isMuted)
 	
-	  
 	return (
 		<>
 			{isJoined && !isBanned && (
@@ -158,12 +179,15 @@ export default function CurrentChannel(props: any) {
 							onChange={(e) => setNewMessage2(e.target.value)}
 							value={newMessage2}
 						></input>
-						<FontAwesomeIcon
-							icon={faPaperPlane}
-							onClick={handleSubmit}
-							className={`send-btn-chat ${isMuted ? 'muted' : ""}`} // ajouter la classe 'muted' si l'utilisateur est mute							
-							disabled={isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
-						/>
+						{!isMuted && 
+
+							<FontAwesomeIcon
+								icon={faPaperPlane}
+								onClick={handleSubmit}
+								className={`send-btn-chat`} // ajouter la classe 'muted' si l'utilisateur est mute							
+								disabled={props.isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
+							/>
+						}
 					</div>
 				</>
 			)}

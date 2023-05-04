@@ -309,6 +309,7 @@ export class ChatroomService {
 					status: UserStatusOnChannel.MUTE,
 				},
 			});
+			console.log("updated status------>", updatedStatus)
 			return `User with ID ${userId} has been muted from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);

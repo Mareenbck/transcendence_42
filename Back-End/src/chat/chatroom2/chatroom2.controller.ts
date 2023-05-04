@@ -135,7 +135,7 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@UseGuards(JwtGuard)
 	async mute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const muted = await this.chatRoomService.mute(parseInt(channelId), parseInt(userId));
-		// console.log("muted", muted)
+		console.log("muted", muted)
 		return muted ;
 	}
 

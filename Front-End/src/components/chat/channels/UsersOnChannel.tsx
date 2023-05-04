@@ -37,8 +37,10 @@ export default function InteractiveListe(props: any) {
   const [isBanned, setIsBanned] = useState(false);
   const [participants, setParticipants] = useState([]);
   const banned = participants.filter((p) => p.status === 'BAN');
+  const muted = participants.filter((p) => p.status === 'MUTE');
   const admins = participants.filter((p) => p.role === 'ADMIN');
   const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));     
+
    
     const showParticipants = async (channelId: string) => {
         try {
@@ -152,6 +154,8 @@ export default function InteractiveListe(props: any) {
               console.error(error);
           }
       };
+
+
 
       const unMuteSomeone = async (channelId: string, userId: string) => {
         try {
