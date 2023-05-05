@@ -17,8 +17,11 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import "../../../style/UsersOnChannel.css"
 import PersonnalInfoChat from '../PersonnalInfoChat';
-import { Avatar } from '@mui/material';
+import { Avatar, Tooltip } from '@mui/material';
 import "../../../style/UsersChat.css"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FriendContext } from "../../../store/FriendshipContext";
+import { faTrash, faBan } from '@fortawesome/free-solid-svg-icons'
 
 
 function generate(element: React.ReactElement) {
@@ -34,15 +37,17 @@ const Demo = styled('div')(({ theme }) => ({
 }));
 
 export default function InteractiveListe(props: any) {
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
-  const authCtx = useContext(AuthContext);
-  const [isBanned, setIsBanned] = React.useState(false);
-  const [isMuted, setIsMuted] = React.useState(false);
-  const [participants, setParticipants] = React.useState([]);
-  const banned = participants.filter((p: any) => p.status === 'BAN');
-  const admins = participants.filter((p: any) => p.role === 'ADMIN');
-  const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p)); 
+    const friendCtx = React.useContext(FriendContext);
+    const [friends, setFriends] = React.useState<any[]>([]);
+    const [dense, setDense] = React.useState(false);
+    const [secondary, setSecondary] = React.useState(false);
+    const authCtx = useContext(AuthContext);
+    const [isBanned, setIsBanned] = React.useState(false);
+    const [isMuted, setIsMuted] = React.useState(false);
+    const [participants, setParticipants] = React.useState([]);
+    const banned = participants.filter((p: any) => p.status === 'BAN');
+    const admins = participants.filter((p: any) => p.role === 'ADMIN');
+    const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p)); 
   
 //   console.log("participants", participants)
 
@@ -196,6 +201,31 @@ export default function InteractiveListe(props: any) {
         }, [props.channelId, kickSomeone]);
 
 
+
+	// React.useEffect(() => {
+	// 	const url = "http://localhost:3000/users/";
+	// 	const fetchUsers = async () => {
+	// 		const response = await fetch(
+	// 			url,
+	// 			{
+	// 				method: "GET",
+	// 				headers: {
+	// 					"Content-Type": "application/json",
+	// 					Authorization: `Bearer ${authCtx.token}`
+	// 				}
+	// 			}
+	// 		)
+	// 		const data = await response.json();
+	// 		const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
+	// 			const avatar = await friendCtx.fetchAvatar(friend.id);
+	// 			return { ...friend, avatar };
+	// 		}));
+	// 		setFriends(updatedFriends);
+	// 	}
+	// 	fetchUsers();
+	// }, [])
+
+
 return (
     <Box className="participants-container" style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
         <PersonnalInfoChat />
@@ -211,17 +241,12 @@ return (
             <ListItem key={participants.user.username}
             secondaryAction={
                 <div>
-                <Link to={`/users/profile/${participants?.user.userId}`} className="profile-link">
-                    <IconButton  className='violet-icon' edge="end" aria-label="Profil">
-                    <AccountBoxIcon />
-                    </IconButton>
-                </Link>
-                <i className="fa-sharp fa-solid fa-crown"></i>
+                    <i className="fa-sharp fa-solid fa-crown"></i>
                 </div>
             }
             >
             <ListItemAvatar>
-                <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
+                <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
             </ListItemAvatar>
             <ListItemText
                 primary={participants?.user.username}
@@ -233,17 +258,7 @@ return (
             Users
             </Typography>
         {users.map((participants: any) => ( 
-            <ListItem key={participants.user.username}
-            secondaryAction={
-                <div>
-                <Link to={`/users/profile/${participants?.user.userId}`} className="profile-link">
-                    <IconButton  className='violet-icon' edge="end" aria-label="Profil">
-                    <AccountBoxIcon />
-                    </IconButton>
-                </Link>
-                </div>
-            }
-            >
+            <ListItem key={participants.user.username}>
             <ListItemAvatar>
                 <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
             </ListItemAvatar>
@@ -253,9 +268,13 @@ return (
             />
             {admins.some(admin => admin.user.id === authCtx.userId) && (
                 <>
-                <DeleteIcon onClick={() => kickSomeone(props.channelId, participants.user.id)}/>
+                <Tooltip title="Kick">
+                    <FontAwesomeIcon icon={faTrash} onClick={() => kickSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+				</Tooltip>
                 {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                    <RemoveCircleIcon className="ban-icon" onClick={() => banSomeone(props.channelId, participants.user.id)} />
+                     <Tooltip title="Ban">
+                        <FontAwesomeIcon icon={faBan} onClick={() => banSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+                    </Tooltip>
                     ) : null
                 }
                 <MicOffIcon 
@@ -296,10 +315,14 @@ return (
             />
                 {admins.some(admin => admin.user.id === authCtx.userId) && (
                 <>
-                    <DeleteIcon onClick={() => kickSomeone(props.channelId, participants.user.id)}/>
-                    {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                    <RemoveCircleOutlineIcon  onClick={() => unBanSomeone(props.channelId, participants.user.id)} />
-                    ) : null}
+                <Tooltip title="Kick">
+                    <FontAwesomeIcon icon={faTrash} onClick={() => kickSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+				</Tooltip>                   
+                {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
+                <Tooltip title="UnBan">
+                    <FontAwesomeIcon icon={faBan} onClick={() => unBanSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+                </Tooltip>                    ) : null
+                }
                 </>
                 )}
             </ListItem>
