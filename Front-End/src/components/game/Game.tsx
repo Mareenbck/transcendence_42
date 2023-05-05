@@ -19,6 +19,7 @@ import PlayerOne from './PlayerOne';
 import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
 
+
 function Game() {
     const user = useContext(AuthContext);
     const id = user.userId;
@@ -39,32 +40,32 @@ function Game() {
                 const index = games.findIndex(room => room.playerL.username == user.username || room.playerR.username == user.username);
                 if (index != -1) {   
                     setCurRoom(games[index].roomN);
+console.log("games[index].playerR", index, games[index].playerL)
+console.log("games[index].playerR", index, games[index].playerR)
                 }
             }
             setOnlinePlayers(games);
-         }
+        }
         addListener("gameRooms", handleGameRooms);
         sendMessage('listRooms');
 
     }, []);
 
-    const getPlaer = (games: gamesList[], roomN: number, player: string) => {
-        const index = games.findIndex(r => r.roomN == roomN);
-        if (player == 'R')
-            return (games[index].playerR);
-        if (player == 'L')
-            return (games[index].playerL);
+//     const getPlayer = (room: number, player: string) => {
+//         if (games){
+//             const index = games.findIndex(r => r.room == room);
+//             if (player == 'R'){
+// console.log("games[index].playerR", index, games[index].playerL)
 
-    };
+//                 return (games[index].playerR);}
+//             if (player == 'L'){
+// console.log("games[index].playerR", index, games[index].playerL)
+//                 return (games[index].playerL);
+//         }}
+//         else
+//             return null;
+//     };
 
-    const getScore = (games: gamesList[], roomN: number, player: string) => {
-        const index = games.findIndex(r => r.roomN == roomN);
-        if (player == 'R')
-            return (games[index].scoreR);
-        if (player == 'L')
-            return (games[index].scoreL);
-
-    };
 // console.log("curroom", curroom)
 /////////////////////////////////////////////////leave the page////////////////////////////////////
 //event when user leaves the page
@@ -208,7 +209,6 @@ function Game() {
         }
     );
 
-getPlaer    
 // the responsive game
     useEffect(() => {
         const updateWidth = () => {
@@ -289,13 +289,26 @@ getPlaer
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                             
-                            (<div className="container-match" style={{backgroundColor: "white",
-                                                                        border: "solid" ,
-                                                                        borderBlockColor:"black" } } >    
-                                <PlayerOne  style={{backgroundColor: "white"}} player={getPlaer(games, curroom, 'L')} sizeAvatar={"l"} />
-                                <p> VS </p>
-                                <PlayerTwo player={getPlaer(games, curroom, 'R')} sizeAvatar={"l"} />
-                            </div>)                           
+                                 // head Game***********
+                                 (<div>
+                                    {games.map((game: gamesList) => (
+                                        <div>
+                                        
+                                        <div className="container-match" style={{backgroundColor: "white",
+                                                                                border: "solid" ,
+                                                                                borderBlockColor:"black" } } >
+                                            
+                                          
+                                            <PlayerTwo  style={{backgroundColor: "white"}} player={game.playerL} winner={game.scoreL} sizeAvatar={"l"} />
+                                            <p className='vs'> VS</p>
+                                           
+                                            <PlayerOne  player={game.playerR} winner={""}  sizeAvatar={"l"} />
+                                        </div>
+                                        </div>
+                                    ))}
+                                    </div>    
+                                )
+                                //head Game************                                                   
                                 :  
                                 (<SelectColor changColorToRed={changColorToRed}
                                                 changColorToBlue={changColorToBlue}
@@ -374,7 +387,7 @@ getPlaer
 
 
                 <div>
-                    {games.map((game: gamesList) => (
+                {games.map((game: gamesList) => (
                         <div className='wrapList'>
 
                         {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
@@ -382,7 +395,7 @@ getPlaer
                                 <div className="container-match">
                                     <button  style={{backgroundColor: "#F3F0FF"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
                                     <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
-                                    <ScoresMatch score1={game.scoreL} score2={game.scoreR} />
+                                    <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
                                      
                                     <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
                                 </div>
@@ -403,39 +416,3 @@ getPlaer
 
 export default Game;
 
-(<div>
-    <div className="container-match" style={{backgroundColor: "white",
-                                            border: "solid" ,
-                                            borderBlockColor:"black" } } >
-        
-        <PlayerOne  style={{backgroundColor: "white"}} player={games[curroom].playerL} winner={0} score={games[curroom].scoreL} sizeAvatar={"l"} />
-        <p> VS </p>
-        <PlayerTwo player={games[curroom].playerR} winner={0} score={games[curroom].scoreR} sizeAvatar={"l"} />
-        {/* <PlayerTwo  style={{backgroundColor: "white"}} player={game.playerL} winner={game.scoreL} sizeAvatar={"l"} />
-        <p className='vs'> VS </p>
-        
-        <PlayerOne  player={game.playerR} winner={""}  sizeAvatar={"l"} /> */}
-    </div>                                         
-</div> )   //head Game************
-
-
-
-(<div>
-                                    
-    {games.map((game: gamesList) => (
-        <div>
-        
-        <div className="container-match" style={{backgroundColor: "white",
-                                                border: "solid" ,
-                                                borderBlockColor:"black" } } >
-            
-          
-            <PlayerTwo  style={{backgroundColor: "white"}} player={game.playerL} winner={game.scoreL} sizeAvatar={"l"} />
-            <p className='vs'> VS </p>
-           
-            <PlayerOne  player={game.playerR} winner={""}  sizeAvatar={"l"} />
-        </div>
-        </div>
-    ))}
-    </div>    //head Game************
-)          
