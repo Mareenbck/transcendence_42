@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../../store/AuthContext";
 import SelectDialog from "../../utils/SelectDialog";
 import ChannelsSettings from "./ChannelsSettings";
-import { Modal, TextField } from "@mui/material";
+import { Modal, TextField, Tooltip } from "@mui/material";
 import { Box } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import PublicIcon from '@mui/icons-material/Public';
@@ -208,9 +208,9 @@ export function NavbarChannel(props: any) {
 			 {/* <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button> */}
 				<>
 			<Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
-				<Box className="modal-content">
-					<h2>Welcome to {props.chatroom.name} settings</h2>
-					<div>Do you want to change the password ?</div>
+				<Box className="modal-content-password">
+					<h2>{props.chatroom.name} settings</h2>
+					<div>Chose a new password</div>
 					<TextField
 						id="password"
 						className="custom-field"
@@ -220,9 +220,11 @@ export function NavbarChannel(props: any) {
 						placeholder="Type a new password..."
 						inputRef={passwordInputRef}
 					/>
-					 <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
-					<button type='submit' onSubmit={handleFormSubmit} onClick={changeAndClose}>OK</button>
-					<button onClick={() => setOpenModal(false)}>Cancel</button>
+					 <div className="button-popup-global">
+						<VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
+						<button className="button-popup" type='submit' onSubmit={handleFormSubmit} onClick={changeAndClose}>OK</button>
+						<button className="button-popup" onClick={() => setOpenModal(false)}>Cancel</button>
+					 </div>
 				</Box>
 			</Modal>
 			</>
