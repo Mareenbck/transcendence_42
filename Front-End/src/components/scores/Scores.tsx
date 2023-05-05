@@ -44,25 +44,25 @@ const Scores = () => {
   //score/ user
   const getNbGames = (user: UserScore) => {
     if (games) {
-      const p1 = games.filter(u => +u.playerOneId === +user.id);
-      const p2 = games.filter(u => +u.playerTwoId === +user.id);
+      const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user.id);
+      const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user.id);
       return (p2.length + p1.length);
     }
   }
 
   const getWinner = (user: UserScore) => {
     if (games) {
-      return (games.filter(u => +u.winnerId === +user.id).length);
+      return (games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user.id).length);
     }
   }
 
   const getScore = (user: UserScore) => {
     if (games) {
-      const p1 = games.filter(u => +u.playerOneId === +user.id);
-      const p2 = games.filter(u => +u.playerTwoId === +user.id);
+      const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user?.id);
+      const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user?.id);
       let total:number = 0;
-      if (p1.length > 0) {total = p1.reduce((score, game) => score = score + +game.score1, 0)};
-      if (p2.length > 0) {total = total + p2.reduce((score, game) => score = score + +game.score2, 0)};
+      if (p1.length > 0) {total = p1.reduce((score: number, game: { score1: string | number; }) => score = score + +game.score1, 0)};
+      if (p2.length > 0) {total = total + p2.reduce((score: number, game: { score2: string | number; }) => score = score + +game.score2, 0)};
       return (total);
     }
   }
@@ -92,7 +92,7 @@ const Scores = () => {
           <h1 className='one_podium'>PODIUM</h1>
           
           <section className= "two">
-          <form onSubmit={(event) => handleNewGame(event)}>
+          <form onSubmit={(event: any) => handleNewGame(event)}>
          
         </form>
            

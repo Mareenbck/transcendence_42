@@ -9,7 +9,7 @@ const defaultValue = {
 	friends: [] as Friend[],
 	pendingDemandsCount: 0,
 	fetchAvatar: async (userId: number) => {},
-	createDemand: async (receiverId: number, token: string, currentId: string) => { },
+	createDemand: async (receiverId: number, currentId: string) => { },
 	getDemands: async (token: string, currentId: string) => { },
 	getFriends: async (token: string, currentId: string) => { },
 	removeFriend: (friendId: number, currentId: string, token: string) => { },
@@ -54,17 +54,18 @@ export const FriendContextProvider = (props: any) => {
 		});
 	}, [addListener]);
 
-	const createDemand = async (receiverId: number, token: string, currentId: string) => {
+	const createDemand = async (receiverId: number, currentId: string) => {
 		try {
 			const response = await fetch(`http://localhost:3000/friendship/create`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${authCtx.token}`,
 				},
 				body: JSON.stringify({ requesterId: currentId, receiverId: receiverId }),
 			});
 			const data = await response.json();
+			sendMessage('createDemand', {id: receiverId});
 			if (!response.ok) {
 				console.log("POST error on /friendship/create");
 				return "error";

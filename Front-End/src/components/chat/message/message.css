@@ -1,12 +1,12 @@
 .message {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
       align-items: flex-start;
 }
 
 .messageTop{
     display: flex;
+    align-items: center;
 }
 
 .messageImg {
@@ -20,21 +20,36 @@
 .messageText{
     padding: 10px;
     border-radius: 20px;
-    background-color: #1877f2;
+    background-color: #699bf7;
     color: white;
     max-width: 300px;
+	margin-bottom: 0px;
+	font-size: 13px;
+	height: 40px;
 }
+/*
+.messageText p {
+	margin-bottom: 0px;
+} */
 
 .messageBottom{
-    font-size: 12px;
-    margin-top: 10px;
+	font-size: 10px;
+	margin-top: 3px;
+	margin-left: 20px;
+	font-weight: 200;
+	font-family: 'Noto Sans';
 }
 
 .message.own{
     align-items: flex-end;
 }
 
+.message.own .messageTop{
+	display: flex;
+	flex-direction: row-reverse;
+}
+
 .message.own .messageText{
-    background-color: rgb(245, 241, 241);
+	background-color: #c7b9ff3b;
     color: black;
 }

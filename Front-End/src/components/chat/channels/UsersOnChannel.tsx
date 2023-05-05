@@ -17,6 +17,7 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import "../../../style/UsersOnChannel.css"
+import PersonnalInfoChat from '../PersonnalInfoChat';
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2].map((value) =>
@@ -94,7 +95,7 @@ export default function InteractiveListe(props: any) {
         }
         };
 
-        
+
         const banSomeone = async (channelId: string, userId: string) => {
             try {
                 const response = await fetch(
@@ -113,12 +114,12 @@ export default function InteractiveListe(props: any) {
                 const updatedParticipants = participants.filter(p => p.user.id !== userId);
                 setParticipants(updatedParticipants);
                 setIsBanned(true);
-                
+
             } catch (error) {
                 console.error(error);
             }
         };
-        
+
         const unBanSomeone = async (channelId: string, userId: string) => {
             try {
                 const response = await fetch(
@@ -136,12 +137,12 @@ export default function InteractiveListe(props: any) {
                 }
                 const updatedParticipants = participants.filter(p => p.user.id !== userId);
                 setParticipants(updatedParticipants);
-                
+
             } catch (error) {
                 console.error(error);
             }
         };
-        
+
         const muteSomeone = async (channelId: string, userId: string) => {
             try {
                 const response = await fetch(
@@ -188,7 +189,6 @@ export default function InteractiveListe(props: any) {
             }
         };      
 
-        
         useEffect(() => {
             showParticipants(props.channelId);
         }, [props.channelId, kickSomeone]);
@@ -196,6 +196,7 @@ export default function InteractiveListe(props: any) {
 
 return (
     <Box className="participants-container" style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
+        <PersonnalInfoChat />
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
         Participants of {props.channelName}
         </Typography>
@@ -224,7 +225,7 @@ return (
                 primary={participants?.user.username}
                 secondary={secondary ? 'Secondary text' : null}
             />
-            </ListItem>    
+            </ListItem>
         ))}
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
             Users
@@ -267,7 +268,7 @@ return (
                 />
                 </>
             )}
-            </ListItem>  
+            </ListItem>
         ))}
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
             Banned Users

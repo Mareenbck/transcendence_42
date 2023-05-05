@@ -21,6 +21,8 @@ export interface gamesList{
     roomN: number;
 	playerR: UserGame;
 	playerL: UserGame;
+    scoreR: number;
+    scoreL: number;
 }
 
 // export interface profile{
@@ -62,8 +64,9 @@ export interface gameInit {
     scoreL: number;
 }
 
-export interface gameWinner {
+export interface gameStatus {
     winner: UserGame;
+    status: string;
 }
 
 export interface star {

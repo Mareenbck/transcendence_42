@@ -40,6 +40,8 @@ export interface roomsList{
 	roomN: number;
 	playerR: UserDto;
 	playerL: UserDto;
+	scoreR: number;
+	scoreL: number;
 }
 
 export interface invited{
@@ -47,6 +49,10 @@ export interface invited{
 	player: UserDto;
 }
 
+export interface status{
+	winner: UserDto;
+	status: string;
+}
 // export interface IGameState {
 // 	player1: IProfil;
 // 	player2: IProfil;
@@ -61,14 +67,25 @@ export interface invited{
 // }
 
 
+// const a = 1000;
+const a = 1;
 export const GameParams = {
-	GAME_WIDTH: 1000, // 
-	GAME_HEIGHT: 500,
-	RACKET_SPEED_Y: 5,
-	RACKET_HEIGHT: 150,
-	RACKET_WIDTH: 10,
-	BALL_RADIUS: 15,
-	BALL_DEFAULT_SPEED: 7,
+	GAME_WIDTH: 1.0*a, // 
+	GAME_HEIGHT: 0.5*a,
+	RACKET_SPEED_Y: 0.008*a,
+	RACKET_HEIGHT: 0.150*a,
+	RACKET_WIDTH: 0.010*a,
+	RACKET_XBOARD: 0.010*a,
+	BALL_RADIUS: 0.015*a,
+	BALL_DEFAULT_SPEED: 0.007*a,
+	BALL_DELTA_SPEED: 0.001*a,
+	// GAME_WIDTH: 1000, // 
+	// GAME_HEIGHT: 500,
+	// RACKET_SPEED_Y: 8,
+	// RACKET_HEIGHT: 150,
+	// RACKET_WIDTH: 10,
+	// BALL_RADIUS: 15,
+	// BALL_DEFAULT_SPEED: 7,
 	PERIOD: 100
 };
 

@@ -31,7 +31,7 @@ function PopUp(props: any) {
 
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
-    
+
         let idConv: number | undefined = undefined;
         if (channelName === "") { return; }
         const newConv = {

@@ -3,15 +3,24 @@
   display: flex;
   align-items: center;
   font-weight: 500;
-  cursor: pointer;
   margin-top: 10px;
   justify-content: space-evenly;
 }
 
+.chatOnlineFriend.MuiListItem-root {
+  height: 80px;
+  border-bottom: 1px solid rgb(180 180 180 / 41%);
+  margin-top: 0;
+}
+
 .chatOnlineNotFriend {
-  filter: grayscale(80%);
   background-color: lightgrey;
-  border-radius: 10px;
+  border-radius: 8px;
+}
+
+.chatOnlineNotFriend .MuiListItemAvatar-root {
+  filter: grayscale(80%);
+
 }
 
 .line-chat {
@@ -80,7 +89,7 @@
 
 
 .messenger {
-  height: calc(100vh - 70px);
+  height: calc(100vh - 15px);
   display: flex;
 }
 
@@ -110,7 +119,8 @@
   height: 100%;
   overflow-y: scroll;
   background-color: #FDFAF9;
-  padding: 15px;
+  padding: 25px 15px 15px 15px;
+  border-right: 1px solid #cbcbcb;
 }
 
 .conversationListe {
@@ -180,7 +190,7 @@
 	text-align: center;
 	width: 350px;
 	height: 100vh;
-	padding: 2px;
+  border-right: 1px solid #8b8a8a45;
 }
 
 
@@ -316,4 +326,69 @@
 .send-btn-chat:hover {
 	color: #1006968f;
 	cursor: pointer;
+}
+
+.persoInfo {
+	display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgb(211, 211, 211);
+    background-color: #fffefe;
+    border-radius: 7px;
+    padding: 15px;
+    height: 75px;
+    align-items: center;
+	margin-right: 20px;
+    margin-left: 20px;
+}
+
+.avatName {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	margin-left: 15px;
+}
+
+.avatName p {
+	font-family: 'Noto Sans';
+	font-weight: 200;
+	font-size: 15px;
+	margin-bottom: 0px;
+}
+
+.avatName h3{
+	margin-bottom: 0px;
+	font-family: 'Noto Sans';
+	font-weight: 600;
+	font-size: 20px;
+}
+
+.avat-perso.MuiAvatar-root {
+	height: 49px;
+	width: 50px;
+	border-radius: 50%;
+}
+
+.outChat {
+	position: absolute;
+	right: 50px;
+	font-size: 30px;
+	color: black;
+}
+
+.chatMenu .MuiTabs-scroller {
+    height: 101px;
+    border-bottom: 1px solid rgb(211, 211, 211);
+}
+
+.chatMenu .MuiTabs-flexContainer {
+	height: 100%;
+}
+
+.border-perso {
+	height: 86px;
+	border-bottom: 1px solid rgb(211, 211, 211);
+	margin-left: -20px;
+	margin-right: -20px;
+
 }
