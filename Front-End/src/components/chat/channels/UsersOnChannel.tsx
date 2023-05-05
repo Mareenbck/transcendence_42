@@ -21,7 +21,7 @@ import { Avatar, Tooltip } from '@mui/material';
 import "../../../style/UsersChat.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FriendContext } from "../../../store/FriendshipContext";
-import { faTrash, faBan } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faBan, faMicrophoneSlash } from '@fortawesome/free-solid-svg-icons'
 
 
 function generate(element: React.ReactElement) {
@@ -260,7 +260,7 @@ return (
         {users.map((participants: any) => ( 
             <ListItem key={participants.user.username}>
             <ListItemAvatar>
-                <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
+                {/* <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
             </ListItemAvatar>
             <ListItemText
                 primary={participants?.user.username}
@@ -277,16 +277,19 @@ return (
                     </Tooltip>
                     ) : null
                 }
-                <MicOffIcon 
-                className={`mute ${participants.status === 'MUTE' ? 'muted' : ''}`} 
-                onClick={() => {
-                    if (participants.status === 'MUTE') {
-                    unMuteSomeone(props.channelId, participants.user.id);
-                    } else {
-                    muteSomeone(props.channelId, participants.user.id);
-                    }
-                }}
-                />
+                 <Tooltip title="Mute">
+                    <FontAwesomeIcon 
+                        icon={faMicrophoneSlash} 
+                        onClick={() => {
+                            if (participants.status === 'MUTE') {
+                            unMuteSomeone(props.channelId, participants.user.id);
+                            } else {
+                            muteSomeone(props.channelId, participants.user.id);
+                            }
+                        }}                        
+                        className={`btn-chatlist mute ${participants.status === 'MUTE' ? 'muted' : ''}`}
+                    />
+				</Tooltip>           
                 </>
             )}
             </ListItem>
@@ -295,19 +298,9 @@ return (
             Banned Users
         </Typography>
         {banned.map((participants: any) => (
-             <ListItem key={participants.user.username}
-             secondaryAction={
-                 <div>
-                 <Link to={`/users/profile/${participants?.user.userId}`} className="profile-link">
-                     <IconButton  className='violet-icon' edge="end" aria-label="Profil">
-                     <AccountBoxIcon />
-                     </IconButton>
-                 </Link>
-                 </div>
-             }
-             >
+             <ListItem key={participants.user.username}>
             <ListItemAvatar>
-                <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
+                {/* <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
             </ListItemAvatar>
             <ListItemText
                 primary={participants?.user.username}
@@ -321,7 +314,8 @@ return (
                 {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
                 <Tooltip title="UnBan">
                     <FontAwesomeIcon icon={faBan} onClick={() => unBanSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
-                </Tooltip>                    ) : null
+                </Tooltip> 
+                ) : null
                 }
                 </>
                 )}
