@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
 // import Winner from './Winner'
-import type { gameInit, gameState, gameStatus, gamesList } from './interface_game'
+import type { gameInit, gameState, gameStatus, gamesList, UserGame } from './interface_game'
 import ColorModal from './modal/ColorModal';
 import RefusModal from './modal/RefusModal';
 import useSocket from '../../service/socket';
@@ -48,6 +48,24 @@ function Game() {
 
     }, []);
 
+    const getPlaer = (games: gamesList[], roomN: number, player: string) => {
+        const index = games.findIndex(r => r.roomN == roomN);
+        if (player == 'R')
+            return (games[index].playerR);
+        if (player == 'L')
+            return (games[index].playerL);
+
+    };
+
+    const getScore = (games: gamesList[], roomN: number, player: string) => {
+        const index = games.findIndex(r => r.roomN == roomN);
+        if (player == 'R')
+            return (games[index].scoreR);
+        if (player == 'L')
+            return (games[index].scoreL);
+
+    };
+// console.log("curroom", curroom)
 /////////////////////////////////////////////////leave the page////////////////////////////////////
 //event when user leaves the page
     const handleUnload = () => {
@@ -190,7 +208,7 @@ function Game() {
         }
     );
 
-    
+getPlaer    
 // the responsive game
     useEffect(() => {
         const updateWidth = () => {
@@ -248,6 +266,7 @@ function Game() {
 
     const handleClick = (roomN: number) => {
         sendMessage("playGame", {user: user, roomN: roomN});
+        setCurRoom(roomN);
         gamestatus.winner = null;
         setClicked(true);
     };
@@ -270,40 +289,27 @@ function Game() {
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                             
-                                // head Game***********
-                                (<div>
-                                    {games.map((game: gamesList) => (
-                                        <div>
-                                        
-                                        <div className="container-match" style={{backgroundColor: "white",
-                                                                                border: "solid" ,
-                                                                                borderBlockColor:"black" } } >
-                                            
-                                          
-                                            <PlayerTwo  style={{backgroundColor: "white"}} player={game.playerL} winner={game.scoreL} sizeAvatar={"l"} />
-                                            <p className='vs'> VS</p>
-                                           
-                                            <PlayerOne  player={game.playerR} winner={""}  sizeAvatar={"l"} />
-                                        </div>
-                                        </div>
-                                    ))}
-                                    </div>    
-                                )
-                                //head Game************
-                            :  
-                            (
-                                <SelectColor changColorToRed={changColorToRed}
-                                            changColorToBlue={changColorToBlue}
-                                            changColorToGreen={changColorToGreen}
-                                            changColorToBlack={changColorToBlack}>
-                                </SelectColor> ) }    
+                            (<div className="container-match" style={{backgroundColor: "white",
+                                                                        border: "solid" ,
+                                                                        borderBlockColor:"black" } } >    
+                                <PlayerOne  style={{backgroundColor: "white"}} player={getPlaer(games, curroom, 'L')} sizeAvatar={"l"} />
+                                <p> VS </p>
+                                <PlayerTwo player={getPlaer(games, curroom, 'R')} sizeAvatar={"l"} />
+                            </div>)                           
+                                :  
+                                (<SelectColor changColorToRed={changColorToRed}
+                                                changColorToBlue={changColorToBlue}
+                                                changColorToGreen={changColorToGreen}
+                                                changColorToBlack={changColorToBlack}>
+                                </SelectColor> ) } 
+                                   
 
                             {(gamestatus.status == 'waiting') ? (
                                 <div className='.wrapWaiting'>
-                                <div className="center">
-                                    <h1 className="blink"> Waiting your opponent</h1>
-                                    <div className="circle"></div>
-                                </div>
+                                    <div className="center">
+                                        <h1 className="blink"> Waiting your opponent</h1>
+                                        <div className="circle"></div>
+                                    </div>
                                 </div>
                             ):(   
 
@@ -341,7 +347,7 @@ function Game() {
                             <h2> WINNER </h2>
                             <div className='CapWinner'>    
                                 <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
-                                < EmojiEventsIcon id = "win"/>
+                                <EmojiEventsIcon id = "win"/>
                             </div>
 
                             {/* <Winner gameinit={gameinit} gamewinner={gamewinner} /> */}
@@ -376,7 +382,7 @@ function Game() {
                                 <div className="container-match">
                                     <button  style={{backgroundColor: "#F3F0FF"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
                                     <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
-                                    <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
+                                    <ScoresMatch score1={game.scoreL} score2={game.scoreR} />
                                      
                                     <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
                                 </div>
@@ -397,29 +403,39 @@ function Game() {
 
 export default Game;
 
-//import SportsVolleyballRoundedIcon from '@mui/icons-material/SportsVolleyballRounded';
-// {(status == 'false') && (<RefusModal/>)};
+(<div>
+    <div className="container-match" style={{backgroundColor: "white",
+                                            border: "solid" ,
+                                            borderBlockColor:"black" } } >
+        
+        <PlayerOne  style={{backgroundColor: "white"}} player={games[curroom].playerL} winner={0} score={games[curroom].scoreL} sizeAvatar={"l"} />
+        <p> VS </p>
+        <PlayerTwo player={games[curroom].playerR} winner={0} score={games[curroom].scoreR} sizeAvatar={"l"} />
+        {/* <PlayerTwo  style={{backgroundColor: "white"}} player={game.playerL} winner={game.scoreL} sizeAvatar={"l"} />
+        <p className='vs'> VS </p>
+        
+        <PlayerOne  player={game.playerR} winner={""}  sizeAvatar={"l"} /> */}
+    </div>                                         
+</div> )   //head Game************
 
 
-// {((!isInPlay() && clicked_play && isagree == 'waiting')) ? (
-//     <div class="center">
-//         <h1 class="blink"> Waiting your opponent</h1>
-//         <div class="circle"></div>
-//     </div>
-// ) : (
-// <>
-//     { !isInPlay() ? (<SelectColor changColorToRed={changColorToRed}
-//                  changColorToBlue={changColorToBlue}
-//                  changColorToGreen={changColorToGreen}
-//                 changColorToBlack={changColorToBlack}>
-//     </SelectColor> ): (<h1>GAME</h1>)}                   
-//     <div>                   
-//        { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
-//        {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
-//                                                                     changColorToBlue={changColorToBlue}
-//                                                                     changColorToGreen={changColorToGreen}
-//                                                                     changColorToBlack={changColorToBlack}
-//                                                                     />}
-//         { !ShowCamva &&<Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
-//     </div>
-// </>)}
+
+(<div>
+                                    
+    {games.map((game: gamesList) => (
+        <div>
+        
+        <div className="container-match" style={{backgroundColor: "white",
+                                                border: "solid" ,
+                                                borderBlockColor:"black" } } >
+            
+          
+            <PlayerTwo  style={{backgroundColor: "white"}} player={game.playerL} winner={game.scoreL} sizeAvatar={"l"} />
+            <p className='vs'> VS </p>
+           
+            <PlayerOne  player={game.playerR} winner={""}  sizeAvatar={"l"} />
+        </div>
+        </div>
+    ))}
+    </div>    //head Game************
+)          

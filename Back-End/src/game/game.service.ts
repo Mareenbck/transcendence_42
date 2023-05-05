@@ -4,12 +4,11 @@ import { Game } from '@prisma/client';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { GameDto } from './dto/game.dto';
-import { TwoFaUserDto } from 'src/auth/dto/2fa.dto';
+// import { TwoFaUserDto } from 'src/auth/dto/2fa.dto';
 import { UserDto } from 'src/user/dto/user.dto';
 import { Server, Socket } from "socket.io";
 import UsersSockets from "src/gateway/socket.class";
 import {
-	player,
 	roomsList,
 	invited
 	} from './game.interfaces';
@@ -223,6 +222,22 @@ async updateUserXPAndLevel(userId: number, allGames: GameDto[]) {
 		},
 	});
 	return user;
+}
+
+async updateStatusGame (userId: number)
+{
+	const user = await this.prisma.user.update({
+		where: { id: userId },
+		data: { status: 'PLAYING' },
+	});
+}
+
+async updateStatusGameOver (userId: number)
+{
+	const user = await this.prisma.user.update({
+		where: { id: userId },
+		data: { status: 'ONLINE' },
+	});
 }
 
 async getUserRankByWins(userId: number): Promise<number> {
