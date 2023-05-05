@@ -17,6 +17,7 @@ import { UserService } from "src/user/user.service";
 import { UserDto } from 'src/user/dto/user.dto';
 import { CreateChatMessDto } from 'src/chat/chat-mess/dto/create-chatMess.dto';
 import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
+import { ChatroomService } from 'src/chat/chatroom2/chatroom2.service';
 
 @WebSocketGateway(
 8001, { cors: {origin: "http://localhost:8080",}, }
@@ -31,6 +32,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   private readonly logger = new Logger(GlobalGateway.name);
   private userSockets: UsersSockets;
   constructor(
+      private readonly chatroomService: ChatroomService,    
       private readonly gameService: GameService,
       private readonly chatService: ChatService,
       private readonly globalService: GlobalService,
@@ -44,14 +46,16 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   server: Server;
 
   afterInit() {
-      this.globalService.server = this.server;
-      this.gameService.server = this.server;
+    this.globalService.server = this.server;
+    this.chatroomService.server = this.server;
+    this.gameService.server = this.server;
       this.chatService.server = this.server;
 	  this.friendshipService.server = this.server;
       this.globalService.userSockets = this.userSockets;
       this.chatService.userSockets = this.userSockets;
-	  this.gameService.userSockets = this.userSockets;
-	  this.friendshipService.userSockets = this.userSockets;
+      this.gameService.userSockets = this.userSockets;
+      this.chatroomService.userSockets = this.userSockets;
+      this.friendshipService.userSockets = this.userSockets;
       this.logger.verbose("globalGateway Initialized");
   }
 
@@ -190,6 +194,13 @@ console.log("26 Connect + map: client", this.userSockets.users);
 		const pendingDemands = await this.friendshipService.getReceivedFriendships(receiverId);
 		// Envoyer les demandes mises à jour à tous les clients connectés
 		this.server.emit('pendingDemands', pendingDemands);
+	}
+  @SubscribeMessage('removeConv')
+	async removeConv(@MessageBody() data: any ): Promise<void> {
+		// Récupérer les demandes mises à jour
+		const newList = await this.chatroomService.findAll();
+		// Envoyer les demandes mises à jour à tous les clients connectés
+		this.server.emit('deleteChannel', newList);
 	}
 
 }

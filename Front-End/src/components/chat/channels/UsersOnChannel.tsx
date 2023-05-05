@@ -49,7 +49,7 @@ export default function InteractiveListe(props: any) {
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
     const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p)); 
    
-    const showParticipants = async (channelId: string) => {
+    const showParticipants = React.useCallback(async (channelId: string) => {
         try {
             const response = await fetch(
                 `http://localhost:3000/chatroom2/${channelId}/participants`, {
@@ -59,37 +59,38 @@ export default function InteractiveListe(props: any) {
                         Authorization: `Bearer ${authCtx.token}`
                     }
                 }
-                )
-                if (response.ok) {
-                    const data = await response.json();
-                    setParticipants(data);
-                }
-            } catch(err) {
-                console.log(err)
-            }
-        }
-
-        const kickSomeone = async (channelId: string, userId: string) => {
-            try {
-                const response = await fetch(
-                    `http://localhost:3000/chatroom2/${channelId}/kick/${userId}`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${authCtx.token}`,
-                        },
-                    }
             );
-            if (!response.ok) {
-              throw new Error("Failed to kick user.");
+            if (response.ok) {
+                const data = await response.json();
+                setParticipants(data);
             }
-            const updatedParticipants = participants.filter(p => p.user.id !== userId);
-            setParticipants(updatedParticipants);
+        } catch (err) {
+            console.log(err)
+        }
+    }, [authCtx.token]);
+
+
+    const kickSomeone = async (channelId: string, userId: string) => {
+        try {
+            const response = await fetch(
+                `http://localhost:3000/chatroom2/${channelId}/kick/${userId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${authCtx.token}`,
+                    },
+                }
+        );
+        if (!response.ok) {
+            throw new Error("Failed to kick user.");
+        }
+        const updatedParticipants = participants.filter(p => p.user.id !== userId);
+        setParticipants(updatedParticipants);
         } catch (error) {
             console.error(error);
         }
-        };
+    };
 
 
         const banSomeone = async (channelId: string, userId: string) => {
@@ -187,32 +188,7 @@ export default function InteractiveListe(props: any) {
 
         useEffect(() => {
             showParticipants(props.channelId);
-        }, [props.channelId]);
-
-
-
-	// React.useEffect(() => {
-	// 	const url = "http://localhost:3000/users/";
-	// 	const fetchUsers = async () => {
-	// 		const response = await fetch(
-	// 			url,
-	// 			{
-	// 				method: "GET",
-	// 				headers: {
-	// 					"Content-Type": "application/json",
-	// 					Authorization: `Bearer ${authCtx.token}`
-	// 				}
-	// 			}
-	// 		)
-	// 		const data = await response.json();
-	// 		const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
-	// 			const avatar = await friendCtx.fetchAvatar(friend.id);
-	// 			return { ...friend, avatar };
-	// 		}));
-	// 		setFriends(updatedFriends);
-	// 	}
-	// 	fetchUsers();
-	// }, [])
+        }, [props.channelId, showParticipants]);
 
 
 return (
@@ -235,7 +211,7 @@ return (
             }
             >
             <ListItemAvatar>
-                <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
+                {/* <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
             </ListItemAvatar>
             <ListItemText
                 primary={participants?.user.username}

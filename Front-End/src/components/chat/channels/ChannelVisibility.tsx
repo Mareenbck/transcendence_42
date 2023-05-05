@@ -61,20 +61,20 @@ export default function ChannelVisibility(props: any) {
   }
 
 	const joinChannel = async (e: FormEvent, channelId: number) => {
-	e.preventDefault();
-	const password = passwordInputRef.current?.value;
+		e.preventDefault();
+		const password = passwordInputRef.current?.value;
 	try {
 		const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
-		method: "POST",
-		headers: {
-			"Content-type": "application/json",
-			Authorization: `Bearer ${userContext.token}`
-		},
-		body: JSON.stringify({
-			channelId: channelId,
-			userId: userContext.userId,
-			hash: password
-		})
+			method: "POST",
+			headers: {
+				"Content-type": "application/json",
+				Authorization: `Bearer ${userContext.token}`
+			},
+			body: JSON.stringify({
+				channelId: channelId,
+				userId: userContext.userId,
+				hash: password
+			})
 		});
 		const dataResponse = await resp.json();
 		if (!resp.ok) {
@@ -83,9 +83,9 @@ export default function ChannelVisibility(props: any) {
 			setIsJoined(true);
 			setOpenJoinModal(false);
 		}
-	} catch (err) {
+		} catch (err) {
 		console.log(err);
-	}
+		}
 	};
 
   return (

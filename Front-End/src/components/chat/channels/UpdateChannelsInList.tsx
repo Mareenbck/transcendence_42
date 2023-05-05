@@ -18,17 +18,19 @@ export default function UpdateChannelsInList(props: any) {
 	// const [openModal, setOpenModal] = useState(false);
 	const [sendMessage, addListener] = useSocket();
 
+	
 	useEffect(() => {
-		addListener("getConv", data => setAConversation({
-			id: data.channelId,
-			name: data.name,
-			visibility: data.visibility,
-		}));
+		addListener("getConv", data => setAConversation(data));
 	});
+
+	useEffect(() => {
+		addListener("deleteChannel", data => setAConversation(data))
+	})
 
 	useEffect(() => {
 		AConversation && setConversations(prev => [AConversation, ...prev]);
 	}, [AConversation]);
+
 
 	useEffect(() => {
 		async function getAllConv(user: AuthContext) {
@@ -43,6 +45,7 @@ export default function UpdateChannelsInList(props: any) {
 		};
 		getAllConv(user);
 	}, [AConversation]);
+
 
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })

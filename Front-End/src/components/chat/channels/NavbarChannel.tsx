@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { isAnyArrayBuffer } from "util/types";
 import { faCrown, faUserPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import useSocket from '../../../service/socket';
 
 
 export function NavbarChannel(props: any) {
@@ -25,6 +26,8 @@ export function NavbarChannel(props: any) {
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 	const [showPassword, setShowPassword] = useState(false);
 	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
+	const [sendMessage, addListener] = useSocket()
+
 
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
@@ -89,7 +92,7 @@ export function NavbarChannel(props: any) {
 	}
 
 	const deleteChannel = async (channelId: string) => {
-        try { 
+        try {
             const response = await fetch(`http://localhost:3000/chatroom2/${channelId}/delete`, {
                 method: 'POST',
                 headers: {
@@ -99,9 +102,10 @@ export function NavbarChannel(props: any) {
             });
             const data = await response.json();
             props.onDeleteChannel();
+			sendMessage("removeConv", data)
             return data;
           
-        }catch(error) {
+        } catch(error) {
             console.log("error", error)
         }
     }
@@ -151,6 +155,7 @@ export function NavbarChannel(props: any) {
         e.preventDefault();
         setOpenModal(false);
     };
+
 	const [icon, setIcon] = useState<any>();
 	useEffect(() => {
 		if (props.chatroom.visibility === 'PUBLIC') {
@@ -163,7 +168,8 @@ export function NavbarChannel(props: any) {
 	}, [props.chatroom.visibility])
 
 	const handleDeleteChannel = () => {
-		props.isJoined(false);
+		deleteChannel(props.chatroom.id)
+			// sendMessage("removeConv")
 	}
 
 
@@ -185,7 +191,7 @@ export function NavbarChannel(props: any) {
 						onAddAdmin={handleAddAdmin}
 						type="invite-admin"
 					/>
-					<FontAwesomeIcon className="btn-dialog-navbar" icon={faTrash} onClick={() => deleteChannel(props.chatroom.id)} role={isAdmin}/>
+					<FontAwesomeIcon className="btn-dialog-navbar" icon={faTrash} onClick={handleDeleteChannel} role={isAdmin}/>
 					{props.chatroom.visibility === 'PRIVATE' &&
 						<SelectDialog
 						onSelect={(userId: string) => setSelectedUser(userId)}
