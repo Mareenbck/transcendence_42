@@ -16,8 +16,8 @@ export function NavbarChannel(props: any) {
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [status, setStatus] = useState<string>('');
 
-	console.log("props dans navbar")
-	console.log(props)
+	// console.log("props dans navbar")
+	// console.log(props)
 	const handleCloseSnackbar = () => {
 		setSnackbarOpen(false);
 	}

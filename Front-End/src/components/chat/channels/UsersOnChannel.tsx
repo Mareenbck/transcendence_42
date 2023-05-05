@@ -9,7 +9,6 @@ import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
-import MyAvatar from '../../user/Avatar';
 import AuthContext from '../../../store/AuthContext';
 import { Link } from "react-router-dom";
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -18,6 +17,9 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import "../../../style/UsersOnChannel.css"
 import PersonnalInfoChat from '../PersonnalInfoChat';
+import { Avatar } from '@mui/material';
+import "../../../style/UsersChat.css"
+
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2].map((value) =>
@@ -219,7 +221,7 @@ return (
             }
             >
             <ListItemAvatar>
-                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={participants.user.avatar} ftAvatar={participants.user.ftAvatar}/>
+                <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
             </ListItemAvatar>
             <ListItemText
                 primary={participants?.user.username}
@@ -243,7 +245,7 @@ return (
             }
             >
             <ListItemAvatar>
-                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={participants.user.avatar} ftAvatar={participants.user.ftAvatar}/>
+                <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
             </ListItemAvatar>
             <ListItemText
                 primary={participants?.user.username}
@@ -286,7 +288,7 @@ return (
              }
              >
             <ListItemAvatar>
-                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={participants.user.avatar} ftAvatar={participants.user.ftAvatar}/>
+                <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
             </ListItemAvatar>
             <ListItemText
                 primary={participants?.user.username}
