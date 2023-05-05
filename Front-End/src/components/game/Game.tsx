@@ -27,17 +27,17 @@ function Game() {
     const location = useLocation();
     const [gamestatus, setGameStatus] = useState<gameStatus>(
         {   winner: null,
-            status: "null"} 
-    );  
+            status: "null"}
+    );
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
     const [curroom, setCurRoom] = useState<number>(-1);
-    
+
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
     useEffect(() => {
         const handleGameRooms = (games: gamesList[]) => {
             if(curroom == -1){
                 const index = games.findIndex(room => room.playerL.username == user.username || room.playerR.username == user.username);
-                if (index != -1) {   
+                if (index != -1) {
                     setCurRoom(games[index].roomN);
                 }
             }
@@ -66,39 +66,39 @@ function Game() {
             alert("you leave page| beforeunload");
         })
 
-      
+
     //   window.onbeforeunload = null;
 
     //   window.onbeforeunload = (event: BeforeUnloadEvent) => handleUnload(event);
-  
+
     //   window.addEventListener('beforeunload', (event) => {             //When they leave the site
     //     event.preventDefault();                                     // Cancel the event as stated by the standard.
     //     handleUnload();
     // });
-  
+
         return () => {
             document.removeEventListener('beforeunload', handleUnload);
         };
     }, []);
-     
+
     // useEffect(() => {
     //     const handleUnload = (event: BeforeUnloadEvent) => {
     //       // Do something before the page is unloaded
-    //       event.preventDefault(); 
+    //       event.preventDefault();
     //       alert("you leave page");
     //     }
-    
+
     //     window.addEventListener('beforeunload', handleUnload);
 
     //     return () => {
     //       window.removeEventListener('beforeunload', handleUnload);
     //     };
     //   }, []);
-    
+
 //     useBeforeUnload(() => {
 //     // Execute code before the user navigates away from the page
 // alert('Leaving the page...');
-//     });    
+//     });
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 // onKeyDown handler function
@@ -116,7 +116,7 @@ function Game() {
     useEffect(() => {
 // Attach the event listener to the window object
         window.addEventListener('keydown', onkeyPress);
-        
+
         return () => {
         // Remove the event listener when the component unmounts
             window.removeEventListener('keydown', onkeyPress);
@@ -190,7 +190,7 @@ function Game() {
         }
     );
 
-    
+
 // the responsive game
     useEffect(() => {
         const updateWidth = () => {
@@ -251,7 +251,7 @@ function Game() {
         gamestatus.winner = null;
         setClicked(true);
     };
-//////////////////////////////////////////////////////////////////////////////  
+//////////////////////////////////////////////////////////////////////////////
 
     return (
         <>
@@ -261,42 +261,42 @@ function Game() {
                 <h1 className='titre_option'></h1>
                 {/* <div className='wrapWaiting'> */}
                 {/* <div className='wrapGaming'> */}
-                    
+
             {/* /GAME or WINNER*/}
                 {(!gamestatus.winner) ? (
                     <>
                         <div className='wrapWaiting'>
                             {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
-                        
-                            { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
-                            
+
+                            { (gamestatus.status == 'watch' || gamestatus.status == 'game') ?
+
                                 // head Game***********
                                 (<div>
                                     {games.map((game: gamesList) => (
                                         <div>
-                                        
+
                                         <div className="container-match" style={{backgroundColor: "white",
                                                                                 border: "solid" ,
                                                                                 borderBlockColor:"black" } } >
-                                            
-                                          
+
+
                                             <PlayerTwo  style={{backgroundColor: "white"}} player={game.playerL} winner={game.scoreL} sizeAvatar={"l"} />
                                             <p className='vs'> VS</p>
-                                           
+
                                             <PlayerOne  player={game.playerR} winner={""}  sizeAvatar={"l"} />
                                         </div>
                                         </div>
                                     ))}
-                                    </div>    
+                                    </div>
                                 )
                                 //head Game************
-                            :  
+                            :
                             (
                                 <SelectColor changColorToRed={changColorToRed}
                                             changColorToBlue={changColorToBlue}
                                             changColorToGreen={changColorToGreen}
                                             changColorToBlack={changColorToBlack}>
-                                </SelectColor> ) }    
+                                </SelectColor> ) }
 
                             {(gamestatus.status == 'waiting') ? (
                                 <div className='.wrapWaiting'>
@@ -305,9 +305,9 @@ function Game() {
                                     <div className="circle"></div>
                                 </div>
                                 </div>
-                            ):(   
+                            ):(
 
-                             <div>                   
+                             <div>
                                 {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
                                 {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
                                                                                             changColorToBlue={changColorToBlue}
@@ -331,15 +331,15 @@ function Game() {
                                 </div>
 
                             </div>)}
-                              
+
                         </div>
-                
+
                     </>
                         ):(
                     <>
                         <div className='wrapWin'>
                             <h2> WINNER </h2>
-                            <div className='CapWinner'>    
+                            <div className='CapWinner'>
                                 <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
                                 < EmojiEventsIcon id = "win"/>
                             </div>
@@ -377,17 +377,17 @@ function Game() {
                                     <button  style={{backgroundColor: "#F3F0FF"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
                                     <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
                                     <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
-                                     
+
                                     <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
                                 </div>
-                                
+
                             </div>
                          </div>
 
                     ))}
                 </div>
                 {/* / */}
-               
+
             </div>
         </div>
      </>
@@ -412,8 +412,8 @@ export default Game;
 //                  changColorToBlue={changColorToBlue}
 //                  changColorToGreen={changColorToGreen}
 //                 changColorToBlack={changColorToBlack}>
-//     </SelectColor> ): (<h1>GAME</h1>)}                   
-//     <div>                   
+//     </SelectColor> ): (<h1>GAME</h1>)}
+//     <div>
 //        { ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} gamewinner={gamewinner} backColorGame={backColorGame}  />}
 //        {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
 //                                                                     changColorToBlue={changColorToBlue}

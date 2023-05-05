@@ -38,7 +38,7 @@ const UserProfile = (props: any) => {
 
 	return (
 		<>
-			<div className={style.mainPos}>
+			<div className="contain-page">
 				<SideBar title="Profile" />
 				<div className='container-profile'>
 					<ProfileCard authCtx={authCtx} user={user} id={props.id}></ProfileCard>

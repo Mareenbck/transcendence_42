@@ -136,3 +136,11 @@
     font-size: 11px;
     color: grey;
 }
+
+.contain-page {
+	display: flex;
+	flex-direction: row;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+}

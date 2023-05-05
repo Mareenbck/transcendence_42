@@ -15,7 +15,7 @@ const Profile = (props: any) =>  {
 //m
 	return (
 		<>
-		<div className={style.mainPos}>
+		{/* <div className={style.mainPos}> */}
 				<div>
 					{isMyProfile ? (
 						<MyProfile id={id}></MyProfile>
@@ -25,7 +25,7 @@ const Profile = (props: any) =>  {
 				<ButtonToggle ></ButtonToggle>
 				</div>
 			{!isLoggedIn && <Navigate to="/" replace={true} />}
-		</div>
+		{/* </div> */}
 		</>
 	)
 }

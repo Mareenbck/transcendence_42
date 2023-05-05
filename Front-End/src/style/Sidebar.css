@@ -1,15 +1,12 @@
 .sidebar {
-	display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    background-color: #699BF7;
-	width: 360px;
-	height: 100vh;
-    /* height: fit-content; */
-	display: grid;
-	grid-template-columns: 1fr 3fr;
+	flex: 0 0 360px; /* Utilise flex pour spécifier une largeur fixe de 360px */
+	background-color: #699BF7;
 }
-
+/* height: 100vh; */
+/* height: fit-content; */
+/* display: grid; */
+/* grid-template-columns: 1fr 3fr; */
+/*
 @media (max-width: 1500px) {
     .sidebar {
 		display: flex;
@@ -17,13 +14,12 @@
 		align-items: flex-start;
 		background-color: #699BF7;
 		width: 280px;
-		
+
 		height: 130vh;
-		/* height: fit-content; */
 	}
 
-}
-
+} */
+/*
 @media (max-width: 1500px) {
     .sidebar {
 		display: flex;
@@ -32,10 +28,10 @@
 		background-color: #699BF7;
 		width: 300px;
 		height: 100vh;
-		/* height: fit-content; */
+	 height: fit-content;
 	}
 
-}
+} */
 
 .sidebar h4 {
 	font-weight: 700;
@@ -50,9 +46,9 @@
 	margin-left: 50px;
 	width: inherit;
 	align-items: center;
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 }
-@media (max-width: 1700px) {
+/* @media (max-width: 1700px) {
 	.sidebar .title {
 		display: flex;
 		margin-top: 22px;
@@ -61,7 +57,7 @@
 		align-items: center;
 		margin-bottom: 15px;
 	}
-}
+} */
 
 .links {
 	display: flex;
@@ -79,8 +75,9 @@
 	font-weight: 900;
 	font-size: 18px;
 	line-height: 20px;
+	height: 120px;
 }
-@media (max-width: 1700px) {
+/* @media (max-width: 1700px) {
 	.links .li {
 		display: flex;
     	align-items: center;
@@ -88,11 +85,10 @@
 		font-style: normal;
 		font-weight: 700;
 		font-size: 18px;
-		/* line-height: 10px; */
 
 	}
 
-} 
+} */
 
 .li span {
 	font-size: 63px;
@@ -109,17 +105,17 @@
 
 .links a {
     font-weight: 700;
-    font-size: 18px;
+    font-size: 19px;
     color: black;
 }
-@media (max-width: 1700px) {
+/* @media (max-width: 1700px) {
 	.links a {
 		font-weight: 500;
 		font-size: 18px;
 		color: black;
 	}
 
-} 
+} */
 
 .links a.active {
     font-weight: 700;
@@ -133,8 +129,8 @@
 	width: 100px;
 	height: 100px;
   }
- 
-  @media (max-width: 1700px) {
+
+  /* @media (max-width: 1700px) {
 	.hexa {
 		position: relative;
 		top: 1px;
@@ -142,7 +138,7 @@
 		height: 50px;
 	  }
 
-} 
+} */
 
   .bi-hexagon-fill {
 	position: absolute;
