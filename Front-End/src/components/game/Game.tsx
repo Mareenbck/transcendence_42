@@ -257,10 +257,11 @@ function Game() {
         <>
         <div className={style.mainPos} >
             <SideBar title="Game" />
-                {/* <div className='container-optionPage'> */}
+                <div className='container-optionPage'>
+                <h1 className='titre_option'></h1>
                 {/* <div className='wrapWaiting'> */}
-                <div className='wrapGaming'>
-                    <h1 className='titre_option'></h1>
+                {/* <div className='wrapGaming'> */}
+                    
             {/* /GAME or WINNER*/}
                 {(!gamestatus.winner) ? (
                     <>
@@ -269,18 +270,26 @@ function Game() {
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                             
-                            // head Game***********
-                               (
-                               <div >
-                                    <div className="container-matchh">
+                                // head Game***********
+                                (<div>
+                                    {games.map((game: gamesList) => (
+                                        <div>
                                         
-                                        {/* <PlayerOne  style={{backgroundColor: "white"}} player={games[curroom].playerL} winner={0} score={games[curroom].scoreL} sizeAvatar={"l"} /> */}
-                                           <p> VS </p>
-                                        {/* <PlayerTwo player={games[curroom].playerR} winner={0} score={games[curroom].scoreR} sizeAvatar={"l"} /> */}
-                                    </div>
-                                </div>    
-                               )
-                            //head Game************
+                                        <div className="container-match" style={{backgroundColor: "white",
+                                                                                border: "solid" ,
+                                                                                borderBlockColor:"black" } } >
+                                            
+                                          
+                                            <PlayerTwo  style={{backgroundColor: "white"}} player={game.playerL} winner={game.scoreL} sizeAvatar={"l"} />
+                                            <p className='vs'> VS</p>
+                                           
+                                            <PlayerOne  player={game.playerR} winner={""}  sizeAvatar={"l"} />
+                                        </div>
+                                        </div>
+                                    ))}
+                                    </div>    
+                                )
+                                //head Game************
                             :  
                             (
                                 <SelectColor changColorToRed={changColorToRed}
@@ -322,33 +331,22 @@ function Game() {
                                 </div>
 
                             </div>)}
-                              {/* <div className='posWating'>
-                                    <div className='posBtnWating'> */}
-                                        {/* /LIST OF CURRENT GAME */}
-                                        {/* {!isInPlay() && (
-                                            <div >
-                                                <button className="btn" onClick={() => handleClick(-1)}>Play Game</button>
-                                            </div>
-                                        )} */}
-                                        {/* /EXIT FROM THE GAME. IF GAME - THE LOSS*/}
-                                        {/* {!isInPlay() && (
-                                            <Link to="/menu">
-                                                <button className="btn"  style={{ alignSelf: "flex-end"}}>Menu</button>
-                                            </Link>
-                                        )}
-                                    </div>
-                              </div> */}
+                              
                         </div>
                 
                     </>
                         ):(
                     <>
-                        <div className='wrapWinner'>
+                        <div className='wrapWin'>
                             <h2> WINNER </h2>
-                            
+                            <div className='CapWinner'>    
+                                <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
+                                < EmojiEventsIcon id = "win"/>
+                            </div>
+
                             {/* <Winner gameinit={gameinit} gamewinner={gamewinner} /> */}
-                             <MyAvatar  id={gamestatus.winner.id} style="s" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
-                             < EmojiEventsIcon id = "win" />
+                             {/* <MyAvatar  id={gamestatus.winner.id} style="s" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
+                             < EmojiEventsIcon id = "win" /> */}
 
                                 <div className='posBtn' >
                                     {/* /BUTTON FOR GAME START */}
@@ -367,10 +365,7 @@ function Game() {
                         </div>
                     </>
                 )}
-                {/* /LIST OF CURRENT GAME with button "Watch*/}
-                {/* <div className='card-wrapper'>
-					<Card color='yellow' title="List of online Games" type="viweGame" width="90%"></Card>
-                </div> */}
+
 
                 <div>
                     {games.map((game: gamesList) => (
@@ -382,15 +377,10 @@ function Game() {
                                     <button  style={{backgroundColor: "#F3F0FF"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
                                     <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
                                     <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
+                                     
                                     <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
                                 </div>
-                                {/* ({game.playerR.username}
-                                <MyAvatar  id={game.playerR.id} style="s" avatar={game.playerR.avatar} ftAvatar={game.playerR.ftAvatar}/>
-
-                                {game.scoreR } vs { game.scoreL}
-
-                                {game.playerL.username})
-                                <MyAvatar  id={game.playerL.id} style="s" avatar={game.playerL.avatar} ftAvatar={game.playerL.ftAvatar}/> */}
+                                
                             </div>
                          </div>
 
