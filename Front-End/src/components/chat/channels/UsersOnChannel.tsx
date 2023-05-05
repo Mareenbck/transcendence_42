@@ -17,6 +17,7 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import "../../../style/UsersOnChannel.css"
+import PersonnalInfoChat from '../PersonnalInfoChat';
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2].map((value) =>
@@ -38,8 +39,8 @@ export default function InteractiveListe(props: any) {
   const [participants, setParticipants] = useState([]);
   const banned = participants.filter((p) => p.status === 'BAN');
   const admins = participants.filter((p) => p.role === 'ADMIN');
-  const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));     
-   
+  const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));
+
     const showParticipants = async (channelId: string) => {
         try {
             const response = await fetch(
@@ -82,7 +83,7 @@ export default function InteractiveListe(props: any) {
         }
         };
 
-        
+
         const banSomeone = async (channelId: string, userId: string) => {
             try {
                 const response = await fetch(
@@ -101,12 +102,12 @@ export default function InteractiveListe(props: any) {
                 const updatedParticipants = participants.filter(p => p.user.id !== userId);
                 setParticipants(updatedParticipants);
                 setIsBanned(true);
-                
+
             } catch (error) {
                 console.error(error);
             }
         };
-        
+
         const unBanSomeone = async (channelId: string, userId: string) => {
             try {
                 const response = await fetch(
@@ -124,12 +125,12 @@ export default function InteractiveListe(props: any) {
                 }
                 const updatedParticipants = participants.filter(p => p.user.id !== userId);
                 setParticipants(updatedParticipants);
-                
+
             } catch (error) {
                 console.error(error);
             }
         };
-        
+
         const muteSomeone = async (channelId: string, userId: string) => {
           try {
               const response = await fetch(
@@ -147,7 +148,7 @@ export default function InteractiveListe(props: any) {
               }
               const updatedParticipants = participants.filter(p => p.user.id !== userId);
               setParticipants(updatedParticipants);
-              
+
           } catch (error) {
               console.error(error);
           }
@@ -170,13 +171,13 @@ export default function InteractiveListe(props: any) {
             }
             const updatedParticipants = participants.filter(p => p.user.id !== userId);
             setParticipants(updatedParticipants);
-            
+
         } catch (error) {
             console.error(error);
         }
-    };      
+    };
 
-        
+
         useEffect(() => {
             showParticipants(props.channelId);
         }, [props.channelId, kickSomeone]);
@@ -185,6 +186,7 @@ export default function InteractiveListe(props: any) {
 
 return (
     <Box className="participants-container" style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
+        <PersonnalInfoChat />
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
         Participants of {props.name}
         </Typography>
@@ -213,12 +215,12 @@ return (
                 primary={p?.user.username}
                 secondary={secondary ? 'Secondary text' : null}
             />
-            </ListItem>    
+            </ListItem>
         ))}
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
             Users
             </Typography>
-        {users.map((p: any) => ( 
+        {users.map((p: any) => (
             <ListItem key={p.user.username}
             secondaryAction={
                 <div>
@@ -244,8 +246,8 @@ return (
                     <RemoveCircleIcon className="ban-icon" onClick={() => banSomeone(props.channelId, p.user.id)} />
                     ) : null
                 }
-                <MicOffIcon 
-                className={`mute ${p.status === 'MUTE' ? 'muted' : ''}`} 
+                <MicOffIcon
+                className={`mute ${p.status === 'MUTE' ? 'muted' : ''}`}
                 onClick={() => {
                     if (p.status === 'MUTE') {
                     unMuteSomeone(props.channelId, p.user.id);
@@ -256,7 +258,7 @@ return (
                 />
                 </>
             )}
-            </ListItem>  
+            </ListItem>
         ))}
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
             Banned Users
@@ -264,7 +266,7 @@ return (
         {banned.map((p) => (
             <li className='username-participants' key={p.id}>
                 <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
-                {p.user.username} 
+                {p.user.username}
                 {admins.some(admin => admin.user.id === authCtx.userId) && (
                 <>
                     <DeleteIcon onClick={() => kickSomeone(props.channelId, p.user.id)}/>

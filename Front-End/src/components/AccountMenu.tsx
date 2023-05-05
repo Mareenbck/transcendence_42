@@ -11,15 +11,10 @@ import MyAvatar from './user/Avatar';
 import { Link } from "react-router-dom";
 import HomeIcon from '@mui/icons-material/Home';
 import AuthContext from '../store/AuthContext';
-import { FriendContext } from '../store/FriendshipContext';
-import BadgeUnstyled from '@mui/base/BadgeUnstyled';
-import Demand from '../interfaces/IFriendship';
-import useSocket from '../service/socket';
 import NotificationDemands from './friends/NotificationDemands';
 
 
 export default function MyAccountMenu(props: any) {
-	// const [sendMessage, addListener] = useSocket();
 	const authCtx = React.useContext(AuthContext);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -92,9 +87,6 @@ export default function MyAccountMenu(props: any) {
 			<MyAvatar authCtx={authCtx} id={authCtx.userId} sx={{ width: 34, height: 34 }}/>
 			<Link to={`/users/profile/${authCtx.userId}`}>Profile</Link>
 		</MenuItem>
-		{/* <MenuItem onClick={handleClose}>
-			<Avatar /> My Friends
-		</MenuItem> */}
 		<Divider />
 		<MenuItem>
 			<ListItemIcon>

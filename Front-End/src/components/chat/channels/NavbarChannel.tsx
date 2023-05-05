@@ -5,7 +5,6 @@ import SelectDialog from "../../utils/SelectDialog";
 import ChannelsSettings from "./ChannelsSettings";
 import { Modal, TextField } from "@mui/material";
 import { Box } from "@mui/material";
-import { Button } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
@@ -126,7 +125,6 @@ export function NavbarChannel(props: any) {
 		try {
 			await changePassword(e);
 			setOpenModal(false);
-			// props.onCLick();
 		} catch (err) { console.log(err);}
 	}
 

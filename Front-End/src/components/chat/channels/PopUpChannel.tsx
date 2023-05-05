@@ -31,7 +31,7 @@ function PopUp(props: any) {
 
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
-    
+
         let idConv: number | undefined = undefined;
         if (channelName === "") { return; }
         const newConv = {
@@ -39,7 +39,7 @@ function PopUp(props: any) {
             isPublic: isPublic,
             isPrivate: isPrivate,
             isProtected: isProtected,
-            password:  passwordInputRef.current!.value,
+            password:  passwordInputRef.current?.value,
         };
         try {
             idConv = await ConversationReq.postRoom(user, newConv);
