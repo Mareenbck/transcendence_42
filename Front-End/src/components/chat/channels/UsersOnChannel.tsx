@@ -22,6 +22,7 @@ import "../../../style/UsersChat.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FriendContext } from "../../../store/FriendshipContext";
 import { faTrash, faBan, faMicrophoneSlash } from '@fortawesome/free-solid-svg-icons'
+import useSocket from '../../../service/socket';
 
 
 function generate(element: React.ReactElement) {
@@ -47,7 +48,9 @@ export default function InteractiveListe(props: any) {
     const [participants, setParticipants] = React.useState([]);
     const banned = participants.filter((p: any) => p.status === 'BAN');
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
-    const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p)); 
+    const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p));
+    const [sendMessage, addListener] = useSocket()
+ 
    
     const showParticipants = React.useCallback(async (channelId: string) => {
         try {
@@ -155,8 +158,8 @@ export default function InteractiveListe(props: any) {
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
-                const updatedParticipants = participants.filter(p => p.user.id !== userId);
-                setParticipants(updatedParticipants);
+                // const data = await response.json();
+                // sendMessage("hidePaperPlane", data);
                 
             } catch (error) {
                 console.error(error);

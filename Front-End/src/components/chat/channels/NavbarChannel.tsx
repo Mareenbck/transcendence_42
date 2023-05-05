@@ -84,7 +84,7 @@ export function NavbarChannel(props: any) {
 			  body: JSON.stringify({ channelId: channelId }),
 			});
 			const data = await response.json();
-			sendMessage("showUsersList", data)
+			sendMessage("showUsersList", data);
 			props.onLeaveChannel();
 			return data;
 		} catch(err) {

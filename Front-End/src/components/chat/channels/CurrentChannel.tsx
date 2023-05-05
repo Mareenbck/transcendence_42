@@ -31,6 +31,11 @@ export default function CurrentChannel(props: any) {
 	const [isMuted, setIsMuted] = useState(false);
 	const [isBanned, setIsBanned] = useState(false);
 
+	const [showUserList, setShowUserList] = useState<boolean>(false);
+	const [UsersList, setUsersList] = useState(null);
+	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
+	const [paperPlane, hidePaperPlane] = useState(null);
+
 
 	useEffect(() => {
 		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
@@ -136,11 +141,6 @@ export default function CurrentChannel(props: any) {
 		setIsJoined(false);
 	};
 
-	const [showUserList, setShowUserList] = useState<boolean>(false);
-	const [UsersList, setUsersList] = useState(null);
-	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
-
-
 	
 	useEffect(() => {
 		addListener("showUsersList", data => setUsersList(data));
@@ -148,6 +148,11 @@ export default function CurrentChannel(props: any) {
 		  setShowUserList(true);
 		}
 	  }, [showUsersOnChannel]);
+	  
+
+	useEffect(() => {
+		addListener("hidePaperPlane", data => hidePaperPlane(data));
+	})
 
 
 	return (
