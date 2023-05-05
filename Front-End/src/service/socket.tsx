@@ -17,28 +17,28 @@ export default function useSocket() {
 	    // return manager.socket('/');
 	  }, [authCtx])
 
-	//   const addListener = useMemo<(signal: string, callback: (data: any) => void) => void>
-	//   (() => (signal:any, message:any) => {
-	//     if (socket)
-	//       { socket.on(signal, message)} ;
-	//   }, [socket])
-
-	// // const sendMessage = useMemo<(signal: string, message: any) => void>
-	// // (() => (signal, message) => {
-	// //   if (socket) {
-	// //   socket.emit(signal, message)};
-	// // }, [socket])
-
-	//   const sendMessage = useMemo<(signal: string, message: any) => void>
-	//   (() => {
-	//       return (signal:any, message:any) => {
-	//         if (socket) {
-	//           socket.emit(signal, message);
-	//         }
-	//       };
-	//     },
-	//     [socket]
-	//   );
+	  const addListener = useMemo<(signal: string, callback: (data: any) => void) => void>
+	  (() => (signal:any, message:any) => {
+	    if (socket)
+	      { socket.on(signal, message)} ;
+	  }, [socket])
+	//
+	// const sendMessage = useMemo<(signal: string, message: any) => void>
+	// (() => (signal, message) => {
+	//   if (socket) {
+	//   socket.emit(signal, message)};
+	// }, [socket])
+	
+	  const sendMessage = useMemo<(signal: string, message: any) => void>
+	  (() => {
+	      return (signal:any, message:any) => {
+	        if (socket) {
+	          socket.emit(signal, message);
+	        }
+	      };
+	    },
+	    [socket]
+	  );
 	////////////////////////////////////////////////////
 
 // export default function useSocket() {
@@ -63,21 +63,21 @@ export default function useSocket() {
 // 			}
 // 		};
 // 	}, [socket]);
-	const addListener = useMemo(() => {
-		return (signal: string, callback: (data: any) => void) => {
-			if (socket) {
-				socket.on(signal, callback);
-			}
-		};
-	}, [socket]);
+	// const addListener = useMemo(() => {
+	// 	return (signal: string, callback: (data: any) => void) => {
+	// 		if (socket) {
+	// 			socket.on(signal, callback);
+	// 		}
+	// 	};
+	// }, [socket]);
 
-	const sendMessage = useMemo(() => {
-		return (signal: string, message: any) => {
-			if (socket) {
-				socket.emit(signal, message);
-			}
-		};
-	}, [socket]);
+	// const sendMessage = useMemo(() => {
+	// 	return (signal: string, message: any) => {
+	// 		if (socket) {
+	// 			socket.emit(signal, message);
+	// 		}
+	// 	};
+	// }, [socket]);
 
   return [sendMessage, addListener];
 }

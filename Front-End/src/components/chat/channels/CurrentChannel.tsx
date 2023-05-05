@@ -8,7 +8,7 @@ import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import { Box, IconButton, Modal, Snackbar } from '@mui/material';
+import { Alert, Box, IconButton, Modal, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorModalPassword from "./ErrorModalPassword";
 import '../../../style/UsersOnChannel.css'
@@ -23,14 +23,23 @@ export default function CurrentChannel(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
-	const [isBanned, setIsBanned] = useState<boolean>(currentChatroom.participants.some((p: any) => p.status === 'BAN') && parseInt(authCtx.userId));
-	const [isMuted, setIsMuted] = useState<boolean>(currentChatroom.participants.some((p: any) => p.status === 'MUTE'));
-
+	
+	
 	const [showPopUp, setShowPopUp] = useState(true);
-
+	
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
-	const userBanned = currentChatroom.participants.some((p: any) => p.status === 'BAN')&& parseInt(authCtx.userId);
-	const userMuted = currentChatroom.participants.some((p: any) => p.status === 'MUTE') && parseInt(authCtx.userId);
+	const [isMuted, setIsMuted] = useState(false);
+	const [isBanned, setIsBanned] = useState(false);
+
+
+	useEffect(() => {
+		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
+		if (participant) {
+		  setIsMuted(participant.status === 'MUTE');
+		  setIsBanned(participant.status === 'BAN');
+		}
+	  }, [currentChatroom.participants, authCtx.userId]);
+	  
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -116,11 +125,16 @@ export default function CurrentChannel(props: any) {
 
 	const handleLeaveChannel = () => {
 		setIsJoined(false);
-	  };
+	};
 
-	  return (
+	const handleDeleteChannel = () => {
+		props.setShowList(false);
+		props.setUsersList(true);
+		setIsJoined(false);
+	};
+	
+	return (
 		<>
-			
 			{isJoined && !isBanned && (
 				<>
 					<NavbarChannel
@@ -129,6 +143,7 @@ export default function CurrentChannel(props: any) {
 						onClick={() => setShowPopUp(false)}
 						onSubmit={handleFormSubmit}
 						onLeaveChannel={handleLeaveChannel}
+						onDeleteChannel={handleDeleteChannel}
 					/>
 					<div className="chatBoxTop">
 						{messages2.length ? (
@@ -148,34 +163,18 @@ export default function CurrentChannel(props: any) {
 							onChange={(e) => setNewMessage2(e.target.value)}
 							value={newMessage2}
 						></input>
-						<FontAwesomeIcon
-							icon={faPaperPlane}
-							onClick={handleSubmit}
-							className={`send-btn-chat ${isMuted ? 'muted' : ""}`} // ajouter la classe 'muted' si l'utilisateur est mute							
-							disabled={isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
-						/>
+						{!isMuted && 
+							<FontAwesomeIcon
+								icon={faPaperPlane}
+								onClick={handleSubmit}
+								className={`send-btn-chat`} // ajouter la classe 'muted' si l'utilisateur est mute							
+								disabled={props.isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
+							/>
+						}
 					</div>
 				</>
 			)}
-			{!isJoined && showPopUp &&
-				(
-					<div className="popup-container">
-						<div className="popup-content">
-							<span className="popup-text">You need to join the channel before being able to talk.</span>
-							<button className="popup-button" onClick={() => setShowPopUp(false)}>OK</button>
-						</div>
-					</div>
-				)
-			}
-			{isBanned && (
-				<div className="popup-container">
-					<div className="popup-content">
-						<span className="popup-text">You have been banned from this chat room.</span>
-						<button className="popup-button" onClick={() => setShowPopUp(false)}>OK</button>
-					</div>
-				</div>
-			)
-			}
+
 		</>
 	);
 	

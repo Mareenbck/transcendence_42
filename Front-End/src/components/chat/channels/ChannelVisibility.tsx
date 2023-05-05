@@ -42,11 +42,6 @@ export default function ChannelVisibility(props: any) {
               <ArrowCircleRightIcon />
             </IconButton>
           )}
-          {/* {isJoined && (
-            <IconButton disabled={true} aria-label="fingerprint" style={{ opacity: 0 }}>
-              <ArrowCircleRightIcon />
-            </IconButton>
-          )} */}
         </div>
       );
     }else if (props.visibility === "PUBLIC") { // on vérifie que le timeout n'est pas actif
@@ -68,8 +63,6 @@ export default function ChannelVisibility(props: any) {
     return icon;
   }
 
-  // console.log(props.banTimeout)
-
   const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const password = passwordInputRef.current?.value;
@@ -88,10 +81,10 @@ export default function ChannelVisibility(props: any) {
       });
       const dataResponse = await resp.json();
       if (!resp.ok) {
-					setError({
-						title: "Wrong Password",
-						message: dataResponse.error,
-					})
+		setError({
+			title: "Wrong Password",
+			message: dataResponse.error,
+		})
       }
       setIsJoined(true);
     } catch (err) {

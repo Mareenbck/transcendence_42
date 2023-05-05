@@ -13,7 +13,8 @@ import Avatar from '@mui/material/Avatar';
 import '../../../style/NavbarChannel.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-
+import { isAnyArrayBuffer } from "util/types";
+import { faCrown, faUserPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 
 export function NavbarChannel(props: any) {
@@ -87,6 +88,24 @@ export function NavbarChannel(props: any) {
 		}
 	}
 
+	const deleteChannel = async (channelId: string) => {
+        try { 
+            const response = await fetch(`http://localhost:3000/chatroom2/${channelId}/delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({channelId: props.channelId}),
+            });
+            const data = await response.json();
+            props.onDeleteChannel();
+            return data;
+          
+        }catch(error) {
+            console.log("error", error)
+        }
+    }
+
 	const handleInviteUser = (invitedUserId: string) => {
 		inviteUserOnChannel(props.chatroom.id, parseInt(invitedUserId));
 	}
@@ -143,6 +162,9 @@ export function NavbarChannel(props: any) {
 		}
 	}, [props.chatroom.visibility])
 
+	const handleDeleteChannel = () => {
+		props.isJoined(false);
+	}
 
 
 	return (
@@ -162,7 +184,8 @@ export function NavbarChannel(props: any) {
 						onInvite={handleInviteUser}
 						onAddAdmin={handleAddAdmin}
 						type="invite-admin"
-						/>
+					/>
+					<FontAwesomeIcon className="btn-dialog-navbar" icon={faTrash} onClick={() => deleteChannel(props.chatroom.id)} role={isAdmin}/>
 					{props.chatroom.visibility === 'PRIVATE' &&
 						<SelectDialog
 						onSelect={(userId: string) => setSelectedUser(userId)}
@@ -172,11 +195,16 @@ export function NavbarChannel(props: any) {
 						/>
 					}
 					{props.chatroom.visibility === 'PWD_PROTECTED' &&
-						<ChannelsSettings role={isAdmin} onOpenModal={handleOpenModal} />
+						<ChannelsSettings 
+							role={isAdmin} 
+							onOpenModal={handleOpenModal}
+							onDeleteChannel={handleDeleteChannel} />
 					}
 				</div>
 			}
-			<FontAwesomeIcon onClick={() => leaveChannel(props.chatroom.id)} icon={faArrowRightFromBracket} className="btn-dialog-navbar-leave"/>
+			{isAdmin === 'USER' &&
+				<FontAwesomeIcon onClick={() => leaveChannel(props.chatroom.id)} icon={faArrowRightFromBracket} className="btn-dialog-navbar-leave"/>
+			}
 			 {/* <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button> */}
 				<>
 			<Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
