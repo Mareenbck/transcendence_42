@@ -42,7 +42,7 @@ export default function UpdateChannelsInList(props: any) {
 			}
 		};
 		getAllConv(user);
-	}, [AConversation, conversations]);
+	}, [AConversation]);
 
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })

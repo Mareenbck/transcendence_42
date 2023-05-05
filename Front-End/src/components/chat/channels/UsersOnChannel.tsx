@@ -48,17 +48,6 @@ export default function InteractiveListe(props: any) {
     const banned = participants.filter((p: any) => p.status === 'BAN');
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
     const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p)); 
-  
-//   console.log("participants", participants)
-
-    // useEffect(() => {
-    //     const participant = props.channelId.participant.find((p: any) => p.userId === parseInt(authCtx.userId))
-    //     if (participant) {
-    //         setIsBanned(participant.status === 'BAN');
-    //         setIsMuted(participants.status === 'MUTE');
-    //     }
-    // })
-
    
     const showParticipants = async (channelId: string) => {
         try {
@@ -198,7 +187,7 @@ export default function InteractiveListe(props: any) {
 
         useEffect(() => {
             showParticipants(props.channelId);
-        }, [props.channelId, kickSomeone]);
+        }, [props.channelId]);
 
 
 
