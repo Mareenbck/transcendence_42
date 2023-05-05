@@ -358,7 +358,6 @@ function Chat(props: any) {
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
 	const [isJoined, setIsJoined] = useState(false);
 	const [isChannelClicked, setIsChannelClicked] = useState(false);
-	const [isChannelSelected, setIsChannelSelected] = useState(true);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
 	const [showInteractiveList, setShowInteractiveList] = useState<boolean>(false);
 	const [showUserList, setShowUserList] = useState<boolean>(false);
@@ -439,23 +438,23 @@ function Chat(props: any) {
 			</div> */}
 			{/* <PersonnalInfoChat /> */}
 			{(!currentChat || showUserList) && (
-			  <UsersChat
-				isHeBlocked={isHeBlocked}
-				getDirect={getDirect}
-				getUser={getUser}
-				inviteGame={inviteGame}
-				setToBlock={setToBlock}
-				setToUnblock={setToUnblock}
+				<UsersChat
+					isHeBlocked={isHeBlocked}
+					getDirect={getDirect}
+					getUser={getUser}
+					inviteGame={inviteGame}
+					setToBlock={setToBlock}
+					setToUnblock={setToUnblock}
 				/>
 			)}
-		{currentChat && showUsersOnChannel &&(
-			<UsersOnChannel
-				currentChatroom={currentChat}
-				channelId={currentChat?.id}
-				channelVisibility={currentChat?.visibility}
-				channelName={currentChat?.name}
-				isChannelClicked={isChannelClicked}
-			/>
+			{currentChat && showUsersOnChannel &&(
+				<UsersOnChannel
+					currentChatroom={currentChat}
+					channelId={currentChat?.id}
+					channelVisibility={currentChat?.visibility}
+					channelName={currentChat?.name}
+					isChannelClicked={isChannelClicked}
+				/>
 		)}
 	</div>
     </>

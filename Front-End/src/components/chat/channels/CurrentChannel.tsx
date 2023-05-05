@@ -125,6 +125,9 @@ export default function CurrentChannel(props: any) {
 
 	const handleLeaveChannel = () => {
 		setIsJoined(false);
+		props.setShowList(false);
+		props.setUsersList(true);
+		setShowUserList(true);
 	};
 
 	const handleDeleteChannel = () => {
@@ -132,7 +135,21 @@ export default function CurrentChannel(props: any) {
 		props.setUsersList(true);
 		setIsJoined(false);
 	};
+
+	const [showUserList, setShowUserList] = useState<boolean>(false);
+	const [UsersList, setUsersList] = useState(null);
+	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
+
+
 	
+	useEffect(() => {
+		addListener("showUsersList", data => setUsersList(data));
+		if (!showUsersOnChannel) {
+		  setShowUserList(true);
+		}
+	  }, [showUsersOnChannel]);
+
+
 	return (
 		<>
 			{isJoined && !isBanned && (
@@ -174,6 +191,7 @@ export default function CurrentChannel(props: any) {
 					</div>
 				</>
 			)}
+			{showUsersOnChannel}
 
 		</>
 	);
