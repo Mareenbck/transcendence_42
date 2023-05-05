@@ -43,6 +43,7 @@ import { ChatroomService } from './chat/chatroom2/chatroom2.service';
 		GameService,
 		ChatService,
 		ChatroomService,
+		UserModule,
     ],
 	exports: [JwtModule],
 })

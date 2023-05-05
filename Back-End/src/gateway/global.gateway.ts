@@ -37,7 +37,8 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       private readonly chatService: ChatService,
       private readonly globalService: GlobalService,
       private readonly authService: AuthService,
-	  private readonly friendshipService: FriendshipService,
+      private readonly userService: UserService,
+	    private readonly friendshipService: FriendshipService,
   ) {
       this.userSockets = new UsersSockets();
   }
@@ -47,6 +48,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   afterInit() {
     this.globalService.server = this.server;
+    this.userService.server = this.server;
     this.chatroomService.server = this.server;
     this.gameService.server = this.server;
       this.chatService.server = this.server;
@@ -56,6 +58,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       this.gameService.userSockets = this.userSockets;
       this.chatroomService.userSockets = this.userSockets;
       this.friendshipService.userSockets = this.userSockets;
+      this.userService.userSockets = this.userSockets;
       this.logger.verbose("globalGateway Initialized");
   }
 
@@ -195,12 +198,19 @@ console.log("26 Connect + map: client", this.userSockets.users);
 		// Envoyer les demandes mises à jour à tous les clients connectés
 		this.server.emit('pendingDemands', pendingDemands);
 	}
+  
   @SubscribeMessage('removeConv')
 	async removeConv(@MessageBody() data: any ): Promise<void> {
 		// Récupérer les demandes mises à jour
 		const newList = await this.chatroomService.findAll();
 		// Envoyer les demandes mises à jour à tous les clients connectés
 		this.server.emit('deleteChannel', newList);
+	}  
+  
+  @SubscribeMessage('showUsersList')
+	async showUsersList(@MessageBody() data: any ): Promise<void> {
+    const showList = await this.userService.getUsers();
+		this.server.emit('showUsersList', showList);
 	}
 
 }
