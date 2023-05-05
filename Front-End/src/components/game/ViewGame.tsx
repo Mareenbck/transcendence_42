@@ -7,7 +7,7 @@ import PlayerTwo from "./PlayerTwo";
 import ScoresMatch from "./ScoresMatch";
 import AuthContext from "../../store/AuthContext";
 
-const ViweGame = (props: any) => {
+const ViewGame = (props: any) => {
 	const [games, setGames] = useState<any[] | null>();
 	const { id } = useParams();
 	const authCtx = useContext(AuthContext)

@@ -10,7 +10,7 @@
    
 }
 
-@media (max-width: 1700px) {
+ @media (max-width: 1700px) {
     .combPos{
         margin: 0.5rem;
         /* display: flex;
@@ -45,11 +45,7 @@
     color: black;
     font-weight:bold;
     border: 5px solid black;
-    margin: 50px;
-    margin-top: 0;
-    margin-bottom: 0;
-    width: 100px;
-    direction:initial;
+    width: 120px;
     border-radius: 10.9501px;
     margin-bottom: 2;
     background: linear-gradient(0deg, #003ba5, #84c4e9); */
@@ -99,6 +95,7 @@
 
 }
 
+
 .cadre p{
     /* padding: auto; */
     /* display: block;
@@ -110,7 +107,7 @@
     font-weight: 800; 
 }
 
-@media (min-width: 1700px) {
+@media (max-width: 1700px) {
     .cadre p{
         font-weight: 400; 
 
@@ -123,5 +120,4 @@
         
 
 }
-}
-
+} 

@@ -2,8 +2,9 @@ import './App.css';
 import React, { useContext, useEffect, useState } from "react";
 import Signup from './components/auth/Signup'
 import { Route, Routes} from 'react-router-dom';
-import Game from './components/game/Game'
-import OptionGame from './components/game/OptionGame'
+
+import Game from './components/game/Game';
+//import OptionGame from './components/game/OptionGame'
 import Chat from './components/chat/Chat'
 import Home from './pages/Home'
 import Profile from './pages/Profile';

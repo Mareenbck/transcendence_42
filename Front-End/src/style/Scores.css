@@ -175,9 +175,9 @@ tr:nth-child(even) {background-color: #d4dcf7;}
 }
 
 .rangAvatar:nth-of-type(2) .cadre {
-    background: linear-gradient(0deg, #003ba5, #84c4e9);
+    background: linear-gradient(0deg, #699BF7, #c2e1f3);
 }
 
 .rangAvatar:last-of-type .cadre {
-    background: linear-gradient(0deg, #f1f52e, #e9c984);
+    background: linear-gradient(0deg, #f1f52e, #fa7f37);
 }

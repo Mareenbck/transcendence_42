@@ -20,10 +20,10 @@ h2{
     background-color: #ffffff;
     display: block;
     /* margin: 0 auto;     */
-    margin-left: 100px;
+    /* margin-left: 100px; */
 }
 
-.winner{
+#win{
     font-size: 105px; 
     color: rgb(247, 199, 56);
 }
@@ -46,8 +46,9 @@ h2{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    /* height: 100vh; */
     align-items: center;
+    margin-top: 150px;
 }
 
 .circle {
@@ -71,9 +72,9 @@ h2{
 .btn{
     margin: 10px;
     background: #699BF7;
-    border: 3px solid #000000;
+    
     border-radius: 4px;
-    margin: 10px;
+  
     color: black;
     box-shadow: 3.65002px 3.65002px 0px #000000;
     font-family: 'Inter';
@@ -83,29 +84,205 @@ h2{
     line-height: 19px; 
     background: #FFFFFF;
      border: 3.19377px solid #000000;
-    box-shadow: 3.65002px 3.65002px 0px #000000;
+    
     border-radius: 10.9501px;
     width: 117px;
     height: 40px;
-    display: flex;
+    /* display: flex; */
     align-items: center;
-    padding: 16px;
+    /* padding: 16px; */
     /* margin-right: 30px; */
 }
 
+.posBtn a{
+    display: block;
+}
+
 .posBtn{
-    /* width: 230px;
-    height: 270px; */
-    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 16px;
-    gap: 50%;
+    /* padding: 16px; */
+    /* gap: 70%; */
     /* border: 3px solid #000000; */
     border-radius: 12px;
-    
-    margin-top: 21px;
+    margin-left: 90px;
+    margin-top: 10rem;
     margin-right: 20px;
-   
+  
 }
+.posBtnWinner{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+.posBtn a{
+    display: block;
+}
+
+.wrapGaming{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    /* margin-left: 2rem; */
+    /* margin: auto; */
+
+}
+
+.wrapWaiting{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    margin: auto;
+    /* margin-left: 8rem; */
+   
+    width: 100%;
+   align-items: center;
+}
+
+.wrapWaiting .center {
+    margin-left: 18rem;
+}
+
+/* .wrapWaiting  .cadrOption{
+    margin-left:270rem;
+} */
+
+@media (max-width: 1500px) {
+    .wrapWaiting{
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        margin-left: 4rem;
+        width: 70%;
+       align-items: center;
+    }
+
+}
+
+.posWating{
+    display: flex;
+    flex-direction: row;
+    /* margin: 100px; */
+    margin-top: 150px;
+    align-items: center;
+   
+
+}
+
+.posBtnWating{
+    margin: 30px;
+    align-items: center;
+
+}
+
+.wrapList{
+    margin: auto;
+    padding: 5px;
+    /* margin-left: 200px; */
+    /* width: calc(100% - 50px); */
+    width: 100%;
+    align-items: center;
+    /* align-self: self-start; */
+
+}
+@media (max-width: 1500px) {
+    .wrapList{
+        margin: 0;
+        padding: 5px;
+        margin-left: 50px;
+        width: 50%;
+        align-items:center ;
+    }
+
+}
+
+.container-matchh{
+    
+        display: flex;
+        justify-content: space-between;
+        width: inherit;
+        /* width: 100%; */
+        align-items: center;
+        margin-bottom: 2rem;
+        /* background-color: #F3F0FF; */
+        border-radius: 10px;
+        padding: 3px 10px 3px 10px;
+        border: solid 4px black;
+        /* margin-left: -15px;  */
+       
+
+        background-color: "white";
+        /* border: "solid" ; */
+        /* borderBlockColor:"black"; */
+    }
+
+   
+.wrapLook{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* margin-left: 15rem; */
+
+
+    }
+    .wrapLook h2{
+       
+        margin-bottom: 15rem;
+        /* border: solid 4px rgb(252, 227, 6); */
+        border-radius: 10px;
+        font-weight: 800;
+    
+        }
+
+    .wrapLook .posBtn{ 
+        margin-top: 25rem;
+
+    }   
+
+    .wrapLook .custom-avatar.avatar-s{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 15rem;
+        margin-bottom: -2rem;
+        
+    
+        }
+
+.wrapWinner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    width: 100%;
+    margin-left: 18rem;
+    align-items: center;
+
+}  
+
+@media (max-width: 1500px) {
+    .wrapWinner{
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        margin-left: 5rem;
+        width: 70%;
+       align-items: center;
+    }
+
+}
+
+
+.wrapWinner .custom-avatar.avatar-s{
+
+    margin-left: 1rem;
+    margin-bottom: -2rem;
+    margin-top: 3rem;
+    
+
+    }      
