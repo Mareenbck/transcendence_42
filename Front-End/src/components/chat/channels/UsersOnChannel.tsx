@@ -34,12 +34,22 @@ export default function InteractiveListe(props: any) {
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
   const authCtx = useContext(AuthContext);
-  const [isBanned, setIsBanned] = useState(false);
-  const [participants, setParticipants] = useState([]);
-  const banned = participants.filter((p) => p.status === 'BAN');
-  const muted = participants.filter((p) => p.status === 'MUTE');
-  const admins = participants.filter((p) => p.role === 'ADMIN');
-  const users = participants.filter((p) => p.role === 'USER' && !banned.includes(p));     
+  const [isBanned, setIsBanned] = React.useState(false);
+  const [isMuted, setIsMuted] = React.useState(false);
+  const [participants, setParticipants] = React.useState([]);
+  const banned = participants.filter((p: any) => p.status === 'BAN');
+  const admins = participants.filter((p: any) => p.role === 'ADMIN');
+  const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p)); 
+  
+//   console.log("participants", participants)
+
+    // useEffect(() => {
+    //     const participant = props.channelId.participant.find((p: any) => p.userId === parseInt(authCtx.userId))
+    //     if (participant) {
+    //         setIsBanned(participant.status === 'BAN');
+    //         setIsMuted(participants.status === 'MUTE');
+    //     }
+    // })
 
    
     const showParticipants = async (channelId: string) => {
@@ -133,52 +143,50 @@ export default function InteractiveListe(props: any) {
         };
         
         const muteSomeone = async (channelId: string, userId: string) => {
-          try {
-              const response = await fetch(
-                  `http://localhost:3000/chatroom2/${channelId}/mute/${userId}`,
-                  {
+            try {
+                const response = await fetch(
+                    `http://localhost:3000/chatroom2/${channelId}/mute/${userId}`,
+                    {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${authCtx.token}`,
+                    },
+                }
+                );
+                if (!response.ok) {
+                    throw new Error("Failed to mute user.");
+                }
+                const updatedParticipants = participants.filter(p => p.user.id !== userId);
+                setParticipants(updatedParticipants);
+                
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        const unMuteSomeone = async (channelId: string, userId: string) => {
+            try {
+                const response = await fetch(
+                    `http://localhost:3000/chatroom2/${channelId}/unmute/${userId}`,
+                    {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${authCtx.token}`,
-                  },
-              }
-              );
-              if (!response.ok) {
-                  throw new Error("Failed to mute user.");
-              }
-              const updatedParticipants = participants.filter(p => p.user.id !== userId);
-              setParticipants(updatedParticipants);
-              
-          } catch (error) {
-              console.error(error);
-          }
-      };
-
-
-
-      const unMuteSomeone = async (channelId: string, userId: string) => {
-        try {
-            const response = await fetch(
-                `http://localhost:3000/chatroom2/${channelId}/unmute/${userId}`,
-                {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${authCtx.token}`,
-                },
+                    },
+                }
+                );
+                if (!response.ok) {
+                    throw new Error("Failed to mute user.");
+                }
+                const updatedParticipants = participants.filter(p => p.user.id !== userId);
+                setParticipants(updatedParticipants);
+                
+            } catch (error) {
+                console.error(error);
             }
-            );
-            if (!response.ok) {
-                throw new Error("Failed to mute user.");
-            }
-            const updatedParticipants = participants.filter(p => p.user.id !== userId);
-            setParticipants(updatedParticipants);
-            
-        } catch (error) {
-            console.error(error);
-        }
-    };      
+        };      
 
         
         useEffect(() => {
@@ -196,11 +204,11 @@ return (
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
              Admins
         </Typography>
-        {admins.map((p: any) => (
-            <ListItem key={p.user.username}
+        {admins.map((participants: any) => (
+            <ListItem key={participants.user.username}
             secondaryAction={
                 <div>
-                <Link to={`/users/profile/${p?.user.userId}`} className="profile-link">
+                <Link to={`/users/profile/${participants?.user.userId}`} className="profile-link">
                     <IconButton  className='violet-icon' edge="end" aria-label="Profil">
                     <AccountBoxIcon />
                     </IconButton>
@@ -210,10 +218,10 @@ return (
             }
             >
             <ListItemAvatar>
-                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={participants.user.avatar} ftAvatar={participants.user.ftAvatar}/>
             </ListItemAvatar>
             <ListItemText
-                primary={p?.user.username}
+                primary={participants?.user.username}
                 secondary={secondary ? 'Secondary text' : null}
             />
             </ListItem>    
@@ -221,11 +229,11 @@ return (
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
             Users
             </Typography>
-        {users.map((p: any) => ( 
-            <ListItem key={p.user.username}
+        {users.map((participants: any) => ( 
+            <ListItem key={participants.user.username}
             secondaryAction={
                 <div>
-                <Link to={`/users/profile/${p?.user.userId}`} className="profile-link">
+                <Link to={`/users/profile/${participants?.user.userId}`} className="profile-link">
                     <IconButton  className='violet-icon' edge="end" aria-label="Profil">
                     <AccountBoxIcon />
                     </IconButton>
@@ -234,26 +242,26 @@ return (
             }
             >
             <ListItemAvatar>
-                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={participants.user.avatar} ftAvatar={participants.user.ftAvatar}/>
             </ListItemAvatar>
             <ListItemText
-                primary={p?.user.username}
+                primary={participants?.user.username}
                 secondary={secondary ? 'Secondary text' : null}
             />
             {admins.some(admin => admin.user.id === authCtx.userId) && (
                 <>
-                <DeleteIcon onClick={() => kickSomeone(props.channelId, p.user.id)}/>
+                <DeleteIcon onClick={() => kickSomeone(props.channelId, participants.user.id)}/>
                 {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                    <RemoveCircleIcon className="ban-icon" onClick={() => banSomeone(props.channelId, p.user.id)} />
+                    <RemoveCircleIcon className="ban-icon" onClick={() => banSomeone(props.channelId, participants.user.id)} />
                     ) : null
                 }
                 <MicOffIcon 
-                className={`mute ${p.status === 'MUTE' ? 'muted' : ''}`} 
+                className={`mute ${participants.status === 'MUTE' ? 'muted' : ''}`} 
                 onClick={() => {
-                    if (p.status === 'MUTE') {
-                    unMuteSomeone(props.channelId, p.user.id);
+                    if (participants.status === 'MUTE') {
+                    unMuteSomeone(props.channelId, participants.user.id);
                     } else {
-                    muteSomeone(props.channelId, p.user.id);
+                    muteSomeone(props.channelId, participants.user.id);
                     }
                 }}
                 />
@@ -264,11 +272,11 @@ return (
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
             Banned Users
         </Typography>
-        {banned.map((p) => (
-             <ListItem key={p.user.username}
+        {banned.map((participants: any) => (
+             <ListItem key={participants.user.username}
              secondaryAction={
                  <div>
-                 <Link to={`/users/profile/${p?.user.userId}`} className="profile-link">
+                 <Link to={`/users/profile/${participants?.user.userId}`} className="profile-link">
                      <IconButton  className='violet-icon' edge="end" aria-label="Profil">
                      <AccountBoxIcon />
                      </IconButton>
@@ -277,17 +285,17 @@ return (
              }
              >
             <ListItemAvatar>
-                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={p.user.avatar} ftAvatar={p.user.ftAvatar}/>
+                <MyAvatar style="s" authCtx={authCtx} alt={"avatar"} avatar={participants.user.avatar} ftAvatar={participants.user.ftAvatar}/>
             </ListItemAvatar>
             <ListItemText
-                primary={p?.user.username}
+                primary={participants?.user.username}
                 secondary={secondary ? 'Secondary text' : null}
             />
                 {admins.some(admin => admin.user.id === authCtx.userId) && (
                 <>
-                    <DeleteIcon onClick={() => kickSomeone(props.channelId, p.user.id)}/>
+                    <DeleteIcon onClick={() => kickSomeone(props.channelId, participants.user.id)}/>
                     {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                    <RemoveCircleOutlineIcon  onClick={() => unBanSomeone(props.channelId, p.user.id)} />
+                    <RemoveCircleOutlineIcon  onClick={() => unBanSomeone(props.channelId, participants.user.id)} />
                     ) : null}
                 </>
                 )}

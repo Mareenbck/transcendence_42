@@ -354,12 +354,11 @@ useEffect(() => {
 
 
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
-  const [isJoined, setIsJoined] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isChannelClicked, setIsChannelClicked] = useState(false);
-  const [isChannelSelected, setIsChannelSelected] = useState(true);
-  const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
-  const [showInteractiveList, setShowInteractiveList] = useState<boolean>(false);
+	const [isJoined, setIsJoined] = useState(false);
+	const [isChannelClicked, setIsChannelClicked] = useState(false);
+	const [isChannelSelected, setIsChannelSelected] = useState(true);
+	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
+	const [showInteractiveList, setShowInteractiveList] = useState<boolean>(false);
 
 
   const handleShowList = () => {
@@ -372,8 +371,6 @@ useEffect(() => {
     setShowInteractiveList(true);
   }
   
-
-    
 
 return (
   <>
@@ -473,11 +470,9 @@ return (
           />
         )}
         
-      </div>
-
-
+      		</div>
         </div>
-      </div>
+    </div>
 
     </>
   )
