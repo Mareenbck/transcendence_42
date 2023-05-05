@@ -23,12 +23,12 @@ export default function useSocket() {
 	      { socket.on(signal, message)} ;
 	  }, [socket])
 	//
-	// const sendMessage = useMemo<(signal: string, message: any) => void>
-	// (() => (signal, message) => {
-	//   if (socket) {
-	//   socket.emit(signal, message)};
-	// }, [socket])
-	
+	// // const sendMessage = useMemo<(signal: string, message: any) => void>
+	// // (() => (signal, message) => {
+	// //   if (socket) {
+	// //   socket.emit(signal, message)};
+	// // }, [socket])
+
 	  const sendMessage = useMemo<(signal: string, message: any) => void>
 	  (() => {
 	      return (signal:any, message:any) => {
@@ -43,18 +43,18 @@ export default function useSocket() {
 
 // export default function useSocket() {
 
-// 	const authCtx = useContext(AuthContext);
-// 	const [socket, setSocket] = useState(null);
+	// const authCtx = useContext(AuthContext);
+	// const [socket, setSocket] = useState(null);
 
-// 	useEffect(() => {
-// 		if (authCtx.isLoggedIn) {
-// 			const newSocket = manager.socket('/', { auth: { token: authCtx.token } });
-// 			setSocket(newSocket);
-// 			return () => {
-// 				newSocket.disconnect();
-// 			};
-// 		}
-// 	}, [authCtx]);
+	// useEffect(() => {
+	// 	if (authCtx.isLoggedIn) {
+	// 		const newSocket = manager.socket('/', { auth: { token: authCtx.token } });
+	// 		setSocket(newSocket);
+	// 		return () => {
+	// 			newSocket.disconnect();
+	// 		};
+	// 	}
+	// }, [authCtx]);
 
 // 	const addListener = useMemo(() => {
 // 		return (signal: string, callback: (data: any[]) => void ) => {

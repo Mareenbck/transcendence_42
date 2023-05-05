@@ -45,12 +45,12 @@ export class GameRoom {
 	private ball: ball = {x: width/2, y: height/2};
 	private rackets_ypos : [number, number] = [0, 0];
 	private rackets_acel : [number, number] = [0, 0];
-  
+
 	private server: Server;
 	private room: string;
 	public roomN: number;
 	private gameService: GameService;
-	public userSockets: UsersSockets; 
+	public userSockets: UsersSockets;
 	public isrunning: boolean = false;
 
 
@@ -60,7 +60,7 @@ export class GameRoom {
 		gameService: GameService,
 		userSockets: UsersSockets,
 	) {
-console.log("constructor Class.game");
+// console.log("constructor Class.game");
 		this.server = server;
 		this.roomN = roomN;
 		this.room = `room${roomN}`;
@@ -84,7 +84,7 @@ console.log("constructor Class.game");
 
 // function: initialization of game during the ferst connection to the game
 	public init(player: UserDto){
-		this.userSockets.emitToUser(player.username, 'init-pong', { 
+		this.userSockets.emitToUser(player.username, 'init-pong', {
 			table_width: width,
 			table_height: height,
 			racket_width: racket_width,
@@ -185,9 +185,9 @@ console.log("constructor Class.game");
 				this.emit2all();
 			}
 		});
-		  
+
 		this.userSockets.onFromUser(this.playerL.user .username,'move', (message: string) => {
-// console.log("game_class_playerL socket message", message);	
+// console.log("game_class_playerL socket message", message);
 			if (message == 'up') {
 				if (this.playerL.racket.y > 0) {
 					this.playerL.racket.y -= racketSpeedY;
@@ -216,21 +216,21 @@ console.log("constructor Class.game");
 		this.isrunning = false;
 
 		clearInterval(this.interval);
-		
+
 		// disconnect Move Events
 		this.userSockets.offFromUser(this.playerR.user.username, 'move', (message: string)=>{});
 		this.userSockets.offFromUser(this.playerL.user.username, 'move', (message: string)=>{});
 
 		// player disconect
 		this.server.to(this.room).emit('status', {winner: this.status.winner, status: 'winner',});
-		
+
 		this.gameService.removeRoom(this.roomN);
 	}
 
 // function: run game
 	public run(): void {
 		this.isrunning = true;
-console.log("game.class.run");
+// console.log("game.class.run");
 	//interval function: update the game at the certain period until the score reaches MAX
 		this.interval = setInterval(() => {
 			this.updatePositions();
@@ -238,11 +238,11 @@ console.log("game.class.run");
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
 			//score MAX - change here
-			if ((this.playerL.score >= MAX_SCORE || this.playerR.score >= MAX_SCORE)){ 
+			if ((this.playerL.score >= MAX_SCORE || this.playerR.score >= MAX_SCORE)){
 				this.status.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
 //////////////////// to DB /////////////////////////
 				this.save_results2DB();
-////////////////////////////////////////////////////		
+////////////////////////////////////////////////////
 				this.destroy_game();
 			}
 		}, period);

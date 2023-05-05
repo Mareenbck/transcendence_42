@@ -43,7 +43,7 @@ export class ChatService {
     // SENDING MESSAGES
     sendRoomMessage:any = (authorId: number, chatroomId: number, content: string) => {
         const roomU = this.roomUsers.filter( room => +room.roomId === +chatroomId);
-        console.log("room message", chatroomId)
+        // console.log("room message", chatroomId)
         if (roomU.length > 1) {
             for(const room of roomU) {
                 this.server.to(room.socketId).emit("getMessageRoom", {
@@ -55,10 +55,10 @@ export class ChatService {
         }
     };
 
-    sendDirectMessage:any = async (content: string, author: number, receiver: number, ) => {    
+    sendDirectMessage:any = async (content: string, author: number, receiver: number, ) => {
         const user = this.getUser(receiver);
         const a = this.getUser(author);
-        if (user && a) 
+        if (user && a)
         {
             this.server.to(user.socketId).emit("getMessageDirect", {
                 content,
@@ -68,15 +68,15 @@ export class ChatService {
             const usersDirectForReceiver = await this.userService.getUsersWithMessages(receiver);
             if (!usersDirectForReceiver || !(usersDirectForReceiver.find(u => +u.id === +author)))
             {
-                this.server.to(user.socketId).emit("getNewDirectUser", author);
+                this.server.to(user.socketId).emit("getNewDirectUser", receiver);
             };
-        }   
+        }
         if (a && user) {
             const usersDirectForAuthor = await this.userService.getUsersWithMessages(author);
             if (!usersDirectForAuthor || !(usersDirectForAuthor.find(u => +u.id === +author)))
             {
                 const a = this.getUser(author);
-                this.server.to(a.socketId).emit("getNewDirectUser", receiver)
+                this.server.to(a.socketId).emit("getNewDirectUser", author)
             };
         }
     };

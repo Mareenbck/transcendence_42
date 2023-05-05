@@ -25,22 +25,6 @@ import { faBan, faTableTennisPaddleBall } from '@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DirectMessageInfo from './DirectMessageInfo';
 
-
-
-
-
-// const Demo = styled('div')(({ theme }) => ({
-//   backgroundColor: theme.palette.background.paper,
-// }));
-
-// function generate(element: React.ReactElement) {
-//   return [0, 1, 2].map((value) =>
-//     React.cloneElement(element, {
-//       key: value,
-//     }),
-//   );
-// }
-
 export default function UsersWithDirectMessage(props: any) {
   const {currentDirect, setCurrentDirect} = props;
   const [usersWith, setUsersWith] = useState<UserChat[]>([]);
@@ -56,18 +40,12 @@ export default function UsersWithDirectMessage(props: any) {
   const [unfromBlock, setUnfromBlock] = useState<number | null>();
   const [blockForMe, setBlockForMe] = useState<number | null>();
   const [unblockForMe, setUnblockForMe] = useState<number | null>();
-  // const [dense, setDense] = React.useState(false);
-//   const [secondary, setSecondary] = React.useState(false);
-	// console.log("AUsersWith --->")
-	// console.log(AUsersWith)
-	// console.log("usersWith --->")
-	// console.log(usersWith)
+
 // scroll
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({behavior: "smooth"})
 	}, [usersWith]);
 
-// en cas de nouveau en route
 	useEffect(() => {
 		addListener("getNewDirectUser", data => setAUsersWith(data));
 	}, [addListener]);
@@ -96,7 +74,7 @@ export default function UsersWithDirectMessage(props: any) {
 
 	useEffect(() => {
 		getAllUsersWith();
-	},[]);
+	},[AUsersWith]);
 
 // pour le mécanisme des blocked,j'ai besoin de ME as user puisque je ne suis pas dans allWith direct messsage
 	async function getMe() {
@@ -250,7 +228,8 @@ export default function UsersWithDirectMessage(props: any) {
 							<FontAwesomeIcon icon={faBan} className={`btn-chatlist-disable`} />
 							) : (
 								!me?.blockedTo.find((u: UserChat) => +o?.id === +u?.id) && (
-									<DirectMessageInfo userWithDM={o} type='status'/>
+									// <DirectMessageInfo userWithDM={o} type='status'/>
+									<p>LOL</p>
 								)
 						)}
 						</>
@@ -261,7 +240,7 @@ export default function UsersWithDirectMessage(props: any) {
 					</ListItemAvatar>
 					<div className='directMess-info'>
 						<ListItemText className="dicuss-link" primary={o?.username} onClick={props.isHeBlocked(o.id) ? () => props.getDirect(o) : undefined}/>
-						<DirectMessageInfo userWithDM={o} type='msg'/>
+						{/* <DirectMessageInfo userWithDM={o} type='msg'/> */}
 					</div>
 				</ListItem>
 			))}
