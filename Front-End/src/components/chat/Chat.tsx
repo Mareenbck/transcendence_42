@@ -6,7 +6,7 @@ import '../../style/Chat.css'
 import '../../style/Friends.css';
 import React from 'react';
 import PopupChallenge from './PopupChallenge';
-import { UserChat, ChatRoom, OnlineU} from "../../interfaces/iChat";
+import { UserChat, ChatRoom, OnlineU, DirectMessage} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import { Tab } from '@mui/material';
 import { Tabs } from '@mui/material';
@@ -37,6 +37,7 @@ function Chat(props: any) {
   const [sendMessage, addListener] = useSocket()
   const [blockForMe, setBlockForMe] = useState<number | null>();
   const [unblockForMe, setUnblockForMe] = useState<number | null>();
+  const [AMessageD, setAMessageD] = useState<DirectMessage | null> ();
 
 
 ///////////////////////////////////////////////////////////
@@ -117,7 +118,7 @@ function Chat(props: any) {
 
   async function getAllUsersWithBlocked(token: string) {
     const response = await Fetch.fetch(token, "GET", `users\/block\/users`);
-	const updatedFriends = await Promise.all(response.map(async (friend: UserChat) => {
+	  const updatedFriends = await Promise.all(response.map(async (friend: UserChat) => {
 		const avatar = await friendCtx.fetchAvatar(friend.id);
 		return { ...friend, avatar };
 	}));
@@ -367,12 +368,12 @@ function Chat(props: any) {
     setShowUsersOnChannel(false);
     setShowInteractiveList(true);
   }
-  
+
   const handleShowUserList = () => {
     setShowUsersOnChannel(false);
     setShowInteractiveList(true);
   }
-  
+
 
 return (
   <>
@@ -395,12 +396,18 @@ return (
 			)}
 			{activeTab === "Direct messages" && (
 				<UsersWithDirectMessage
-					currentDirect={currentDirect}
-					setCurrentDirect={setCurrentDirect}
+					// currentDirect={currentDirect}
+					// setCurrentDirect={setCurrentDirect}
 					isHeBlocked={isHeBlocked}
 					getDirect={getDirect}
 					getUser={getUser}
 					setToUnblock={setToUnblock}
+					toUnblock={toUnblock}
+					toBlock={toBlock}
+					fromBlock={fromBlock}
+					unfromBlock={unfromBlock}
+					blockForMe={blockForMe}
+					unblockForMe={unblockForMe}
 					/>
 			)}
 		</div>
@@ -408,21 +415,23 @@ return (
 			<div className="chatBoxW">
 				<PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 				{currentChat ? (
-					 <CurrentChannel 
-           currentChatroom={currentChat} 
-           allUsers={allUsers} 
-           isJoined={isJoined} 
-           setIsJoined={setIsJoined}
-           setShowList={handleShowList}
-           setUsersList={handleShowUserList}
-         />
+					 <CurrentChannel
+						currentChatroom={currentChat}
+						allUsers={allUsers}
+						isJoined={isJoined}
+						setIsJoined={setIsJoined}
+						setShowList={handleShowList}
+						setUsersList={handleShowUserList}
+						/>
 				) : currentDirect ? (
-						<CurrentDirectMessages
-							currentDirect={currentDirect}
-							allUsers={allUsers}
-							setToBlock={setToBlock}
-							inviteGame={inviteGame}
-							/>
+					<CurrentDirectMessages
+						currentDirect={currentDirect}
+						allUsers={allUsers}
+						setToBlock={setToBlock}
+						inviteGame={inviteGame}
+						setAMessageD={setAMessageD}
+						AMessageD={AMessageD}
+						/>
 				) : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
 				}
 			</div>
@@ -438,6 +447,12 @@ return (
 				inviteGame={inviteGame}
 				setToBlock={setToBlock}
 				setToUnblock={setToUnblock}
+				toUnblock={toUnblock}
+				toBlock={toBlock}
+				fromBlock={fromBlock}
+				unfromBlock={unfromBlock}
+				blockForMe={blockForMe}
+				unblockForMe={unblockForMe}
 				/>
 		)}
 		{currentChat && showUsersOnChannel &&(

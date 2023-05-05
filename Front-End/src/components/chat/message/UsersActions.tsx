@@ -4,18 +4,13 @@ import { Avatar, ListItem, Tooltip } from '@mui/material';
 import { ListItemAvatar } from '@mui/material';
 import { faBan, faTableTennisPaddleBall } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Friend from '../interfaces/IFriendship';
 import { UserChat } from '../../../interfaces/iChat';
 import AuthContext from '../../../store/AuthContext';
 import Fetch from '../../../interfaces/Fetch';
-import useSocket from '../../../service/socket';
 
 const UsersAction = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const [me, setMe] = useState<UserChat | null>(null);
-
-	console.log("props --->")
-	console.log(props)
 
 	// pour le mécanisme des blocked,j'ai besoin de ME as user puisque je ne suis pas dans allWith direct messsage
 	async function getMe() {
@@ -24,41 +19,10 @@ const UsersAction = (props: any) => {
 			setMe(response);
 		}
 	};
-	const [unfromBlock, setUnfromBlock] = useState<number | null>();
-	const [sendMessage, addListener] = useSocket();
-	const [fromBlock, setFromBlock] = useState<number | null>(null);
-	const [blockForMe, setBlockForMe] = useState<number | null>();
-	const [unblockForMe, setUnblockForMe] = useState<number | null>();
 
 	useEffect(() => {
 		getMe();
-	}, [unfromBlock, fromBlock, blockForMe, unblockForMe]);
-
-	useEffect(() => {
-		addListener("wasUnblocked", data => {
-		  if (+data.id !== +authCtx.userId)
-		  { setUnfromBlock(+data.id);}
-		});
-	  });
-
-	  useEffect(() => {
-		addListener("wasBlocked", data => {
-		  if (+data.id !== +authCtx.userId)
-		  { setFromBlock(+data.id);}
-		});
-	  });
-	  useEffect(() => {
-		addListener("blockForMe", data => {
-		  if (+data.id !== +authCtx.userId)
-			{ setBlockForMe(+data.id);}
-		});
-	  });
-	  useEffect(() => {
-		addListener("unblockForMe", data => {
-		  if (+data.id !== +authCtx.userId)
-			{ setUnblockForMe(+data.id);}
-		});
-	  });
+	}, [props.chat]);
 
   // suis-je bloqué
   const amIBlocked = (userXid: number): string => {
@@ -67,7 +31,6 @@ const UsersAction = (props: any) => {
     else
       {return "users-list";}
   };
-
 
 	return (
 		<>
@@ -78,7 +41,7 @@ const UsersAction = (props: any) => {
 						<ListItemAvatar>
 							<Avatar variant="rounded" className="users-chatlist-avatar"  src={user.ftAvatar ? user.ftAvatar : user.avatar} />
 						</ListItemAvatar>
-						<div className="dicuss-link" onClick={props.isHeBlocked(user.id) ? () => props.getDirect(user) : undefined}>
+						<div className="dicuss-link" onClick={props.chat.isHeBlocked(user.id) ? () => props.chat.getDirect(user) : undefined}>
 							{user.username}
 						</div>
 					</div>
@@ -89,17 +52,17 @@ const UsersAction = (props: any) => {
 						<>
 						<div className='btn-inlist'>
 							<Tooltip title="Block">
-								<FontAwesomeIcon icon={faBan} onClick={() => {props.setToBlock(props.getUser(user.id))}} className={`btn-chatlist`}/>
+								<FontAwesomeIcon icon={faBan} onClick={() => {props.chat.setToBlock(props.chat.getUser(user.id))}} className={`btn-chatlist`}/>
 							</Tooltip>
 							<Tooltip title="Invite to Play">
-								<Link to={'/game/'}  className='violet-icon' onClick={() => props.inviteGame(user.id)}>
+								<Link to={'/game/'}  className='violet-icon' onClick={() => props.chat.inviteGame(user.id)}>
 									<FontAwesomeIcon icon={faTableTennisPaddleBall} className={`btn-chatlist`}/>
 								</Link>
 							</Tooltip>
 						</div>
 						</>
 						) : (
-						<FontAwesomeIcon icon={faBan} onClick={() => {props.setToUnblock(props.getUser(user.id))}} className={`btn-chatlist-clicked`}/>
+						<FontAwesomeIcon icon={faBan} onClick={() => {props.chat.setToUnblock(props.chat.getUser(user.id))}} className={`btn-chatlist-clicked`}/>
 						)}
 				</ListItem>
 			))}

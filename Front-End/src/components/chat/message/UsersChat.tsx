@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Container } from '@mui/material';
 import AuthContext from '../../../store/AuthContext';
 import { FriendContext } from '../../../store/FriendshipContext';
-import FriendsList from '../../friends/FriendsList';
 import Friend from '../../interfaces/IFriendship'
 import '../../../style/UsersChat.css';
 import UsersAction from './UsersActions';
@@ -47,14 +45,9 @@ const UsersChat = (props: any) => {
 		<>
 		<div className='contain-users'>
 		<PersonnalInfoChat />
-			{/* <div className='title-drawer'>
-				<h2>Members</h2>
-			</div> */}
-			{/* <Container maxWidth="sm"> */}
-				<UsersAction title="Online" users={onlineFriends} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
-				<UsersAction title="Offline" users={offlineFriends} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
-				<UsersAction title="Playing" users={playingFriends} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
-			{/* </Container> */}
+			<UsersAction title="Online" users={onlineFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
+			<UsersAction title="Offline" users={offlineFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
+			<UsersAction title="Playing" users={playingFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
 		</div>
 		</>
 	  );

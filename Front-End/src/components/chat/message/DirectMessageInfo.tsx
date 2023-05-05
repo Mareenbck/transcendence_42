@@ -8,6 +8,9 @@ const DirectMessageInfo = (props: any) => {
 	const [lastEmittedMessage, setLastEmittedMessage] = useState<any>({});
 	const [status, setStatus] = useState<string>('');
 
+	console.log("props de direct mesgae ifo ")
+	console.log(props)
+	// console.log(props.userWithDM.dirMessReceived)
 	useEffect(() => {
 		if (props.userWithDM.dirMessReceived.length) {
 			setLastReceivedMessage( props.userWithDM.dirMessReceived[props.userWithDM.dirMessReceived.length - 1]);
