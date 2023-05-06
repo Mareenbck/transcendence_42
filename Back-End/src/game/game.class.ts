@@ -221,6 +221,9 @@ console.log("constructor Class.game");
 		this.userSockets.offFromUser(this.playerR.user.username, 'move', (message: string)=>{});
 		this.userSockets.offFromUser(this.playerL.user.username, 'move', (message: string)=>{});
 
+		this.gameService.updateStatusGameOver(this.playerL.user.id);
+		this.gameService.updateStatusGameOver(this.playerR.user.id);
+
 		// player disconect
 		this.server.to(this.room).emit('status', {winner: this.status.winner, status: 'winner',});
 		
@@ -231,6 +234,8 @@ console.log("constructor Class.game");
 	public run(): void {
 		this.isrunning = true;
 console.log("game.class.run");
+		this.gameService.updateStatusGame(this.playerL.user.id);
+		this.gameService.updateStatusGame(this.playerR.user.id);
 	//interval function: update the game at the certain period until the score reaches MAX
 		this.interval = setInterval(() => {
 			this.updatePositions();
