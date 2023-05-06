@@ -41,48 +41,30 @@ body{
 
 .card-option
 {
-    border: solid black;
-    /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    font-weight: bold;
-    font-size: large;*/
-    padding: 10px;
-    
-    width: 100%;
-    /*padding-bottom: 0;*/
+    display: flex;
+    /* width: 70%; */
+    margin: auto;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    padding: 1rem;
     align-items: center;
-    border-radius: 10px;
-    text-align: left;
-    margin: 10px;
-    margin-bottom: 50px;
-   
-    /*display: inline-block;*/
-    display: grid;
-   /* flex-direction: row;*/
-
-   border: 3.19377px solid #000000;
-box-shadow: 3.65002px 3.65002px 0px #000000;
+    border: 3.19377px solid #000000;
+    box-shadow: 3.65002px 3.65002px 0px #000000; 
+    border-radius: 20px;
 }
 
- /*
-.card-option a{
-    display:flex;
-    flex-direction: row;
-}*/
+
 
 .card-option h2
 {
+    font-family: 'Noto Sans', sans-serif;
+    font-style: normal;
     text-align: left;
-   display: inline-block;
-   /*align-self:flex-start;*/
-
-   font-style: normal;
-    font-weight: 600;
-    font-size: 28px;
+    display: inline-block;
+    font-weight: 500;
+    font-size: 18px;
     line-height: 20px;
     align-self: center;
-    font-family: 'Noto Sans', sans-serif;
-   
-
   
 }
 
@@ -115,10 +97,12 @@ box-shadow: 3.65002px 3.65002px 0px #000000;
     padding: 1rem;
 }
 .posColor__circlebtn{
-    margin: -3px;
+    display: flex;
+    flex-direction: column;
+    margin: -20px;
     padding: 0;
-    width: 30px;
-    height: 40px;
+    width: 40px;
+    height: 80px;
     border-radius: 100%;
    /* display: inline-block;*/
 	

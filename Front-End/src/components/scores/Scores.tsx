@@ -12,6 +12,7 @@ import Card from "../../components/utils/Card";
 // import Table from "./Table";
 
 const Scores = () => {
+  const MAX_SCORE = 10;
   const [games, setGames] = useState<Game[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
   
@@ -60,9 +61,17 @@ const Scores = () => {
     if (games) {
       const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user?.id);
       const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user?.id);
+      const w = games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user?.id);
       let total:number = 0;
+      let totalWin:number = 0;
+      let totalPerd:number = 0;
       if (p1.length > 0) {total = p1.reduce((score: number, game: { score1: string | number; }) => score = score + +game.score1, 0)};
       if (p2.length > 0) {total = total + p2.reduce((score: number, game: { score2: string | number; }) => score = score + +game.score2, 0)};
+      if (w.length > 0) {totalWin = w.length * MAX_SCORE};
+      totalPerd = total - totalWin;
+      total = totalWin - totalPerd;
+      if (total < 0) 
+        total = 0;
       return (total);
     }
   }
