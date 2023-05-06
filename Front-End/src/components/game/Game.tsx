@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
 // import Winner from './Winner'
-import type { gameInit, gameState, gameStatus, gamesList, UserGame } from './interface_game'
+import type { gameInit, gameState, gameStatus, gameList, UserGame } from './interface_game'
 import ColorModal from './modal/ColorModal';
 import RefusModal from './modal/RefusModal';
 import useSocket from '../../service/socket';
@@ -30,18 +30,17 @@ function Game() {
         {   winner: null,
             status: "null"} 
     );  
-    const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
+    const [games, setOnlinePlayers] = useState<gameList[]> ([]);
     const [curroom, setCurRoom] = useState<number>(-1);
     
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
     useEffect(() => {
-        const handleGameRooms = (games: gamesList[]) => {
+        const handleGameRooms = (games: gameList[]) => {
             if(curroom == -1){
                 const index = games.findIndex(room => room.playerL.username == user.username || room.playerR.username == user.username);
-                if (index != -1) {   
-                    setCurRoom(games[index].roomN);
-console.log("games[index].playerR", index, games[index].playerL)
-console.log("games[index].playerR", index, games[index].playerR)
+                if (index != -1) { 
+                    const roomN = games[index].roomN;
+                    setCurRoom(roomN);
                 }
             }
             setOnlinePlayers(games);
@@ -51,73 +50,38 @@ console.log("games[index].playerR", index, games[index].playerR)
 
     }, []);
 
-//     const getPlayer = (room: number, player: string) => {
-//         if (games){
-//             const index = games.findIndex(r => r.room == room);
-//             if (player == 'R'){
-// console.log("games[index].playerR", index, games[index].playerL)
+    const getCurrentGame = (roomN: number) => {
+        if (games){
+            const index = games.findIndex((game:gameList) => game.roomN == roomN);
+            if (index != -1){
+                const game:gameList = games[index];
+                return (
+                    <>
+                    <div className="container-match" style={{backgroundColor: "white",
+                                                            border: "solid" ,
+                                                            borderBlockColor:"black" } } >
+                        <PlayerOne  style={{backgroundColor: "white"}} player={game.playerL} winner={""} sizeAvatar={"l"} />
+                        <p className='vs'> VS</p>
+                    
+                        <PlayerTwo  player={game.playerR} winner={""}  sizeAvatar={"l"} />
+                    </div>
+                    </>
+                );
+            }
+        }
+    };
 
-//                 return (games[index].playerR);}
-//             if (player == 'L'){
-// console.log("games[index].playerR", index, games[index].playerL)
-//                 return (games[index].playerL);
-//         }}
-//         else
-//             return null;
-//     };
-
-// console.log("curroom", curroom)
 /////////////////////////////////////////////////leave the page////////////////////////////////////
-//event when user leaves the page
-    const handleUnload = () => {
-        // Do something before the page is unloaded
-        alert("you leave page");
-    }
-
     useEffect(() => {
 
-        window.addEventListener('unload',  (event) => {
-            event.preventDefault();
-            alert("you leave page| unload");
-        })
-        window.addEventListener('beforeunload',  (event) => {
-            event.preventDefault();
-            alert("you leave page| beforeunload");
-        })
-
-      
-    //   window.onbeforeunload = null;
-
-    //   window.onbeforeunload = (event: BeforeUnloadEvent) => handleUnload(event);
-  
-    //   window.addEventListener('beforeunload', (event) => {             //When they leave the site
-    //     event.preventDefault();                                     // Cancel the event as stated by the standard.
-    //     handleUnload();
-    // });
-  
         return () => {
-            document.removeEventListener('beforeunload', handleUnload);
+        // unmount component event (works at mount too)
+            if (gamestatus.status == 'game'){
+                // alert("Alert of sortie");
+            }
         };
     }, []);
      
-    // useEffect(() => {
-    //     const handleUnload = (event: BeforeUnloadEvent) => {
-    //       // Do something before the page is unloaded
-    //       event.preventDefault(); 
-    //       alert("you leave page");
-    //     }
-    
-    //     window.addEventListener('beforeunload', handleUnload);
-
-    //     return () => {
-    //       window.removeEventListener('beforeunload', handleUnload);
-    //     };
-    //   }, []);
-    
-//     useBeforeUnload(() => {
-//     // Execute code before the user navigates away from the page
-// alert('Leaving the page...');
-//     });    
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 // onKeyDown handler function
@@ -141,7 +105,6 @@ console.log("games[index].playerR", index, games[index].playerR)
             window.removeEventListener('keydown', onkeyPress);
         }
     }, []);
-
 
 // Pour partis de Modal select Color,
 
@@ -239,6 +202,9 @@ console.log("games[index].playerR", index, games[index].playerR)
         // else{
         //     data.table_width = 600;
         }
+        if(curroom == -1){
+            gamestatus.status == 'game';
+        }
         setGameInit(data);
     }
 
@@ -267,6 +233,9 @@ console.log("games[index].playerR", index, games[index].playerR)
     const handleClick = (roomN: number) => {
         sendMessage("playGame", {user: user, roomN: roomN});
         setCurRoom(roomN);
+        if(roomN == -1){
+            gamestatus.status == 'game';
+        }
         gamestatus.winner = null;
         setClicked(true);
     };
@@ -288,25 +257,9 @@ console.log("games[index].playerR", index, games[index].playerR)
                             {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
-                            
                                  // head Game***********
-                                 (<div>
-                                    {games.map((game: gamesList) => (
-                                        <div>
-                                        
-                                        <div className="container-match" style={{backgroundColor: "white",
-                                                                                border: "solid" ,
-                                                                                borderBlockColor:"black" } } >
-                                            
-                                          
-                                            <PlayerTwo  style={{backgroundColor: "white"}} player={game.playerL} winner={game.scoreL} sizeAvatar={"l"} />
-                                            <p className='vs'> VS</p>
-                                           
-                                            <PlayerOne  player={game.playerR} winner={""}  sizeAvatar={"l"} />
-                                        </div>
-                                        </div>
-                                    ))}
-                                    </div>    
+                                (
+                                    getCurrentGame(curroom)
                                 )
                                 //head Game************                                                   
                                 :  
@@ -314,47 +267,47 @@ console.log("games[index].playerR", index, games[index].playerR)
                                                 changColorToBlue={changColorToBlue}
                                                 changColorToGreen={changColorToGreen}
                                                 changColorToBlack={changColorToBlack}>
-                                </SelectColor> ) } 
+                                </SelectColor>)
+                            } 
                                    
 
-                            {(gamestatus.status == 'waiting') ? (
+                            {(gamestatus.status == 'waiting') ?
+                            (
                                 <div className='.wrapWaiting'>
                                     <div className="center">
                                         <h1 className="blink"> Waiting your opponent</h1>
                                         <div className="circle"></div>
                                     </div>
                                 </div>
-                            ):(   
-
-                             <div>                   
-                                {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
-                                {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
-                                                                                            changColorToBlue={changColorToBlue}
-                                                                                            changColorToGreen={changColorToGreen}
-                                                                                            changColorToBlack={changColorToBlack}
-                                                                                            />}
-                                { !ShowCamva &&<Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
-                                <div className='posBtn' >
-                                    {/* /BUTTON FOR GAME START */}
-                                    {!isInPlay() && (
-                                        <div >
-                                            <button className="btn" onClick={() => handleClick(-1)}>Play Game</button>
-                                        </div>
-                                    )}
-                                    {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
-                                    {!isInPlay() && (
-                                        <Link to="/menu">
-                                            <button className="btn"  style={{ alignSelf: "flex-end"}}>Menu</button>
-                                        </Link>
-                                    )}
+                            ):(
+                                <div>                   
+                                    {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
+                                    {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
+                                                                                                changColorToBlue={changColorToBlue}
+                                                                                                changColorToGreen={changColorToGreen}
+                                                                                                changColorToBlack={changColorToBlack}
+                                                                                                />}
+                                    { !ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
+                                    <div className='posBtn' >
+                                        {/* /BUTTON FOR GAME START */}
+                                        {!isInPlay() && (
+                                            <div >
+                                                <button className="btn" onClick={() => handleClick(-1)}>Play Game</button>
+                                            </div>
+                                        )}
+                                        {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
+                                        {!isInPlay() && (
+                                            <Link to="/menu">
+                                                <button className="btn"  style={{ alignSelf: "flex-end"}}>Menu</button>
+                                            </Link>
+                                        )}
+                                    </div>
                                 </div>
-
-                            </div>)}
+                            )}
                               
                         </div>
-                
                     </>
-                        ):(
+                ):(
                     <>
                         <div className='wrapWin'>
                             <h2> WINNER </h2>
@@ -391,7 +344,7 @@ console.log("games[index].playerR", index, games[index].playerR)
                         <div className='wrapList'>
 
                         {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
-                            <div  onClick={() => handleClick(game.roomN)}>
+                            <div onClick={() => handleClick(game.roomN)}>
                                 <div className="container-match">
                                     <button  style={{backgroundColor: "#F3F0FF"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
                                     <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
