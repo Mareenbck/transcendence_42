@@ -18,7 +18,8 @@ const racket_width = GameParams.RACKET_WIDTH;
 const racket_xboard = GameParams.RACKET_XBOARD;
 const racketSpeedY = GameParams.RACKET_SPEED_Y;
 const ballR = GameParams.BALL_RADIUS;
-const MAX_SCORE = 3;
+// si tu changes MAX_SCORE il faut faire les changements dans: ./Front-End/src/components/scores/Scores.tsx et ./Front-End/src/components/scores/Table.tsx
+const MAX_SCORE = 3; 
 const period = GameParams.PERIOD
 
 

@@ -36,6 +36,7 @@ body{
     flex-direction: row-reverse;
     align-items:self-start;
     padding: 0;
+    /* justify-content: space-between; */
     /* padding-top: 10px; */
     width: 80%;
     margin-left: 5px;
@@ -60,18 +61,20 @@ body{
 .pos{
     display: flex;
     flex-direction: row;
-    
-    margin: 30px;
+    justify-content: space-between;
+    gap: 20%;
+    /* margin: 30px; */
     align-self: center;
 
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1200px) {
     .Pos{
         display: grid;
         /* flex-direction: column; */
         margin: 30px;
-        align-self: center;  
+        align-self: center; 
+        gap: 5%;
        
     }
     
