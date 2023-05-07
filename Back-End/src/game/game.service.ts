@@ -1,4 +1,3 @@
-
 import { PrismaService } from '../prisma/prisma.service';
 import { Game } from '@prisma/client';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
@@ -69,6 +68,10 @@ export class GameService {
 // creating rooms for a pair of players and game launch
 	addNewRoom = (playerR: UserDto, playerL: UserDto): void => {
 		const room = `room${this.roomN}`;
+		// leave room is see previously
+		this.userSockets.getUserSockets(playerR.username)?.forEach(socket => socket.leave(room));
+		this.userSockets.getUserSockets(playerL.username)?.forEach(socket => socket.leave(room));
+		// join room
 		this.userSockets.joinToRoom(playerR.username, room);
 		this.userSockets.joinToRoom(playerL.username, room);
 //game initialization 
@@ -89,13 +92,20 @@ export class GameService {
 
 // removing room in gameMap and roomArray
 	removeRoom = (roomN: number): void => {
-		const room = `room${roomN}`;
-		this.userSockets.leaveRoom(room);
-		this.gameMap = this.gameMap.filter(i => i.roomN != roomN);
+//		const room = `room${roomN}`;
+//		this.userSockets.leaveRoom(room);
+
+console.log("0 gameMap", this.gameMap.length);	
+		const filteredGameMap = this.gameMap.filter(i => i.roomN !== roomN);
+		this.gameMap = filteredGameMap;
+console.log("1 gameMap", this.gameMap.length);	
+
+		// this.gameMap = this.gameMap.filter(i => i.roomN != roomN);
+
+console.log("0 roomArray", this.roomArray.length);	
 		this.roomArray = this.roomArray.filter(i => i.roomN != roomN);
 		this.sendListRooms();
-console.log("102 gameMap", this.gameMap);	
-console.log("103 roomArray", this.roomArray);	
+console.log("105 roomArray", this.roomArray.length);	
 	}
 
 // emit to all users in all rooms that play
@@ -103,19 +113,19 @@ console.log("103 roomArray", this.roomArray);
 		this.server.emit("gameRooms", this.roomArray); // send to Front
 	}
 
-	checkPlayerInRooms = async (player: any) => {
-		const playerDto: UserDto = await this.userService.getUser(player.userId);
-// find Nroom by user Dto
-		let game = this.gameMap.find(game => game.checkPlayer(playerDto) );
-		if (game) {
-			// if exist send init
-			this.playGame(playerDto, game.roomN);
-		}
-		else{
-			// or new game
-			this.playGame(playerDto, -1);
-		}
-	}
+// 	checkPlayerInRooms = async (player: any) => {
+// 		const playerDto: UserDto = await this.userService.getUser(player.userId);
+// // find Nroom by user Dto
+// 		let game = this.gameMap.find(game => game.checkPlayer(playerDto) );
+// 		if (game) {
+// 			// if exist send init
+// 			this.playGame(playerDto, game.roomN);
+// 		}
+// 		else{
+// 			// or new game
+// 			this.playGame(playerDto, -1);
+// 		}
+// 	}
 
 //after pressing "playGame" or "watch"
 	playGame = async (player: any, roomN: number): Promise<void> => {
@@ -129,8 +139,8 @@ console.log("103 roomArray", this.roomArray);
 			if (this.players.length == 2){
 				const playerR: UserDto = await this.userService.getUser(this.players[0].userId);
 				const playerL: UserDto = await this.userService.getUser(this.players[1].userId);
-				this.userSockets.emitToUser(playerR.username,'status', {status:'game'}); 
-				this.userSockets.emitToUser(playerL.username,'status', {status:'game'}); 
+				this.userSockets.emitToUser(playerR.username,'status', {status: 'game'}); 
+				this.userSockets.emitToUser(playerL.username,'status', {status: 'game'}); 
 				this.addNewRoom(playerR, playerL);
 			}
 		}

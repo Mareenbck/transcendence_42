@@ -240,15 +240,15 @@ useEffect(() => {
     useEffect(() => {
         addListener('status', updateStatus);
 
-        // return () => {
-        //     // unmount component event (works at mount too)
-        //         if (gamestatus.status == 'game'){
-        //             alert("Alert of sortie game");
-        //         }
-        //         else if (gamestatus.status == 'waiting'){
-        //             alert("Alert of sortie waiting");
-        //         }
-        //     };
+        return () => {
+            // unmount component event (works at mount too)
+                if (gamestatus.status == 'game'){
+                    alert("Alert of sortie game");
+                }
+                else if (gamestatus.status == 'waiting'){
+                    alert("Alert of sortie waiting");
+                }
+            };
     
     }, [updateStatus]);
 
@@ -315,7 +315,7 @@ useEffect(() => {
                         {(!gamestatus.winner) ? (
                     <>
                         {/* <div className='wrapWaiting'>*/}
-                            {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
+                            {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)} 
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                                 // head Game***********
