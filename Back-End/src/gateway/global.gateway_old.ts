@@ -149,9 +149,6 @@ console.log("26 Connect + map: client", this.userSockets.users);
   @SubscribeMessage('playGame')
   async playGame(@MessageBody() data: {user: any, roomN: number}, @ConnectedSocket() socket: Socket,): Promise<void>
   {
-    // leave all rooms before starting/watching a game
-    socket.rooms.forEach(room => socket.leave(room));
-
     this.gameService.playGame(data.user, data.roomN);
   };
 
