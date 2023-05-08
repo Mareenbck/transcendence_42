@@ -120,16 +120,17 @@
     display: flex;
   }
 
-.container-profile {
+  .container-profile {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 80px;
-    height: fit-content;
+    grid-gap: 65px;
+    grid-row-gap: 40px; /* Ajuste la valeur de grid-row-gap */
     padding-top: 80px;
     padding-left: 70px;
-    height: 100%;
     min-height: 100vh;
-}
+    align-content: stretch;
+    align-items: start;
+  }
 
 .card-wrapper {
     grid-template-columns: repeat(3, 1fr);

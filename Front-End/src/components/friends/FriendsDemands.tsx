@@ -15,7 +15,7 @@ import NotificationDemands from "./NotificationDemands";
 const FriendsDemands = (props: any) => {
 	const [sendMessage, addListener] = useSocket();
 	const friendCtx = useContext(FriendContext);
-	const [pendingDemands, setPendingDemands] = useState(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
+	const [pendingDemands, setPendingDemands] = useState<Demand []>([]);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
 
