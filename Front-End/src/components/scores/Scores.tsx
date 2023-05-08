@@ -75,7 +75,7 @@ const Scores = () => {
       return (total);
     }
   }
- 
+  // console.log("fffffffffff");
  
   var sorted = [...allUsers];
   //console.log("sorted", sorted);
@@ -88,7 +88,7 @@ const Scores = () => {
     throw new Error('Function not implemented.');
   }
   
- // console.log("wqwretyt", firts?.avatar);
+//  console.log("wqwretyt", firts?.avatar);
     return(
 
     <>

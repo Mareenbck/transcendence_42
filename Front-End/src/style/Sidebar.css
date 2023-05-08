@@ -19,12 +19,12 @@
 		width: 280px;
 		
 		height: 130vh;
-		/* height: fit-content; */
+		
 	}
 
 }
 
-@media (max-width: 1500px) {
+/* @media (max-width: 1500px) {
     .sidebar {
 		display: flex;
 		flex-direction: column;
@@ -32,8 +32,8 @@
 		background-color: #699BF7;
 		width: 300px;
 		height: 100vh;
-		/* height: fit-content; */
-	}
+		
+	} */
 
 }
 
@@ -52,7 +52,7 @@
 	align-items: center;
 	margin-bottom: 20px;
 }
-@media (max-width: 1700px) {
+@media (max-width: 1500px) {
 	.sidebar .title {
 		display: flex;
 		margin-top: 22px;
@@ -136,10 +136,12 @@
  
   @media (max-width: 1700px) {
 	.hexa {
-		position: relative;
+		/* position: relative;
 		top: 1px;
 		width: 50px;
-		height: 50px;
+		height: 70px; */
+		margin-right: 1rem;
+		padding-left: 1rem;
 	  }
 
 } 

@@ -109,13 +109,13 @@ const Table = (props: any) => {
                     </ListItem >
 
                   {sorted.map((g) => (
-                      <ListItem key={g?.id}>
+                      <ListItem  className="lineTable" key={g?.id}>
                         <div className="container-match">
-                            <p>{g?.username}</p>
-                            <p>{getNbGames(g)}</p>
-                            <p>{getScore(g)}</p>
-                            <p>{getWinner(g)}</p>
-                            <p><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></p>
+                            <p >{g?.username}</p>
+                            <p >{getNbGames(g)}</p>
+                            <p >{getScore(g)}</p>
+                            <p >{getWinner(g)}</p>
+                            <span ><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></span>
                           {/* <PlayerOne player={game.playerOne} winner={game.winner} score={game.score1} />
                           <ScoresMatch score1={game.score1} score2={game.score2} date={game.createdAt}/>
                           <PlayerTwo player={game.playerTwo} winner={game.winner} score={game.score2} /> */}

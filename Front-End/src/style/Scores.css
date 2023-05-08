@@ -65,6 +65,7 @@ body{
     gap: 20%;
     /* margin: 30px; */
     align-self: center;
+    
 
 }
 
@@ -75,25 +76,24 @@ body{
         margin: 30px;
         align-self: center; 
         gap: 5%;
+      
        
     }
     
 }
 
 .midPos{
-    
-        display: flex;
-        flex-direction: row;
-        margin: 20px;
-        
-    
+    display: flex;
+   flex-direction: row;
+   margin: 20px;
+   
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1200px) {
     .midPos{
         display: flex;
        flex-direction: row;
-       margin: 20px;
+       margin: 5px;
        
     }
     
