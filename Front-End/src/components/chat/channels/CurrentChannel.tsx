@@ -23,22 +23,15 @@ export default function CurrentChannel(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
-	
-	
+	const [isMuted, setIsMuted] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'MUTE'));
 	const [showPopUp, setShowPopUp] = useState(true);
 	
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
-	const [isMuted, setIsMuted] = useState(false);
 	const [isBanned, setIsBanned] = useState(false);
 
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
-	const [paperPlaneVisible, setPaperPlaneVisible] = useState(false);
-
-	useEffect(() => {
-		setPaperPlaneVisible(!isMuted);
-	  }, [isMuted]);
 
 	useEffect(() => {
 		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
@@ -47,7 +40,7 @@ export default function CurrentChannel(props: any) {
 		  setIsBanned(participant.status === 'BAN');
 		}
 	  }, [currentChatroom.participants, authCtx.userId]);
-	  
+
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -133,7 +126,6 @@ export default function CurrentChannel(props: any) {
 
 	const handleLeaveChannel = () => {
 		setIsJoined(false);
-		props.showConv(true)
 		props.setShowList(false);
 		props.setUsersList(true);
 		setShowUserList(true);
@@ -152,11 +144,6 @@ export default function CurrentChannel(props: any) {
 		  setShowUserList(true);
 		}
 	  }, [showUsersOnChannel]);
-	  
-
-	// useEffect(() => {
-	// 	addListener("hidePaperPlane", data => hidePaperPlane(data));
-	// }, [paperPlane])
 
 
 	return (
@@ -189,12 +176,12 @@ export default function CurrentChannel(props: any) {
 							onChange={(e) => setNewMessage2(e.target.value)}
 							value={newMessage2}
 						></input>
-						{!isMuted && paperPlaneVisible && 
+						{!isMuted && 
 							<FontAwesomeIcon
 								icon={faPaperPlane}
 								onClick={handleSubmit}
 								className={`send-btn-chat`} // ajouter la classe 'muted' si l'utilisateur est mute							
-								disabled={isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
+								disabled={props.paperPlane} // désactiver le bouton d'envoi si l'utilisateur est mute
 							/>
 						}
 					</div>

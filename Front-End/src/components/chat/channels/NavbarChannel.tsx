@@ -85,7 +85,6 @@ export function NavbarChannel(props: any) {
 			});
 			const data = await response.json();
 			sendMessage("showUsersList", data);
-			// sendMessage("getConv", data);
 			props.onLeaveChannel();
 			return data;
 		} catch(err) {

@@ -62,7 +62,6 @@ export default function UpdateChannelsInList(props: any) {
 						<div className="conversation-icon">
 						{c.participants && !c.participants.some(p => p.userId === user.userId) && (
 							<ChannelVisibility 
-								showConv={c.showConv} 
 								visibility={c.visibility} 
 								id={c.id} 
 								isJoined={c.isJoined} 

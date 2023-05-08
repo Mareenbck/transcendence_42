@@ -360,18 +360,18 @@ function Chat(props: any) {
 	const [isChannelClicked, setIsChannelClicked] = useState(false);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
 	const [showInteractiveList, setShowInteractiveList] = useState<boolean>(false);
-	const [showConv, setShowConv] = useState<boolean>(false);
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [mutedUsers, setMutedUsers] = useState<string[]>([]);
+  const [unMutedUsers, setUnMutedUsers] = useState<string[]>([]);
+
 	
 	const handleShowList = () => {
 	  setShowUsersOnChannel(false);
 	  setShowInteractiveList(true);
 	}
   
-	const handleShowConv = () => {
-	  setShowConv(true);
-	}
 	
 
 	const handleShowUserList = () => {
@@ -386,6 +386,7 @@ function Chat(props: any) {
 		setShowUserList(true);
 	  }
 	}, [showUsersOnChannel]);
+
 	
 	return (
 	  <>
@@ -404,7 +405,6 @@ function Chat(props: any) {
 			  <UpdateChannelsInList
 				currentChat={currentChat}
 				setCurrentChat={setCurrentChat}
-        setShowConv={handleShowConv}
 				/>
 			)}
 			{activeTab === "Direct messages" && (
@@ -429,7 +429,8 @@ function Chat(props: any) {
 				   setIsJoined={setIsJoined}
 				   setShowList={handleShowList}
 				   setUsersList={handleShowUserList}
-           setShowConv={handleShowConv}
+           setMutedUsers={setMutedUsers}
+           setUnMutedUsers={setUnMutedUsers}
 				 />
 			  ) : currentDirect ? (
 				  <CurrentDirectMessages
@@ -462,6 +463,8 @@ function Chat(props: any) {
 					channelVisibility={currentChat?.visibility}
 					channelName={currentChat?.name}
 					isChannelClicked={isChannelClicked}
+          setMutedUsers={setMutedUsers}
+          setUnMutedUsers={setUnMutedUsers}
 				/>
 		)}
 	</div>

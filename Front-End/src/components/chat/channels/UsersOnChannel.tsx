@@ -48,18 +48,9 @@ export default function InteractiveListe(props: any) {
     const [participants, setParticipants] = React.useState([]);
     const banned = participants.filter((p: any) => p.status === 'BAN');
     const muted = participants.filter((p: any) => p.status === 'MUTE');
-    const clean = participants.filter((p: any) => p.status === 'CLEAN');
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
     const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p));
-    const [sendMessage, addListener] = useSocket()
 
-    // useEffect(() => {
-    //     if (muted.length > 0) {
-    //         setIsMuted(true);
-    //     } else {
-    //         setIsMuted(false);
-    //     }
-    // }, [muted]);
    
     const showParticipants = React.useCallback(async (channelId: string) => {
         try {
@@ -116,6 +107,7 @@ export default function InteractiveListe(props: any) {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${authCtx.token}`,
                     },
+
                 }
             );
             if (!response.ok) {
@@ -168,11 +160,16 @@ export default function InteractiveListe(props: any) {
                     },
                 }
                 );
+
+                console.log(response)
+
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
-                setIsMuted(true);
-                
+                 
+                props.setMutedUsers((mutedUsers: any) => [...mutedUsers, userId]);
+                // console.log(props.setMutedUsers)   
+                setIsMuted(true)           
             } catch (error) {
                 console.error(error);
             }
@@ -193,7 +190,11 @@ export default function InteractiveListe(props: any) {
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
+                props.setUnMutedUsers((unMutedUsers: any) => [...unMutedUsers, userId]);
+
                 setIsMuted(false)
+                // props.setPaperPlane(true);
+
             } catch (error) {
                 console.error(error);
             }
@@ -260,7 +261,7 @@ return (
 
                 <Tooltip title="Mute">
                     <FontAwesomeIcon 
-                        icon={faMicrophoneSlash} 
+                        icon={faMicrophone} 
                         onClick={() => muteSomeone(props.channelId, participants.user.id)}                        
                         className={`btn-chatlist mute`}
                     />
@@ -268,7 +269,7 @@ return (
               ) :
                 <Tooltip title="Unmute">                    
                     <FontAwesomeIcon 
-                        icon={faMicrophone} 
+                        icon={faMicrophoneSlash} 
                         onClick={() => unMuteSomeone(props.channelId, participants.user.id)}                        
                         className={`btn-chatlist mute`}
                     />
