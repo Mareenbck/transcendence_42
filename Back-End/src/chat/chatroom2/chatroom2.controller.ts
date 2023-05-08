@@ -116,7 +116,7 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 		// console.log("KICK SOMEONE", kickSomeone);
 		return kickSomeone;
 	}
-	
+
 	@Post('/:channelId/ban/:userId')
 	@UseGuards(JwtGuard)
 	async ban(@Param('channelId') channelId: string, @Param('userId') userId: string) {
