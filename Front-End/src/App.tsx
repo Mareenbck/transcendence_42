@@ -4,7 +4,6 @@ import Signup from './components/auth/Signup'
 import { Route, Routes} from 'react-router-dom';
 
 import Game from './components/game/Game';
-//import OptionGame from './components/game/OptionGame'
 import Chat from './components/chat/Chat'
 import Home from './pages/Home'
 import Profile from './pages/Profile';
@@ -23,7 +22,6 @@ function App() {
 		<Routes>
 			<Route path='/' element={<Home />} />
 			<Route path='/game' element={<Game />} />
-			{/* <Route path='/game/option' element={<OptionGame />} /> */}
 			<Route path='/chat/message' element={<Chat />} />
 			<Route path='/friends' element={<Friends />} />
 			<Route path='/auth/signin' element={<Login />} />

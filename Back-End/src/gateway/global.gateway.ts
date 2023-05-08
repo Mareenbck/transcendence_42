@@ -51,15 +51,15 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.userService.server = this.server;
     this.chatroomService.server = this.server;
     this.gameService.server = this.server;
-      this.chatService.server = this.server;
+    this.chatService.server = this.server;
 	  this.friendshipService.server = this.server;
-      this.globalService.userSockets = this.userSockets;
-      this.chatService.userSockets = this.userSockets;
-      this.gameService.userSockets = this.userSockets;
-      this.chatroomService.userSockets = this.userSockets;
-      this.friendshipService.userSockets = this.userSockets;
-      this.userService.userSockets = this.userSockets;
-      this.logger.verbose("globalGateway Initialized");
+    this.globalService.userSockets = this.userSockets;
+    this.chatService.userSockets = this.userSockets;
+    this.gameService.userSockets = this.userSockets;
+    this.chatroomService.userSockets = this.userSockets;
+    this.friendshipService.userSockets = this.userSockets;
+    this.userService.userSockets = this.userSockets;
+    this.logger.verbose("globalGateway Initialized");
   }
 
   async handleConnection(socket: Socket) {
@@ -77,8 +77,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         this.userSockets.removeSocket(socket)
         socket.disconnect(true);
     }
-console.log("68 handleConnect: client");
-console.log("26 Connect + map: client", this.userSockets.users);
+console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.keys());
   }
 
   async handleDisconnect(client: Socket) {
@@ -140,21 +139,28 @@ console.log("26 Connect + map: client", this.userSockets.users);
 ///////////////////////////
 // Messages for Game: Invite et random
 //////////////////////////
+  @SubscribeMessage('enterGame')
+  async enterGame(@MessageBody() data: {user: any}, @ConnectedSocket() socket: Socket): Promise<void>
+  { this.gameService.enterGame(data.user, socket); };
+  
+  @SubscribeMessage('exitGame')
+  async exitGame(@MessageBody() data: {user: any, status: string}, @ConnectedSocket() socket: Socket): Promise<void> ///
+  { this.gameService.exitGame(data.user, data.status, socket); };
+
   @SubscribeMessage('acceptGame')
-  async acceptGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void>
+  async acceptGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void>
   { this.gameService.acceptGame(data.author, data.player) };
 
   @SubscribeMessage('refuseGame')
-  async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void> 
   { this.gameService.refusalGame(data.author, data.player) };
 
   @SubscribeMessage('InviteGame')
-  async gameInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void>
-  {
-    this.gameService.gameInvite(data.author, data.player) };
+  async gameInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void>
+  { this.gameService.gameInvite(data.author, data.player) };
 
   @SubscribeMessage('playGame')
-  async playGame(@MessageBody() data: {user: any, roomN: number}, @ConnectedSocket() socket: Socket,): Promise<void>
+  async playGame(@MessageBody() data: {user: any, roomN: number}, @ConnectedSocket() socket: Socket): Promise<void>
   {
     // leave all rooms before starting/watching a game
     socket.rooms.forEach(room => socket.leave(room));
@@ -164,9 +170,7 @@ console.log("26 Connect + map: client", this.userSockets.users);
 
   @SubscribeMessage('listRooms')
   async listRooms(@ConnectedSocket() socket: Socket): Promise<void>
-  {
-    this.gameService.sendListRooms();
-  };
+  { this.gameService.sendListRooms(); };
 
 //   @SubscribeMessage('doIplay')
 //   async doIplay(@ConnectedSocket() socket: Socket): Promise<void>
