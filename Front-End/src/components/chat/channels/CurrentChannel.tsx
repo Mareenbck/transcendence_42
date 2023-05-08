@@ -32,14 +32,19 @@ export default function CurrentChannel(props: any) {
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
+	  
+
 
 	useEffect(() => {
-		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
+		const participant = currentChatroom.participants.find(
+		  (p: any) => p.userId === parseInt(authCtx.userId)
+		);
 		if (participant) {
 		  setIsMuted(participant.status === 'MUTE');
 		  setIsBanned(participant.status === 'BAN');
 		}
 	  }, [currentChatroom.participants, authCtx.userId]);
+	  
 
 
 	const getUser = (userId: number): UserChat | null => {
@@ -181,7 +186,7 @@ export default function CurrentChannel(props: any) {
 								icon={faPaperPlane}
 								onClick={handleSubmit}
 								className={`send-btn-chat`} // ajouter la classe 'muted' si l'utilisateur est mute							
-								disabled={props.paperPlane} // désactiver le bouton d'envoi si l'utilisateur est mute
+								// disabled={isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
 							/>
 						}
 					</div>

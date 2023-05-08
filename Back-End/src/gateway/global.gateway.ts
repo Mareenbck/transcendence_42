@@ -205,6 +205,13 @@ console.log("26 Connect + map: client", this.userSockets.users);
 		this.server.emit('deleteChannel', newList);
 	}  
   
+  
+  @SubscribeMessage('joinedChannel')
+	async joinChannel(@MessageBody() data: any, @MessageBody() channelId: any ): Promise<void> {
+		const newList = await this.chatroomService.getParticipants(channelId);
+		this.server.emit('joinedChannel', newList);
+	}  
+
   @SubscribeMessage('showUsersList')
 	async showUsersList(@MessageBody() data: any ): Promise<void> {
     const showList = await this.userService.getUsers();

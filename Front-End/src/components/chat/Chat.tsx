@@ -387,7 +387,8 @@ function Chat(props: any) {
 	  }
 	}, [showUsersOnChannel]);
 
-	
+
+
 	return (
 	  <>
 	  {" "}
@@ -456,17 +457,18 @@ function Chat(props: any) {
 					setToUnblock={setToUnblock}
 				/>
 			)}
-			{currentChat && showUsersOnChannel &&(
+			{currentChat && showUsersOnChannel && (
 				<UsersOnChannel
 					currentChatroom={currentChat}
 					channelId={currentChat?.id}
 					channelVisibility={currentChat?.visibility}
 					channelName={currentChat?.name}
 					isChannelClicked={isChannelClicked}
-          setMutedUsers={setMutedUsers}
-          setUnMutedUsers={setUnMutedUsers}
+					setMutedUsers={setMutedUsers}
+					setUnMutedUsers={setUnMutedUsers}
 				/>
-		)}
+			)}
+			
 	</div>
     </>
   )

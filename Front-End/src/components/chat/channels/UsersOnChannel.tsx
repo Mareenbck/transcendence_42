@@ -23,6 +23,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FriendContext } from "../../../store/FriendshipContext";
 import { faTrash, faBan, faMicrophoneSlash, faMicrophone } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
+import { addListener } from 'process';
+
 
 
 function generate(element: React.ReactElement) {
@@ -50,6 +52,9 @@ export default function InteractiveListe(props: any) {
     const muted = participants.filter((p: any) => p.status === 'MUTE');
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
     const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p));
+    const [isJoined, setIsJoined] = React.useState(true)
+    const [sendMessage, addListener] = useSocket();
+
 
    
     const showParticipants = React.useCallback(async (channelId: string) => {
@@ -193,7 +198,6 @@ export default function InteractiveListe(props: any) {
                 props.setUnMutedUsers((unMutedUsers: any) => [...unMutedUsers, userId]);
 
                 setIsMuted(false)
-                // props.setPaperPlane(true);
 
             } catch (error) {
                 console.error(error);
@@ -204,6 +208,15 @@ export default function InteractiveListe(props: any) {
             showParticipants(props.channelId);
         }, [props.channelId, showParticipants]);
 
+    const [showList, setShowList] = React.useState(null)
+
+  
+	useEffect(() => {        
+		addListener('joinedChannel', data => setShowList(data))
+	}, [setShowList])
+
+	
+            
 
 
 return (
@@ -212,101 +225,103 @@ return (
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
         Participants of {props.channelName}
         </Typography>
-        <Demo style={{ backgroundColor: '#f2f2f2' }}>
+        <Demo style={{ backgroundColor: '#f2f2f2' }}>        
         <List dense={dense}>
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
              Admins
-        </Typography>
-        {admins.map((participants: any) => (
-            <ListItem key={participants.user.username}
-            secondaryAction={
-                <div>
-                    <i className="fa-sharp fa-solid fa-crown"></i>
-                </div>
-            }
-            >
-            <ListItemAvatar>
-                {/* <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
-            </ListItemAvatar>
-            <ListItemText
-                primary={participants?.user.username}
-                secondary={secondary ? 'Secondary text' : null}
-            />
-            </ListItem>
-        ))}
-        <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-            Users
-            </Typography>
-        {users.map((participants: any) => ( 
-            <ListItem key={participants.user.username}>
-            <ListItemAvatar>
-                {/* <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
-            </ListItemAvatar>
-            <ListItemText
-                primary={participants?.user.username}
-                secondary={secondary ? 'Secondary text' : null}
-            />
-            {admins.some(admin => admin.user.id === authCtx.userId) && (
-                <>
-                <Tooltip title="Kick">
-                    <FontAwesomeIcon icon={faTrash} onClick={() => kickSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
-				</Tooltip>
-                {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                     <Tooltip title="Ban">
-                        <FontAwesomeIcon icon={faBan} onClick={() => banSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
-                    </Tooltip>
-                    ) : null
+        </Typography>        
+            {admins.map((participants: any) => (
+                <ListItem key={participants.user.username}
+                secondaryAction={
+                    <div>
+                        <i className="fa-sharp fa-solid fa-crown"></i>
+                    </div>
                 }
-              {!isMuted ? (
-
-                <Tooltip title="Mute">
-                    <FontAwesomeIcon 
-                        icon={faMicrophone} 
-                        onClick={() => muteSomeone(props.channelId, participants.user.id)}                        
-                        className={`btn-chatlist mute`}
-                    />
-                </Tooltip> 
-              ) :
-                <Tooltip title="Unmute">                    
-                    <FontAwesomeIcon 
-                        icon={faMicrophoneSlash} 
-                        onClick={() => unMuteSomeone(props.channelId, participants.user.id)}                        
-                        className={`btn-chatlist mute`}
-                    />
-                </Tooltip>          
-                
-                }
-                </>
-            )}
-            </ListItem>
-        ))}
-        <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-            Banned Users
-        </Typography>
-        {banned.map((participants: any) => (
-             <ListItem key={participants.user.username}>
-            <ListItemAvatar>
-                {/* <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
-            </ListItemAvatar>
-            <ListItemText
-                primary={participants?.user.username}
-                secondary={secondary ? 'Secondary text' : null}
-            />
+                >
+                <ListItemAvatar>
+                    {/* <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
+                </ListItemAvatar>
+                <ListItemText
+                    primary={participants?.user.username}
+                    secondary={secondary ? 'Secondary text' : null}
+                />
+                </ListItem>
+            ))}
+            <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                Users
+                </Typography>
+            {users.map((participants: any) => ( 
+                <ListItem key={participants.user.username}>
+                <ListItemAvatar>
+                    {/* <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
+                </ListItemAvatar>
+                <ListItemText
+                    primary={participants?.user.username}
+                    secondary={secondary ? 'Secondary text' : null}
+                />
+                {showList}
                 {admins.some(admin => admin.user.id === authCtx.userId) && (
                     <>
                     <Tooltip title="Kick">
                         <FontAwesomeIcon icon={faTrash} onClick={() => kickSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
-                    </Tooltip>                   
+                    </Tooltip>
                     {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                    <Tooltip title="UnBan">
-                        <FontAwesomeIcon icon={faBan} onClick={() => unBanSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+                        <Tooltip title="Ban">
+                            <FontAwesomeIcon icon={faBan} onClick={() => banSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+                        </Tooltip>
+                        ) : null
+                    }
+                {!isMuted ?(
+
+                    <Tooltip title="Mute">
+                        <FontAwesomeIcon 
+                            icon={faMicrophone} 
+                            onClick={() => muteSomeone(props.channelId, participants.user.id)}                        
+                            className={`btn-chatlist mute`}
+                        />
                     </Tooltip> 
-                    ) : null
+                ) :
+                    <Tooltip title="Unmute">                    
+                        <FontAwesomeIcon 
+                            icon={faMicrophoneSlash} 
+                            onClick={() => unMuteSomeone(props.channelId, participants.user.id)}                        
+                            className={`btn-chatlist mute`}
+                        />
+                    </Tooltip>          
+                    
                     }
                     </>
                 )}
-            </ListItem>
-        ))}
+                </ListItem>
+            ))}
+            <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                Banned Users
+            </Typography>
+            {banned.map((participants: any) => (
+                <ListItem key={participants.user.username}>
+                <ListItemAvatar>
+                    {/* <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
+                </ListItemAvatar>
+                <ListItemText
+                    primary={participants?.user.username}
+                    secondary={secondary ? 'Secondary text' : null}
+                />
+                    {admins.some(admin => admin.user.id === authCtx.userId) && (
+                        <>
+                        <Tooltip title="Kick">
+                            <FontAwesomeIcon icon={faTrash} onClick={() => kickSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+                        </Tooltip>                   
+                        {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
+                        <Tooltip title="UnBan">
+                            <FontAwesomeIcon icon={faBan} onClick={() => unBanSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+                        </Tooltip> 
+                        ) : null
+                        }
+                        </>
+                    )}
+                
+                </ListItem>
+            ))}
         </List>
         </Demo>
     </Box>

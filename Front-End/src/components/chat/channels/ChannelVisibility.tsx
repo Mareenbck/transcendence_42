@@ -80,12 +80,13 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
                 hash: password
             })
         });
-        const dataResponse = await resp.json();
+        const data = await resp.json();
         if (!resp.ok) {
             setPasswordError(true);
         } else {
             setIsJoined(true);
             setOpenJoinModal(false);
+			sendMessage("joinedChannel", data)
         }
     } catch (err) {
         console.log(err);

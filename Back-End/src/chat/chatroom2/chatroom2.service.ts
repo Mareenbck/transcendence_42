@@ -109,11 +109,11 @@ export class ChatroomService {
 	}
 
   async getParticipants(channelId: number) {
-    // console.log("ENTRE DANS LE SERVICE")
     const channel = await this.prisma.userOnChannel.findMany({
       where: { channelId },
       include: { user: true },
     });
+	// console.log("channelllll" ,channel )
       return channel;
   }
 
