@@ -56,15 +56,19 @@ export class GameService {
 
 
 	enterGame = async (user: any, socket: Socket) => {
+console.log("0 enterGame");	
 		// was waiting
 	    if(this.players.length == 1 && this.players.some(p => p.userId == user.userId)){
+console.log("1 enterGame waiting");	
 			socket.emit('status', {status: 'waiting'}); 
 		} 
 		// was playing
 		else{
+console.log("1 enterGame game");	
 			const playerDto: UserDto = await this.userService.getUser(parseInt(user.userId));
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
+console.log("2 enterGame game");	
 				const game: GameRoom = this.gameMap[index];
 				game.init(playerDto);
 				game.initMoveEvents();
@@ -75,10 +79,13 @@ export class GameService {
 		}
 	}
 	exitGame = async (user: any, status: string, socket: Socket) => {
+console.log("0 exitGame");	
 		// if it was waiting
 		if (status == 'waiting'){
+console.log("1 exitGame waiting");	
 			// waiting a new game
 			if(this.players.some(p => +p.userId == +user.userId)){
+console.log("1 exitGame waiting");	
 				this.players = [];
 			}
 			//waiting invited game
@@ -91,9 +98,11 @@ export class GameService {
 		}
 		// if is game
 		else if (status == 'game'){
+console.log("1 exitGame game");	
 			const playerDto: UserDto = await this.userService.getUser(parseInt(user.userId));
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
+console.log("2 exitGame game");	
 				const game: GameRoom = this.gameMap[index];
 				game.exitGame(playerDto);
 			}
