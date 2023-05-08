@@ -268,15 +268,26 @@ useEffect(() => {
         gamestatus.winner = null;
         setClicked(true);
     };
+
+ // for Disable after click
+//  const [activeLinkk, setActiveLinkk] = useState('');
+//  useEffect(() => {
+//     setActiveLinkk(location.pathname);
+//   }, []);
+
+//  const handleLinkClick = (path: string) => {
+//     setActiveLinkk(path);
+//   };   
   
 //////////////////////////////////////////////////////////////////////////////  
 
     return (
-        <>
+        // <>
+        <React.Fragment key={user.userId}>
 
-        {" "}
-	<div className="containerGame">
-		<div className="gameSideL">
+          {" "}
+	     <div className="containerGame">
+		   <div className="gameSideL">
 			
             {/* <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/> */}
             <div className="title">
@@ -292,17 +303,19 @@ useEffect(() => {
             </SelectColor>
             <div className='posBtnn' >
                             {/* /BUTTON FOR GAME START */}
-                                 <div >
-                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/><a> </a><a> </a>Play</button>
-                                </div>
-                            {/* {!isInPlay() && (
+                                 {/* <div >
+                                 
+                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/><a> </a>Play</button>
+                                </div> */}
+                                
+                            {!isInPlay() && (
                                 <div >
-                                    <button className="btnn" onClick={() => handleClick(-1)}>Play Game</button>
+                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/>Play</button>
                                 </div>
-                            )} */}
+                            )}
                             {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
                             <Link to="/menu">
-                                <button className="btnn"  style={{ alignSelf: "flex-end"}}><ExitToAppIcon/><a> </a> Exit</button>
+                                <button className="btnn"  style={{ alignSelf: "flex-end"}}><ExitToAppIcon/>Exit</button>
                             </Link>
                             
             </div>
@@ -324,7 +337,7 @@ useEffect(() => {
                                 )
                                 //head Game************                                                   
                                 :  
-                              (<p>Select</p>)
+                              ( <h2 className='gametitle'>Game </h2>)
                             } 
                                 
 
@@ -375,12 +388,13 @@ useEffect(() => {
                                 </div>
                             </section>
                     </>
+               
                 )}
               {/* test2 */}
 			</div>
-		</div>
+		 </div>
 
-        <div className='gameSideR'>
+         <div className='gameSideR'>
           <h2 className='posH'>Live games</h2>
           <div>
             {games.map((game: gamesList) => (
@@ -400,13 +414,14 @@ useEffect(() => {
                     </div>
 
                 ))}
-    </div>
+      </div>
 		</div>
 
 
-	</div>
+</div>
    
-     </>
+     {/* </> */}
+    </React.Fragment>
     );
 }
 

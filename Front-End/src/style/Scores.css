@@ -65,6 +65,7 @@ body{
     gap: 20%;
     /* margin: 30px; */
     align-self: center;
+    
 
 }
 
@@ -75,25 +76,24 @@ body{
         margin: 30px;
         align-self: center; 
         gap: 5%;
+      
        
     }
     
 }
 
 .midPos{
-    
-        display: flex;
-        flex-direction: row;
-        margin: 20px;
-        
-    
+    display: flex;
+   flex-direction: row;
+   margin: 20px;
+   
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1200px) {
     .midPos{
         display: flex;
        flex-direction: row;
-       margin: 20px;
+       margin: 5px;
        
     }
     
@@ -174,16 +174,16 @@ tr:nth-child(even) {background-color: #d4dcf7;}
 
 .rangAvatar:first-of-type .cadre {
     background:linear-gradient(0deg, #7862f7, #f2def3);
-    height: 9rem;
+    height: 15rem;
    
 }
 
 .rangAvatar:nth-of-type(2) .cadre {
     background: linear-gradient(0deg, #699BF7, #c2e1f3);
-    height: 15rem;
+    height: 20rem;
 }
 
 .rangAvatar:last-of-type .cadre {
     background: linear-gradient(0deg, #f1f52e, #fa7f37);
-    height: 6rem;
+    height: 9rem;
 }
