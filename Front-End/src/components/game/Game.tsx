@@ -268,6 +268,16 @@ useEffect(() => {
         gamestatus.winner = null;
         setClicked(true);
     };
+
+ // for Disable after click
+//  const [activeLinkk, setActiveLinkk] = useState('');
+//  useEffect(() => {
+//     setActiveLinkk(location.pathname);
+//   }, []);
+
+//  const handleLinkClick = (path: string) => {
+//     setActiveLinkk(path);
+//   };   
   
 //////////////////////////////////////////////////////////////////////////////  
 
@@ -292,14 +302,16 @@ useEffect(() => {
             </SelectColor>
             <div className='posBtnn' >
                             {/* /BUTTON FOR GAME START */}
-                                 <div >
-                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/><a> </a><a> </a>Play</button>
-                                </div>
-                            {/* {!isInPlay() && (
+                                 {/* <div >
+                                 
+                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/><a> </a>Play</button>
+                                </div> */}
+                                
+                            {!isInPlay() && (
                                 <div >
-                                    <button className="btnn" onClick={() => handleClick(-1)}>Play Game</button>
+                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/><a> </a>Play</button>
                                 </div>
-                            )} */}
+                            )}
                             {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
                             <Link to="/menu">
                                 <button className="btnn"  style={{ alignSelf: "flex-end"}}><ExitToAppIcon/><a> </a> Exit</button>
@@ -324,7 +336,7 @@ useEffect(() => {
                                 )
                                 //head Game************                                                   
                                 :  
-                              (<p>Select</p>)
+                              ( <h2 className='gametitle'>Game </h2>)
                             } 
                                 
 
