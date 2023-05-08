@@ -2,15 +2,13 @@ import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
 // import Winner from './Winner'
-import type { gameInit, gameState, gameStatus, gameList, UserGame, gamesList } from './interface_game'
+import type { gameInit, gameState, gameStatus, gameList, UserGame } from './interface_game'
 import ColorModal from './modal/ColorModal';
 import RefusModal from './modal/RefusModal';
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
 import '../../style/OptionGame.css';
 import { Link, useLocation, useBeforeUnload } from "react-router-dom";
-import SideBar from '../SideBar';
-import style from '../../style/Menu.module.css';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import BrightnessLowIcon from '@mui/icons-material/BrightnessLow';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -56,6 +54,10 @@ function Game() {
 
     }, []);
 
+    useEffect(() => {
+        sendMessage("enterGame", {user: user});
+    }, []);
+
     const getCurrentGame = (roomN: number) => {
         if (games){
             const index = games.findIndex((game:gameList) => game.roomN == roomN);
@@ -68,10 +70,10 @@ function Game() {
                     <div className="container-match" style={{backgroundColor: "white",
                                                             border: "solid" ,
                                                             borderBlockColor:"black" } } >
-                        <PlayerOne  style={{backgroundColor: "white"}} player={game.playerL} winner={""} sizeAvatar={"l"} />
+                        <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
                         <p className='vs'> VS</p>
                     
-                        <PlayerTwo  player={game.playerR} winner={""}  sizeAvatar={"l"} />
+                        <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
                     </div>
                     </>
                 );
@@ -213,9 +215,6 @@ useEffect(() => {
         const width = Math.floor(0.6 * window.innerWidth);
         if(width){
             data.table_width = width;
-        // }
-        // else{
-        //     data.table_width = 600;
         }
         if(curroom == -1){
             gamestatus.status == 'game';
@@ -235,26 +234,12 @@ useEffect(() => {
     useEffect(() => {
         addListener('init-pong', initListener);
         addListener('pong', updateListener);
-    }, [initListener, updateListener]);
-
-    useEffect(() => {
         addListener('status', updateStatus);
+    }, [initListener, updateListener, updateStatus]);
 
-        // return () => {
-        //     // unmount component event (works at mount too)
-        //         if (gamestatus.status == 'game'){
-        //             alert("Alert of sortie game");
-        //         }
-        //         else if (gamestatus.status == 'waiting'){
-        //             alert("Alert of sortie waiting");
-        //         }
-        //     };
-    
-    }, [updateStatus]);
-
-    const isInPlay = (): boolean => {
-        return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
-    };
+    // const isInPlay = (): boolean => {
+    //     return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
+    // };
 
 // action when clicking on "PlayGame"
     const [clicked_play, setClicked] = useState(false);
@@ -275,138 +260,137 @@ useEffect(() => {
         <>
 
         {" "}
-	<div className="containerGame">
-		<div className="gameSideL">
-			
-            {/* <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/> */}
-            <div className="title">
-            <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
-                <h4>{user.username}</h4>
-            </div>
-            
-            {/* <PlayerOne player={user} winner={""} score={0} /> */}
-            <SelectColor changColorToRed={changColorToRed}
-                                    changColorToBlue={changColorToBlue}
-                                    changColorToGreen={changColorToGreen}
-                                    changColorToBlack={changColorToBlack}>
-            </SelectColor>
-            <div className='posBtnn' >
-                            {/* /BUTTON FOR GAME START */}
-                                 <div >
-                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/><a> </a><a> </a>Play</button>
-                                </div>
-                            {/* {!isInPlay() && (
-                                <div >
-                                    <button className="btnn" onClick={() => handleClick(-1)}>Play Game</button>
-                                </div>
-                            )} */}
-                            {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
-                            <Link to="/menu">
-                                <button className="btnn"  style={{ alignSelf: "flex-end"}}><ExitToAppIcon/><a> </a> Exit</button>
-                            </Link>
-                            
-            </div>
-	
+        <div className="containerGame">
+            <div className="gameSideL">
+                
+                {/* <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/> */}
+                <div className="title">
+                <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
+                    <h4>{user.username}</h4>
+                </div>
+                
+                {/* <PlayerOne player={user} winner={""} score={0} /> */}
+                <SelectColor changColorToRed={changColorToRed}
+                            changColorToBlue={changColorToBlue}
+                            changColorToGreen={changColorToGreen}
+                            changColorToBlack={changColorToBlack}>
+                </SelectColor>
+                <div className='posBtnn' >
+                    {/* /BUTTON FOR GAME START */}
+                    <div >
+                        <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/>Play</button>
                     </div>
+                    {/* {!isInPlay() && (
+                        <div >
+                            <button className="btnn" onClick={() => handleClick(-1)}>Play Game</button>
+                        </div>
+                    )} */}
+                    {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
+                    <Link to="/menu">
+                        <button className="btnn" onClick={() => sendMessage("exitGame", { user: user, status: gamestatus.status })} style={{ alignSelf: "flex-end" }}>
+                            <ExitToAppIcon /> Exit
+                        </button>
+                    </Link>
+                                
+                </div>
+        
+            </div>
 
-                    <div className="gameBox">
-                        <div className="gameBoxW">
-                        
-                        {(!gamestatus.winner) ? (
+                <div className="gameBox">
+                    <div className="gameBoxW">
+                    
+                    {(!gamestatus.winner) ? (
                     <>
                         {/* <div className='wrapWaiting'>*/}
-                            {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
-                        
-                            { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
-                                // head Game***********
-                                (
-                                    getCurrentGame(curroom)
-                                )
-                                //head Game************                                                   
-                                :  
-                              (<p>Select</p>)
-                            } 
-                                
-
-                            {(gamestatus.status == 'waiting') ?
+                        {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
+                    
+                        { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
+                            // head Game***********
                             (
-                                <div className='wrapWaiting'>
-                                    <div className="center">
-                                        <h1 className="blink"> Waiting your opponent</h1>
-                                        <div className="circle"></div>
-                                    </div>
-                                </div>
-                            ):(
-                                <div>                   
-                                    {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
-                                    {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
-                                                                                                changColorToBlue={changColorToBlue}
-                                                                                                changColorToGreen={changColorToGreen}
-                                                                                                changColorToBlack={changColorToBlack}
-                                                                                                />}
-                                    { !ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
-                                   
-                                </div>
-                            )}
+                                getCurrentGame(curroom)
+                            )
+                            //head Game************                                                   
+                            :  
+                            (<p>Select</p>)
+                        } 
                             
-                        {/* </div> */}
+
+                        {(gamestatus.status == 'waiting') ?
+                        (
+                            <div className='wrapWaiting'>
+                                <div className="center">
+                                    <h1 className="blink"> Waiting your opponent</h1>
+                                    <div className="circle"></div>
+                                </div>
+                            </div>
+                        ):(
+                            <div>                   
+                                {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
+                                {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
+                                                                                            changColorToBlue={changColorToBlue}
+                                                                                            changColorToGreen={changColorToGreen}
+                                                                                            changColorToBlack={changColorToBlack}
+                                                                                            />}
+                                { !ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
+                                
+                            </div>
+                        )}
                     </>
-                ):(
+                    ):(
                     <>
                         <section className='headerWin'>
-
                         </section>
+
                         <section className='sctWin'>
-                        
-                                {/* <div className="container-match" style={{backgroundColor: "white",
-                                                                        border: "solid" ,
-                                                                        borderBlockColor:"black" } } >
-                                    <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
-                                    <p className='vs'> VS</p>
-                                
-                                    <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
-                                </div> */}
-                   
-                                <h1> WINNER </h1>
-                                <div className='CapWinner'>    
-                                    <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
-                                   
-                                    <BrightnessLowIcon id = "win" className='star' />
-                                </div>
-                            </section>
-                    </>
-                )}
-              {/* test2 */}
-			</div>
-		</div>
-
-        <div className='gameSideR'>
-          <h2 className='posH'>Live games</h2>
-          <div>
-            {games.map((game: gamesList) => (
-                    <div className='wrapList'>
-
-                    {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
-                        <div onClick={() => handleClick(game.roomN)}>
-                            <div className="container-match">
-                                <button  style={{backgroundColor: "with", marginRight:"0", padding:"0"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
-                                <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
-                                <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
-                                
-                                <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
-                            </div>
+                            {/* <div className="container-match" style={{backgroundColor: "white",
+                                                                    border: "solid" ,
+                                                                    borderBlockColor:"black" } } >
+                                <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
+                                <p className='vs'> VS</p>
                             
+                                <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
+                            </div> */}
+                
+                            <h1> WINNER </h1>
+                            <div className='CapWinner'>    
+                                <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
+                                
+                                <BrightnessLowIcon id = "win" className='star' />
+                            </div>
+                        </section>
+                    </>
+                    )}
+                    {/* test2 */}
+                </div>
+            </div>
+
+            <div className='gameSideR'>
+                <h2 className='posH'>Live games</h2>
+                    <div>
+                    {games.map((game: gamesList) => (
+                        <div className='wrapList'>
+
+                            {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
+                            <div onClick={() => handleClick(game.roomN)}>
+                                <div className="container-match">
+                                    <button  style={{backgroundColor: "with", marginRight:"0", padding:"0"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
+                                    <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
+                                    <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
+                                    
+                                    <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
+                                </div>
+                                
+                            </div>
                         </div>
-                    </div>
 
-                ))}
-    </div>
-		</div>
+                    ))}
+                </div>
+            </div>
 
 
-	</div>
-   
-     </>
+        </div>
+    
+    </>
     );
 }
 

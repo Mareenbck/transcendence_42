@@ -33,7 +33,8 @@ export class GameRoom {
 	};
 	private playerR: player = {
 		user: {} as UserDto,
-		racket: {x: width - racket_width - racket_xboard, y: (height - racket_height)/2},		score: 0,
+		racket: {x: width - racket_width - racket_xboard, y: (height - racket_height)/2},
+		score: 0,
 	};
 
 	private interval: NodeJS.Timeout; // define the interval property
@@ -105,10 +106,8 @@ console.log("constructor Class.game");
 		this.playerL.user = playerL;
 	}
 
-	public checkPlayer(
-		player: UserDto,
-	): boolean {
-		return this.playerR.user == player || this.playerL.user == player;
+	public checkPlayer(player: UserDto): boolean {
+		return +this.playerR.user.id == +player.id || +this.playerL.user.id == +player.id;
 	}
 
 
@@ -216,7 +215,6 @@ console.log("constructor Class.game");
 	private destroy_game(): void{
 		this.isrunning = false;
 
-		
 		// disconnect Move Events
 		this.userSockets.offFromUser(this.playerR.user.username, 'move', (message: string)=>{});
 		this.userSockets.offFromUser(this.playerL.user.username, 'move', (message: string)=>{});
@@ -226,7 +224,7 @@ console.log("constructor Class.game");
 
 		// send winner
 		this.server.to(this.room).emit('status', {winner: this.status.winner, status: 'winner',});
-		
+
 		// leave room
 console.log("leave room");
 		this.userSockets.leaveRoom(this.room);
@@ -260,5 +258,23 @@ console.log("game.class.run");
 				this.interval = null;
 			}
 		}, period);
+	}
+
+	// exit Game if exit buttonis pressed
+	public exitGame(player: UserDto): void {
+console.log("exit in gameClass", player.id, this.playerR.user.id, this.playerL.user.id)
+		clearInterval(this.interval);
+		if (player.id == this.playerR.user.id){
+			this.playerL.score = MAX_SCORE;
+			this.status.winner =  this.playerL.user;
+		}
+		else {
+			this.playerR.score = MAX_SCORE;
+			this.status.winner =  this.playerR.user;
+		}
+
+		this.save_results2DB();
+		this.destroy_game();
+		this.interval = null;
 	}
 }
