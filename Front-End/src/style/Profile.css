@@ -127,6 +127,8 @@
     height: fit-content;
     padding-top: 80px;
     padding-left: 70px;
+    height: 100%;
+    min-height: 100vh;
 }
 
 .card-wrapper {
@@ -154,7 +156,7 @@
     width: 50px;
     height: 50px;
 }
-
+/*
 @media (max-width: 768px) {
     .container-profile {
       grid-template-columns: 1fr;
@@ -162,7 +164,7 @@
     .card-wrapper {
         grid-template-columns: 1fr;
       }
-}
+} */
 
 .body h5{
     font-style: normal;
