@@ -23,7 +23,6 @@ export class GameService {
 	public server: Server = null;
 	public userSockets: UsersSockets;
 	public gameService: GameService;
-	private gameId: number = 0;
 
 //connected users> random game >:  MAX length = 2 and after paring, cleared
 	private players: any[] = [];
@@ -34,10 +33,6 @@ export class GameService {
 //array of the active rooms: roomN, playerR, playerL, scoreR, scoreL
 	private roomArray: roomsList[] = [];
 	private roomN: number = 0;
-
-	// getPlayer:any = (username: string) => {
-    //     return this.players.find(u => +u.user.username === +username);
-    // }
 
 	
 // ...
@@ -58,6 +53,54 @@ export class GameService {
 		}
 		return false;
 	}
+
+
+	enterGame = async (user: any, socket: Socket) => {
+		// was waiting
+	    if(this.players.length == 1 && this.players.some(p => p.userId == user.userId)){
+			socket.emit('status', {status: 'waiting'}); 
+		} 
+		// was playing
+		else{
+			const playerDto: UserDto = await this.userService.getUser(parseInt(user.userId));
+			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
+			if (index != -1) {
+				const game: GameRoom = this.gameMap[index];
+				game.init(playerDto);
+				game.initMoveEvents();
+				socket.join(`room${game.roomN}`);
+				socket.emit('status', {status: 'game'}); 
+				this.sendListRooms();
+			}
+		}
+	}
+	exitGame = async (user: any, status: string, socket: Socket) => {
+		// if it was waiting
+		if (status == 'waiting'){
+			// waiting a new game
+			if(this.players.some(p => +p.userId == +user.userId)){
+				this.players = [];
+			}
+			//waiting invited game
+			const index = this.invited.findIndex(p => p.author.id == user.userId);
+			if (index != -1){
+				this.invited = this.invited.filter(p => p.author.id != user.userId); //send message
+			}
+
+			socket.emit('status', {status: 'null'}); 
+		}
+		// if is game
+		else if (status == 'game'){
+			const playerDto: UserDto = await this.userService.getUser(parseInt(user.userId));
+			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
+			if (index != -1) {
+				const game: GameRoom = this.gameMap[index];
+				game.exitGame(playerDto);
+			}
+			socket.emit('status', {status: 'null'}); 
+		}
+	}
+
 
 // add player in array "players"> random game > after pressing "Play Game"
 	addPlayer = (user: any) => {
@@ -100,8 +143,6 @@ console.log("0 gameMap", this.gameMap.length);
 		this.gameMap = filteredGameMap;
 console.log("1 gameMap", this.gameMap.length);	
 
-		// this.gameMap = this.gameMap.filter(i => i.roomN != roomN);
-
 console.log("0 roomArray", this.roomArray.length);	
 		this.roomArray = this.roomArray.filter(i => i.roomN != roomN);
 		this.sendListRooms();
@@ -113,32 +154,15 @@ console.log("105 roomArray", this.roomArray.length);
 		this.server.emit("gameRooms", this.roomArray); // send to Front
 	}
 
-// 	checkPlayerInRooms = async (player: any) => {
-// 		const playerDto: UserDto = await this.userService.getUser(player.userId);
-// // find Nroom by user Dto
-// 		let game = this.gameMap.find(game => game.checkPlayer(playerDto) );
-// 		if (game) {
-// 			// if exist send init
-// 			this.playGame(playerDto, game.roomN);
-// 		}
-// 		else{
-// 			// or new game
-// 			this.playGame(playerDto, -1);
-// 		}
-// 	}
-
 //after pressing "playGame" or "watch"
 	playGame = async (player: any, roomN: number): Promise<void> => {
-		// const playerDto: UserDto = await this.userService.getUser(player.userId);
-		// // find room by user Dto
-		// const [N, ] = Array.from(this.gameMap.entries()).find(([, game]) => game.checkPlayer(playerDto) ) || [undefined, undefined];
 //if player comes in to random game
 		if (roomN == -1){ //
 			this.addPlayer(player);
 			this.userSockets.emitToUser(player.username,'status', {status: 'waiting'} ); 
 			if (this.players.length == 2){
-				const playerR: UserDto = await this.userService.getUser(this.players[0].userId);
-				const playerL: UserDto = await this.userService.getUser(this.players[1].userId);
+				const playerR: UserDto = await this.userService.getUser(parseInt(this.players[0].userId));
+				const playerL: UserDto = await this.userService.getUser(parseInt(this.players[1].userId));
 				this.userSockets.emitToUser(playerR.username,'status', {status: 'game'}); 
 				this.userSockets.emitToUser(playerL.username,'status', {status: 'game'}); 
 				this.addNewRoom(playerR, playerL);
@@ -147,7 +171,7 @@ console.log("105 roomArray", this.roomArray.length);
 //if spectator comes to watch
 		else {
 			let game = this.gameMap.find(i => i.roomN == roomN);
-			const playerDto: UserDto = await this.userService.getUser(player.userId);
+			const playerDto: UserDto = await this.userService.getUser(parseInt(player.userId));
 			game.init(playerDto);
 			game.initMoveEvents();
 			this.userSockets.joinToRoom(playerDto.username, `room${roomN}`);

@@ -46,11 +46,6 @@ export interface status{
 	winner: UserDto;
 	status: string;
 }
-// export interface IGameState {
-// 	player1: IProfil;
-// 	player2: IProfil;
-// 	ball: IBall;
-// }
  
 // export enum GameStatus {
 // 	STARTING = 'starting',
@@ -72,12 +67,5 @@ export const GameParams = {
 	BALL_RADIUS: 0.015*a,
 	BALL_DEFAULT_SPEED: 0.008*a,
 	BALL_DELTA_SPEED: 0.00025*a,
-	// GAME_WIDTH: 1000, // 
-	// GAME_HEIGHT: 500,
-	// RACKET_SPEED_Y: 8,
-	// RACKET_HEIGHT: 150,
-	// RACKET_WIDTH: 10,
-	// BALL_RADIUS: 15,
-	// BALL_DEFAULT_SPEED: 7,
 	PERIOD: 100
 };
