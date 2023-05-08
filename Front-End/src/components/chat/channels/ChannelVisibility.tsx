@@ -9,24 +9,26 @@ import ChatInChatroom from "./ChatInChatroom";
 import ErrorModal from "../../auth/ErrorModal";
 import ErrorModalPassword from "./ErrorModalPassword";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { addListener } from "process";
+import useSocket from "../../../service/socket";
 
 
 export default function ChannelVisibility(props: any) {
 
-  const [openJoinModal, setOpenJoinModal] = useState(false);
-  const userContext = useContext(AuthContext);
-  const passwordInputRef = useRef<HTMLInputElement>(null);
+	const [openJoinModal, setOpenJoinModal] = useState(false);
+	const userContext = useContext(AuthContext);
+	const passwordInputRef = useRef<HTMLInputElement>(null);
 	const [isJoined, setIsJoined] = useState(false);
-  const [error, setError] = useState<ErrorMsg | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
-  const [passwordError, setPasswordError] = useState(false);
+	const [passwordError, setPasswordError] = useState(false);
+	const [joinButton, setJoinButton] = useState(null);
+	const [sendMessage, addListener] = useSocket();
 
 
   const handleOpenJoinModal = (e: FormEvent) => {
     setOpenJoinModal(true);
   };
-
 
   function getIconByChannelType() {
     let icon;
@@ -34,7 +36,7 @@ export default function ChannelVisibility(props: any) {
     if (props.visibility === "PWD_PROTECTED") {
       icon = (
         <div className="visibility-icon">
-          {!isJoined && (
+          {!isJoined &&(
             <IconButton onClick={handleOpenJoinModal} aria-label="fingerprint">
               <ArrowCircleRightIcon />
             </IconButton>
@@ -60,33 +62,35 @@ export default function ChannelVisibility(props: any) {
     return icon;
   }
 
-	const joinChannel = async (e: FormEvent, channelId: number) => {
-		e.preventDefault();
-		const password = passwordInputRef.current?.value;
-	try {
-		const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
-			method: "POST",
-			headers: {
-				"Content-type": "application/json",
-				Authorization: `Bearer ${userContext.token}`
-			},
-			body: JSON.stringify({
-				channelId: channelId,
-				userId: userContext.userId,
-				hash: password
-			})
-		});
-		const dataResponse = await resp.json();
-		if (!resp.ok) {
-			setPasswordError(true);
-		} else {
-			setIsJoined(true);
-			setOpenJoinModal(false);
-		}
-		} catch (err) {
-		console.log(err);
-		}
-	};
+// ...
+
+const joinChannel = async (e: FormEvent, channelId: number) => {
+    e.preventDefault();
+    const password = passwordInputRef.current?.value;
+    try {
+        const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${userContext.token}`
+            },
+            body: JSON.stringify({
+                channelId: channelId,
+                userId: userContext.userId,
+                hash: password
+            })
+        });
+        const dataResponse = await resp.json();
+        if (!resp.ok) {
+            setPasswordError(true);
+        } else {
+            setIsJoined(true);
+            setOpenJoinModal(false);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
 
   return (
     <>

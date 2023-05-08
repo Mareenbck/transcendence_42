@@ -66,7 +66,7 @@ export function NavbarChannel(props: any) {
 			  },
 			});
 			const data = await response.json();
-			// console.log("DATA IN FETCH", data)
+			console.log("DATA IN FETCH", data)
 			return data;
 		} catch(err) {
 			console.log(err);
@@ -85,6 +85,7 @@ export function NavbarChannel(props: any) {
 			});
 			const data = await response.json();
 			sendMessage("showUsersList", data);
+			// sendMessage("getConv", data);
 			props.onLeaveChannel();
 			return data;
 		} catch(err) {

@@ -34,8 +34,11 @@ export default function CurrentChannel(props: any) {
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
-	const [paperPlane, hidePaperPlane] = useState(null);
+	const [paperPlaneVisible, setPaperPlaneVisible] = useState(false);
 
+	useEffect(() => {
+		setPaperPlaneVisible(!isMuted);
+	  }, [isMuted]);
 
 	useEffect(() => {
 		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
@@ -130,6 +133,7 @@ export default function CurrentChannel(props: any) {
 
 	const handleLeaveChannel = () => {
 		setIsJoined(false);
+		props.showConv(true)
 		props.setShowList(false);
 		props.setUsersList(true);
 		setShowUserList(true);
@@ -150,9 +154,9 @@ export default function CurrentChannel(props: any) {
 	  }, [showUsersOnChannel]);
 	  
 
-	useEffect(() => {
-		addListener("hidePaperPlane", data => hidePaperPlane(data));
-	})
+	// useEffect(() => {
+	// 	addListener("hidePaperPlane", data => hidePaperPlane(data));
+	// }, [paperPlane])
 
 
 	return (
@@ -185,12 +189,12 @@ export default function CurrentChannel(props: any) {
 							onChange={(e) => setNewMessage2(e.target.value)}
 							value={newMessage2}
 						></input>
-						{!isMuted && 
+						{!isMuted && paperPlaneVisible && 
 							<FontAwesomeIcon
 								icon={faPaperPlane}
 								onClick={handleSubmit}
 								className={`send-btn-chat`} // ajouter la classe 'muted' si l'utilisateur est mute							
-								disabled={props.isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
+								disabled={isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
 							/>
 						}
 					</div>

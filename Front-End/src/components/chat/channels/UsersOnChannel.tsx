@@ -90,36 +90,38 @@ export default function InteractiveListe(props: any) {
         }
         const updatedParticipants = participants.filter(p => p.user.id !== userId);
         setParticipants(updatedParticipants);
+        showParticipants(channelId);
         } catch (error) {
             console.error(error);
         }
     };
 
 
-        const banSomeone = async (channelId: string, userId: string) => {
-            try {
-                const response = await fetch(
-                    `http://localhost:3000/chatroom2/${channelId}/ban/${userId}`,
-              {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${authCtx.token}`,
+    const banSomeone = async (channelId: string, userId: string) => {
+        try {
+            const response = await fetch(
+                `http://localhost:3000/chatroom2/${channelId}/ban/${userId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${authCtx.token}`,
                     },
                 }
-                );
-                if (!response.ok) {
-                    throw new Error("Failed to ban user.");
-                }
-                const updatedParticipants = participants.filter(p => p.user.id !== userId);
-                setParticipants(updatedParticipants);
-                setIsBanned(true);
-
-            } catch (error) {
-                console.error(error);
+            );
+            if (!response.ok) {
+                throw new Error("Failed to ban user.");
             }
-        };
-
+            const updatedParticipants = participants.filter(p => p.user.id !== userId);
+            setParticipants(updatedParticipants);
+            setIsBanned(true);
+            showParticipants(channelId);
+        
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    
         const unBanSomeone = async (channelId: string, userId: string) => {
             try {
                 const response = await fetch(
@@ -137,6 +139,8 @@ export default function InteractiveListe(props: any) {
                 }
                 const updatedParticipants = participants.filter(p => p.user.id !== userId);
                 setParticipants(updatedParticipants);
+                showParticipants(channelId);
+
 
             } catch (error) {
                 console.error(error);

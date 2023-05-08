@@ -201,9 +201,7 @@ console.log("26 Connect + map: client", this.userSockets.users);
   
   @SubscribeMessage('removeConv')
 	async removeConv(@MessageBody() data: any ): Promise<void> {
-		// Récupérer les demandes mises à jour
 		const newList = await this.chatroomService.findAll();
-		// Envoyer les demandes mises à jour à tous les clients connectés
 		this.server.emit('deleteChannel', newList);
 	}  
   
@@ -212,7 +210,8 @@ console.log("26 Connect + map: client", this.userSockets.users);
     const showList = await this.userService.getUsers();
 		this.server.emit('showUsersList', showList);
 	} 
-  
+
+
   @SubscribeMessage('hidePaperPlane')
 	async hidePaperPlane(@MessageBody() channelId: any, @MessageBody() userId: any ): Promise<void> {
     const hidePaperPlane = await this.chatroomService.mute(channelId, userId);

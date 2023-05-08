@@ -15,7 +15,6 @@ export default function UpdateChannelsInList(props: any) {
 	const [AConversation, setAConversation] = useState(null);
 	const user = useContext(AuthContext);
 	const { currentChat, setCurrentChat } = props;
-	// const [openModal, setOpenModal] = useState(false);
 	const [sendMessage, addListener] = useSocket();
 
 	
@@ -51,9 +50,10 @@ export default function UpdateChannelsInList(props: any) {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [conversations]);
 
+
 	return (
 		<div className="conversation-list">
-			{conversations.map((c) => (
+			{conversations.map((c: any) => (
 				<div key={c.id} onClick={() => { setCurrentChat(c) }}>
 					<div className="channel-inlist">
 						<div className="conversation-name">
@@ -61,7 +61,13 @@ export default function UpdateChannelsInList(props: any) {
 						</div>
 						<div className="conversation-icon">
 						{c.participants && !c.participants.some(p => p.userId === user.userId) && (
-							<ChannelVisibility visibility={c.visibility} id={c.id} isJoined={c.isJoined} />
+							<ChannelVisibility 
+								showConv={c.showConv} 
+								visibility={c.visibility} 
+								id={c.id} 
+								isJoined={c.isJoined} 
+								setIsJoined={c.setIsJoined}
+							/>
 						)}
 						</div>
 					</div>
