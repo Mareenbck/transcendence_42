@@ -396,8 +396,8 @@ return (
 			)}
 			{activeTab === "Direct messages" && (
 				<UsersWithDirectMessage
-					// currentDirect={currentDirect}
-					// setCurrentDirect={setCurrentDirect}
+					currentDirect={currentDirect}
+					setCurrentDirect={setCurrentDirect}
 					isHeBlocked={isHeBlocked}
 					getDirect={getDirect}
 					getUser={getUser}

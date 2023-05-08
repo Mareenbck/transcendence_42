@@ -22,7 +22,9 @@ export default function UsersWithDirectMessage(props: any) {
 	const friendCtx = useContext(FriendContext);
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
 	const [sendMessage, addListener] = useSocket();
+	const [latestsMsgs, setLatestsMsgs] = useState<any>(null);
 
+	// console.log("User with DM ", props)
 // scroll
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({behavior: "smooth"})
@@ -58,7 +60,6 @@ export default function UsersWithDirectMessage(props: any) {
 	useEffect(() => {
 		const fetchData = async () => {
 		  const data = await getAllUsersWith();
-		  console.log("DATAAAA", data);
 		  setUsersWith(data);
 		};
 		fetchData();
@@ -84,6 +85,29 @@ export default function UsersWithDirectMessage(props: any) {
       {return "chatOnlineFriend";}
   };
 
+  useEffect(() => {
+	const fetchUserWithDirectMessages = async () => {
+	  if (authCtx && props.currentDirect && props.currentDirect.id) {
+		const response = await Fetch.fetch(authCtx.token, "GET", `dir-mess/getMessages/`);
+		setLatestsMsgs(response);
+	  }
+	};
+	fetchUserWithDirectMessages();
+  }, [authCtx, props.currentDirect]);
+
+  const isDirectMsg = (userWithId: number): boolean => {
+	const { currentDirect } = props;
+	if (currentDirect?.id) {
+	  if (userWithId === currentDirect.id) {
+		return true;
+	  }
+	}
+	return false;
+  }
+//   console.log("usersWith --->")
+//   console.log(usersWith)
+//   console.log("latestsMsgs --->")
+//   console.log(latestsMsgs)
 	return (
 		<Box style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
 			{usersWith && usersWith.map((o) => (
@@ -100,10 +124,10 @@ export default function UsersWithDirectMessage(props: any) {
 						{ amIBlocked(+o?.id) === "chatOnlineNotFriend" ? (
 							<FontAwesomeIcon icon={faBan} className={`btn-chatlist-disable`} />
 							) : (
-								!me?.blockedTo.find((u: UserChat) => +o?.id === +u?.id) && (
-									<DirectMessageInfo userWithDM={o} type='status'/>
+								!me?.blockedTo.find((u: UserChat) => +o?.id === +u?.id) ? (
+									<DirectMessageInfo userWithDM={o} type='status' currentDirect={props.currentDirect} latestsMsgs={latestsMsgs} />
 									// <p>LOL</p>
-								)
+								) : null
 						)}
 						</>
 					}
@@ -113,7 +137,7 @@ export default function UsersWithDirectMessage(props: any) {
 					</ListItemAvatar>
 					<div className='directMess-info'>
 						<ListItemText className="dicuss-link" primary={o?.username} onClick={props.isHeBlocked(o.id) ? () => props.getDirect(o) : undefined}/>
-						{/* <DirectMessageInfo userWithDM={o} type='msg'/> */}
+						<DirectMessageInfo userWithDM={o} type='msg'/>
 					</div>
 				</ListItem>
 			))}
