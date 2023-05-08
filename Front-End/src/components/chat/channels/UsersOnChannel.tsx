@@ -158,8 +158,6 @@ export default function InteractiveListe(props: any) {
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
-                // const data = await response.json();
-                // sendMessage("hidePaperPlane", data);
                 
             } catch (error) {
                 console.error(error);
@@ -181,8 +179,7 @@ export default function InteractiveListe(props: any) {
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
-                const updatedParticipants = participants.filter(p => p.user.id !== userId);
-                setParticipants(updatedParticipants);
+
                 
             } catch (error) {
                 console.error(error);
@@ -192,6 +189,7 @@ export default function InteractiveListe(props: any) {
         useEffect(() => {
             showParticipants(props.channelId);
         }, [props.channelId, showParticipants]);
+
 
 
 return (
@@ -246,17 +244,19 @@ return (
                     ) : null
                 }
                  <Tooltip title="Mute">
-                    <FontAwesomeIcon 
-                        icon={faMicrophoneSlash} 
-                        onClick={() => {
-                            if (participants.status === 'MUTE') {
+                 <FontAwesomeIcon 
+                    icon={faMicrophoneSlash} 
+                    onClick={() => {
+                        if (isMuted) {
                             unMuteSomeone(props.channelId, participants.user.id);
-                            } else {
+                            setIsMuted(false);
+                        } else {
                             muteSomeone(props.channelId, participants.user.id);
-                            }
-                        }}                        
-                        className={`btn-chatlist mute ${participants.status === 'MUTE' ? 'muted' : ''}`}
-                    />
+                            setIsMuted(true);
+                        }
+                    }}                        
+                    className={`btn-chatlist mute ${isMuted ? 'muted' : ''}`}
+                />
 				</Tooltip>           
                 </>
             )}
@@ -275,17 +275,17 @@ return (
                 secondary={secondary ? 'Secondary text' : null}
             />
                 {admins.some(admin => admin.user.id === authCtx.userId) && (
-                <>
-                <Tooltip title="Kick">
-                    <FontAwesomeIcon icon={faTrash} onClick={() => kickSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
-				</Tooltip>                   
-                {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                <Tooltip title="UnBan">
-                    <FontAwesomeIcon icon={faBan} onClick={() => unBanSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
-                </Tooltip> 
-                ) : null
-                }
-                </>
+                    <>
+                    <Tooltip title="Kick">
+                        <FontAwesomeIcon icon={faTrash} onClick={() => kickSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+                    </Tooltip>                   
+                    {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
+                    <Tooltip title="UnBan">
+                        <FontAwesomeIcon icon={faBan} onClick={() => unBanSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
+                    </Tooltip> 
+                    ) : null
+                    }
+                    </>
                 )}
             </ListItem>
         ))}
