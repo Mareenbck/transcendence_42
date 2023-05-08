@@ -174,13 +174,16 @@ tr:nth-child(even) {background-color: #d4dcf7;}
 
 .rangAvatar:first-of-type .cadre {
     background:linear-gradient(0deg, #7862f7, #f2def3);
+    height: 9rem;
    
 }
 
 .rangAvatar:nth-of-type(2) .cadre {
     background: linear-gradient(0deg, #699BF7, #c2e1f3);
+    height: 15rem;
 }
 
 .rangAvatar:last-of-type .cadre {
     background: linear-gradient(0deg, #f1f52e, #fa7f37);
+    height: 6rem;
 }
