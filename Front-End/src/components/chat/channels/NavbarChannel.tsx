@@ -192,6 +192,7 @@ export function NavbarChannel(props: any) {
 						onSelect={(userId: string) => setSelectedUser(userId)}
 						onInvite={handleInviteUser}
 						onAddAdmin={handleAddAdmin}
+						channelId={props.chatroom.id}
 						type="invite-user"
 						/>
 					}

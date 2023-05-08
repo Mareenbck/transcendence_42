@@ -81,8 +81,11 @@ export default function DialogSelect(props: { channelId:number, onSelect: (userI
 
 // PROPOSE Seulement LES USERS DU de la CHANNEL pour devenir ADMIN /// !!! l124 et 126 modifiées aussi. ///
 React.useEffect(() => {
+	//setFriends();
 	const fetchUsers = async () => {
+		console.log("hhhhhhhhhhhhhhhh", props.channelId);
 		const data = await Fetch.fetch(authCtx.token, "GET", `chatroom2`, props.channelId, 'participants');
+		console.log("hhhhhhhhhhhhhhhh", data);
 		// const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
 		// 	const avatar = await friendCtx.fetchAvatar(friend.id);
 		// 	return { ...friend, avatar };
@@ -90,7 +93,7 @@ React.useEffect(() => {
 		setFriends(data);
 	}
 	fetchUsers();
-}, [])
+}, [props.channelId])
 
 	React.useEffect (() => {
 		// console.log("props.type--->")
@@ -120,8 +123,8 @@ React.useEffect(() => {
 								onChange={handleChange}
 							>
 								<option aria-label="None" value="" />
-								{friends.map((friend: any) => (
-									<option key={friend.id} value={friend.user.id}>
+								{friends?.map((friend: any) => (
+									<option key={friend.userId} value={friend.userId}>
 										{friend.user.username}
 									</option>))}
 							</Select>
