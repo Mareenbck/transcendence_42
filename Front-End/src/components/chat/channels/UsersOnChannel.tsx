@@ -21,7 +21,7 @@ import { Avatar, Tooltip } from '@mui/material';
 import "../../../style/UsersChat.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FriendContext } from "../../../store/FriendshipContext";
-import { faTrash, faBan, faMicrophoneSlash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faBan, faMicrophoneSlash, faMicrophone } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
 
 
@@ -47,10 +47,19 @@ export default function InteractiveListe(props: any) {
     const [isMuted, setIsMuted] = React.useState(false);
     const [participants, setParticipants] = React.useState([]);
     const banned = participants.filter((p: any) => p.status === 'BAN');
+    const muted = participants.filter((p: any) => p.status === 'MUTE');
+    const clean = participants.filter((p: any) => p.status === 'CLEAN');
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
     const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p));
     const [sendMessage, addListener] = useSocket()
- 
+
+    // useEffect(() => {
+    //     if (muted.length > 0) {
+    //         setIsMuted(true);
+    //     } else {
+    //         setIsMuted(false);
+    //     }
+    // }, [muted]);
    
     const showParticipants = React.useCallback(async (channelId: string) => {
         try {
@@ -162,6 +171,7 @@ export default function InteractiveListe(props: any) {
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
+                setIsMuted(true);
                 
             } catch (error) {
                 console.error(error);
@@ -183,8 +193,7 @@ export default function InteractiveListe(props: any) {
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
-
-                
+                setIsMuted(false)
             } catch (error) {
                 console.error(error);
             }
@@ -247,21 +256,25 @@ return (
                     </Tooltip>
                     ) : null
                 }
-                 <Tooltip title="Mute">
-                 <FontAwesomeIcon 
-                    icon={faMicrophoneSlash} 
-                    onClick={() => {
-                        if (isMuted) {
-                            unMuteSomeone(props.channelId, participants.user.id);
-                            setIsMuted(false);
-                        } else {
-                            muteSomeone(props.channelId, participants.user.id);
-                            setIsMuted(true);
-                        }
-                    }}                        
-                    className={`btn-chatlist mute ${isMuted ? 'muted' : ''}`}
-                />
-				</Tooltip>           
+              {!isMuted ? (
+
+                <Tooltip title="Mute">
+                    <FontAwesomeIcon 
+                        icon={faMicrophoneSlash} 
+                        onClick={() => muteSomeone(props.channelId, participants.user.id)}                        
+                        className={`btn-chatlist mute`}
+                    />
+                </Tooltip> 
+              ) :
+                <Tooltip title="Unmute">                    
+                    <FontAwesomeIcon 
+                        icon={faMicrophone} 
+                        onClick={() => unMuteSomeone(props.channelId, participants.user.id)}                        
+                        className={`btn-chatlist mute`}
+                    />
+                </Tooltip>          
+                
+                }
                 </>
             )}
             </ListItem>
