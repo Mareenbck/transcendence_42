@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
-// import Winner from './Winner'
-import type { gameInit, gameState, gameStatus, gameList, UserGame } from './interface_game'
+import type { gameInit, gameState, gameStatus, gameList, players, UserGame } from './interface_game'
 import ColorModal from './modal/ColorModal';
 import RefusModal from './modal/RefusModal';
 import useSocket from '../../service/socket';
@@ -14,10 +13,10 @@ import BrightnessLowIcon from '@mui/icons-material/BrightnessLow';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SportsTennisIcon from '@mui/icons-material/SportsTennis';
 import SelectColor from './SelectColor';
-import Card from "../utils/Card";
 import PlayerOne from './PlayerOne';
 import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
+import HeaderGame from './HeaderGame';
 import "./Game.css"
 import ProfileCard from '../user/ProfileCard';
 
@@ -36,6 +35,12 @@ function Game() {
     );  
     const [games, setOnlinePlayers] = useState<gameList[]> ([]);
     const [curroom, setCurRoom] = useState<number>(-1);
+    const [players, setPlayers] = useState<players>(
+        {
+            playerR: {} as UserGame,
+            playerL: {} as UserGame
+        }
+    )
     
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
     useEffect(() => {
@@ -50,36 +55,71 @@ function Game() {
             setOnlinePlayers(games);
         }
         addListener("gameRooms", handleGameRooms);
-        sendMessage('listRooms');
-
+        sendMessage('listRooms');       
+//         if (games){
+//             const index = games.findIndex((game:gameList) => game.roomN == curroom);
+//             if (index != -1){
+//                 const game:gameList = games[index];
+//                 setPlayers({playerR: game.playerR, playerL: game.playerL});}
+// console.log("playerL et playerR + games", players.playerR, players.playerL, games)
+//             }
     }, []);
+
 
     useEffect(() => {
         sendMessage("enterGame", {user: user});
-    }, []);
-
-    const getCurrentGame = (roomN: number) => {
-        if (games){
-            const index = games.findIndex((game:gameList) => game.roomN == roomN);
-            if (index != -1){
-                const game:gameList = games[index];
-                const playerL = game.playerL;
-                const playerR = game.playerR;
-                return (
-                    <>
-                    <div className="container-match" style={{backgroundColor: "white",
-                                                            border: "solid" ,
-                                                            borderBlockColor:"black" } } >
-                        <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
-                        <p className='vs'> VS</p>
-                    
-                        <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
-                    </div>
-                    </>
-                );
+        return () => {
+            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+                sendMessage("exitGame", { user: user, status: gamestatus.status });
             }
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        const handleBackButton = (event: PopStateEvent) => {
+alert("2 handlePopstate");
+            // Handle the back button press
+            // Add your custom logic here
+            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+                sendMessage("exitGame", { user: user, status: gamestatus.status });
+            }
+        };
+    
+        // Add the event listener when the component mounts
+        window.addEventListener("popstate", handleBackButton);
+    
+        // Remove the event listener when the component unmounts
+        return () => {
+            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+                alert("1 handlePopstate");
+            }
+            window.removeEventListener("popstate", handleBackButton);
+        };
+      }, []);
+
+    
+    // const getCurrentGame = (roomN: number) => {
+    //     if (games){
+    //         const index = games.findIndex((game:gameList) => game.roomN == roomN);
+    //         if (index != -1){
+    //             const game:gameList = games[index];
+    //             const playerL = game.playerL;
+    //             const playerR = game.playerR;
+    //             // return (
+    //             //     <>
+    //             //     <div className="container-match" style={{backgroundColor: "white",
+    //             //                                             border: "solid" ,
+    //             //                                             borderBlockColor:"black" } } >
+    //             //         <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
+    //             //         <p className='vs'> VS</p>
+                    
+    //             //         <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
+    //             //     </div>
+    //             //     </>
+    //             // );
+    //         }
+    //     }
+    // };
 
 /////////////////////////////////////////////////leave the page////////////////////////////////////
     // useEffect(() => {
@@ -302,14 +342,13 @@ useEffect(() => {
                     {(!gamestatus.winner) ? (
                     <>
                         {/* <div className='wrapWaiting'>*/}
-                        {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
+                        {(gamestatus.status == 'false') && (<RefusModal />)}
+                         {/* handelClose={handleClose} */}
                     
                         { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
-                            // head Game***********
-                            (
-                                getCurrentGame(curroom)
-                            )
-                            //head Game************                                                   
+                            (// getCurrentGame(curroom) 
+                                <HeaderGame games = {games} room = {curroom}></HeaderGame>
+                            )                                              
                             :  
                             (<p>Select</p>)
                         } 
@@ -342,15 +381,16 @@ useEffect(() => {
                         </section>
 
                         <section className='sctWin'>
-                            {/* <div className="container-match" style={{backgroundColor: "white",
+                            <div className="container-match" style={{backgroundColor: "white",
                                                                     border: "solid" ,
                                                                     borderBlockColor:"black" } } >
-                                <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
+                                <PlayerOne  style={{backgroundColor: "white"}} player={players.playerL} winner={{} as UserGame} sizeAvatar={"l"} />
                                 <p className='vs'> VS</p>
                             
-                                <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
-                            </div> */}
-                
+                                <PlayerTwo  player={players.playerR} winner={{} as UserGame}  sizeAvatar={"l"} />
+                            </div>
+                            {/* <HeaderGame props = {players}></HeaderGame> */}
+
                             <h1> WINNER </h1>
                             <div className='CapWinner'>    
                                 <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
