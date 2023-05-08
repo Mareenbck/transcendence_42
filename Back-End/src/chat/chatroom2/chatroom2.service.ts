@@ -116,11 +116,9 @@ export class ChatroomService {
 		where: { channelId },
 		include: { user: true },
 	  });
-
 	if (!users || users.length === 0) {
 	  throw new ForbiddenException(`User with ID ${userId} is not on channel with ID ${channelId}`);
 	}
-
 	const updatedrole = await this.prisma.userOnChannel.updateMany({
 	  where: {
 		userId, channelId,
