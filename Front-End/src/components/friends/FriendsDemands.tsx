@@ -11,10 +11,12 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { FriendContext } from "../../store/FriendshipContext";
 import useSocket from "../../service/socket";
 import NotificationDemands from "./NotificationDemands";
+import AuthContext from "../../store/AuthContext";
 
 const FriendsDemands = (props: any) => {
 	const [sendMessage, addListener] = useSocket();
 	const friendCtx = useContext(FriendContext);
+	const authCtx = useContext(AuthContext);
 	const [pendingDemands, setPendingDemands] = useState<Demand []>([]);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -26,6 +28,10 @@ const FriendsDemands = (props: any) => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	useEffect(() => {
+		friendCtx.getDemands(authCtx.token, authCtx.userId);
+	}, []);
 
 	const open = Boolean(anchorEl);
 	const id = open ? 'simple-popover' : undefined;
@@ -55,6 +61,19 @@ const FriendsDemands = (props: any) => {
 			setPendingDemands(receiverDemands.filter((demand: Demand) => demand.status === 'PENDING'));
 		});
 	}, [addListener]);
+	console.log("pendingDemands --->")
+	console.log(pendingDemands)
+	// useEffect(() => {
+	// 	addListener('pendingDemands', (pendingDemands: any[]) => {
+	// 		const receiverDemands = pendingDemands.filter(
+	// 			(demand: Demand) => demand.receiverId === parseInt(authCtx.userId)
+	// 		);
+	// 		setPendingDemands(prevDemands => [
+	// 			...prevDemands,
+	// 			...receiverDemands.filter((demand: Demand) => demand.status === 'PENDING')
+	// 		]);
+	// 	});
+	// }, [addListener, authCtx.userId]);
 
 	return (
 		<>
