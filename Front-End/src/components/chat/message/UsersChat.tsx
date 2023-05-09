@@ -8,12 +8,15 @@ import '../../../style/UsersChat.css';
 import UsersAction from './UsersActions';
 import { UserChat } from '../../../interfaces/iChat';
 import PersonnalInfoChat from '../PersonnalInfoChat';
+import useSocket from '../../../service/socket';
 
 
 const UsersChat = (props: any) => {
 	const [friends, setFriends] = useState<UserChat[]>([]);
 	const authCtx = useContext(AuthContext);
 	const friendCtx = useContext(FriendContext);
+	const [sendMessage, addListener] = useSocket()
+
 
 	const currentUserId = authCtx.userId;
 	const onlineFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'ONLINE' && friend.id !== parseInt(currentUserId));
@@ -34,6 +37,7 @@ const UsersChat = (props: any) => {
 				}
 			)
 			const data = await response.json();
+			sendMessage("showUsersList", data)
 			const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
 				const avatar = await friendCtx.fetchAvatar(friend.id);
 				return { ...friend, avatar };

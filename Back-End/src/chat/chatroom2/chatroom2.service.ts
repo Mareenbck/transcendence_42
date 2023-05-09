@@ -3,15 +3,21 @@ import { CreateChatroomDto } from './dto/create-chatroom2.dto';
 import { Prisma, UserChannelVisibility } from '@prisma/client';
 import { UserRoleInChannel} from '@prisma/client'
 import { UserStatusOnChannel } from '@prisma/client'
-import { BadRequestException, Injectable, ForbiddenException} from '@nestjs/common';
+import { BadRequestException, Injectable, ForbiddenException, Logger} from '@nestjs/common';
 import { Chatroom } from '@prisma/client';
 import { UserOnChannel} from '@prisma/client'
 import * as argon from 'argon2';
+import { Server, Socket } from "socket.io";
 import { UserService } from 'src/user/user.service';
+import UsersSockets from "src/gateway/socket.class";
 
 
 @Injectable()
 export class ChatroomService {
+	public server: Server = null;
+	private readonly logger = new Logger(ChatroomService.name);
+	public userSockets: UsersSockets;
+
 	constructor(private prisma: PrismaService,
 				private userService: UserService) { }
 
@@ -103,11 +109,11 @@ export class ChatroomService {
 	}
 
   async getParticipants(channelId: number) {
-    // console.log("ENTRE DANS LE SERVICE")
     const channel = await this.prisma.userOnChannel.findMany({
       where: { channelId },
       include: { user: true },
     });
+	// console.log("channelllll" ,channel )
       return channel;
   }
 

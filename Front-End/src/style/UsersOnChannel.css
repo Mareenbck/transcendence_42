@@ -4,7 +4,6 @@
     height: 100%;
     background-color: white;
     overflow-y: auto;
-    flex: 3;
     right: 0; /* Ajout de la propriété right */
   }
   
@@ -38,7 +37,7 @@
   
   .fa-crown {
     color: gold;
-    margin-left: 10px;
+    /* margin-left: 10px; */
   }
   
   .fa-trash {

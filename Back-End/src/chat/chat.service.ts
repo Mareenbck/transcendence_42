@@ -97,7 +97,8 @@ export class ChatService {
                 visibility: visibility
             });
         }
-    };
+    };    
+
 
     chatBlock:any = (blockFrom: number, blockTo: number,) => {
         const userTo = this.getUser(blockTo);
