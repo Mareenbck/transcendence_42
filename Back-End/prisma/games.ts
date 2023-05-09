@@ -15,7 +15,7 @@ export async function insert_games() {
 		playerOne: { connect: { id: emma.id } },
 		playerTwo: { connect: { id: lucie.id } },
 		winner: { connect: { id: emma.id } },
-		score1: 10,
+		score1: 3,
 		score2: 2,
 	  },
 	})
@@ -25,7 +25,7 @@ export async function insert_games() {
 		playerTwo: { connect: { id: fabien.id } },
 		winner: { connect: { id: fabien.id } },
 		score1: 0,
-		score2: 10,
+		score2: 3,
 	  },
 	})
 
@@ -34,8 +34,8 @@ export async function insert_games() {
 		playerOne: { connect: { id: lucie.id } },
 		playerTwo: { connect: { id: math.id } },
 		winner: { connect: { id: math.id } },
-		score1: 5,
-		score2: 10,
+		score1: 1,
+		score2: 3,
 	  },
 	})
 
@@ -44,8 +44,8 @@ export async function insert_games() {
 		playerOne: { connect: { id: lucie.id } },
 		playerTwo: { connect: { id: emma.id } },
 		winner: { connect: { id: lucie.id } },
-		score1: 10,
-		score2: 6,
+		score1: 3,
+		score2: 0,
 	  },
 	})
 
@@ -54,8 +54,8 @@ export async function insert_games() {
 		playerOne: { connect: { id: lucie.id } },
 		playerTwo: { connect: { id: math.id } },
 		winner: { connect: { id: math.id } },
-		score1: 8,
-		score2: 10,
+		score1: 2,
+		score2: 3,
 	  },
 	})
 
