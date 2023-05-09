@@ -72,6 +72,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       }
       socket.data.username = user.username as string;
       socket.data.email = user.email as string;
+      socket.data.id = user.id as number;
       this.userSockets.addUser(socket);
     } catch (e) {
         this.userSockets.removeSocket(socket)
@@ -81,7 +82,6 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
   }
 
   async handleDisconnect(client: Socket) {
-  // console.log("71 handleDisconnect: client");
     this.userSockets.removeSocket(client)
     client.disconnect(true);
   }
@@ -145,12 +145,12 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
 // Messages for Game: Invite et random
 //////////////////////////
   @SubscribeMessage('enterGame')
-  async enterGame(@MessageBody() data: {user: any}, @ConnectedSocket() socket: Socket): Promise<void>
-  { this.gameService.enterGame(data.user, socket); };
+  async enterGame(@ConnectedSocket() socket: Socket): Promise<void>
+  { this.gameService.enterGame(socket.data.id, socket); };
   
   @SubscribeMessage('exitGame')
-  async exitGame(@MessageBody() data: {user: any, status: string}, @ConnectedSocket() socket: Socket): Promise<void> ///
-  { this.gameService.exitGame(data.user, data.status, socket); };
+  async exitGame(@MessageBody() data: {status: string}, @ConnectedSocket() socket: Socket): Promise<void> ///
+  { this.gameService.exitGame(socket.data.id, data.status, socket); };
 
   @SubscribeMessage('acceptGame')
   async acceptGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void>
@@ -165,25 +165,19 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
   { this.gameService.gameInvite(data.author, data.player) };
 
   @SubscribeMessage('playGame')
-  async playGame(@MessageBody() data: {user: any, roomN: number}, @ConnectedSocket() socket: Socket): Promise<void>
+  async playGame(@MessageBody() data: {roomN: number}, @ConnectedSocket() socket: Socket): Promise<void>
   {
     // leave all rooms before starting/watching a game
     socket.rooms.forEach(room => socket.leave(room));
-
-    this.gameService.playGame(data.user, data.roomN);
+    this.gameService.playGame(socket.data.id, data.roomN);
   };
 
+  //request array of live games
   @SubscribeMessage('listRooms')
   async listRooms(@ConnectedSocket() socket: Socket): Promise<void>
   { this.gameService.sendListRooms(); };
 
-//   @SubscribeMessage('doIplay')
-//   async doIplay(@ConnectedSocket() socket: Socket): Promise<void>
-//   {
-// console.log("157_doIplay: socket.id = ", socket.id);
-//     let user = this.userSockets.getUserBySocket(socket.id);
-//     if(user) this.gameService.checkPlayerInRooms(user);
-//   };
+  ////////////////////////////////////////////////////////////////////
 
 	@SubscribeMessage('updateDemands')
 	async updateDemands(@MessageBody() updatedDemands: any): Promise<void> {

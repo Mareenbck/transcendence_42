@@ -6,13 +6,13 @@ export interface UserGame {
 	avatar: string;
 	ftAvatar: string;
 	is2FA: boolean;
-    eceivedFriendships: FriendsDto[];
-    blockedTo: UserDto[];
-    blockedFrom: UserDto[];
-    dirMessEmited: DirMessDto[];
+    // eceivedFriendships: FriendsDto[];
+    // blockedTo: UserDto[];
+    // blockedFrom: UserDto[];
+    // dirMessEmited: DirMessDto[];
 };
 
-export interface gameList{
+export interface gamesList{
     roomN: number;
 	playerR: UserGame;
 	playerL: UserGame;
@@ -56,6 +56,8 @@ export interface gameInit {
 
 export interface gameStatus {
     winner: UserGame;
+    // playerR: UserGame;
+    // playerL: UserGame;
     status: string;
 }
 
@@ -64,6 +66,6 @@ export interface players {
     playerL: UserGame;
 }
 
-export  interface backColorGame{
-    backColorGame: string;
-}
+// export  interface backColorGame{
+//     backColorGame: string;
+// }
