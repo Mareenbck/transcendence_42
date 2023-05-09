@@ -132,7 +132,11 @@ export class ChatService {
         }
     };
 
+    // chatInvite: any = (author: UserDto, player: UserDto,) => {
+    //     this.userSockets.emitToUser(player.username, 'wasInvited', author);
+    // };
+
     chatInvite: any = (author: UserDto, player: UserDto,) => {
-        this.userSockets.emitToUser(player.username, 'wasInvited', author);
+        this.userSockets.emitToId(player.id, 'wasInvited', author);
     };
 }

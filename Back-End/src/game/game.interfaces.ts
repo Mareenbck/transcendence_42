@@ -42,8 +42,10 @@ export interface invited{
 	player: UserDto;
 }
 
-export interface status{
+export interface statuses{
 	winner: UserDto;
+	playerR: UserDto;
+	playerL: UserDto;
 	status: string;
 }
  

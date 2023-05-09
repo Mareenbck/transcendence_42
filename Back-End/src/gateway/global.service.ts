@@ -10,9 +10,15 @@ export class GlobalService {
   public userSockets: UsersSockets;
   constructor() {}
   
-  notifyIfConnected(usernames: string[], eventName: string, eventData: any) {
-      usernames.forEach((username) => {
-          this.userSockets.emitToUser(username, eventName, eventData);
-      });
-  }
+  // notifyIfConnected(usernames: string[], eventName: string, eventData: any) {
+  //     usernames.forEach((username) => {
+  //         this.userSockets.emitToUser(username, eventName, eventData);
+  //     });
+  // }
+
+  notifyIfConnectedId(userIds: number[], eventName: string, eventData: any) {
+    userIds.forEach((userId) => {
+        this.userSockets.emitToId(userId, eventName, eventData);
+    });
+}
 }

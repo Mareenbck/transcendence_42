@@ -18,7 +18,6 @@ import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
 import HeaderGame from './HeaderGame';
 import "./Game.css"
-import ProfileCard from '../user/ProfileCard';
 
 
 
@@ -56,16 +55,16 @@ function Game() {
             setOnlinePlayers(games);
         }
         addListener("gameRooms", handleGameRooms);
-        sendMessage('listRooms');       
+        sendMessage('listRooms', {} as any);       
  console.log("playerL et playerR + games", players.playerR, players.playerL, games)
     }, []);
 
 
     useEffect(() => {
-        sendMessage("enterGame", {user: user});
+        sendMessage("enterGame", {} as any);
         return () => {
             if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                sendMessage("exitGame", { user: user, status: gamestatus.status });
+                sendMessage("exitGame", { user: user.userId, status: gamestatus.status } as any);
             }
         }
     }, []);
@@ -76,7 +75,7 @@ function Game() {
             // Handle the back button press
             // Add your custom logic here
             if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                sendMessage("exitGame", { user: user, status: gamestatus.status });
+                sendMessage("exitGame", {status: gamestatus.status } as any);
             }
         };
     
@@ -95,9 +94,9 @@ function Game() {
     
     // const getCurrentGame = (roomN: number) => {
     //     if (games){
-    //         const index = games.findIndex((game:gameList) => game.roomN == roomN);
+    //         const index = games.findIndex((game:gamesList) => game.roomN == roomN);
     //         if (index != -1){
-    //             const game:gameList = games[index];
+    //             const game:gamesList = games[index];
     //             const playerL = game.playerL;
     //             const playerR = game.playerR;
     //             // return (
@@ -280,7 +279,7 @@ useEffect(() => {
     const [clicked_play, setClicked] = useState(false);
 
     const handleClick = (roomN: number) => {
-        sendMessage("playGame", {user: user, roomN: roomN});
+        sendMessage("playGame", {roomN: roomN} as any);
         setCurRoom(roomN);
         if(roomN == -1){
             gamestatus.status == 'game';
@@ -332,7 +331,7 @@ useEffect(() => {
 
                     {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
                     <Link to="/menu">
-                        <button className="btnn" onClick={() => sendMessage("exitGame", { user: user, status: gamestatus.status })} style={{ alignSelf: "flex-end" }}>
+                        <button className="btnn" onClick={() => sendMessage("exitGame", { status: gamestatus.status } as any)} style={{ alignSelf: "flex-end" }}>
                             <ExitToAppIcon /> Exit
                         </button>
                     </Link>

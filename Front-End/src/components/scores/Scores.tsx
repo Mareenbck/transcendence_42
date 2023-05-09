@@ -1,13 +1,13 @@
-import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
 import SideBar from '../SideBar';
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import style from '../../style/Menu.module.css';
+// import { Link, Navigate, useNavigate } from "react-router-dom";
+// import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
-import {UserScore, Game} from "../interfaces/iChat";
+import {UserScore, Game} from '../../interfaces/iChat'
 import Card from "../../components/utils/Card";
 // import Table from "./Table";
 
@@ -43,31 +43,31 @@ const Scores = () => {
   }, []);
 
   //score/ user
-  const getNbGames = (user: UserScore) => {
-    if (games) {
-      const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user.id);
-      const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user.id);
-      return (p2.length + p1.length);
-    }
-  }
+  // const getNbGames = (user: UserScore) => {
+  //   if (games) {
+  //     const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user.id);
+  //     const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user.id);
+  //     return (p2.length + p1.length);
+  //   }
+  // }
 
-  const getWinner = (user: UserScore) => {
-    if (games) {
-      return (games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user.id).length);
-    }
-  }
+  // const getWinner = (user: UserScore) => {
+  //   if (games) {
+  //     return (games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user.id).length);
+  //   }
+  // }
 
-  const getScore_ = (user: UserScore) => {
-    if (games) {
-      const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user?.id);
-      const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user?.id);
-      const w = games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user?.id);
-      let total:number = 0;
-      return (total);
-    }
-  }
+  // const getScore_ = (user: UserScore) => {
+  //   if (games) {
+  //     const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user?.id);
+  //     const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user?.id);
+  //     const w = games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user?.id);
+  //     let total:number = 0;
+  //     return (total);
+  //   }
+  // }
 
-  const getScore = (user: UserScore) => {
+  const getScore = (user: UserScore): number => {
     if (games) {
       const p1 = games.filter(u => +u.playerOneId === +user.id).length;
       const p2 = games.filter(u => +u.playerTwoId === +user.id).length;
@@ -118,17 +118,17 @@ const Scores = () => {
 
                     <div className='rangAvatar'>
                       <UserChart   userName={second?.username}  h={(getScore(second))} />
-                      <MyAvatar authCtx={authCtx } id={second?.id} style="l" avatar={second?.avatar} ftAvatar={second?.ftavatar}/>
+                      <MyAvatar authCtx={authCtx } id={second?.id} style="l" avatar={second?.avatar} ftAvatar={second?.ftAvatar}/>
                     </div>
 
                     <div className='rangAvatar'>       
                       <UserChart   userName={firts?.username}  h={(getScore(firts))} />
-                      <MyAvatar authCtx={authCtx } id={firts?.id} style="l" avatar={firts?.avatar} ftAvatar={firts?.ftavatar}/>
+                      <MyAvatar authCtx={authCtx } id={firts?.id} style="l" avatar={firts?.avatar} ftAvatar={firts?.ftAvatar}/>
                     </div>
 
                     <div className='rangAvatar'> 
                       <UserChart   userName={third?.username}  h={(getScore(third))} color={"black"}/>
-                      <MyAvatar authCtx={authCtx } id={third?.id}  style="l" avatar={third?.avatar} ftAvatar={third?.ftavatar}/> 
+                      <MyAvatar authCtx={authCtx } id={third?.id}  style="l" avatar={third?.avatar} ftAvatar={third?.ftAvatar}/> 
                     </div>
 
                    
