@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
-import type { gameInit, gameState, gameStatus, gameList, players, UserGame } from './interface_game'
+import type { gameInit, gameState, gameStatus, gamesList, players, UserGame } from './interface_game'
 import ColorModal from './modal/ColorModal';
 import RefusModal from './modal/RefusModal';
 import useSocket from '../../service/socket';
@@ -33,7 +33,7 @@ function Game() {
         {   winner: null,
             status: "null"} 
     );  
-    const [games, setOnlinePlayers] = useState<gameList[]> ([]);
+    const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
     const [curroom, setCurRoom] = useState<number>(-1);
     const [players, setPlayers] = useState<players>(
         {
@@ -41,10 +41,11 @@ function Game() {
             playerL: {} as UserGame
         }
     )
-    
+
+   
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
     useEffect(() => {
-        const handleGameRooms = (games: gameList[]) => {
+        const handleGameRooms = (games: gamesList[]) => {
             if(curroom == -1){
                 const index = games.findIndex(room => room.playerL.username == user.username || room.playerR.username == user.username);
                 if (index != -1) { 
@@ -56,13 +57,7 @@ function Game() {
         }
         addListener("gameRooms", handleGameRooms);
         sendMessage('listRooms');       
-//         if (games){
-//             const index = games.findIndex((game:gameList) => game.roomN == curroom);
-//             if (index != -1){
-//                 const game:gameList = games[index];
-//                 setPlayers({playerR: game.playerR, playerL: game.playerL});}
-// console.log("playerL et playerR + games", players.playerR, players.playerL, games)
-//             }
+ console.log("playerL et playerR + games", players.playerR, players.playerL, games)
     }, []);
 
 
@@ -77,7 +72,7 @@ function Game() {
 
     useEffect(() => {
         const handleBackButton = (event: PopStateEvent) => {
-alert("2 handlePopstate");
+// alert("2 handlePopstate");
             // Handle the back button press
             // Add your custom logic here
             if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
@@ -277,9 +272,9 @@ useEffect(() => {
         addListener('status', updateStatus);
     }, [initListener, updateListener, updateStatus]);
 
-    // const isInPlay = (): boolean => {
-    //     return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
-    // };
+    const isInPlay = (): boolean => {
+        return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
+    };
 
 // action when clicking on "PlayGame"
     const [clicked_play, setClicked] = useState(false);
@@ -307,35 +302,34 @@ useEffect(() => {
 //////////////////////////////////////////////////////////////////////////////  
 
     return (
-        // <>
         <React.Fragment key={user.userId}>
 
         {" "}
         <div className="containerGame">
             <div className="gameSideL">
                 
-                {/* <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/> */}
                 <div className="title">
-                <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
+                    <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
                     <h4>{user.username}</h4>
                 </div>
                 
-                {/* <PlayerOne player={user} winner={""} score={0} /> */}
                 <SelectColor changColorToRed={changColorToRed}
                             changColorToBlue={changColorToBlue}
                             changColorToGreen={changColorToGreen}
                             changColorToBlack={changColorToBlack}>
                 </SelectColor>
+
                 <div className='posBtnn' >
                     {/* /BUTTON FOR GAME START */}
-                    <div >
+                    {/* <div >
                         <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/>Play</button>
-                    </div>
-                    {/* {!isInPlay() && (
+                    </div> */}
+                    {!isInPlay() && (
                         <div >
-                            <button className="btnn" onClick={() => handleClick(-1)}>Play Game</button>
+                            <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/>Play</button>
                         </div>
-                    )} */}
+                    )}
+
                     {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
                     <Link to="/menu">
                         <button className="btnn" onClick={() => sendMessage("exitGame", { user: user, status: gamestatus.status })} style={{ alignSelf: "flex-end" }}>
@@ -347,8 +341,8 @@ useEffect(() => {
         
             </div>
 
-                <div className="gameBox">
-                    <div className="gameBoxW">
+            <div className="gameBox">
+                <div className="gameBoxW">
                     
                     {(!gamestatus.winner) ? (
                     <>
@@ -356,15 +350,12 @@ useEffect(() => {
                             {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
-                                // head Game***********
-                                (
-                                    // getCurrentGame(curroom);
+                                (// getCurrentGame(curroom);
                                     <HeaderGame games = {games} room = {curroom}></HeaderGame>
                                 )
-                                //head Game************                                                   
                                 :  
                               ( <h2 className='gametitle'>Game </h2>)
-                            }   
+                            } 
                             
                             {(gamestatus.status == 'waiting') ?
                         (
@@ -393,55 +384,16 @@ useEffect(() => {
                         </section>
 
                         <section className='sctWin'>
-                        
-                                {/* <div className="container-match" style={{backgroundColor: "white",
-                                                                        border: "solid" ,
-                                                                        borderBlockColor:"black" } } >
-                                    <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
-                                    <p className='vs'> VS</p>
-                                
-                                    <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
-                                </div> */}
-                   
-                                <h1> WINNER </h1>
-                                <div className='CapWinner'>    
-                                    <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
-                                   
-                                    <BrightnessLowIcon id = "win" className='star' />
-                                </div>
-                            </section>
-                    </>
-               
-                )}
-              {/* test2 */}
-			</div>
-		 </div>
-
-         <div className='gameSideR'>
-          <h2 className='posH'>Live games</h2>
-          <div>
-            {games.map((game: gamesList) => (
-                    <div className='wrapList'>
-
-                    {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
-                        <div onClick={() => handleClick(game.roomN)}>
-                            <div className="container-match">
-                                <button  style={{backgroundColor: "with", marginRight:"0", padding:"0"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
-                                <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
-                                <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
-                                
-                                <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
-                            </div>
+                    
                             {/* <div className="container-match" style={{backgroundColor: "white",
                                                                     border: "solid" ,
                                                                     borderBlockColor:"black" } } >
-                                <PlayerOne  style={{backgroundColor: "white"}} player={players.playerL} winner={{} as UserGame} sizeAvatar={"l"} />
+                                <PlayerOne  style={{backgroundColor: "white"}} player={players.playerL} winner={""} sizeAvatar={"l"} />
                                 <p className='vs'> VS</p>
                             
-                                <PlayerTwo  player={players.playerR} winner={{} as UserGame}  sizeAvatar={"l"} />
-                            </div>
-                            {/* <HeaderGame props = {players}></HeaderGame> */}
-
+                                <PlayerTwo  player={players.playerR} winner={""}  sizeAvatar={"l"} />
+                            </div> */}
+                
                             <h1> WINNER </h1>
                             <div className='CapWinner'>    
                                 <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
@@ -451,38 +403,38 @@ useEffect(() => {
                         </section>
                     </>
                     )}
-                    {/* test2 */}
-                </div>
-            </div>
+			</div>
+		</div>
 
-            <div className='gameSideR'>
-                <h2 className='posH'>Live games</h2>
-                    <div>
+        <div className='gameSideR'>
+            <h2 className='posH'>Live games</h2>
+                <div>
                     {games.map((game: gamesList) => (
-                        <div className='wrapList'>
+                    <div className='wrapList'>
 
-                            {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
-                            <div onClick={() => handleClick(game.roomN)}>
-                                <div className="container-match">
-                                    <button  style={{backgroundColor: "with", marginRight:"0", padding:"0"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
-                                    <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
-                                    <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
-                                    
-                                    <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
-                                </div>
-                                
+                    {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
+                        <div onClick={() => handleClick(game.roomN)}>
+                            <div className="container-match">
+                                <button  style={{backgroundColor: "with", marginRight:"0", padding:"0"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
+                                <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
+                                <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
+                                <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
                             </div>
                         </div>
-
-                ))}
+                    </div>
+                    ))}
+                </div>
             </div>
-		</div>
-</div>
-   
-     {/* </> */}
+        </div>
+       
     </React.Fragment>
-    );
+    )
 }
+                                     
+            
+            
+ {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
+
 
 
 export default Game;
