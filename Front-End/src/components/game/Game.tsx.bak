@@ -240,15 +240,15 @@ useEffect(() => {
     useEffect(() => {
         addListener('status', updateStatus);
 
-        // return () => {
-        //     // unmount component event (works at mount too)
-        //         if (gamestatus.status == 'game'){
-        //             alert("Alert of sortie game");
-        //         }
-        //         else if (gamestatus.status == 'waiting'){
-        //             alert("Alert of sortie waiting");
-        //         }
-        //     };
+        return () => {
+            // unmount component event (works at mount too)
+                if (gamestatus.status == 'game'){
+                    alert("Alert of sortie game");
+                }
+                else if (gamestatus.status == 'waiting'){
+                    alert("Alert of sortie waiting");
+                }
+            };
     
     }, [updateStatus]);
 
@@ -268,26 +268,15 @@ useEffect(() => {
         gamestatus.winner = null;
         setClicked(true);
     };
-
- // for Disable after click
-//  const [activeLinkk, setActiveLinkk] = useState('');
-//  useEffect(() => {
-//     setActiveLinkk(location.pathname);
-//   }, []);
-
-//  const handleLinkClick = (path: string) => {
-//     setActiveLinkk(path);
-//   };   
   
 //////////////////////////////////////////////////////////////////////////////  
 
     return (
-        // <>
-        <React.Fragment key={user.userId}>
+        <>
 
-          {" "}
-	     <div className="containerGame">
-		   <div className="gameSideL">
+        {" "}
+	<div className="containerGame">
+		<div className="gameSideL">
 			
             {/* <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/> */}
             <div className="title">
@@ -303,19 +292,17 @@ useEffect(() => {
             </SelectColor>
             <div className='posBtnn' >
                             {/* /BUTTON FOR GAME START */}
-                                 {/* <div >
-                                 
-                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/><a> </a>Play</button>
-                                </div> */}
-                                
-                            {!isInPlay() && (
-                                <div >
-                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/>Play</button>
+                                 <div >
+                                    <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/><a> </a><a> </a>Play</button>
                                 </div>
-                            )}
+                            {/* {!isInPlay() && (
+                                <div >
+                                    <button className="btnn" onClick={() => handleClick(-1)}>Play Game</button>
+                                </div>
+                            )} */}
                             {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
                             <Link to="/menu">
-                                <button className="btnn"  style={{ alignSelf: "flex-end"}}><ExitToAppIcon/>Exit</button>
+                                <button className="btnn"  style={{ alignSelf: "flex-end"}}><ExitToAppIcon/><a> </a> Exit</button>
                             </Link>
                             
             </div>
@@ -328,7 +315,7 @@ useEffect(() => {
                         {(!gamestatus.winner) ? (
                     <>
                         {/* <div className='wrapWaiting'>*/}
-                            {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
+                            {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)} 
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                                 // head Game***********
@@ -337,7 +324,7 @@ useEffect(() => {
                                 )
                                 //head Game************                                                   
                                 :  
-                              ( <h2 className='gametitle'>Game </h2>)
+                              (<p>Select</p>)
                             } 
                                 
 
@@ -388,13 +375,12 @@ useEffect(() => {
                                 </div>
                             </section>
                     </>
-               
                 )}
               {/* test2 */}
 			</div>
-		 </div>
+		</div>
 
-         <div className='gameSideR'>
+        <div className='gameSideR'>
           <h2 className='posH'>Live games</h2>
           <div>
             {games.map((game: gamesList) => (
@@ -414,14 +400,13 @@ useEffect(() => {
                     </div>
 
                 ))}
-      </div>
+    </div>
 		</div>
 
 
-</div>
+	</div>
    
-     {/* </> */}
-    </React.Fragment>
+     </>
     );
 }
 

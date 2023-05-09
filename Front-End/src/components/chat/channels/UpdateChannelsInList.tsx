@@ -2,7 +2,6 @@ import React, { RefObject, useContext, useEffect, useRef, useState } from "react
 import useSocket from '../../../service/socket';
 import Conversation from "./Conversation";
 import ChannelVisibility from "./ChannelVisibility";
-// import io, { Socket } from "socket.io-client";
 import AuthContext from "../../../store/AuthContext";
 import CreateChannelButton from "./CreateChannelBtn";
 import ChannelInvitations from "./ChannelInvitations";
@@ -23,11 +22,10 @@ export default function UpdateChannelsInList(props: any) {
 	});
 
 	useEffect(() => {
-		addListener("deleteChannel", data => setAConversation(data))
-	})
-
-	useEffect(() => {
-		AConversation && setConversations(prev => [AConversation, ...prev]);
+		AConversation && setConversations(prev => {
+			const conversationExists = prev.find((conversation: { id: number; }) => conversation.id === AConversation.id);
+			if (conversationExists) { return prev;} else {return [AConversation, ...prev];}
+		});
 	}, [AConversation]);
 
 

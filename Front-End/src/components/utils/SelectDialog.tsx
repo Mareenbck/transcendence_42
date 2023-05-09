@@ -14,10 +14,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import Tooltip from '@mui/material/Tooltip';
+import Fetch from "../../interfaces/Fetch"
 
 
-
-export default function DialogSelect(props: { onSelect: (userId: string) => void, onInvite: (userId: string) => void, onAddAdmin: (userId: string) => void, type: string}) {
+export default function DialogSelect(props: { channelId:number, onSelect: (userId: string) => void, onInvite: (userId: string) => void, onAddAdmin: (userId: string) => void, type: string}) {
 	const [open, setOpen] = React.useState(false);
 	const [friends, setFriends] = React.useState<any[]>([]);
 	const authCtx = React.useContext(AuthContext);
@@ -54,28 +54,25 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 		handleClose(event, '');
 	}
 
-	React.useEffect(() => {
-		const url = "http://localhost:3000/users/";
-		const fetchUsers = async () => {
-			const response = await fetch(
-				url,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${authCtx.token}`
-					}
-				}
-			)
-			const data = await response.json();
+React.useEffect(() => {
+	const fetchUsers = async () => {
+		if (props.type === "invite-admin") 
+		{
+			const data = await Fetch.fetch(authCtx.token, "GET", `chatroom2`, props.channelId, 'participants');
+			setFriends(data);
+		}
+		else
+		{
+			const data = await Fetch.fetch(authCtx.token, "GET", `users/`);
 			const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
 				const avatar = await friendCtx.fetchAvatar(friend.id);
 				return { ...friend, avatar };
 			}));
 			setFriends(updatedFriends);
 		}
-		fetchUsers();
-	}, [])
+	}
+	fetchUsers();
+}, [props.channelId, props.type])
 
 	React.useEffect (() => {
 		// console.log("props.type--->")
@@ -105,10 +102,12 @@ export default function DialogSelect(props: { onSelect: (userId: string) => void
 								onChange={handleChange}
 							>
 								<option aria-label="None" value="" />
-								{friends.map((friend) => (
-									<option key={friend.id} value={friend.id}>
-										{friend.username}
-									</option>))}
+								{friends?.map((friend: any) => (
+									props.type === "invite-user" ?
+										<option key={friend.id} value={friend.id}> {friend.username} </option> 
+									: 
+										<option key={friend.userId} value={friend.userId}> {friend.user.username} </option>
+								))}
 							</Select>
 						</FormControl>
 					</Box>

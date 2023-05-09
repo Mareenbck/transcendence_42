@@ -36,25 +36,13 @@
     justify-content: start;
     margin-top: -2rem;
 
-    /* padding: 40px;
-    padding-top: 5px;
-    padding-left: auto;
-    padding-right: auto;
-    text-align: center;
-    align-items: center;
-    color: black;
-    font-weight:bold;
-    border: 5px solid black;
-    width: 120px;
-    border-radius: 10.9501px;
-    margin-bottom: 2;
-    background: linear-gradient(0deg, #003ba5, #84c4e9); */
+
     
    
 
 }
 
-@media (max-width: 1700px){
+@media (max-width: 1200px){
     .cadre{
         margin: auto;
         padding-top: 20px;
@@ -68,25 +56,10 @@
         flex-direction: column;
         align-items: center;
         justify-content: start;
+       
         margin-top: -2rem;
 
-        /* padding: 40px;
-        padding-top: 10px;
-        padding-left: auto;
-        padding-right: auto;
-        text-align: center;
-        align-items: center;
-        color: black;
-        font-weight:bold;
-        border: 3px solid black;
-        margin: 2px;
-        margin-top: 0;
-        width: 20px;
-        direction:initial; */
-        /* border-radius: 4%; */
-        /* border-radius: 10.9501px;
-        margin-bottom: 2;
-        background: linear-gradient(0deg, #003ba5, #84c4e9); */
+      
 
 
         
@@ -97,26 +70,16 @@
 
 
 .cadre p{
-    /* padding: auto; */
-    /* display: block;
-    align-self:stretch;
-    padding-right: 50px;
-    margin: auto;
-    text-align: center;
-    font-weight: 800; */
-    font-weight: 800; 
+  
+    font-weight: 800;
+    margin-bottom: 0.5rem;
 }
 
 @media (max-width: 1700px) {
     .cadre p{
         font-weight: 400; 
 
-        /* padding: auto; */
-        /* display: block;
-        align-self:stretch;
-        padding-right: 50px;
-        margin: auto;
-        text-align: center; */
+
         
 
 }

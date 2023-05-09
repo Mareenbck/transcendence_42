@@ -36,6 +36,7 @@ body{
     flex-direction: row-reverse;
     align-items:self-start;
     padding: 0;
+    /* justify-content: space-between; */
     /* padding-top: 10px; */
     width: 80%;
     margin-left: 5px;
@@ -60,37 +61,39 @@ body{
 .pos{
     display: flex;
     flex-direction: row;
-    
-    margin: 30px;
+    justify-content: space-between;
+    gap: 20%;
+    /* margin: 30px; */
     align-self: center;
+    
 
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1200px) {
     .Pos{
         display: grid;
         /* flex-direction: column; */
         margin: 30px;
-        align-self: center;  
+        align-self: center; 
+        gap: 5%;
+      
        
     }
     
 }
 
 .midPos{
-    
-        display: flex;
-        flex-direction: row;
-        margin: 20px;
-        
-    
+    display: flex;
+   flex-direction: row;
+   margin: 20px;
+   
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1200px) {
     .midPos{
         display: flex;
        flex-direction: row;
-       margin: 20px;
+       margin: 5px;
        
     }
     
@@ -171,13 +174,16 @@ tr:nth-child(even) {background-color: #d4dcf7;}
 
 .rangAvatar:first-of-type .cadre {
     background:linear-gradient(0deg, #7862f7, #f2def3);
+    height: 15rem;
    
 }
 
 .rangAvatar:nth-of-type(2) .cadre {
     background: linear-gradient(0deg, #699BF7, #c2e1f3);
+    height: 20rem;
 }
 
 .rangAvatar:last-of-type .cadre {
     background: linear-gradient(0deg, #f1f52e, #fa7f37);
+    height: 9rem;
 }

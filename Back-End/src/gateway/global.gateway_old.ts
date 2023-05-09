@@ -17,7 +17,6 @@ import { UserService } from "src/user/user.service";
 import { UserDto } from 'src/user/dto/user.dto';
 import { CreateChatMessDto } from 'src/chat/chat-mess/dto/create-chatMess.dto';
 import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
-import { ChatroomService } from 'src/chat/chatroom2/chatroom2.service';
 
 @WebSocketGateway(
 8001, { cors: {origin: "http://localhost:8080",}, }
@@ -32,13 +31,11 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   private readonly logger = new Logger(GlobalGateway.name);
   private userSockets: UsersSockets;
   constructor(
-      private readonly chatroomService: ChatroomService,    
       private readonly gameService: GameService,
       private readonly chatService: ChatService,
       private readonly globalService: GlobalService,
       private readonly authService: AuthService,
-      private readonly userService: UserService,
-	    private readonly friendshipService: FriendshipService,
+	  private readonly friendshipService: FriendshipService,
   ) {
       this.userSockets = new UsersSockets();
   }
@@ -47,18 +44,14 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   server: Server;
 
   afterInit() {
-    this.globalService.server = this.server;
-    this.userService.server = this.server;
-    this.chatroomService.server = this.server;
-    this.gameService.server = this.server;
+      this.globalService.server = this.server;
+      this.gameService.server = this.server;
       this.chatService.server = this.server;
 	  this.friendshipService.server = this.server;
       this.globalService.userSockets = this.userSockets;
       this.chatService.userSockets = this.userSockets;
-      this.gameService.userSockets = this.userSockets;
-      this.chatroomService.userSockets = this.userSockets;
-      this.friendshipService.userSockets = this.userSockets;
-      this.userService.userSockets = this.userSockets;
+	  this.gameService.userSockets = this.userSockets;
+	  this.friendshipService.userSockets = this.userSockets;
       this.logger.verbose("globalGateway Initialized");
   }
 
@@ -156,9 +149,6 @@ console.log("26 Connect + map: client", this.userSockets.users);
   @SubscribeMessage('playGame')
   async playGame(@MessageBody() data: {user: any, roomN: number}, @ConnectedSocket() socket: Socket,): Promise<void>
   {
-    // leave all rooms before starting/watching a game
-    socket.rooms.forEach(room => socket.leave(room));
-
     this.gameService.playGame(data.user, data.roomN);
   };
 
@@ -200,32 +190,6 @@ console.log("26 Connect + map: client", this.userSockets.users);
 		const pendingDemands = await this.friendshipService.getReceivedFriendships(receiverId);
 		// Envoyer les demandes mises à jour à tous les clients connectés
 		this.server.emit('pendingDemands', pendingDemands);
-	}
-  
-  @SubscribeMessage('removeConv')
-	async removeConv(@MessageBody() data: any ): Promise<void> {
-		const newList = await this.chatroomService.findAll();
-		this.server.emit('deleteChannel', newList);
-	}  
-  
-  
-  @SubscribeMessage('joinedChannel')
-	async joinChannel(@MessageBody() data: any, @MessageBody() channelId: any ): Promise<void> {
-		const newList = await this.chatroomService.getParticipants(channelId);
-		this.server.emit('joinedChannel', newList);
-	}  
-
-  @SubscribeMessage('showUsersList')
-	async showUsersList(@MessageBody() data: any ): Promise<void> {
-    const showList = await this.userService.getUsers();
-		this.server.emit('showUsersList', showList);
-	} 
-
-
-  @SubscribeMessage('hidePaperPlane')
-	async hidePaperPlane(@MessageBody() channelId: any, @MessageBody() userId: any ): Promise<void> {
-    const hidePaperPlane = await this.chatroomService.mute(channelId, userId);
-		this.server.emit('hidePaperPlane', hidePaperPlane);
 	}
 
 }

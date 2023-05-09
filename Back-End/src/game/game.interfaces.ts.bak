@@ -1,4 +1,11 @@
+// import { Server, Socket } from "socket.io";
+
 import { UserDto } from "src/user/dto/user.dto";
+
+// export interface profile{
+// 	socket: Socket; // socketId: any //socketId: any [];
+// 	user: any; //userId: any
+// }
 
 export interface player{
 	user: UserDto;
