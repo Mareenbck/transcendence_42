@@ -28,12 +28,12 @@ const SelectColor = (props: any) => {
             <div className="card-option">
                         <div className="poslogo">
                            
-                            <h2 >Changing Color</h2>
+                            <h2 >Change Color</h2>
                          </div>
                          <div className="posColor" style={{"cursor": "prompt"}}>
-                            <button  className = "posColor__circlebtn" onClick={props.changColorToRed}   style={{backgroundColor: "rgb(158, 28, 28)"}} ></button>
-                            <button  className = "posColor__circlebtn" onClick={props.changColorToBlue} style={{backgroundColor: "rgb(37, 37, 167)"}}></button>
-                            <button  className = "posColor__circlebtn" onClick={props.changColorToGreen} style={{backgroundColor: "rgb(40, 128, 40)"}}></button>
+                            <button  className = "posColor__circlebtn" onClick={props.changColorToRed}   style={{backgroundColor: "#699BF7"}} ></button>
+                            <button  className = "posColor__circlebtn" onClick={props.changColorToBlue} style={{backgroundColor: "#C7B9FF"}}></button>
+                            <button  className = "posColor__circlebtn" onClick={props.changColorToGreen} style={{backgroundColor: "#FF5166"}}></button>
                             <button  className = "posColor__circlebtn " onClick={props.changColorToBlack} style={{backgroundColor: "black"}}></button>
                          </div>
                          

@@ -8,12 +8,13 @@ import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
 import {UserScore, Game} from "../interfaces/iChat";
-import Card from "../../components/utils/Card";
-import { ListItem } from '@mui/material';
 import '../../style/Profile.css'
 import '../../style/Table.css'
 
-const Table = (props: any) => {
+
+
+
+const Podium = (props: any) => {
   const MAX_SCORE = 10;
   const [games, setGames] = useState<Game[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
@@ -44,20 +45,6 @@ const Table = (props: any) => {
     getAllUsers();
   }, []);
 
-  //score/ user
-  const getNbGames = (user: UserScore) => {
-    if (games) {
-      const p1 = games.filter(u => +u.playerOneId === +user.id);
-      const p2 = games.filter(u => +u.playerTwoId === +user.id);
-      return (p2.length + p1.length);
-    }
-  }
-
-  const getWinner = (user: UserScore) => {
-    if (games) {
-      return (games.filter(u => +u.winnerId === +user.id).length);
-    }
-  }
 
   const getScore = (user: UserScore) => {
     if (games) {
@@ -86,38 +73,33 @@ const Table = (props: any) => {
   let second = sorted[1];
   var third = sorted[2];
   
-  function handleNewGame(event: React.FormEvent<HTMLFormElement>): void {
-    throw new Error('Function not implemented.');
-  }
-  
  // console.log("wqwretyt", firts?.avatar);
     return(
 
     <>
-      <form onSubmit={(event) => handleNewGame(event)}></form>
-             
-          <ListItem  className="headTable">
-              <p>Avatar</p>
-              <p className='tdd'>Name</p>
-              <p>Games</p>
-              <p>Points</p>
-              <p>Victory</p>
-            </ListItem >
+           	<div className="midPos">
+                <div className={`rangAvatar ${getScore(firts) === getScore(second) ? "" : "podium-first"}`}>
+                    <MyAvatar authCtx={authCtx} id={second?.id} style="m" avatar={second?.avatar} ftAvatar={second?.ftavatar}/>
+                    <UserChart userName={second?.username} h={getScore(second)} />
 
-          {sorted.map((g) => (
-              <ListItem  className="lineTable" key={g?.id}>
-                <div className="container-match">
-                    <span ><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></span>
-                    <p >{g?.username}</p>
-                    <p >{getNbGames(g)}</p>
-                    <p >{getScore(g)}</p>
-                    <p >{getWinner(g)}</p>
-                  {/* <PlayerOne player={game.playerOne} winner={game.winner} score={game.score1} />
-                  <ScoresMatch score1={game.score1} score2={game.score2} date={game.createdAt}/>
-                  <PlayerTwo player={game.playerTwo} winner={game.winner} score={game.score2} /> */}
+                    <p className="rank-podium">2</p>
+
                 </div>
-              </ListItem>
-          ))}
+
+                <div className='rangAvatar - one'>       
+                    <MyAvatar authCtx={authCtx } id={firts?.id} style="m" avatar={firts?.avatar} ftAvatar={firts?.ftavatar}/>
+                    <UserChart   userName={firts?.username}  h={(getScore(firts))} />
+                    <p className="rank-podium">1</p>
+
+                </div>
+
+                <div className={`rangAvatar ${getScore(firts) === getScore(third) ? "" : "podium-first"}`}>
+                    <MyAvatar authCtx={authCtx } id={third?.id}  style="m" avatar={third?.avatar} ftAvatar={third?.ftavatar}/> 
+                    <UserChart  userName={third?.username}  h={(getScore(third))} color={"black"}/>
+                    <p className="rank-podium">3</p>
+                </div>
+            </div>
+ 
 
 
         </>
@@ -125,4 +107,4 @@ const Table = (props: any) => {
     }
 
 
-export default Table;
+export default Podium;
