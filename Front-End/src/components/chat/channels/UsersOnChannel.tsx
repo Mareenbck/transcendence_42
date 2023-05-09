@@ -10,11 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AuthContext from '../../../store/AuthContext';
-import { Link } from "react-router-dom";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import MicOffIcon from '@mui/icons-material/MicOff';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import "../../../style/UsersOnChannel.css"
 import PersonnalInfoChat from '../PersonnalInfoChat';
 import { Avatar, Tooltip } from '@mui/material';
@@ -23,17 +18,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FriendContext } from "../../../store/FriendshipContext";
 import { faTrash, faBan, faMicrophoneSlash, faMicrophone } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
-import { addListener } from 'process';
 
 
-
-function generate(element: React.ReactElement) {
-  return [0, 1, 2].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    }),
-  );
-}
 
 const Demo = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -172,8 +158,7 @@ export default function InteractiveListe(props: any) {
                     throw new Error("Failed to mute user.");
                 }
                  
-                props.setMutedUsers((mutedUsers: any) => [...mutedUsers, userId]);
-                // console.log(props.setMutedUsers)   
+                props.setIsHide(true)
                 setIsMuted(true)           
             } catch (error) {
                 console.error(error);
@@ -192,12 +177,13 @@ export default function InteractiveListe(props: any) {
                     },
                 }
                 );
+                console.log(response)
+
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
-                props.setUnMutedUsers((unMutedUsers: any) => [...unMutedUsers, userId]);
-
-                setIsMuted(false)
+                props.setIsHide(false)
+                setIsMuted(false) 
 
             } catch (error) {
                 console.error(error);
