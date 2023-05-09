@@ -9,6 +9,13 @@ import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
 import {UserScore, Game} from "../interfaces/iChat";
 import Card from "../../components/utils/Card";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import ButtonToggle from '../utils/ButtonToggle';
+
+
+
+
 // import Table from "./Table";
 
 const Scores = () => {
@@ -43,19 +50,7 @@ const Scores = () => {
   }, []);
 
   //score/ user
-  const getNbGames = (user: UserScore) => {
-    if (games) {
-      const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user.id);
-      const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user.id);
-      return (p2.length + p1.length);
-    }
-  }
 
-  const getWinner = (user: UserScore) => {
-    if (games) {
-      return (games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user.id).length);
-    }
-  }
 
   const getScore = (user: UserScore) => {
     if (games) {
@@ -87,65 +82,62 @@ const Scores = () => {
   function handleNewGame(event: React.FormEvent<HTMLFormElement>): void {
     throw new Error('Function not implemented.');
   }
+
+  const theme = createTheme();
+
+		theme.typography.h3 = {
+			// fontSize: '8rem',
+			'@media (min-width:600px)': {
+			// fontSize: '8rem',
+			color: '#699BF7',
+			textShadow: '2px 2px #000000',
+			marginTop: '3rem',
+			marginBottom: '2.5rem',
+			borderBottom: '5px solid black'
+		},
+			[theme.breakpoints.up('md')]: {
+			fontSize: '4rem',
+		},
+		};
   
-//  console.log("wqwretyt", firts?.avatar);
     return(
 
-    <>
-   <div  >
-    <section className= "main">
+		<>
+		<section className= "main">
 
-      <SideBar title="Scores" />          
-    
-      <section className= "one">  
-          <h1 className='one_podium'>PODIUM</h1>
-          
-          <section className= "two">
-          <form onSubmit={(event: any) => handleNewGame(event)}>
-         
-        </form>
-           
-              
-            <div className="pos">
-                    
-             
-              <div className="midPos">
+		<SideBar title="Scores" />   
 
-                
+		
+		
+		<section className= "one">  
+			
+			<ThemeProvider theme={theme}>
+				<Typography variant="h3">Leaderboard</Typography>
+			</ThemeProvider>  
+			<section className= "two">
+			<form onSubmit={(event: any) => handleNewGame(event)}>
+			
+			</form>
+			
+				
+				<div className="pos">
+				
+					
+						<div className='card-wrapper'>
+							<Card  calssName="cardP" color='red' title="Podium" type="podium" width="100%" ></Card>
+						</div>
 
-                    <div className='rangAvatar'>
-                      <UserChart   userName={second?.username}  h={(getScore(second))} />
-                      <MyAvatar authCtx={authCtx } id={second?.id} style="l" avatar={second?.avatar} ftAvatar={second?.ftavatar}/>
-                    </div>
+						<div className='card-wrapper'>
+							<Card  calssName="cardPodium" color='yellow' title="Players List" type="table" width="100%" ></Card>
+					</div>
 
-                    <div className='rangAvatar'>       
-                      <UserChart   userName={firts?.username}  h={(getScore(firts))} />
-                      <MyAvatar authCtx={authCtx } id={firts?.id} style="l" avatar={firts?.avatar} ftAvatar={firts?.ftavatar}/>
-                    </div>
+				</div>  
+					</section>
+				</section>
 
-                    <div className='rangAvatar'> 
-                      <UserChart   userName={third?.username}  h={(getScore(third))} color={"black"}/>
-                      <MyAvatar authCtx={authCtx } id={third?.id}  style="l" avatar={third?.avatar} ftAvatar={third?.ftavatar}/> 
-                    </div>
-
-                   
-                  
-                </div>
-                    <div className='card-wrapper'>
-						          <Card  calssName="cardPodium" color='yellow' title="Users list" type="table" width="100%" ></Card>
-                   </div>
-
-
-
-
-                  </div>  
-                </section>
-            </section>
-
-          </section>    
-          </div>
-
-        </>
+			</section>    
+			<ButtonToggle/>
+			</>
     )
     }
 
