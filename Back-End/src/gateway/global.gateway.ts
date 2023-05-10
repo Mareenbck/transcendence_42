@@ -135,6 +135,11 @@ console.log("26 Connect + map: client", this.userSockets.users);
   async chatInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void>
   { this.chatService.chatInvite(data.author, data.player,) };
 
+  @SubscribeMessage('joinedChannel')
+	async joinChannel(@MessageBody() data: {channelId: any}, @ConnectedSocket() socket: Socket): Promise<void> 
+  { this.chatService.chatJoinedChannel(data.channelId, socket.id) };
+  
+
 
 
 ///////////////////////////
@@ -208,13 +213,6 @@ console.log("26 Connect + map: client", this.userSockets.users);
 		this.server.emit('deleteChannel', newList);
 	}  
   
-  
-  @SubscribeMessage('joinedChannel')
-	async joinChannel(@MessageBody() data: any, @MessageBody() channelId: any ): Promise<void> {
-		const newList = await this.chatroomService.getParticipants(channelId);
-		this.server.emit('joinedChannel', newList);
-	}  
-
   @SubscribeMessage('showUsersList')
 	async showUsersList(@MessageBody() data: any ): Promise<void> {
     const showList = await this.userService.getUsers();

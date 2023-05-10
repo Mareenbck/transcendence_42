@@ -174,6 +174,12 @@ export function NavbarChannel(props: any) {
 			// sendMessage("removeConv")
 	}
 
+	useEffect(() => {        
+		addListener("joinedChannelR2", (data: string) => {			
+			{setIsAdmin('USER')};
+		});
+	});
+
 
 	return (
 		<div className="navbar-channel">

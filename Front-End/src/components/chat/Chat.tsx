@@ -91,13 +91,13 @@ function Chat(props: any) {
         { setBlockForMe(+data.id);}
     });
   });
+
   useEffect(() => {
     addListener("unblockForMe", data => {
       if (+data.id !== +user.userId)
         { setUnblockForMe(+data.id);}
     });
   });
-
 
 //   useEffect(() => {
 //     AMessageD && currentDirect && +currentDirect?.id === +AMessageD.author &&

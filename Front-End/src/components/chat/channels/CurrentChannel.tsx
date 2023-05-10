@@ -32,8 +32,17 @@ export default function CurrentChannel(props: any) {
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
-	  
 
+	useEffect(() => {        
+	addListener("joinedChannelR2", (channelId: number) => {
+		if (!currentChatroom.participants.find((p: { userId: number; }) => +p.userId === +currentId))
+		{   
+			const newParticipant = { role: "USER", status:	"CLEAN", channelId: channelId, userId: currentId,};
+    		currentChatroom.participants.push(newParticipant);
+		}    
+      		setIsJoined(true);
+		});
+	});
 
 	useEffect(() => {
 		const participant = currentChatroom.participants.find(
@@ -43,9 +52,7 @@ export default function CurrentChannel(props: any) {
 		  setIsMuted(participant.status === 'MUTE');
 		  setIsBanned(participant.status === 'BAN');
 		}
-	  }, [currentChatroom.participants, authCtx.userId]);
-	  
-
+	}, [currentChatroom.participants, authCtx.userId]);	  
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -142,14 +149,12 @@ export default function CurrentChannel(props: any) {
 		setIsJoined(false);
 	};
 
-	
 	useEffect(() => {
 		addListener("showUsersList", data => setUsersList(data));
 		if (!showUsersOnChannel) {
 		  setShowUserList(true);
 		}
 	  }, [showUsersOnChannel]);
-
 
 	return (
 		<>
