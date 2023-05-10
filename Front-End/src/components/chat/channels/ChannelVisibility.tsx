@@ -30,6 +30,10 @@ export default function ChannelVisibility(props: any) {
     setOpenJoinModal(true);
   };
 
+  const handleCloseJoinModal = (e: FormEvent) => {
+    setOpenJoinModal(false);
+  };
+
   function getIconByChannelType() {
     let icon;
 
@@ -100,7 +104,7 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
         <Modal
           className="modal-container"
           open={openJoinModal}
-        //   onClose={handleCloseModal}
+          onClose={handleCloseJoinModal}
         >
           <Box className="modal-content-password">
             <label htmlFor="floatingPassword">Enter the password</label>
