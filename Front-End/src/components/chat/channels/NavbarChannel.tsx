@@ -74,7 +74,6 @@ export function NavbarChannel(props: any) {
 	  }
 
 	const leaveChannel = async (channelId: number) => {
-		// console.log("xxxxxxxxxxxxx", channelId);
 		try {
 			const response = await fetch(`http://localhost:3000/chatroom2/leave_channel`, {
 			  method: 'POST',
@@ -85,7 +84,6 @@ export function NavbarChannel(props: any) {
 			  body: JSON.stringify({ channelId: channelId }),
 			});
 			const data = await response.json();
-			// console.log("ddddddddddd", channelId);
 			sendMessage("leaveChannel", {channelId: channelId});
 			sendMessage("showUsersList", data);
 			sendMessage('toMute', {channelId: channelId})
@@ -110,7 +108,7 @@ export function NavbarChannel(props: any) {
 			sendMessage("removeConv", data)
 			sendMessage("showUsersList", data)
             return data;
-          
+
         } catch(error) {
             console.log("error", error)
         }
@@ -208,8 +206,8 @@ export function NavbarChannel(props: any) {
 						/>
 					}
 					{props.chatroom.visibility === 'PWD_PROTECTED' &&
-						<ChannelsSettings 
-							role={isAdmin} 
+						<ChannelsSettings
+							role={isAdmin}
 							onOpenModal={handleOpenModal}
 							onDeleteChannel={handleDeleteChannel} />
 					}

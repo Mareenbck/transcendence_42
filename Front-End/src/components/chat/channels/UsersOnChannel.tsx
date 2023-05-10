@@ -231,7 +231,7 @@ export default function InteractiveListe(props: any) {
 
         useEffect(() => {
             showParticipants(props.channelId);
-        }, []);
+        }, [props.channelId]);
 
 
         useEffect(() => {
