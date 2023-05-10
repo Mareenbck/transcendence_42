@@ -16,8 +16,9 @@ import SelectColor from './SelectColor';
 import PlayerOne from './PlayerOne';
 import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
-import HeaderGame from './HeaderGame';
+// import HeaderGame from './HeaderGame';
 import "./Game.css"
+import HeaderGame from './HeaderGame';
 
 
 
@@ -29,7 +30,7 @@ function Game() {
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
     const [gamestatus, setGameStatus] = useState<gameStatus>(
-        {   winner: null,
+        {   winner: {} as UserGame,
             playerR: {} as UserGame,
             playerL: {} as UserGame,
             status: "null"} 
@@ -48,13 +49,12 @@ function Game() {
                 }
             }
             setOnlinePlayers(games);
-            // getCurrentGame(curroom);
         }
         addListener("gameRooms", handleGameRooms);
         sendMessage('listRooms', {} as any);      
     }, []);
 
-
+//event: entre to game's page
     useEffect(() => {
         sendMessage("enterGame", {} as any);
         return () => {
@@ -345,6 +345,7 @@ useEffect(() => {
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                                 (getCurrentGame(curroom))
+                                // (<HeaderGame games = {games} room = {curroom}></HeaderGame>)
                                 :  
                                 ( <h2 className='gametitle'>Game </h2>)
                             } 
