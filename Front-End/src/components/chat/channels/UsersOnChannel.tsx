@@ -201,6 +201,11 @@ export default function InteractiveListe(props: any) {
             showParticipants(props.channelId);
         }, [props.channelId, showParticipants]);
 
+
+        useEffect(() => {
+            addListener('toMute', data => setParticipants(data))
+        }, [addListener])
+
     const [showList, setShowList] = React.useState(null)
 
 	useEffect(() => {

@@ -85,6 +85,7 @@ export function NavbarChannel(props: any) {
 			});
 			const data = await response.json();
 			sendMessage("showUsersList", data);
+			sendMessage('toMute', {channelId: channelId})
 			props.onLeaveChannel();
 			return data;
 		} catch(err) {

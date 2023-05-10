@@ -52,6 +52,10 @@ export default function UpdateChannelsInList(props: any) {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [conversations]);
 
+	const handleJoinChannel = () => {
+		props.showParticipantsList(true);
+	};
+
 
 	return (
 		<div className="conversation-list">

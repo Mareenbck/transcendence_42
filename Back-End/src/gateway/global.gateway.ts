@@ -217,6 +217,7 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
 		this.server.emit('showUsersList', showList);
 	}
 
+
   @SubscribeMessage('toMute')
 	async hidePaperPlane(@MessageBody() data: any): Promise<void> {
     const { channelId } = data
