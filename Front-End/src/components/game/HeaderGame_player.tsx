@@ -7,15 +7,7 @@ import PlayerTwo from './PlayerTwo';
 
 const HeaderGame = (props: any): React.JSX.Element => {
 
-	// useEffect(() => {
-    //     if (games){
-    //         const index = games.findIndex((game:gameList) => +game.roomN == +roomN);
-    //         if (index != -1){
-    //             setPlayers( {playerL: games[index].playerL, playerR: games[index].playerR} );
-    //         }
-    //     }
-	// }, [games]);
-    const playerL: UserGame = props.playerL;
+	const playerL: UserGame = props.playerL;
     const playerR: UserGame = props.playerR;
 
     return (

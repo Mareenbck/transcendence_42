@@ -29,20 +29,13 @@ function Game() {
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
     const [gamestatus, setGameStatus] = useState<gameStatus>(
-        {   winner: {}  as UserGame,
+        {   winner: null,
             playerR: {} as UserGame,
             playerL: {} as UserGame,
             status: "null"} 
     );  
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
     const [curroom, setCurRoom] = useState<number>(-1);
-    // const [players, setPlayers] = useState<players>(
-    //     {
-    //         playerR: {} as UserGame,
-    //         playerL: {} as UserGame
-    //     }
-    // )
-
    
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
     useEffect(() => {
@@ -55,10 +48,10 @@ function Game() {
                 }
             }
             setOnlinePlayers(games);
+            // getCurrentGame(curroom);
         }
         addListener("gameRooms", handleGameRooms);
-        sendMessage('listRooms', {} as any);       
- console.log("playerL et playerR + games", gamestatus.playerR, gamestatus.playerL)
+        sendMessage('listRooms', {} as any);      
     }, []);
 
 
@@ -94,28 +87,29 @@ function Game() {
       }, []);
 
     
-    // const getCurrentGame = (roomN: number) => {
-    //     if (games){
-    //         const index = games.findIndex((game:gamesList) => game.roomN == roomN);
-    //         if (index != -1){
-    //             const game:gamesList = games[index];
-    //             const playerL = game.playerL;
-    //             const playerR = game.playerR;
-    //             // return (
-    //             //     <>
-    //             //     <div className="container-match" style={{backgroundColor: "white",
-    //             //                                             border: "solid" ,
-    //             //                                             borderBlockColor:"black" } } >
-    //             //         <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
-    //             //         <p className='vs'> VS</p>
+    const getCurrentGame = (roomN: number): React.JSX.Element | undefined => {
+        if (games){
+            const index = games.findIndex((game:gamesList) => game.roomN == roomN);
+            if (index != -1){
+                const game:gamesList = games[index];
+                const playerL = game.playerL;
+                const playerR = game.playerR;
+
+                return (
+                    <>
+                    <div className="container-match" style={{backgroundColor: "white",
+                                                            border: "solid" ,
+                                                            borderBlockColor:"black" } } >
+                        <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
+                        <p className='vs'> VS</p>
                     
-    //             //         <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
-    //             //     </div>
-    //             //     </>
-    //             // );
-    //         }
-    //     }
-    // };
+                        <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
+                    </div>
+                    </>
+                );
+            }
+        }
+    };
 
 /////////////////////////////////////////////////leave the page////////////////////////////////////
     // useEffect(() => {
@@ -159,7 +153,6 @@ function Game() {
     }, []);
 
 // Pour partis de Modal select Color,
-
 const [ShowColorModal, setShowColorModal] = useState(false);
 const handleColorModal = () => {
     setShowColorModal(true)
@@ -250,7 +243,7 @@ useEffect(() => {
     const initListener = (data: gameInit)=>{
         const width = Math.floor(0.6 * window.innerWidth);
         if(width){
-            data.table_width = width;
+            data.table_width = width;""
         }
         if(curroom == -1){
             gamestatus.status == 'game';
@@ -351,11 +344,9 @@ useEffect(() => {
                             {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
-                                (// getCurrentGame(curroom), header
-                                    <HeaderGame playerL = {gamestatus.playerL} room = {curroom}></HeaderGame>
-                                )
+                                (getCurrentGame(curroom))
                                 :  
-                              ( <h2 className='gametitle'>Game </h2>)
+                                ( <h2 className='gametitle'>Game </h2>)
                             } 
                             
                             {(gamestatus.status == 'waiting') ?
@@ -381,20 +372,18 @@ useEffect(() => {
                     </>
                     ):(
                     <>
-                        <section className='headerWin'>
-                        </section>
-
-                        <section className='sctWin'>
-                    
-                            <div className="container-match" style={{backgroundColor: "white",
+                        {/* <section className='headerWin'> */}
+                        <div className="container-match" style={{backgroundColor: "white",
                                                                     border: "solid" ,
                                                                     borderBlockColor:"black" } } >
-                                <PlayerOne  style={{backgroundColor: "white"}} player={players.playerL} winner={""} sizeAvatar={"l"} />
+                                <PlayerOne  style={{backgroundColor: "white"}} player={gamestatus.playerL} winner={gamestatus.winner} sizeAvatar={"l"} />
                                 <p className='vs'> VS</p>
                             
-                                <PlayerTwo  player={players.playerR} winner={""}  sizeAvatar={"l"} />
+                                <PlayerTwo  player={gamestatus.playerR} winner={gamestatus.winner}  sizeAvatar={"l"} />
                             </div>
-                
+                        {/* </section> */}
+
+                        <section className='sctWin'>             
                             <h1> WINNER </h1>
                             <div className='CapWinner'>    
                                 <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
@@ -431,11 +420,5 @@ useEffect(() => {
     </React.Fragment>
     )
 }
-                                     
-            
-            
- {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
-
-
-
+                                   
 export default Game;
