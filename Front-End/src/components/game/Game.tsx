@@ -164,19 +164,19 @@ const handleClose = () => {
 const [ShowCamva, setShowCamva] = useState(true);
 const [backColorGame, setbackColorGame] = useState<string>("black");
 const changColorToRed= () => {
-    setbackColorGame("rgb(158, 28, 28)");
+    setbackColorGame("#699BF7");
     setShowColorModal(false);
     ShowCamva? setShowCamva(false): setShowCamva(true);
 }
 
 const changColorToBlue= () => {
-    setbackColorGame("rgb(37, 37, 167)");
+    setbackColorGame("#C7B9FF");
     setShowColorModal(false);
     ShowCamva? setShowCamva(false): setShowCamva(true);
 }
 
 const changColorToGreen= () => {
-    setbackColorGame("rgb(40, 128, 40)");
+    setbackColorGame("#FF5166");
     setShowColorModal(false);
     ShowCamva? setShowCamva(false): setShowCamva(true);
 }
@@ -190,6 +190,7 @@ const changColorToBlack= () => {
 useEffect(() => {
 
 }, [backColorGame])
+
 
 /************************* */
 
