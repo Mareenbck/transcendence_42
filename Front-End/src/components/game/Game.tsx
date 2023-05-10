@@ -30,17 +30,19 @@ function Game() {
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
     const [gamestatus, setGameStatus] = useState<gameStatus>(
-        {   winner: null,
+        {   winner: {}  as UserGame,
+            playerR: {} as UserGame,
+            playerL: {} as UserGame,
             status: "null"} 
     );  
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
     const [curroom, setCurRoom] = useState<number>(-1);
-    const [players, setPlayers] = useState<players>(
-        {
-            playerR: {} as UserGame,
-            playerL: {} as UserGame
-        }
-    )
+    // const [players, setPlayers] = useState<players>(
+    //     {
+    //         playerR: {} as UserGame,
+    //         playerL: {} as UserGame
+    //     }
+    // )
 
    
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
@@ -56,8 +58,77 @@ function Game() {
             setOnlinePlayers(games);
         }
         addListener("gameRooms", handleGameRooms);
-        sendMessage('listRooms');       
- console.log("playerL et playerR + games", players.playerR, players.playerL, games)
+        sendMessage('listRooms', {} as any);       
+ console.log("playerL et playerR + games", gamestatus.playerR, gamestatus.playerL)
+    }, []);
+
+
+    useEffect(() => {
+        sendMessage("enterGame", {user: user});
+        return () => {
+            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+                sendMessage("exitGame", { user: user, status: gamestatus.status });
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleBackButton = (event: PopStateEvent) => {
+// alert("2 handlePopstate");
+            // Handle the back button press
+            // Add your custom logic here
+            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+                sendMessage("exitGame", { user: user, status: gamestatus.status });
+            }
+        };
+    
+        // Add the event listener when the component mounts
+        window.addEventListener("popstate", handleBackButton);
+    
+        // Remove the event listener when the component unmounts
+        return () => {
+            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+                alert("1 handlePopstate");
+            }
+            window.removeEventListener("popstate", handleBackButton);
+        };
+      }, []);
+
+    
+    // const getCurrentGame = (roomN: number) => {
+    //     if (games){
+    //         const index = games.findIndex((game:gameList) => game.roomN == roomN);
+    //         if (index != -1){
+    //             const game:gameList = games[index];
+    //             const playerL = game.playerL;
+    //             const playerR = game.playerR;
+    //             // return (
+    /garde/             //     <>
+    //             //     <div className="container-match" style={{backgroundColor: "white",
+    //             //                                             border: "solid" ,
+    //             //                                             borderBlockColor:"black" } } >
+    //             //         <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
+    //             //         <p className='vs'> VS</p>
+                    
+    //             //         <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
+    //             //     </div>
+    //             //     </>
+    //             // );
+    //         }R, scoreL
+    useEffect(() => {
+        const handleGameRooms = (games: gamesList[]) => {
+            if(curroom == -1){
+                const index = games.findIndex(room => room.playerL.username == user.username || room.playerR.username == user.username);
+                if (index != -1) { 
+                    const roomN = games[index].roomN;
+                    setCurRoom(roomN);
+                }
+            }
+            setOnlinePlayers(games);
+        }
+        addListener("gameRooms", handleGameRooms);
+        sendMessage('listRooms', {} as any);       
+ console.log("playerL et playerR + games", gamestatus.playerR, gamestatus.playerL)
     }, []);
 
 
@@ -209,7 +280,7 @@ useEffect(() => {
             racket_height: 0.100,
             scoreR: 0,
             scoreL: 0,
-            winner: null,
+            // winner: null,
         }
     );
 
@@ -238,8 +309,138 @@ useEffect(() => {
                     racket_width: gameinit.racket_width,
                     racket_height: gameinit.racket_height,
                     scoreR: gameinit.scoreR,
-                    scoreL: gameinit.scoreL,
-                    winner: gameinit.winner});
+                    scoreL: gameinit.scoreL})
+                    // winner: gameinit.winner});
+            }
+        };
+        window.addEventListener("resize", updateWidth);
+    //     }
+    // };
+
+/////////////////////////////////////////////////leave the page////////////////////////////////////
+    // useEffect(() => {
+
+    //     return () => {
+    //     // unmount component event (works at mount too)
+    //         if (gamestatus.status == 'game'){
+    //             alert("Alert of sortie game");
+    //         }
+    //         else if (gamestatus.status == 'waiting'){
+    //             alert("Alert of sortie waiting");
+    //         }
+    //         else {
+    //             alert(`Alert of sortie gamestatus.status = ${gamestatus.status}`);
+    //         }
+    //     };
+    // }, []);
+     
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+// onKeyDown handler function
+
+    const onkeyPress = (event: KeyboardEvent) => {
+        event.preventDefault();
+        if (event.code === "ArrowUp") {
+            sendMessage('move', "up" as any)
+        }
+        if (event.code === "ArrowDown") {
+            sendMessage('move', "down" as any)
+        }
+    };
+
+    useEffect(() => {
+// Attach the event listener to the window object
+        window.addEventListener('keydown', onkeyPress);
+        
+        return () => {
+        // Remove the event listener when the component unmounts
+            window.removeEventListener('keydown', onkeyPress);
+        }
+    }, []);
+
+// Pour partis de Modal select Color,
+
+const [ShowColorModal, setShowColorModal] = useState(false);
+const handleColorModal = () => {
+    setShowColorModal(true)
+}
+const handleClose = () => {
+    setShowColorModal(false)
+}
+
+const [ShowCamva, setShowCamva] = useState(true);
+const [backColorGame, setbackColorGame] = useState<string>("black");
+const changColorToRed= () => {
+    setbackColorGame("#699BF7");
+    setShowColorModal(false);
+    ShowCamva? setShowCamva(false): setShowCamva(true);
+}
+
+const changColorToBlue= () => {
+    setbackColorGame("#C7B9FF");
+    setShowColorModal(false);
+    ShowCamva? setShowCamva(false): setShowCamva(true);
+}
+
+const changColorToGreen= () => {
+    setbackColorGame("#FF5166");
+    setShowColorModal(false);
+    ShowCamva? setShowCamva(false): setShowCamva(true);
+}
+
+const changColorToBlack= () => {
+    setbackColorGame("black");
+    setShowColorModal(false);
+    ShowCamva? setShowCamva(false): setShowCamva(true);
+}
+
+useEffect(() => {
+
+}, [backColorGame])
+
+/************************* */
+
+//initialization of the initial parameters of the game
+    const [gameinit, setGameInit] = useState<gameInit>(
+        {
+            table_width: Math.floor(0.6 * window.innerWidth),
+            table_height: 0.5,
+            ballR: 0.015,
+            racket_width: 0.010,
+            racket_height: 0.100,
+            scoreR: 0,
+            scoreL: 0,
+            // winner: null,
+        }
+    );
+
+// game parameters update (coordinates ball and racket)
+    const [gamestate, setGameState] = useState<gameState>(
+        {
+            ball: {x: 0.500, y: 0.250},
+            racket1: {x: 0.010, y: 0.150},
+            racket2: {x: 0.990 - gameinit.racket_width , y: 0.150},
+            scoreR: 0,
+            scoreL: 0,
+        }
+    );
+
+// the responsive game
+    useEffect(() => {
+        const updateWidth = () => {
+            // window.screen.width
+            const width = Math.floor(0.6 * window.innerWidth);
+            if(width){
+                gameinit.table_width = width;
+                setGameInit({
+                    table_width: width,
+                    table_height: gameinit.table_height,
+                    ballR: gameinit.ballR,
+                    racket_width: gameinit.racket_width,
+                    racket_height: gameinit.racket_height,
+                    scoreR: gameinit.scoreR,
+                    scoreL: gameinit.scoreL})
+                    // winner: gameinit.winner});
             }
         };
         window.addEventListener("resize", updateWidth);
@@ -285,7 +486,7 @@ useEffect(() => {
         if(roomN == -1){
             gamestatus.status == 'game';
         }
-        gamestatus.winner = null;
+        gamestatus.winner = {} as UserGame;
         setClicked(true);
     };
 
@@ -350,8 +551,8 @@ useEffect(() => {
                             {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
-                                (// getCurrentGame(curroom);
-                                    <HeaderGame games = {games} room = {curroom}></HeaderGame>
+                                (// getCurrentGame(curroom), header
+                                    <HeaderGame playerL = {gamestatus.playerL} room = {curroom}></HeaderGame>
                                 )
                                 :  
                               ( <h2 className='gametitle'>Game </h2>)
@@ -385,14 +586,14 @@ useEffect(() => {
 
                         <section className='sctWin'>
                     
-                            {/* <div className="container-match" style={{backgroundColor: "white",
+                            <div className="container-match" style={{backgroundColor: "white",
                                                                     border: "solid" ,
                                                                     borderBlockColor:"black" } } >
                                 <PlayerOne  style={{backgroundColor: "white"}} player={players.playerL} winner={""} sizeAvatar={"l"} />
                                 <p className='vs'> VS</p>
                             
                                 <PlayerTwo  player={players.playerR} winner={""}  sizeAvatar={"l"} />
-                            </div> */}
+                            </div>
                 
                             <h1> WINNER </h1>
                             <div className='CapWinner'>    

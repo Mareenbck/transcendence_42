@@ -56,8 +56,8 @@ export interface gameInit {
 
 export interface gameStatus {
     winner: UserGame;
-    // playerR: UserGame;
-    // playerL: UserGame;
+    playerR: UserGame;
+    playerL: UserGame;
     status: string;
 }
 
