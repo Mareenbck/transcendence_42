@@ -29,17 +29,19 @@ function Game() {
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
     const [gamestatus, setGameStatus] = useState<gameStatus>(
-        {   winner: null,
+        {   winner: {}  as UserGame,
+            playerR: {} as UserGame,
+            playerL: {} as UserGame,
             status: "null"} 
     );  
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
     const [curroom, setCurRoom] = useState<number>(-1);
-    const [players, setPlayers] = useState<players>(
-        {
-            playerR: {} as UserGame,
-            playerL: {} as UserGame
-        }
-    )
+    // const [players, setPlayers] = useState<players>(
+    //     {
+    //         playerR: {} as UserGame,
+    //         playerL: {} as UserGame
+    //     }
+    // )
 
    
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
@@ -56,7 +58,7 @@ function Game() {
         }
         addListener("gameRooms", handleGameRooms);
         sendMessage('listRooms', {} as any);       
- console.log("playerL et playerR + games", players.playerR, players.playerL, games)
+ console.log("playerL et playerR + games", gamestatus.playerR, gamestatus.playerL)
     }, []);
 
 
@@ -208,7 +210,7 @@ useEffect(() => {
             racket_height: 0.100,
             scoreR: 0,
             scoreL: 0,
-            winner: null,
+            // winner: null,
         }
     );
 
@@ -237,8 +239,8 @@ useEffect(() => {
                     racket_width: gameinit.racket_width,
                     racket_height: gameinit.racket_height,
                     scoreR: gameinit.scoreR,
-                    scoreL: gameinit.scoreL,
-                    winner: gameinit.winner});
+                    scoreL: gameinit.scoreL})
+                    // winner: gameinit.winner});
             }
         };
         window.addEventListener("resize", updateWidth);
@@ -284,7 +286,7 @@ useEffect(() => {
         if(roomN == -1){
             gamestatus.status == 'game';
         }
-        gamestatus.winner = null;
+        gamestatus.winner = {} as UserGame;
         setClicked(true);
     };
 
@@ -349,8 +351,8 @@ useEffect(() => {
                             {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
-                                (// getCurrentGame(curroom);
-                                    <HeaderGame games = {games} room = {curroom}></HeaderGame>
+                                (// getCurrentGame(curroom), header
+                                    <HeaderGame playerL = {gamestatus.playerL} room = {curroom}></HeaderGame>
                                 )
                                 :  
                               ( <h2 className='gametitle'>Game </h2>)
@@ -384,14 +386,14 @@ useEffect(() => {
 
                         <section className='sctWin'>
                     
-                            {/* <div className="container-match" style={{backgroundColor: "white",
+                            <div className="container-match" style={{backgroundColor: "white",
                                                                     border: "solid" ,
                                                                     borderBlockColor:"black" } } >
                                 <PlayerOne  style={{backgroundColor: "white"}} player={players.playerL} winner={""} sizeAvatar={"l"} />
                                 <p className='vs'> VS</p>
                             
                                 <PlayerTwo  player={players.playerR} winner={""}  sizeAvatar={"l"} />
-                            </div> */}
+                            </div>
                 
                             <h1> WINNER </h1>
                             <div className='CapWinner'>    
