@@ -18,6 +18,7 @@ export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
 	const authCtx = useContext(AuthContext);
 	const currentId = parseInt(authCtx.userId);
+	const [participants, setParticipants] = useState(currentChatroom.participants);
 	const [sendMessage, addListener] = useSocket();
 	const [newMessage2, setNewMessage2] = useState<string>("");
 	const [messages2, setMessages2] = useState<RoomMessage[]>([]);
@@ -28,23 +29,27 @@ export default function CurrentChannel(props: any) {
 	const [showPopUp, setShowPopUp] = useState(true);
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
 	const [isBanned, setIsBanned] = useState(false);
-	
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
 	const [toMute, setToMute] = useState(props.setToMute);
-	// const muted = props.mutedParticipants;
-	// console.log("muted", props.mutedParticipants)
 
 
 	useEffect(() => {
-		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
+		const participant = participants.find((p: any) => p.userId === parseInt(authCtx.userId));
 		if (participant) {
-		  setIsMuted(participant.status === 'MUTE');
-		  setIsBanned(participant.status === 'BAN');
+			setIsJoined(true)
+			setIsMuted(participant.status === 'MUTE');
+			setIsBanned(participant.status === 'BAN');
+		} else {
+			setIsJoined(false)
 		}
-	  }, [currentChatroom.participants, authCtx.userId, props.isUserMuted]);
-	  
+	  }, [participants, authCtx.userId]);
+
+	useEffect(() => {
+		addListener('toMute', data => setParticipants(data))
+	}, [addListener])
+
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
 		if (author !== undefined) { return (author) }
@@ -84,10 +89,6 @@ export default function CurrentChannel(props: any) {
 		}
 	};
 
-
-
-
-
 	useEffect(() => {
 		if (userJoined) {
 			setIsJoined(true)
@@ -95,8 +96,6 @@ export default function CurrentChannel(props: any) {
 			setIsJoined(false)
 		}
 	}, [currentChatroom]);
-
-	  
 
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
@@ -146,7 +145,7 @@ export default function CurrentChannel(props: any) {
 		setIsJoined(false);
 	};
 
-	
+
 	useEffect(() => {
 		addListener("showUsersList", data => setUsersList(data));
 		if (!showUsersOnChannel) {
@@ -185,13 +184,12 @@ export default function CurrentChannel(props: any) {
 							onChange={(e) => setNewMessage2(e.target.value)}
 							value={newMessage2}
 						></input>
-						{props.setToMute &&
-					
+						{!isMuted &&
 							 <FontAwesomeIcon
-								icon={faPaperPlane}
-								onClick={handleSubmit}
-								className={`send-btn-chat ${toMute ? 'muted' : ''}`} // Ajoute la classe 'muted' si l'utilisateur est muté
-								disabled={toMute}
+							 icon={faPaperPlane}
+							 onClick={handleSubmit}
+							 className={`send-btn-chat ${isMuted ? 'muted' : ''}`} // Ajoute la classe 'muted' si l'utilisateur est muté
+							 disabled={toMute}
 							/>
 						}
 
@@ -202,5 +200,5 @@ export default function CurrentChannel(props: any) {
 
 		</>
 	);
-	
+
 }

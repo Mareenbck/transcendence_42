@@ -32,7 +32,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   private readonly logger = new Logger(GlobalGateway.name);
   private userSockets: UsersSockets;
   constructor(
-      private readonly chatroomService: ChatroomService,    
+      private readonly chatroomService: ChatroomService,
       private readonly gameService: GameService,
       private readonly chatService: ChatService,
       private readonly globalService: GlobalService,
@@ -145,7 +145,7 @@ console.log("26 Connect + map: client", this.userSockets.users);
   { this.gameService.acceptGame(data.author, data.player) };
 
   @SubscribeMessage('refuseGame')
-  async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void> 
+  async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void>
   { this.gameService.refusalGame(data.author, data.player) };
 
   @SubscribeMessage('InviteGame')
@@ -201,30 +201,30 @@ console.log("26 Connect + map: client", this.userSockets.users);
 		// Envoyer les demandes mises à jour à tous les clients connectés
 		this.server.emit('pendingDemands', pendingDemands);
 	}
-  
+
   @SubscribeMessage('removeConv')
 	async removeConv(@MessageBody() data: any ): Promise<void> {
 		const newList = await this.chatroomService.findAll();
 		this.server.emit('deleteChannel', newList);
-	}  
-  
-  
+	}
+
+
   @SubscribeMessage('joinedChannel')
 	async joinChannel(@MessageBody() data: any, @MessageBody() channelId: any ): Promise<void> {
 		const newList = await this.chatroomService.getParticipants(channelId);
 		this.server.emit('joinedChannel', newList);
-	}  
+	}
 
   @SubscribeMessage('showUsersList')
 	async showUsersList(@MessageBody() data: any ): Promise<void> {
     const showList = await this.userService.getUsers();
 		this.server.emit('showUsersList', showList);
-	} 
-
+	}
 
   @SubscribeMessage('toMute')
-	async hidePaperPlane(@MessageBody() channelId: any, @MessageBody() userId: any ): Promise<void> {
-    const hidePaperPlane = await this.chatroomService.mute(channelId, userId);
+	async hidePaperPlane(@MessageBody() data: any): Promise<void> {
+    const { channelId } = data
+    const hidePaperPlane = await this.chatroomService.getParticipants(parseInt(channelId));
 		this.server.emit('toMute', hidePaperPlane);
 	}
 
