@@ -211,12 +211,9 @@ export default function InteractiveListe(props: any) {
     const [showList, setShowList] = React.useState(null)
 
   
-	useEffect(() => {        
-		addListener('joinedChannel', data => setShowList(data))
-	}, [setShowList])
-
-	
-            
+	 useEffect(() => {        
+	 	addListener('joinedChannel', data => setShowList(data))
+	 }, [setShowList])
 
 
 return (
@@ -259,7 +256,7 @@ return (
                     primary={participants?.user.username}
                     secondary={secondary ? 'Secondary text' : null}
                 />
-                {showList}
+                {/* {showList} */}
                 {admins.some(admin => admin.user.id === authCtx.userId) && (
                     <>
                     <Tooltip title="Kick">

@@ -52,7 +52,7 @@ export class Chatroom2Controller {
   @Get(':channelId/participants')
   @UseGuards(JwtGuard)
   async getParticipants(@Param('channelId') channelId: string) {
-    const participants = await this.chatRoomService.getParticipants(parseInt(channelId));
+	const participants = await this.chatRoomService.getParticipants(parseInt(channelId));
     return participants;
   }
 
@@ -143,7 +143,7 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@UseGuards(JwtGuard)
 	async unmute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const unmuted = await this.chatRoomService.unmute(parseInt(channelId), parseInt(userId));
-		console.log("unmuted", unmuted)
+		// console.log("unmuted", unmuted)
 		return unmuted ;
 	}
 
