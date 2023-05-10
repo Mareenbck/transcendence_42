@@ -135,7 +135,7 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@UseGuards(JwtGuard)
 	async mute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const muted = await this.chatRoomService.mute(parseInt(channelId), parseInt(userId));
-		console.log("muted", muted)
+		// console.log("muted", muted)
 		return muted ;
 	}
 
@@ -143,7 +143,7 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@UseGuards(JwtGuard)
 	async unmute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const unmuted = await this.chatRoomService.unmute(parseInt(channelId), parseInt(userId));
-		console.log("unmuted", unmuted)
+		// console.log("unmuted", unmuted)
 		return unmuted ;
 	}
 

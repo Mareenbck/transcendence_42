@@ -364,16 +364,9 @@ function Chat(props: any) {
 	const [UsersList, setUsersList] = useState(null);
   const [unMutedUsers, setUnMutedUsers] = useState<string[]>([]);
 	const [isMuted, setIsMuted] = useState(false);
+  const [hide, setIsHide] = useState(false);
 
-  // const [hide, setIsHide] = useState([]); 
-
-  // useEffect(() => {
-	// 	const participant = currentChat?.participants.find((p: any) => p.userId === parseInt(user.userId));
-	// 	if (participant) {
-	// 	  setIsMuted(participant.status === 'MUTE');
-	// 	  setIsHide(props.isUserMuted); // mettre à jour l'état du composant chaque fois que la prop change
-	// 	}
-	//   }, [currentChat?.participants, user.userId, props.isUserMuted]);
+ 
 	
 	const handleShowList = () => {
 	  setShowUsersOnChannel(false);
@@ -395,6 +388,7 @@ function Chat(props: any) {
 	  }
 	}, [showUsersOnChannel]);
 
+	// console.log("muted", props.mutedParticipants)
 
 
 	return (
@@ -438,8 +432,9 @@ function Chat(props: any) {
           setIsJoined={setIsJoined}
           setShowList={handleShowList}
           setUsersList={handleShowUserList}
-          isUserMuted={hide} // nouvelle prop pour indiquer si l'utilisateur est muet ou non
           setUnMutedUsers={setUnMutedUsers}
+          setToMute={props.setToMute}
+          // mutedParticipants={props.mutedParticipants}
         />
   
 			  ) : currentDirect ? (
@@ -473,10 +468,8 @@ function Chat(props: any) {
 					channelVisibility={currentChat?.visibility}
 					channelName={currentChat?.name}
 					isChannelClicked={isChannelClicked}
-					// setMutedUsers={setMutedUsers}
-					setUnMutedUsers={setUnMutedUsers}
-          setIsHide={setIsHide}
-          updateHideState={props.updateHideState}
+          // mutedParticipants={props.mutedParticipants}
+          setToMute={props.setToMute}
 				/>
 			)}
 			

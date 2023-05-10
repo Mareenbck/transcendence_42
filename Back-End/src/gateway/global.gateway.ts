@@ -222,10 +222,10 @@ console.log("26 Connect + map: client", this.userSockets.users);
 	} 
 
 
-  @SubscribeMessage('hidePaperPlane')
+  @SubscribeMessage('toMute')
 	async hidePaperPlane(@MessageBody() channelId: any, @MessageBody() userId: any ): Promise<void> {
     const hidePaperPlane = await this.chatroomService.mute(channelId, userId);
-		this.server.emit('hidePaperPlane', hidePaperPlane);
+		this.server.emit('toMute', hidePaperPlane);
 	}
 
 }

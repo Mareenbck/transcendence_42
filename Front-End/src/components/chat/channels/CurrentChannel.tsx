@@ -12,6 +12,7 @@ import { Alert, Box, IconButton, Modal, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorModalPassword from "./ErrorModalPassword";
 import '../../../style/UsersOnChannel.css'
+import { UserMute } from "../../../interfaces/iChannels";
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -31,32 +32,19 @@ export default function CurrentChannel(props: any) {
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
-	const [mutedUserIds, setMutedUserIds] = useState<number[]>([]);
-	const [hide, setIsHide] = useState<boolean>(props.isUserMuted);
+	const [toMute, setToMute] = useState(props.setToMute);
+	// const muted = props.mutedParticipants;
+	// console.log("muted", props.mutedParticipants)
 
-	// console.log("props", props.hide)
-
-	//   useEffect(() => {
-	// 	const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
-	// 	if (participant) {
-	// 	  setIsMuted(participant.status === 'MUTE');
-	// 	  setIsBanned(participant.status === 'BAN');
-	// 	}
-	//   }, [currentChatroom.participants, authCtx.userId]);
 
 	useEffect(() => {
 		const participant = currentChatroom.participants.find((p: any) => p.userId === parseInt(authCtx.userId));
 		if (participant) {
 		  setIsMuted(participant.status === 'MUTE');
 		  setIsBanned(participant.status === 'BAN');
-		  setIsHide(props.isUserMuted); // mettre à jour l'état du composant chaque fois que la prop change
 		}
 	  }, [currentChatroom.participants, authCtx.userId, props.isUserMuted]);
 	  
-
-
-	
-
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
 		if (author !== undefined) { return (author) }
@@ -197,14 +185,15 @@ export default function CurrentChannel(props: any) {
 							onChange={(e) => setNewMessage2(e.target.value)}
 							value={newMessage2}
 						></input>
-						{!hide &&
-							<FontAwesomeIcon
+						{props.setToMute &&
+					
+							 <FontAwesomeIcon
 								icon={faPaperPlane}
 								onClick={handleSubmit}
-								className={`send-btn-chat`}
-								disabled={hide} // désactiver le bouton d'envoi si l'utilisateur est mute ou si l'un des utilisateurs est muet
+								className={`send-btn-chat ${toMute ? 'muted' : ''}`} // Ajoute la classe 'muted' si l'utilisateur est muté
+								disabled={toMute}
 							/>
-							}
+						}
 
 					</div>
 					</>

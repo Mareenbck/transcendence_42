@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FriendContext } from "../../../store/FriendshipContext";
 import { faTrash, faBan, faMicrophoneSlash, faMicrophone } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
+import { UserMute } from '../../../interfaces/iChannels';
 
 
 
@@ -35,11 +36,14 @@ export default function InteractiveListe(props: any) {
     const [isMuted, setIsMuted] = React.useState(false);
     const [participants, setParticipants] = React.useState([]);
     const banned = participants.filter((p: any) => p.status === 'BAN');
-    const muted = participants.filter((p: any) => p.status === 'MUTE');
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
     const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p));
     const [isJoined, setIsJoined] = React.useState(true)
     const [sendMessage, addListener] = useSocket();
+    const [toMute, setToMute] = useState<UserMute | null>(null);
+
+    const [mutedParticipants, setMutedParticipants] = React.useState<string[]>([]);
+    const muted = participants.filter((p: any) => p.status === 'MUTE' && mutedParticipants.includes(p.user.id)); 
 
 
    
@@ -144,22 +148,24 @@ export default function InteractiveListe(props: any) {
                 const response = await fetch(
                     `http://localhost:3000/chatroom2/${channelId}/mute/${userId}`,
                     {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${authCtx.token}`,
-                    },
-                }
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${authCtx.token}`,
+                        },
+                    }
                 );
-
+        
                 console.log(response)
-
+        
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
-                 
-                props.setIsHide(true)
-                setIsMuted(true)           
+                
+                setIsMuted(true);
+                // setMutedParticipants([...mutedParticipants, userId]);
+                // console.log("muted1", mutedParticipants)
+
             } catch (error) {
                 console.error(error);
             }
@@ -182,7 +188,7 @@ export default function InteractiveListe(props: any) {
                 if (!response.ok) {
                     throw new Error("Failed to mute user.");
                 }
-                props.setIsHide(false)
+                // props.setIsHide(false)
                 setIsMuted(false) 
 
             } catch (error) {
@@ -201,9 +207,18 @@ export default function InteractiveListe(props: any) {
 		addListener('joinedChannel', data => setShowList(data))
 	}, [setShowList])
 
+    useEffect(() => {
+        if (toMute)
+        {
+            async function muteUser() {
+                try {
+                    if (toMute) {const res = await muteSomeone(props.channelId, authCtx.userId)}
+                } catch (err) {console.log(err)}
+            };
+            muteUser(); 
+        }
+    }, [toMute])
 	
-            
-
 
 return (
     <Box className="participants-container" style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
