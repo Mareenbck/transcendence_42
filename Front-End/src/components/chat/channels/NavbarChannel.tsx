@@ -174,7 +174,6 @@ export function NavbarChannel(props: any) {
 			// sendMessage("removeConv")
 	}
 
-
 	return (
 		<div className="navbar-channel">
 			<Avatar variant="rounded" className="channel-avatar-navbar" >

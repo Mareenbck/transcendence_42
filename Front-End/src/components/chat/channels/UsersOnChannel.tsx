@@ -40,7 +40,7 @@ export default function InteractiveListe(props: any) {
     const users = participants.filter((p: any) => p.role === 'USER' && !banned.includes(p));
     const [isJoined, setIsJoined] = React.useState(true)
     const [sendMessage, addListener] = useSocket();
-    const [toMute, setToMute] = useState<UserMute | null>(null);
+    // const [toMute, setToMute] = useState<UserMute | null>(null);
     // const [mutedParticipants, setMutedParticipants] = React.useState<string[]>([]);
 
 
@@ -194,7 +194,6 @@ export default function InteractiveListe(props: any) {
 
     const [showList, setShowList] = React.useState(null)
 
-
 	useEffect(() => {
 		addListener('joinedChannel', data => setShowList(data))
 	}, [setShowList])
@@ -258,7 +257,7 @@ return (
                     primary={participants?.user.username}
                     secondary={secondary ? 'Secondary text' : null}
                 />
-                {showList}
+                {/* {showList} */}
                 {admins.some(admin => admin.user.id === authCtx.userId) && (
                     <>
                     <Tooltip title="Kick">

@@ -1,13 +1,13 @@
-import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
 import SideBar from '../SideBar';
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import style from '../../style/Menu.module.css';
+// import { Link, Navigate, useNavigate } from "react-router-dom";
+// import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
-import {UserScore, Game} from "../interfaces/iChat";
+import {UserScore, Game} from '../../interfaces/iChat'
 import Card from "../../components/utils/Card";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -19,7 +19,7 @@ import ButtonToggle from '../utils/ButtonToggle';
 // import Table from "./Table";
 
 const Scores = () => {
-  const MAX_SCORE = 10;
+  const MAX_SCORE = 3;
   const [games, setGames] = useState<Game[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
   
@@ -51,22 +51,24 @@ const Scores = () => {
 
   //score/ user
 
+  // const getScore_ = (user: UserScore) => {
+  //   if (games) {
+  //     const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user?.id);
+  //     const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user?.id);
+  //     const w = games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user?.id);
+  //     let total:number = 0;
+  //     return (total);
+  //   }
+  // }
 
-  const getScore = (user: UserScore) => {
+  const getScore = (user: UserScore): number => {
     if (games) {
-      const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user?.id);
-      const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user?.id);
-      const w = games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user?.id);
-      let total:number = 0;
-      let totalWin:number = 0;
-      let totalPerd:number = 0;
-      if (p1.length > 0) {total = p1.reduce((score: number, game: { score1: string | number; }) => score = score + +game.score1, 0)};
-      if (p2.length > 0) {total = total + p2.reduce((score: number, game: { score2: string | number; }) => score = score + +game.score2, 0)};
-      if (w.length > 0) {totalWin = w.length * MAX_SCORE};
-      totalPerd = total - totalWin;
-      total = totalWin - totalPerd;
-      if (total < 0) 
-        total = 0;
+      const p1 = games.filter(u => +u.playerOneId === +user.id).length;
+      const p2 = games.filter(u => +u.playerTwoId === +user.id).length;
+      const win = games.filter(u => +u.winnerId === +user.id).length;
+      let total:number = win * MAX_SCORE - (p1 + p2 - win);
+      if (total < 0)
+        total = 0; 
       return (total);
     }
   }

@@ -62,9 +62,10 @@ export class ChatroomService {
 		});
 	}
 
-  findOne(id: number) {
-    return this.prisma.chatroom.findUnique({where: {id: id}});;
-  }
+  	async findOne(id: number) {
+    	const chatRoom = await this.prisma.chatroom.findUnique({where: {id: id}});;
+		return chatRoom  
+	}
 
   async getUserTable(userId: number, channelId: number) {
     const users = await this.prisma.userOnChannel.findMany( {where:
@@ -109,11 +110,13 @@ export class ChatroomService {
 	}
 
   async getParticipants(channelId: number) {
+	if (typeof channelId !== 'number') {
+		throw new Error('Invalid value for channelId');
+	}
     const channel = await this.prisma.userOnChannel.findMany({
       where: { channelId },
       include: { user: true },
     });
-	// console.log("channelllll" ,channel )
       return channel;
   }
 

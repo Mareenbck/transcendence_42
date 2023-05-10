@@ -86,7 +86,7 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
         } else {
             setIsJoined(true);
             setOpenJoinModal(false);
-			sendMessage("joinedChannel", data)
+			      sendMessage("joinedChannel", data)
         }
     } catch (err) {
         console.log(err);

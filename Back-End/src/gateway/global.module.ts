@@ -9,12 +9,13 @@ import { GameController } from "src/game/game.controller";
 import { GlobalGateway } from "./global.gateway";
 import { GlobalService } from "src/gateway/global.service";
 import { ChatService } from "src/chat/chat.service";
+import { ChatroomService } from "src/chat/chatroom2/chatroom2.service";
 
 @Global()
 @Module({
   imports: [],
   controllers: [GameController],
-  providers: [GlobalService, ChatService, PrismaService, GameService, UserService],
+  providers: [GlobalService, ChatroomService, ChatService, PrismaService, GameService, UserService],
   exports: [GlobalService],
 })
 export class GlobalModule {}

@@ -8,11 +8,8 @@ import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import { Alert, Box, IconButton, Modal, Snackbar } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import ErrorModalPassword from "./ErrorModalPassword";
 import '../../../style/UsersOnChannel.css'
-import { UserMute } from "../../../interfaces/iChannels";
+
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
@@ -34,6 +31,16 @@ export default function CurrentChannel(props: any) {
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
 	const [toMute, setToMute] = useState(props.setToMute);
 
+	useEffect(() => {
+	addListener("joinedChannelR2", (channelId: number) => {
+		if (!currentChatroom.participants.find((p: { userId: number; }) => +p.userId === +currentId))
+		{
+			const newParticipant = { role: "USER", status:	"CLEAN", channelId: channelId, userId: currentId,};
+    		currentChatroom.participants.push(newParticipant);
+		}
+      		setIsJoined(true);
+		});
+	});
 
 	useEffect(() => {
 		const participant = participants.find((p: any) => p.userId === parseInt(authCtx.userId));
@@ -145,14 +152,12 @@ export default function CurrentChannel(props: any) {
 		setIsJoined(false);
 	};
 
-
 	useEffect(() => {
 		addListener("showUsersList", data => setUsersList(data));
 		if (!showUsersOnChannel) {
 		  setShowUserList(true);
 		}
 	  }, [showUsersOnChannel]);
-
 
 	return (
 		<>

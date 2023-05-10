@@ -52,7 +52,7 @@ export class Chatroom2Controller {
   @Get(':channelId/participants')
   @UseGuards(JwtGuard)
   async getParticipants(@Param('channelId') channelId: string) {
-    const participants = await this.chatRoomService.getParticipants(parseInt(channelId));
+	const participants = await this.chatRoomService.getParticipants(parseInt(channelId));
     return participants;
   }
 

@@ -16,7 +16,7 @@ const Modal = (props:any) => {
 				</header>
           <footer className='actions'>  
             <Link to="/menu">
-                  <button className="btn" onClick={props.handelClose}>Close</button>
+                  <button className="btnn" onClick={props.handelClose}>Close</button>
             </Link>   
           </footer>
       </div>

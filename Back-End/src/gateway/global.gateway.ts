@@ -51,15 +51,15 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.userService.server = this.server;
     this.chatroomService.server = this.server;
     this.gameService.server = this.server;
-      this.chatService.server = this.server;
+    this.chatService.server = this.server;
 	  this.friendshipService.server = this.server;
-      this.globalService.userSockets = this.userSockets;
-      this.chatService.userSockets = this.userSockets;
-      this.gameService.userSockets = this.userSockets;
-      this.chatroomService.userSockets = this.userSockets;
-      this.friendshipService.userSockets = this.userSockets;
-      this.userService.userSockets = this.userSockets;
-      this.logger.verbose("globalGateway Initialized");
+    this.globalService.userSockets = this.userSockets;
+    this.chatService.userSockets = this.userSockets;
+    this.gameService.userSockets = this.userSockets;
+    this.chatroomService.userSockets = this.userSockets;
+    this.friendshipService.userSockets = this.userSockets;
+    this.userService.userSockets = this.userSockets;
+    this.logger.verbose("globalGateway Initialized");
   }
 
   async handleConnection(socket: Socket) {
@@ -72,17 +72,16 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       }
       socket.data.username = user.username as string;
       socket.data.email = user.email as string;
+      socket.data.id = user.id as number;
       this.userSockets.addUser(socket);
     } catch (e) {
         this.userSockets.removeSocket(socket)
         socket.disconnect(true);
     }
-console.log("68 handleConnect: client");
-console.log("26 Connect + map: client", this.userSockets.users);
+console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.keys());
   }
 
   async handleDisconnect(client: Socket) {
-  // console.log("71 handleDisconnect: client");
     this.userSockets.removeSocket(client)
     client.disconnect(true);
   }
@@ -135,46 +134,54 @@ console.log("26 Connect + map: client", this.userSockets.users);
   async chatInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void>
   { this.chatService.chatInvite(data.author, data.player,) };
 
+  @SubscribeMessage('joinedChannel')
+	async joinChannel(@MessageBody() data: {channelId: any}, @ConnectedSocket() socket: Socket): Promise<void>
+  { this.chatService.chatJoinedChannel(data.channelId, socket.id) };
+
+
 
 
 ///////////////////////////
 // Messages for Game: Invite et random
 //////////////////////////
+  @SubscribeMessage('enterGame')
+  async enterGame(@ConnectedSocket() socket: Socket): Promise<void>
+  { this.gameService.enterGame(socket.data.id, socket); };
+
+  @SubscribeMessage('exitGame')
+  async exitGame(@MessageBody() data: {status: string}, @ConnectedSocket() socket: Socket): Promise<void> ///
+  { this.gameService.exitGame(socket.data.id, data.status, socket); };
+
   @SubscribeMessage('acceptGame')
-  async acceptGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void>
+  async acceptGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void>
   { this.gameService.acceptGame(data.author, data.player) };
 
   @SubscribeMessage('refuseGame')
+<<<<<<< HEAD
   async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void>
+=======
+  async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void>
+>>>>>>> master
   { this.gameService.refusalGame(data.author, data.player) };
 
   @SubscribeMessage('InviteGame')
-  async gameInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void>
-  {
-    this.gameService.gameInvite(data.author, data.player) };
+  async gameInvite(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void>
+  { this.gameService.gameInvite(data.author, data.player) };
 
   @SubscribeMessage('playGame')
-  async playGame(@MessageBody() data: {user: any, roomN: number}, @ConnectedSocket() socket: Socket,): Promise<void>
+  async playGame(@MessageBody() data: {roomN: number}, @ConnectedSocket() socket: Socket): Promise<void>
   {
     // leave all rooms before starting/watching a game
     socket.rooms.forEach(room => socket.leave(room));
-
-    this.gameService.playGame(data.user, data.roomN);
+    this.gameService.playGame(socket.data.id, data.roomN);
   };
 
+  //request array of live games
   @SubscribeMessage('listRooms')
   async listRooms(@ConnectedSocket() socket: Socket): Promise<void>
-  {
-    this.gameService.sendListRooms();
-  };
+  { this.gameService.sendListRooms(); };
 
-//   @SubscribeMessage('doIplay')
-//   async doIplay(@ConnectedSocket() socket: Socket): Promise<void>
-//   {
-// console.log("157_doIplay: socket.id = ", socket.id);
-//     let user = this.userSockets.getUserBySocket(socket.id);
-//     if(user) this.gameService.checkPlayerInRooms(user);
-//   };
+  ////////////////////////////////////////////////////////////////////
 
 	@SubscribeMessage('updateDemands')
 	async updateDemands(@MessageBody() updatedDemands: any): Promise<void> {
@@ -206,13 +213,6 @@ console.log("26 Connect + map: client", this.userSockets.users);
 	async removeConv(@MessageBody() data: any ): Promise<void> {
 		const newList = await this.chatroomService.findAll();
 		this.server.emit('deleteChannel', newList);
-	}
-
-
-  @SubscribeMessage('joinedChannel')
-	async joinChannel(@MessageBody() data: any, @MessageBody() channelId: any ): Promise<void> {
-		const newList = await this.chatroomService.getParticipants(channelId);
-		this.server.emit('joinedChannel', newList);
 	}
 
   @SubscribeMessage('showUsersList')
