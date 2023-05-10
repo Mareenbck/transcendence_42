@@ -22,6 +22,10 @@ export default function UpdateChannelsInList(props: any) {
 	});
 
 	useEffect(() => {
+		addListener("deleteChannel", data => {setAConversation(data)});
+	});
+
+	useEffect(() => {
 		addListener('leavedChannel', (channelId: number) => {
 			const updatedConversations = conversations.map((conversation) => {
 				if (+conversation.id === +channelId) {
@@ -63,6 +67,10 @@ export default function UpdateChannelsInList(props: any) {
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [conversations]);
+
+	const handleJoinChannel = () => {
+		props.showParticipantsList(true);
+	};
 
 
 	return (
