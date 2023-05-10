@@ -30,6 +30,11 @@ export default function ChannelVisibility(props: any) {
     setOpenJoinModal(true);
   };
 
+  const handleCloseJoinModal = (e: FormEvent) => {
+    setOpenJoinModal(false);
+  };
+
+
   function getIconByChannelType() {
     let icon;
 
@@ -67,6 +72,9 @@ export default function ChannelVisibility(props: any) {
 const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const password = passwordInputRef.current?.value;
+	if (!password) {
+		return;
+	}
     try {
         const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
             method: "POST",
@@ -86,12 +94,13 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
         } else {
             setIsJoined(true);
             setOpenJoinModal(false);
-			      sendMessage("joinedChannel", data)
+			sendMessage("joinedChannel", data)
         }
     } catch (err) {
         console.log(err);
     }
 };
+
 
   return (
     <>
@@ -99,7 +108,7 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
         <Modal
           className="modal-container"
           open={openJoinModal}
-        //   onClose={handleCloseModal}
+          onClose={handleCloseJoinModal}
         >
           <Box className="modal-content-password">
             <label htmlFor="floatingPassword">Enter the password</label>
