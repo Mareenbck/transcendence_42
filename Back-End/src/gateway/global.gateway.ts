@@ -157,11 +157,7 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
   { this.gameService.acceptGame(data.author, data.player) };
 
   @SubscribeMessage('refuseGame')
-<<<<<<< HEAD
-  async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket,): Promise<void>
-=======
   async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void>
->>>>>>> master
   { this.gameService.refusalGame(data.author, data.player) };
 
   @SubscribeMessage('InviteGame')
