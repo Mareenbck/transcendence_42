@@ -30,7 +30,7 @@ function Game() {
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
     const [gamestatus, setGameStatus] = useState<gameStatus>(
-        {   winner: {} as UserGame,
+        {   winner: null,
             playerR: {} as UserGame,
             playerL: {} as UserGame,
             status: "null"} 
