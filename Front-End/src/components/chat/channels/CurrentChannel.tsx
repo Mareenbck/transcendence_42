@@ -8,15 +8,14 @@ import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-import { Alert, Box, IconButton, Modal, Snackbar } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import ErrorModalPassword from "./ErrorModalPassword";
 import '../../../style/UsersOnChannel.css'
+
 
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
 	const authCtx = useContext(AuthContext);
 	const currentId = parseInt(authCtx.userId);
+	const [participants, setParticipants] = useState(currentChatroom.participants);
 	const [sendMessage, addListener] = useSocket();
 	const [newMessage2, setNewMessage2] = useState<string>("");
 	const [messages2, setMessages2] = useState<RoomMessage[]>([]);
@@ -25,34 +24,38 @@ export default function CurrentChannel(props: any) {
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
 	const [isMuted, setIsMuted] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'MUTE'));
 	const [showPopUp, setShowPopUp] = useState(true);
-	
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
 	const [isBanned, setIsBanned] = useState(false);
-
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
+	const [toMute, setToMute] = useState(props.setToMute);
 
-	useEffect(() => {        
+	useEffect(() => {
 	addListener("joinedChannelR2", (channelId: number) => {
 		if (!currentChatroom.participants.find((p: { userId: number; }) => +p.userId === +currentId))
-		{   
+		{
 			const newParticipant = { role: "USER", status:	"CLEAN", channelId: channelId, userId: currentId,};
     		currentChatroom.participants.push(newParticipant);
-		}    
+		}
       		setIsJoined(true);
 		});
 	});
 
 	useEffect(() => {
-		const participant = currentChatroom.participants.find(
-		  (p: any) => p.userId === parseInt(authCtx.userId)
-		);
+		const participant = participants.find((p: any) => p.userId === parseInt(authCtx.userId));
 		if (participant) {
-		  setIsMuted(participant.status === 'MUTE');
-		  setIsBanned(participant.status === 'BAN');
+			setIsJoined(true)
+			setIsMuted(participant.status === 'MUTE');
+			setIsBanned(participant.status === 'BAN');
+		} else {
+			setIsJoined(false)
 		}
-	}, [currentChatroom.participants, authCtx.userId]);	  
+	  }, [participants, authCtx.userId]);
+
+	useEffect(() => {
+		addListener('toMute', data => setParticipants(data))
+	}, [addListener])
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -99,7 +102,7 @@ export default function CurrentChannel(props: any) {
 		} else {
 			setIsJoined(false)
 		}
-	  }, [currentChatroom]);
+	}, [currentChatroom]);
 
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
@@ -186,20 +189,21 @@ export default function CurrentChannel(props: any) {
 							onChange={(e) => setNewMessage2(e.target.value)}
 							value={newMessage2}
 						></input>
-						{!isMuted && 
-							<FontAwesomeIcon
-								icon={faPaperPlane}
-								onClick={handleSubmit}
-								className={`send-btn-chat`} // ajouter la classe 'muted' si l'utilisateur est mute							
-								// disabled={isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
+						{!isMuted &&
+							 <FontAwesomeIcon
+							 icon={faPaperPlane}
+							 onClick={handleSubmit}
+							 className={`send-btn-chat ${isMuted ? 'muted' : ''}`} // Ajoute la classe 'muted' si l'utilisateur est muté
+							 disabled={toMute}
 							/>
 						}
+
 					</div>
-				</>
-			)}
+					</>
+				)}
 			{showUsersOnChannel}
 
 		</>
 	);
-	
+
 }

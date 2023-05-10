@@ -25,7 +25,7 @@ function Chat(props: any) {
   const friendCtx = useContext(FriendContext);
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<OnlineU[]> ([]);
-  const [currentChat, setCurrentChat] = useState<ChatRoom | null> (null);
+  const [currentChat, setCurrentChat] = useState(null);
   const [currentDirect, setCurrentDirect] = useState<UserChat | null> (null);
   const [otherUsers, setOtherUsers] = useState <UserChat[]> ([]);
   const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
@@ -362,10 +362,11 @@ function Chat(props: any) {
 	const [showInteractiveList, setShowInteractiveList] = useState<boolean>(false);
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [mutedUsers, setMutedUsers] = useState<string[]>([]);
   const [unMutedUsers, setUnMutedUsers] = useState<string[]>([]);
+	const [isMuted, setIsMuted] = useState(false);
+  const [hide, setIsHide] = useState(false);
 
+ 
 	
 	const handleShowList = () => {
 	  setShowUsersOnChannel(false);
@@ -387,6 +388,7 @@ function Chat(props: any) {
 	  }
 	}, [showUsersOnChannel]);
 
+	// console.log("muted", props.mutedParticipants)
 
 
 	return (
@@ -423,16 +425,18 @@ function Chat(props: any) {
 			<div className="chatBoxW">
 			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 			  {currentChat ? (
-				 <CurrentChannel 
-				   currentChatroom={currentChat} 
-				   allUsers={allUsers} 
-				   isJoined={isJoined} 
-				   setIsJoined={setIsJoined}
-				   setShowList={handleShowList}
-				   setUsersList={handleShowUserList}
-           setMutedUsers={setMutedUsers}
-           setUnMutedUsers={setUnMutedUsers}
-				 />
+          <CurrentChannel 
+          currentChatroom={currentChat} 
+          allUsers={allUsers} 
+          isJoined={isJoined} 
+          setIsJoined={setIsJoined}
+          setShowList={handleShowList}
+          setUsersList={handleShowUserList}
+          setUnMutedUsers={setUnMutedUsers}
+          setToMute={props.setToMute}
+          // mutedParticipants={props.mutedParticipants}
+        />
+  
 			  ) : currentDirect ? (
 				  <CurrentDirectMessages
 					currentDirect={currentDirect}
@@ -464,8 +468,8 @@ function Chat(props: any) {
 					channelVisibility={currentChat?.visibility}
 					channelName={currentChat?.name}
 					isChannelClicked={isChannelClicked}
-					setMutedUsers={setMutedUsers}
-					setUnMutedUsers={setUnMutedUsers}
+          // mutedParticipants={props.mutedParticipants}
+          setToMute={props.setToMute}
 				/>
 			)}
 			

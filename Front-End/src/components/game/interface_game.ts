@@ -1,8 +1,3 @@
-// export interface player{
-//     socket: any;
-// 	userId: any;
-// }
-
 export interface UserGame {
 	id: number;
 	username: string;
@@ -11,10 +6,10 @@ export interface UserGame {
 	avatar: string;
 	ftAvatar: string;
 	is2FA: boolean;
-    eceivedFriendships: FriendsDto[];
-    blockedTo: UserDto[];
-    blockedFrom: UserDto[];
-    dirMessEmited: DirMessDto[];
+    // eceivedFriendships: FriendsDto[];
+    // blockedTo: UserDto[];
+    // blockedFrom: UserDto[];
+    // dirMessEmited: DirMessDto[];
 };
 
 export interface gamesList{
@@ -24,11 +19,6 @@ export interface gamesList{
     scoreR: number;
     scoreL: number;
 }
-
-// export interface profile{
-// 	socketId: any; //socketId: any [];
-// 	userId: any;
-// }
 
 // export interface player{
 // 	profile: profile;
@@ -55,31 +45,27 @@ export interface gameState {
 }
 
 export interface gameInit {
-    table_width: number,
-    table_height: number,
-    racket_width: number,
-    racket_height: number,
-    ballR: number
+    table_width: number;
+    table_height: number;
+    racket_width: number;
+    racket_height: number;
+    ballR: number;
     scoreR: number;
     scoreL: number;
 }
 
 export interface gameStatus {
     winner: UserGame;
+    playerR: UserGame;
+    playerL: UserGame;
     status: string;
 }
 
-export interface star {
-    centerX: number;
-    centerY: number; // the center point of the star
-    points: number; //the number of points on the exterior of the star
-    inner: number;//the radius of the inner points of the star
-    outer: number;//the radius of the outer points of the star
-    fill: string;
-    stroke: string;//the fill and stroke colors to apply
-    line: number; //the linewidth of the stroke
+export interface players {
+    playerR: UserGame;
+    playerL: UserGame;
 }
 
-export  interface backColorGame{
-    backColorGame: string;
-}
+// export  interface backColorGame{
+//     backColorGame: string;
+// }

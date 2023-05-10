@@ -8,6 +8,7 @@ import MenuCard from "./MenuCard";
 import MatchHistory from "../game/MatchHistory";
 import ShowAchievements from "../game/ShowAchievements";
 import Table from "../scores/Table"
+import Podium from "../scores/Podium"
 
 const Card = (props: any) => {
 	const [color, setColor] = useState<string>('');
@@ -47,6 +48,8 @@ const Card = (props: any) => {
 			setContent(<Table id={props.id}/>)
 		}else if (props.type === 'viewGame') {
 			setContent(<MatchHistory id={props.id} authCtx={props.authCtx}/>)
+		}else if (props.type === 'podium') {
+			setContent(<Podium id={props.id}/>)
 		}
 	}, [props.type])
 

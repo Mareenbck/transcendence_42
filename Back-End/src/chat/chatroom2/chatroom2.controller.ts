@@ -135,19 +135,21 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@UseGuards(JwtGuard)
 	async mute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const muted = await this.chatRoomService.mute(parseInt(channelId), parseInt(userId));
-		console.log("muted", muted)
-		return muted ;
+		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
+		console.log("muted", allUser)
+		return allUser ;
 	}
 
 	@Post('/:channelId/unmute/:userId')
 	@UseGuards(JwtGuard)
 	async unmute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const unmuted = await this.chatRoomService.unmute(parseInt(channelId), parseInt(userId));
-		// console.log("unmuted", unmuted)
-		return unmuted ;
+		console.log("unmuted", unmuted)
+		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
+		return allUser ;
 	}
 
-	
+
 
 }
 

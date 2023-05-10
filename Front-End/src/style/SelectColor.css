@@ -95,21 +95,22 @@ body{
 
 
 .posColor{
-    display: inline-block;
+    /* display: inline-block; */
     margin: auto;
     padding: 1rem;
 }
+
 .posColor__circlebtn{
     display: flex;
     flex-direction: column;
     margin: -20px;
     padding: 0;
-    width: 40px;
-    height: 70px;
-    border-radius: 100%;	
+    width: 50px;
+    height: 50px;
+    /* border-radius: %;	 */
 } 
 
-@media (max-width: 1100px) {
+/* @media (max-width: 1100px) {
     .posColor__circlebtn{
         display: flex;
         flex-direction: column;
@@ -119,4 +120,4 @@ body{
         height: 40px;
         border-radius: 100%;  
     }
-}
+} */
