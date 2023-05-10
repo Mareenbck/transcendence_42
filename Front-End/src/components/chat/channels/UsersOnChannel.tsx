@@ -35,7 +35,7 @@ export default function InteractiveListe(props: any) {
     const authCtx = useContext(AuthContext);
     const [isBanned, setIsBanned] = React.useState(false);
     const [isMuted, setIsMuted] = React.useState(false);
-    const [participants, setParticipants] = React.useState([]);
+    const [participants, setParticipants] = React.useState<any []>([]);
     // const banned = participants.filter((p: any) => p.status === 'BAN');
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
     const users = participants.filter((p: any) => p.role === 'USER');
@@ -60,8 +60,6 @@ export default function InteractiveListe(props: any) {
 			);
 			if (response.ok) {
 				const data = await response.json();
-				console.log("data")
-				console.log(data)
 				const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
 					const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
 					return {
@@ -233,18 +231,30 @@ export default function InteractiveListe(props: any) {
 
         useEffect(() => {
             showParticipants(props.channelId);
-        }, [props.channelId, showParticipants]);
+        }, []);
 
 
         useEffect(() => {
-            addListener('toMute', data => setParticipants(data))
+            addListener('toMute', async data => {
+                const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
+					const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
+					return {
+						...userOnChannel,
+						user: {
+						  ...userOnChannel.user,
+						  avatar: avatar
+						}
+					  };
+				}));
+                setParticipants(updatedUsersOnChannel)
+            })
         }, [addListener])
 
-    const [showList, setShowList] = React.useState(null)
+    // const [showList, setShowList] = React.useState(null)
 
-	useEffect(() => {
-		addListener('joinedChannel', data => setShowList(data))
-	}, [setShowList])
+	// useEffect(() => {
+	// 	addListener('joinedChannel', data => setShowList(data))
+	// }, [setShowList])
 
 
 	function isHeMuted(id: number): true | undefined {
@@ -311,17 +321,17 @@ return (
                     {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
                         !isHeBanned(participants.user.id) ? (
                             <Tooltip title="Ban">
-                                <FontAwesomeIcon 
-                                    icon={faBan} 
-                                    onClick={() => banSomeone(props.channelId, participants.user.id)} 
+                                <FontAwesomeIcon
+                                    icon={faBan}
+                                    onClick={() => banSomeone(props.channelId, participants.user.id)}
                                     className={`btn-chatlist ban`}
                                 />
                             </Tooltip>
                         ) : (
                             <Tooltip title="UnBan">
-                                <FontAwesomeIcon 
-                                    icon={faBan} 
-                                    onClick={() => unBanSomeone(props.channelId, participants.user.id)} 
+                                <FontAwesomeIcon
+                                    icon={faBan}
+                                    onClick={() => unBanSomeone(props.channelId, participants.user.id)}
                                     className={`btn-chatlist-clicked`}
                                 />
                             </Tooltip>

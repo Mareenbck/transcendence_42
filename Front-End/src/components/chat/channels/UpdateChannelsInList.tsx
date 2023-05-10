@@ -10,13 +10,13 @@ import UsersOnChannel from "./UsersOnChannel";
 
 export default function UpdateChannelsInList(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
-	const [conversations, setConversations] = useState([]);
+	const [conversations, setConversations] = useState<any []>([]);
 	const [AConversation, setAConversation] = useState(null);
 	const user = useContext(AuthContext);
 	const { currentChat, setCurrentChat } = props;
 	const [sendMessage, addListener] = useSocket();
 
-	
+
 	useEffect(() => {
 		addListener("getConv", data => {setAConversation(data)});
 	});
@@ -40,7 +40,7 @@ export default function UpdateChannelsInList(props: any) {
 			  setConversations(updatedConversations);
 		});
 	});
-	
+
 	// useEffect(() => {
 	// 	AConversation && setConversations(prev => {
 	// 		const conversationExists = prev.find((conversation: { id: number; }) => conversation.id === AConversation.id);
@@ -83,10 +83,10 @@ export default function UpdateChannelsInList(props: any) {
 						</div>
 						<div className="conversation-icon">
 						{c.participants && !c.participants.some(p => p.userId === user.userId) && (
-							<ChannelVisibility 
-								visibility={c.visibility} 
-								id={c.id} 
-								isJoined={c.isJoined} 
+							<ChannelVisibility
+								visibility={c.visibility}
+								id={c.id}
+								isJoined={c.isJoined}
 								setIsJoined={c.setIsJoined}
 							/>
 						)}
