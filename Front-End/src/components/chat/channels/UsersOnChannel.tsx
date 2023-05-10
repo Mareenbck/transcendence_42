@@ -29,23 +29,15 @@ const Demo = styled('div')(({ theme }) => ({
 
 export default function InteractiveListe(props: any) {
     const friendCtx = React.useContext(FriendContext);
-    // const [friends, setFriends] = React.useState<any[]>([]);
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
     const authCtx = useContext(AuthContext);
     const [isBanned, setIsBanned] = React.useState(false);
     const [isMuted, setIsMuted] = React.useState(false);
     const [participants, setParticipants] = React.useState([]);
-    // const banned = participants.filter((p: any) => p.status === 'BAN');
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
     const users = participants.filter((p: any) => p.role === 'USER');
-    const [isJoined, setIsJoined] = React.useState(true)
     const [sendMessage, addListener] = useSocket();
-    // const [toMute, setToMute] = useState<UserMute | null>(null);
-    // const [mutedParticipants, setMutedParticipants] = React.useState<string[]>([]);
-
-	console.log("participants --->")
-	console.log(participants)
 
 	const showParticipants = React.useCallback(async (channelId: string) => {
 		try {
@@ -60,8 +52,8 @@ export default function InteractiveListe(props: any) {
 			);
 			if (response.ok) {
 				const data = await response.json();
-				console.log("data")
-				console.log(data)
+				// console.log("data")
+				// console.log(data)
 				const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
 					const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
 					return {
@@ -99,6 +91,8 @@ export default function InteractiveListe(props: any) {
         setParticipants(updatedParticipants);
         showParticipants(channelId);
 		sendMessage('toMute', {channelId: channelId})
+        sendMessage("sendConv", {channelId: channelId});
+        console.log(userId)
         } catch (error) {
             console.error(error);
         }

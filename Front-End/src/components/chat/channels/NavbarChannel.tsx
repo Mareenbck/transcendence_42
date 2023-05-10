@@ -66,7 +66,7 @@ export function NavbarChannel(props: any) {
 			  },
 			});
 			const data = await response.json();
-			console.log("DATA IN FETCH", data)
+			sendMessage('toMute', {channelId: channelId})
 			return data;
 		} catch(err) {
 			console.log(err);
@@ -74,7 +74,6 @@ export function NavbarChannel(props: any) {
 	  }
 
 	const leaveChannel = async (channelId: number) => {
-		// console.log("xxxxxxxxxxxxx", channelId);
 		try {
 			const response = await fetch(`http://localhost:3000/chatroom2/leave_channel`, {
 			  method: 'POST',
@@ -85,7 +84,6 @@ export function NavbarChannel(props: any) {
 			  body: JSON.stringify({ channelId: channelId }),
 			});
 			const data = await response.json();
-			// console.log("ddddddddddd", channelId);
 			sendMessage("leaveChannel", {channelId: channelId});
 			sendMessage("showUsersList", data);
 			sendMessage('toMute', {channelId: channelId})
