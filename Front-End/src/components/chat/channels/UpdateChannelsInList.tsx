@@ -21,6 +21,10 @@ export default function UpdateChannelsInList(props: any) {
 		addListener("getConv", data => {setAConversation(data)});
 	});
 
+	useEffect(() => {
+		addListener("deleteChannel", data => {setAConversation(data)});
+	});
+
 	// useEffect(() => {
 	// 	AConversation && setConversations(prev => {
 	// 		const conversationExists = prev.find((conversation: { id: number; }) => conversation.id === AConversation.id);
