@@ -223,7 +223,12 @@ console.log("constructor Class.game");
 		this.gameService.updateStatusGameOver(this.playerR.user.id);
 
 		// send winner
-		this.server.to(this.room).emit('status', { winner: this.status.winner, status: 'winner',});
+
+		this.status.playerL = (this.playerL.user == this.status.winner ? this.status.winner : this.playerL.user);
+		this.status.playerR = (this.playerR.user == this.status.winner ? this.status.winner : this.playerR.user);
+		console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)
+		
+		this.server.to(this.room).emit('status', { winner: this.status.winner, playerR:this.status.playerL, playerL: this.status.playerR, status: 'winner',});
 
 		// leave room
 console.log("leave room");
