@@ -21,6 +21,26 @@ export default function UpdateChannelsInList(props: any) {
 		addListener("getConv", data => {setAConversation(data)});
 	});
 
+	useEffect(() => {
+		addListener("deleteChannel", data => {setAConversation(data)});
+	});
+
+	useEffect(() => {
+		addListener('leavedChannel', (channelId: number) => {
+			const updatedConversations = conversations.map((conversation) => {
+				if (+conversation.id === +channelId) {
+				  return {
+					...conversation,
+					participants: conversation.participants.filter(p => +p.userId !== +user.userId)
+				  };
+				} else {
+				  return conversation;
+				}
+			  });
+			  setConversations(updatedConversations);
+		});
+	});
+	
 	// useEffect(() => {
 	// 	AConversation && setConversations(prev => {
 	// 		const conversationExists = prev.find((conversation: { id: number; }) => conversation.id === AConversation.id);
@@ -47,6 +67,10 @@ export default function UpdateChannelsInList(props: any) {
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [conversations]);
+
+	const handleJoinChannel = () => {
+		props.showParticipantsList(true);
+	};
 
 
 	return (

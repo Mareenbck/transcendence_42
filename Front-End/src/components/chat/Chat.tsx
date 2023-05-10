@@ -388,6 +388,7 @@ function Chat(props: any) {
 	  }
 	}, [showUsersOnChannel]);
 
+
 	// console.log("muted", props.mutedParticipants)
 
 

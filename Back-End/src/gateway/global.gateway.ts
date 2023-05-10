@@ -137,8 +137,11 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
   @SubscribeMessage('joinedChannel')
 	async joinChannel(@MessageBody() data: {channelId: any}, @ConnectedSocket() socket: Socket): Promise<void>
   { this.chatService.chatJoinedChannel(data.channelId, socket.id) };
-
-
+  
+  @SubscribeMessage('leaveChannel')
+	async leaveChannel(@MessageBody() data: {channelId: any}, @ConnectedSocket() socket: Socket): Promise<void> 
+  { this.chatService.chatLeavedChannel(data.channelId, socket.id) };
+  
 
 
 ///////////////////////////
@@ -216,6 +219,7 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
     const showList = await this.userService.getUsers();
 		this.server.emit('showUsersList', showList);
 	}
+
 
   @SubscribeMessage('toMute')
 	async hidePaperPlane(@MessageBody() data: any): Promise<void> {

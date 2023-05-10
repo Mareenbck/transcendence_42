@@ -254,7 +254,8 @@ export class ChatroomService {
 					status: UserStatusOnChannel.BAN,
 				},
 			});
-			return `User with ID ${userId} has been banned from channel with ID ${channelId}`;
+			return (updatedStatus)
+			// return `User with ID ${userId} has been banned from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to ban user from channel.");
@@ -285,7 +286,8 @@ export class ChatroomService {
 					status: UserStatusOnChannel.CLEAN,
 				},
 			});
-			return `User with ID ${userId} has been unbanned from channel with ID ${channelId}`;
+			return (updatedStatus)
+			// return `User with ID ${userId} has been unbanned from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to unban user from channel.");
