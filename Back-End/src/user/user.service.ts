@@ -312,6 +312,9 @@ export class UserService {
 			  achievementId: achievement.id,
 			},
 		});
+		if (existingUserAchievement) {
+			return null
+		}
 		if (!existingUserAchievement) {
 			await this.prisma.userAchievement.create({
 				data: {

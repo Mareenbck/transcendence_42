@@ -55,10 +55,10 @@ export class ChatService {
         }
     };
 
-    sendDirectMessage:any = async (content: string, author: number, receiver: number, ) => {    
+    sendDirectMessage:any = async (content: string, author: number, receiver: number, ) => {
         const user = this.getUser(receiver);
         const a = this.getUser(author);
-        if (user && a) 
+        if (user && a)
         {
             this.server.to(user.socketId).emit("getMessageDirect", {
                 content,
@@ -70,7 +70,7 @@ export class ChatService {
             {
                 this.server.to(user.socketId).emit("getNewDirectUser", author);
             };
-        }   
+        }
         if (a && user) {
             const usersDirectForAuthor = await this.userService.getUsersWithMessages(author);
             if (!usersDirectForAuthor || !(usersDirectForAuthor.find(u => +u.id === +author)))
@@ -97,7 +97,7 @@ export class ChatService {
                 visibility: visibility
             });
         }
-    };    
+    };
 
 
     chatBlock:any = (blockFrom: number, blockTo: number,) => {
@@ -139,7 +139,7 @@ export class ChatService {
     chatInvite: any = (author: UserDto, player: UserDto,) => {
         this.userSockets.emitToId(player.id, 'wasInvited', author);
     };
-    
+
     chatJoinedChannel: any = (channelId: number , socketId: string) => {
         console.log("join kkkkkkkkk", channelId, "szzzzz", socketId )
         // const newList = await this.chatroomService.getParticipants(data.channelId);
@@ -155,3 +155,4 @@ export class ChatService {
 
 
 }
+

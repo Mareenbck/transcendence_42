@@ -19,6 +19,7 @@ import { FriendContext } from "../../../store/FriendshipContext";
 import { faTrash, faBan, faMicrophoneSlash, faMicrophone, faCircle } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
 import { UserMute } from '../../../interfaces/iChannels';
+import { UserChat } from '../../../interfaces/iChat';
 
 
 
@@ -43,27 +44,40 @@ export default function InteractiveListe(props: any) {
     // const [toMute, setToMute] = useState<UserMute | null>(null);
     // const [mutedParticipants, setMutedParticipants] = React.useState<string[]>([]);
 
+	console.log("participants --->")
+	console.log(participants)
 
-
-    const showParticipants = React.useCallback(async (channelId: string) => {
-        try {
-            const response = await fetch(
-                `http://localhost:3000/chatroom2/${channelId}/participants`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${authCtx.token}`
-                    }
-                }
-            );
-            if (response.ok) {
-                const data = await response.json();
-                setParticipants(data);
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    }, [authCtx.token]);
+	const showParticipants = React.useCallback(async (channelId: string) => {
+		try {
+			const response = await fetch(
+				`http://localhost:3000/chatroom2/${channelId}/participants`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${authCtx.token}`
+					}
+				}
+			);
+			if (response.ok) {
+				const data = await response.json();
+				console.log("data")
+				console.log(data)
+				const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
+					const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
+					return {
+						...userOnChannel,
+						user: {
+						  ...userOnChannel.user,
+						  avatar: avatar
+						}
+					  };
+				}));
+				setParticipants(updatedUsersOnChannel);
+			}
+		} catch (err) {
+			console.log(err)
+		}
+	}, [authCtx.token]);
 
 
     const kickSomeone = async (channelId: string, userId: string) => {
@@ -84,8 +98,7 @@ export default function InteractiveListe(props: any) {
         const updatedParticipants = participants.filter(p => p.user.id !== userId);
         setParticipants(updatedParticipants);
         showParticipants(channelId);
-		sendMessage('toMute', {channelId: channelId, userId: userId})
-        // sendMessage("leaveChannel", {channelId: channelId});
+		sendMessage('toMute', {channelId: channelId})
         } catch (error) {
             console.error(error);
         }
@@ -166,7 +179,17 @@ export default function InteractiveListe(props: any) {
                     throw new Error("Failed to mute user.");
                 }
 				const data = await response.json();
-				setParticipants(data);
+				const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
+					const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
+					return {
+						...userOnChannel,
+						user: {
+						  ...userOnChannel.user,
+						  avatar: avatar
+						}
+					  };
+				}));
+				setParticipants(updatedUsersOnChannel)
                 setIsMuted(true);
 				sendMessage('toMute', {channelId: channelId, userId: userId})
             } catch (error) {
@@ -191,7 +214,17 @@ export default function InteractiveListe(props: any) {
                 }
 				const data = await response.json();
                 setIsMuted(false)
-				setParticipants(data);
+				const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
+					const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
+					return {
+						...userOnChannel,
+						user: {
+						  ...userOnChannel.user,
+						  avatar: avatar
+						}
+					  };
+				}));
+				setParticipants(updatedUsersOnChannel)
 				sendMessage('toMute', {channelId: channelId, userId: userId})
             } catch (error) {
                 console.error(error);
@@ -249,7 +282,7 @@ return (
                 }
                 >
                 <ListItemAvatar>
-                    {/* <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
+                    <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
                 </ListItemAvatar>
                 <ListItemText
                     primary={participants?.user.username}
@@ -263,7 +296,7 @@ return (
             {users.map((participants: any) => (
                 <ListItem key={participants.user.username}>
                 <ListItemAvatar>
-                    {/* <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} /> */}
+                    <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
                 </ListItemAvatar>
                 <ListItemText
                     primary={participants?.user.username}

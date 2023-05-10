@@ -104,8 +104,6 @@ export class FriendshipService {
 
 	async findAndDeleteFriendship(userOne: number, userTwo: number) {
 		const friendship = await this.findFriendship(userOne, userTwo);
-		console.log("friendship-------------->")
-		console.log(friendship)
 		if (!friendship) {
 			throw new BadRequestException('findAndDeleteFriendship error : ');
 		}

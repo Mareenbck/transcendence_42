@@ -25,22 +25,6 @@ import { faBan, faTableTennisPaddleBall } from '@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DirectMessageInfo from './DirectMessageInfo';
 
-
-
-
-
-// const Demo = styled('div')(({ theme }) => ({
-//   backgroundColor: theme.palette.background.paper,
-// }));
-
-// function generate(element: React.ReactElement) {
-//   return [0, 1, 2].map((value) =>
-//     React.cloneElement(element, {
-//       key: value,
-//     }),
-//   );
-// }
-
 export default function UsersWithDirectMessage(props: any) {
   const {currentDirect, setCurrentDirect} = props;
   const [usersWith, setUsersWith] = useState<UserChat[]>([]);
@@ -56,13 +40,8 @@ export default function UsersWithDirectMessage(props: any) {
   const [unfromBlock, setUnfromBlock] = useState<number | null>();
   const [blockForMe, setBlockForMe] = useState<number | null>();
   const [unblockForMe, setUnblockForMe] = useState<number | null>();
-  // const [dense, setDense] = React.useState(false);
-//   const [secondary, setSecondary] = React.useState(false);
-	// console.log("AUsersWith --->")
-	// console.log(AUsersWith)
-	// console.log("usersWith --->")
-	// console.log(usersWith)
-// scroll
+
+
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({behavior: "smooth"})
 	}, [usersWith]);

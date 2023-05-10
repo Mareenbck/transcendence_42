@@ -7,7 +7,7 @@ import Message2 from "../message/message";
 import MessageReq from "../message/message.req";
 import NavbarChannel from "./NavbarChannel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faPaperPlane, faCommentSlash } from '@fortawesome/free-solid-svg-icons'
 import '../../../style/UsersOnChannel.css'
 
 
@@ -103,13 +103,13 @@ export default function CurrentChannel(props: any) {
 		}
 	};
 
-	useEffect(() => {
-		if (userJoined) {
-			setIsJoined(true)
-		} else {
-			setIsJoined(false)
-		}
-	}, [currentChatroom]);
+	// useEffect(() => {
+	// 	if (userJoined) {
+	// 		setIsJoined(true)
+	// 	} else {
+	// 		setIsJoined(false)
+	// 	}
+	// }, [currentChatroom]);
 
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
@@ -184,23 +184,29 @@ export default function CurrentChannel(props: any) {
 							<div className="box-msg"><span className="noConversationText2">No message in this room yet.</span></div>
 						)}
 					</div>
-					<div className="chatBoxBottom">
+				{!isMuted ?
+					(<div className="chatBoxBottom">
 						<input
 							className="chatMessageInput"
 							placeholder="write something..."
 							onChange={(e) => setNewMessage2(e.target.value)}
 							value={newMessage2}
 						></input>
-						{!isMuted &&
 							 <FontAwesomeIcon
 							 icon={faPaperPlane}
 							 onClick={handleSubmit}
 							 className={`send-btn-chat ${isMuted ? 'muted' : ''}`} // Ajoute la classe 'muted' si l'utilisateur est muté
 							 disabled={toMute}
 							/>
+					</div>
+							) : (
+								<div className="been-muted">
+								<p>Sorry, You've been muted by Admin</p>
+								<FontAwesomeIcon icon={faCommentSlash} className="been-muted-icon"/>
+								</div>
+							)
 						}
 
-					</div>
 					</>
 				)}
 			{showUsersOnChannel}
