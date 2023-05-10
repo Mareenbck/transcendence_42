@@ -68,3 +68,7 @@
     opacity: 0.5;
   }
   
+  .send-btn-chat.muted {
+    display: none;
+  }
+  
