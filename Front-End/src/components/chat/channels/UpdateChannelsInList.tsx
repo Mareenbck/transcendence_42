@@ -18,15 +18,15 @@ export default function UpdateChannelsInList(props: any) {
 
 	
 	useEffect(() => {
-		addListener("getConv", data => setAConversation(data));
+		addListener("getConv", data => {setAConversation(data)});
 	});
 
-	useEffect(() => {
-		AConversation && setConversations(prev => {
-			const conversationExists = prev.find((conversation: { id: number; }) => conversation.id === AConversation.id);
-			if (conversationExists) { return prev;} else {return [AConversation, ...prev];}
-		});
-	}, [AConversation]);
+	// useEffect(() => {
+	// 	AConversation && setConversations(prev => {
+	// 		const conversationExists = prev.find((conversation: { id: number; }) => conversation.id === AConversation.id);
+	// 		if (conversationExists) { return prev;} else {return [AConversation, ...prev];}
+	// 	});
+	// }, [AConversation]);
 
 
 	useEffect(() => {

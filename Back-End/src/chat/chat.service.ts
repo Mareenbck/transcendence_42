@@ -138,8 +138,8 @@ export class ChatService {
     
     chatJoinedChannel: any = (channelId: number , socketId: string) => {
     console.log("kkkkkkkkk", channelId, "szzzzz", socketId )
-   // const newList = await this.chatroomService.getParticipants(data.channelId);
-	//this.server.emit('joinedChannelR', newList);
+    // const newList = await this.chatroomService.getParticipants(data.channelId);
+	// this.server.emit('joinedChannelR', newList);
     this.server.to(socketId).emit('joinedChannelR2', channelId);
 	}  
 }
