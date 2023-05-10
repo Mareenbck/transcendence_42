@@ -139,7 +139,10 @@ console.log("26 Connect + map: client", this.userSockets.users);
 	async joinChannel(@MessageBody() data: {channelId: any}, @ConnectedSocket() socket: Socket): Promise<void> 
   { this.chatService.chatJoinedChannel(data.channelId, socket.id) };
   
-
+  @SubscribeMessage('leaveChannel')
+	async leaveChannel(@MessageBody() data: {channelId: any}, @ConnectedSocket() socket: Socket): Promise<void> 
+  { this.chatService.chatLeavedChannel(data.channelId, socket.id) };
+  
 
 
 ///////////////////////////
