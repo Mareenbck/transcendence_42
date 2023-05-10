@@ -32,7 +32,7 @@ const MatchHistory = (props: any) => {
 		}
 		fetchUserGames();
 	}, [id])
-
+	{}
 	if (!games) {
 		return <div>Loading...</div>;
 	}

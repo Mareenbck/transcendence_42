@@ -16,9 +16,9 @@ import SelectColor from './SelectColor';
 import PlayerOne from './PlayerOne';
 import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
-import HeaderGame from './HeaderGame';
+// import HeaderGame from './HeaderGame';
 import "./Game.css"
-import ProfileCard from '../user/ProfileCard';
+import HeaderGame from './HeaderGame';
 
 
 
@@ -30,7 +30,7 @@ function Game() {
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
     const [gamestatus, setGameStatus] = useState<gameStatus>(
-        {   winner: null,
+        {   winner: {} as UserGame,
             playerR: {} as UserGame,
             playerL: {} as UserGame,
             status: "null"} 
@@ -49,18 +49,17 @@ function Game() {
                 }
             }
             setOnlinePlayers(games);
-            // getCurrentGame(curroom);
         }
         addListener("gameRooms", handleGameRooms);
         sendMessage('listRooms', {} as any);      
     }, []);
 
-
+//event: entre to game's page
     useEffect(() => {
-        sendMessage("enterGame", {user: user});
+        sendMessage("enterGame", {} as any);
         return () => {
             if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                sendMessage("exitGame", { user: user, status: gamestatus.status });
+                sendMessage("exitGame", { user: user.userId, status: gamestatus.status } as any);
             }
         }
     }, []);
@@ -71,7 +70,7 @@ function Game() {
             // Handle the back button press
             // Add your custom logic here
             if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                sendMessage("exitGame", { user: user, status: gamestatus.status });
+                sendMessage("exitGame", {status: gamestatus.status } as any);
             }
         };
     
@@ -165,149 +164,19 @@ const handleClose = () => {
 const [ShowCamva, setShowCamva] = useState(true);
 const [backColorGame, setbackColorGame] = useState<string>("black");
 const changColorToRed= () => {
-    setbackColorGame("#699BF7");
+    setbackColorGame("rgb(158, 28, 28)");
     setShowColorModal(false);
     ShowCamva? setShowCamva(false): setShowCamva(true);
 }
 
 const changColorToBlue= () => {
-    setbackColorGame("#C7B9FF");
+    setbackColorGame("rgb(37, 37, 167)");
     setShowColorModal(false);
     ShowCamva? setShowCamva(false): setShowCamva(true);
 }
 
 const changColorToGreen= () => {
-    setbackColorGame("#FF5166");
-    setShowColorModal(false);
-    ShowCamva? setShowCamva(false): setShowCamva(true);
-}
-
-const changColorToBlack= () => {
-    setbackColorGame("black");
-    setShowColorModal(false);
-    ShowCamva? setShowCamva(false): setShowCamva(true);
-}
-
-useEffect(() => {
-
-}, [backColorGame])
-
-/************************* */
-
-//initialization of the initial parameters of the game
-    const [gameinit, setGameInit] = useState<gameInit>(
-        {
-            table_width: Math.floor(0.6 * window.innerWidth),
-            table_height: 0.5,
-            ballR: 0.015,
-            racket_width: 0.010,
-            racket_height: 0.100,
-            scoreR: 0,
-            scoreL: 0,
-            // winner: null,
-        }
-    );
-
-// game parameters update (coordinates ball and racket)
-    const [gamestate, setGameState] = useState<gameState>(
-        {
-            ball: {x: 0.500, y: 0.250},
-            racket1: {x: 0.010, y: 0.150},
-            racket2: {x: 0.990 - gameinit.racket_width , y: 0.150},
-            scoreR: 0,
-            scoreL: 0,
-        }
-    );
-
-// the responsive game
-    useEffect(() => {
-        const updateWidth = () => {
-            // window.screen.width
-            const width = Math.floor(0.6 * window.innerWidth);
-            if(width){
-                gameinit.table_width = width;
-                setGameInit({
-                    table_width: width,
-                    table_height: gameinit.table_height,
-                    ballR: gameinit.ballR,
-                    racket_width: gameinit.racket_width,
-                    racket_height: gameinit.racket_height,
-                    scoreR: gameinit.scoreR,
-                    scoreL: gameinit.scoreL})
-                    // winner: gameinit.winner});
-            }
-        };
-        window.addEventListener("resize", updateWidth);
-    //     }
-    // };
-
-/////////////////////////////////////////////////leave the page////////////////////////////////////
-    // useEffect(() => {
-
-    //     return () => {
-    //     // unmount component event (works at mount too)
-    //         if (gamestatus.status == 'game'){
-    //             alert("Alert of sortie game");
-    //         }
-    //         else if (gamestatus.status == 'waiting'){
-    //             alert("Alert of sortie waiting");
-    //         }
-    //         else {
-    //             alert(`Alert of sortie gamestatus.status = ${gamestatus.status}`);
-    //         }
-    //     };
-    // }, []);
-     
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-// onKeyDown handler function
-
-    const onkeyPress = (event: KeyboardEvent) => {
-        event.preventDefault();
-        if (event.code === "ArrowUp") {
-            sendMessage('move', "up" as any)
-        }
-        if (event.code === "ArrowDown") {
-            sendMessage('move', "down" as any)
-        }
-    };
-
-    useEffect(() => {
-// Attach the event listener to the window object
-        window.addEventListener('keydown', onkeyPress);
-        
-        return () => {
-        // Remove the event listener when the component unmounts
-            window.removeEventListener('keydown', onkeyPress);
-        }
-    }, []);
-
-// Pour partis de Modal select Color,
-
-const [ShowColorModal, setShowColorModal] = useState(false);
-const handleColorModal = () => {
-    setShowColorModal(true)
-}
-const handleClose = () => {
-    setShowColorModal(false)
-}
-
-const [ShowCamva, setShowCamva] = useState(true);
-const [backColorGame, setbackColorGame] = useState<string>("black");
-const changColorToRed= () => {
-    setbackColorGame("#699BF7");
-    setShowColorModal(false);
-    ShowCamva? setShowCamva(false): setShowCamva(true);
-}
-
-const changColorToBlue= () => {
-    setbackColorGame("#C7B9FF");
-    setShowColorModal(false);
-    ShowCamva? setShowCamva(false): setShowCamva(true);
-}
-
-const changColorToGreen= () => {
-    setbackColorGame("#FF5166");
+    setbackColorGame("rgb(40, 128, 40)");
     setShowColorModal(false);
     ShowCamva? setShowCamva(false): setShowCamva(true);
 }
@@ -405,7 +274,7 @@ useEffect(() => {
     const [clicked_play, setClicked] = useState(false);
 
     const handleClick = (roomN: number) => {
-        sendMessage("playGame", {user: user, roomN: roomN});
+        sendMessage("playGame", {roomN: roomN} as any);
         setCurRoom(roomN);
         if(roomN == -1){
             gamestatus.status == 'game';
@@ -457,7 +326,7 @@ useEffect(() => {
 
                     {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
                     <Link to="/menu">
-                        <button className="btnn" onClick={() => sendMessage("exitGame", { user: user, status: gamestatus.status })} style={{ alignSelf: "flex-end" }}>
+                        <button className="btnn" onClick={() => sendMessage("exitGame", { status: gamestatus.status } as any)} style={{ alignSelf: "flex-end" }}>
                             <ExitToAppIcon /> Exit
                         </button>
                     </Link>
@@ -476,6 +345,7 @@ useEffect(() => {
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                                 (getCurrentGame(curroom))
+                                // (<HeaderGame games = {games} room = {curroom}></HeaderGame>)
                                 :  
                                 ( <h2 className='gametitle'>Game </h2>)
                             } 
