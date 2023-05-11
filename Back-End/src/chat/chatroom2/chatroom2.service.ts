@@ -210,7 +210,7 @@ export class ChatroomService {
 				]
 			},
 		  });
-		  console.log("result ===", result);
+		//   console.log("result ===", result);
 		  return result;
 		} catch (err) {
 		  console.log(err);

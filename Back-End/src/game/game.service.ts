@@ -27,7 +27,7 @@ export class GameService {
 
 //connected users> random game >:  MAX length = 2 and after paring, cleared
 	private players: number[] = [];
-//all connected paires [invitation author + invited] 
+//all connected paires [invitation author + invited]
 	private invited: invited[] = [];
 //map of the games [key: N_room; game]
 	private gameMap: GameRoom[] = [];
@@ -35,7 +35,7 @@ export class GameService {
 	private roomArray: roomsList[] = [];
 	private roomN: number = 0;
 
-	
+
 // ...
 	changeScore = (roomN: number, scoreR: number, scoreL: number) => {
 		const index = this.roomArray.findIndex(i => i.roomN == roomN);
@@ -57,39 +57,39 @@ export class GameService {
 
 
 	enterGame = async (userId: number, socket: Socket) => {
-console.log("0 enterGame");	
+console.log("0 enterGame");
 		// was waiting
 
 		if (isNaN(userId)) return;
 
 	    if(this.players.length == 1 && this.players.some(id => id == userId)){
-console.log("1 enterGame waiting");	
-			socket.emit('status', {status: 'waiting'}); 
-		} 
+console.log("1 enterGame waiting");
+			socket.emit('status', {status: 'waiting'});
+		}
 		// was playing
 		else{
-console.log("2 enterGame game");	
+console.log("2 enterGame game");
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
-console.log("3 enterGame game");	
+console.log("3 enterGame game");
 				const game: GameRoom = this.gameMap[index];
 				game.init(playerDto);
 				game.initMoveEvents();
 				socket.join(`room${game.roomN}`);
-				socket.emit('status', {status: 'game'}); 
+				socket.emit('status', {status: 'game'});
 				this.sendListRooms();
 			}
 		}
 	}
 	exitGame = async (userId: number, status: string, socket: Socket) => {
-console.log("0 exitGame");	
+console.log("0 exitGame");
 		// if it was waiting
 		if (status == 'waiting'){
-console.log("1 exitGame waiting");	
+console.log("1 exitGame waiting");
 			// waiting a new game
 			if(this.players.some(id => +id == +userId)){
-console.log("1 exitGame waiting");	
+console.log("1 exitGame waiting");
 				this.players = [];
 			}
 			//waiting invited game
@@ -98,19 +98,19 @@ console.log("1 exitGame waiting");
 				this.invited = this.invited.filter(p => p.author.id != userId); //send message
 			}
 
-			socket.emit('status', {status: 'null'}); 
+			socket.emit('status', {status: 'null'});
 		}
 		// if is game
 		else if (status == 'game'){
-console.log("1 exitGame game");	
+console.log("1 exitGame game");
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
-console.log("2 exitGame game");	
+console.log("2 exitGame game");
 				const game: GameRoom = this.gameMap[index];
 				game.exitGame(playerDto);
 			}
-			socket.emit('status', {status: 'null'}); 
+			socket.emit('status', {status: 'null'});
 		}
 	}
 
@@ -130,7 +130,7 @@ console.log("2 exitGame game");
 		// join room
 		this.userSockets.joinToRoomId(playerR.id, room);
 		this.userSockets.joinToRoomId(playerL.id, room);
-//game initialization 
+//game initialization
 		let game = new GameRoom (this.server, this.roomN, this, this.userSockets);
 		if(game){
 			game.init(playerR);
@@ -151,15 +151,15 @@ console.log("2 exitGame game");
 //		const room = `room${roomN}`;
 //		this.userSockets.leaveRoom(room);
 
-console.log("0 gameMap", this.gameMap.length);	
+console.log("0 gameMap", this.gameMap.length);
 		const filteredGameMap = this.gameMap.filter(i => i.roomN !== roomN);
 		this.gameMap = filteredGameMap;
-console.log("1 gameMap", this.gameMap.length);	
+console.log("1 gameMap", this.gameMap.length);
 
-console.log("0 roomArray", this.roomArray.length);	
+console.log("0 roomArray", this.roomArray.length);
 		this.roomArray = this.roomArray.filter(i => i.roomN != roomN);
 		this.sendListRooms();
-console.log("105 roomArray", this.roomArray.length);	
+console.log("105 roomArray", this.roomArray.length);
 	}
 
 // emit to all users in all rooms that play
@@ -172,12 +172,12 @@ console.log("105 roomArray", this.roomArray.length);
 //if player comes in to random game
 		if (roomN == -1){ //
 			this.addPlayer(userId);
-			this.userSockets.emitToId(userId,'status', {status: 'waiting'} ); 
+			this.userSockets.emitToId(userId,'status', {status: 'waiting'} );
 			if (this.players.length == 2){
 				const playerR: UserDto = await this.userService.getUser(this.players[0]);
 				const playerL: UserDto = await this.userService.getUser(this.players[1]);
 				this.userSockets.emitToId(playerR.id,'status', {status: 'game'});
-				this.userSockets.emitToId(playerL.id,'status', {status: 'game'}); 
+				this.userSockets.emitToId(playerL.id,'status', {status: 'game'});
 				this.addNewRoom(playerR, playerL);
 			}
 		}
@@ -188,29 +188,29 @@ console.log("105 roomArray", this.roomArray.length);
 			game.init(playerDto);
 			game.initMoveEvents();
 			this.userSockets.joinToRoomId(playerDto.id, `room${roomN}`);
-			this.userSockets.emitToId(playerDto.id,'status', {status:'watch'}); 
+			this.userSockets.emitToId(playerDto.id,'status', {status:'watch'});
 		}
 	}
 
 //processing function the messages "InviteGame", 'acceptGame', 'refuseGame'
 	gameInvite = (author: UserDto, player: UserDto): void => {
-		this.userSockets.emitToId(author.id,'status', {status: 'waiting'} ); 
+		this.userSockets.emitToId(author.id,'status', {status: 'waiting'} );
 		this.invited.push({author, player});
 	}
 
 	acceptGame = (author: UserDto, player: UserDto): void => {
 		if(this.searchPair(author.id, player.id)){
-			this.userSockets.emitToId(author.id,'status', { status:'game'}); 
-			this.userSockets.emitToId(player.id,'status', { status:'game'}); 
+			this.userSockets.emitToId(author.id,'status', { status:'game'});
+			this.userSockets.emitToId(player.id,'status', { status:'game'});
 			this.addNewRoom(author, player);
 		}
 	};
-		
+
 	refusalGame = (author: UserDto, player: UserDto): void => {
-console.log("///////// GAME REFUSAL", author, player);
+// console.log("///////// GAME REFUSAL", author, player);
 		if(this.searchPair(author.id, player.id)) {
-			this.userSockets.emitToId(author.id,'status', {status: 'false'} ); 
-			this.userSockets.emitToId(player.id,'status', {status: 'null'} ); 
+			this.userSockets.emitToId(author.id,'status', {status: 'false'} );
+			this.userSockets.emitToId(player.id,'status', {status: 'null'} );
 
 		};
 	};

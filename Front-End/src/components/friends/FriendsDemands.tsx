@@ -11,11 +11,13 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { FriendContext } from "../../store/FriendshipContext";
 import useSocket from "../../service/socket";
 import NotificationDemands from "./NotificationDemands";
+import AuthContext from "../../store/AuthContext";
 
 const FriendsDemands = (props: any) => {
 	const [sendMessage, addListener] = useSocket();
 	const friendCtx = useContext(FriendContext);
-	const [pendingDemands, setPendingDemands] = useState(friendCtx.demands.filter((demand: Demand) => demand.status === 'PENDING'));
+	const authCtx = useContext(AuthContext);
+	const [pendingDemands, setPendingDemands] = useState<Demand []>([]);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
 
@@ -26,6 +28,10 @@ const FriendsDemands = (props: any) => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	useEffect(() => {
+		friendCtx.getDemands(authCtx.token, authCtx.userId);
+	}, []);
 
 	const open = Boolean(anchorEl);
 	const id = open ? 'simple-popover' : undefined;
