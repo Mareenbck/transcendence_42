@@ -9,17 +9,13 @@ type props = {
 
 const Modal = (props:any) => {
   return (
-    <div className='back' >
-      <div className="modal-contain">
-        <header className="header-modal">
-					<h2>Sorry, not right now</h2>
-				</header>
+    <div className='global-popup-refus' >
+			<h3>Sorry, you can't play right now</h3>
           <footer className='actions'>  
             <Link to="/chat/message">
                   <button className="btnn" onClick={props.handelClose}>Close</button>
             </Link>   
           </footer>
-      </div>
     </div>
   );
 };
