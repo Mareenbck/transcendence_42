@@ -304,7 +304,7 @@ function Chat(props: any) {
 	useEffect(() => {
 	  addListener("showUsersList", data => setUsersList(data));
 	  if (!showUsersOnChannel) {
-		setShowUserList(true);
+		  setShowUserList(true);
 	  }
 	}, [showUsersOnChannel]);
 
@@ -313,6 +313,14 @@ function Chat(props: any) {
 		setActiveTab(newValue);
 	  };
 
+  // TESTS
+	useEffect(() => { 
+  if (currentChat)
+    {
+      setShowUserList(false);
+      setShowUsersOnChannel(true);
+    };
+  }, [currentChat]);
 
 	return (
 	  <>
