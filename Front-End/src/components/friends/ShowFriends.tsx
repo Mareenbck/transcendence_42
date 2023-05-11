@@ -4,17 +4,22 @@ import Friend from '../../interfaces/IFriendship'
 import { AvatarGroup } from '@mui/material';
 import MyAvatar from "../user/Avatar";
 import { Link } from "react-router-dom";
+import useSocket from "../../service/socket";
 
 const ShowFriends = (props: any) => {
 	const friendCtx = useContext(FriendContext);
 	const [updatedFriends, setUpdatedFriends] = useState<Friend[]>([]);
 	const authCtx = props.authCtx;
-
+	const [sendMessage, addListener] = useSocket();
 	const [hoveredFriendId, setHoveredFriendId] = useState<any>();
+
+	console.log("updatedFriends EN DEHORS--->")
+	console.log(updatedFriends)
 
 	const handleRemoveFriend = async (event: FormEvent, friendId: number) => {
 		event.preventDefault();
 		friendCtx.removeFriend(friendId, authCtx.userId, authCtx.token);
+		// sendMessage('removeFriend', { friendId: friendId, currentId: authCtx.userId });
 	}
 
 	const handleMouseOver = (friendId: number) => {
@@ -24,6 +29,14 @@ const ShowFriends = (props: any) => {
 	const handleMouseOut = () => {
 		setHoveredFriendId(null);
 	}
+
+	useEffect(() => {
+		addListener('removeFriend', (updatedFriends: Friend[]) => {
+		  console.log("YO")
+			friendCtx.setFriends(updatedFriends);
+		  setUpdatedFriends(updatedFriends);
+		});
+	  }, []);
 
 	useEffect(() => {
 		if (friendCtx.friends) {

@@ -29,8 +29,10 @@ export class FriendshipController {
 	}
 
 	@Post('friends')
-	async showFriends(@Body() userId: number){
-		const friends = await this.friendshipService.showFriends(userId);
+	async showFriends(@Body() userId: any){
+		const { id } = userId;
+		console.log("CONTROLLER FRIEND")
+		const friends = await this.friendshipService.showFriends(id);
 		return friends.friendOf
 	}
 

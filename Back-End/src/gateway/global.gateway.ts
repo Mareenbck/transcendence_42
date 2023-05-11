@@ -201,11 +201,13 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
 		}
 	}
 
-	@SubscribeMessage('updateFriends')
-	async updateFriends(@MessageBody() ids: any, @ConnectedSocket() socket: Socket): Promise<void> {
-		const updatedFriends = await this.friendshipService.showFriends(ids);
-		this.server.emit('friendsUpdated', updatedFriends);
+	@SubscribeMessage('removeFriend')
+	async removeFriend(@MessageBody() friendId: any, @ConnectedSocket() socket: Socket): Promise<void> {
+		const updatedFriendsCurrent = await this.friendshipService.showFriends(friendId.friendId);
+		const newFriendListCurrent = updatedFriendsCurrent.friendOf
+		this.userSockets.emitToId(updatedFriendsCurrent.id, 'removeFriend', newFriendListCurrent)
 	}
+
 
 	@SubscribeMessage('createDemand')
 	async createDemand(@MessageBody() receiverId: any ): Promise<void> {

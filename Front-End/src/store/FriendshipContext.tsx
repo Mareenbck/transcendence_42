@@ -17,6 +17,7 @@ const defaultValue = {
 	updateDemand: (demandId: number, res: string, token: string) => { },
 	setPendingDemandsCount: (demand: any) => { },
 	setPendingDemands: (demand: Demand[]) => { },
+	setFriends: (updatedFriends: Friend[]) => { },
 };
 
 export const FriendContext = createContext(defaultValue);
@@ -57,12 +58,6 @@ export const FriendContextProvider = (props: any) => {
 				(demand: Demand) => demand.receiverId === parseInt(authCtx.userId)
 			);
 			setPendingDemands(receiverDemands.filter((demand: Demand) => demand.status === 'PENDING'));
-		});
-	}, [addListener]);
-
-	useEffect(() => {
-		addListener('friendsUpdated', (updatedFriends: Friend[]) => {
-			setFriends(updatedFriends);
 		});
 	}, [addListener]);
 
@@ -161,6 +156,8 @@ export const FriendContextProvider = (props: any) => {
 				body: JSON.stringify({ friendId: friendId, currentId: currentId }),
 			});
 			const data = await response.json();
+			sendMessage('removeFriend', { friendId: friendId, currentId: currentId });
+
 			setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== friendId));
 			if (!response.ok) {
 				console.log("POST error on /friendship/delete");
@@ -212,6 +209,7 @@ export const FriendContextProvider = (props: any) => {
 		removeFriend,
 		updateDemand,
 		setPendingDemands,
+		setFriends,
 	};
 
 	return (
