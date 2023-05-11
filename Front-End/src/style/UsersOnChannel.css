@@ -80,16 +80,20 @@
 	background-color: #FDFAF9;
   }
 
-  .been-muted p {
-	margin: 0px;
-    font-family: 'Inter';
-    font-weight: 500;
-    font-size: 17px;
-    letter-spacing: 2px;
-  }
+.been-muted p {
+  margin: 0px;
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 2px;
+}
 
-  .been-muted-icon {
-	height: 45px;
-    width: 45px;
-    color: #ab1414;
-  }
+.been-muted-icon {
+  height: 45px;
+  width: 45px;
+  color: #ab1414;
+}
+
+.banned {
+  color: red;
+}
