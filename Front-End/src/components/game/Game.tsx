@@ -280,7 +280,7 @@ useEffect(() => {
         if(roomN == -1){
             gamestatus.status == 'game';
         }
-        gamestatus.winner = {} as UserGame;
+        gamestatus.winner = null;
         setClicked(true);
     };
 

@@ -440,7 +440,7 @@ function Chat(props: any) {
 		  </div>
 		  <div className="chatBox">
 			<div className="chatBoxW">
-			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
+			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > </PopupChallenge>
 			  {currentChat ? (
           <CurrentChannel
           currentChatroom={currentChat}
