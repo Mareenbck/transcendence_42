@@ -19,6 +19,7 @@ import PlayerTwo from './PlayerTwo';
 // import HeaderGame from './HeaderGame';
 import "./Game.css"
 import HeaderGame from './HeaderGame';
+import MyAccountMenu from '../AccountMenu';
 
 
 
@@ -304,7 +305,7 @@ useEffect(() => {
             <div className="gameSideL">
 
                 <div className="title">
-                    <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
+                    <MyAccountMenu authCtx={authCtx}></MyAccountMenu>
                     <h4>{user.username}</h4>
                 </div>
 
