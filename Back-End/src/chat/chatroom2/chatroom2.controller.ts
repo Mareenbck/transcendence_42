@@ -33,7 +33,6 @@ export class Chatroom2Controller {
 	@Post('/:channelId/delete')
 	async delete(@Param('channelId') channelId: string) {
 		const response = await this.chatRoomService.delete(parseInt(channelId));
-		// console.log('deleted', response);
 		return response;
 	  }
 
@@ -60,7 +59,6 @@ export class Chatroom2Controller {
 @UseGuards(JwtGuard)
 async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: string) {
   const response = await this.chatRoomService.addAdmin(parseInt(channelId), parseInt(userId));
-//   console.log("response in controller", response);
   return response;
 }
 
@@ -120,7 +118,6 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	async ban(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const banSomeone = await this.chatRoomService.ban(parseInt(channelId), parseInt(userId));
 		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
-		console.log("muted", allUser)
 		return banSomeone;
 	}
 
@@ -129,7 +126,6 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	async unBan(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const unBanSomeone = await this.chatRoomService.unBan(parseInt(channelId), parseInt(userId));
 		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
-		console.log("muted", allUser)
 		return unBanSomeone;
 	}
 

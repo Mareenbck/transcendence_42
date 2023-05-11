@@ -36,16 +36,11 @@ export default function InteractiveListe(props: any) {
     const [isBanned, setIsBanned] = React.useState(false);
     const [isMuted, setIsMuted] = React.useState(false);
     const [participants, setParticipants] = React.useState<any []>([]);
-    // const banned = participants.filter((p: any) => p.status === 'BAN');
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
     const users = participants.filter((p: any) => p.role === 'USER');
-    const [isJoined, setIsJoined] = React.useState(true)
     const [sendMessage, addListener] = useSocket();
-    // const [toMute, setToMute] = useState<UserMute | null>(null);
-    // const [mutedParticipants, setMutedParticipants] = React.useState<string[]>([]);
+    const [bannedUsers, setBannedUsers] = useState([]);
 
-//	console.log("participants --->")
-//	console.log(participants)
 
 	const showParticipants = React.useCallback(async (channelId: string) => {
 		try {
@@ -98,6 +93,7 @@ export default function InteractiveListe(props: any) {
         setParticipants(updatedParticipants);
         showParticipants(channelId);
 		sendMessage('toMute', {channelId: channelId})
+        sendMessage("sendConv", {channelId: channelId, userId: userId})
         } catch (error) {
             console.error(error);
         }
@@ -128,6 +124,7 @@ export default function InteractiveListe(props: any) {
             showParticipants(channelId);
             setIsBanned(true)
             sendMessage('toMute', {channelId: channelId, userId: userId})
+            setBannedUsers([...bannedUsers, userId]);
 
 
         } catch (error) {
@@ -157,6 +154,7 @@ export default function InteractiveListe(props: any) {
                 showParticipants(channelId);
                 setIsBanned(false)
                 sendMessage('toMute', {channelId: channelId, userId: userId})
+                setBannedUsers(bannedUsers.filter(id => id !== userId));
             } catch (error) {
                 console.error(error);
             }
@@ -251,11 +249,6 @@ export default function InteractiveListe(props: any) {
             })
         }, [addListener])
 
-    // const [showList, setShowList] = React.useState(null)
-
-	// useEffect(() => {
-	// 	addListener('joinedChannel', data => setShowList(data))
-	// }, [setShowList])
 
 
 	function isHeMuted(id: number): true | undefined {
@@ -272,9 +265,9 @@ export default function InteractiveListe(props: any) {
 		}
 	}
 
-
-return (
-    <Box className="participants-container" style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
+    
+    return (
+        <Box className="participants-container" style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
         <PersonnalInfoChat />
         <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
         Participants of {props.channelName}
@@ -285,7 +278,7 @@ return (
              Admins
         </Typography>
             {admins.map((participants: any) => (
-                <ListItem key={participants.user.username}
+                <ListItem key={participants.user.username} 
                 secondaryAction={
                     <div>
                         <i className="fa-sharp fa-solid fa-crown"></i>
@@ -298,14 +291,14 @@ return (
                 <ListItemText
                     primary={participants?.user.username}
                     secondary={secondary ? 'Secondary text' : null}
-                />
+                    />
                 </ListItem>
             ))}
             <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
                 Users
                 </Typography>
             {users.map((participants: any) => (
-                <ListItem key={participants.user.username}>
+                <ListItem key={participants.user.username} className={`username ${bannedUsers.includes(participants.user.id) ? 'banned' : ''}`}>
                 <ListItemAvatar>
                     <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
                 </ListItemAvatar>
@@ -320,25 +313,27 @@ return (
                         <FontAwesomeIcon icon={faTrash} onClick={() => kickSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
                     </Tooltip>
                     {props.channelVisibility === 'PUBLIC' || props.channelVisibility === 'PWD_PROTECTED' ? (
-                        !isHeBanned(participants.user.id) ? (
-                            <Tooltip title="Ban">
-                                <FontAwesomeIcon
-                                    icon={faBan}
-                                    onClick={() => banSomeone(props.channelId, participants.user.id)}
-                                    className={`btn-chatlist ban`}
-                                />
-                            </Tooltip>
+                    <div>
+                        {!isHeBanned(participants.user.id) ? (
+                        <Tooltip title="Ban">
+                            <FontAwesomeIcon
+                            icon={faBan}
+                            onClick={() => banSomeone(props.channelId, participants.user.id)}
+                            className={`btn-chatlist ban`}
+                            />
+                        </Tooltip>
                         ) : (
-                            <Tooltip title="UnBan">
-                                <FontAwesomeIcon
-                                    icon={faBan}
-                                    onClick={() => unBanSomeone(props.channelId, participants.user.id)}
-                                    className={`btn-chatlist-clicked`}
-                                />
-                            </Tooltip>
-                        )
+                        <Tooltip title="UnBan">
+                            <FontAwesomeIcon
+                            icon={faBan}
+                            onClick={() => unBanSomeone(props.channelId, participants.user.id)}
+                            className={`btn-chatlist-clicked`}
+                            />
+                        </Tooltip>
+                        )}
+        
+                    </div>
                     ) : null}
-
                     {!isHeMuted(participants.user.id) ? (
                         <Tooltip title="Mute">
                             <FontAwesomeIcon
