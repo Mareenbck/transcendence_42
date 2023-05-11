@@ -29,7 +29,6 @@ const Demo = styled('div')(({ theme }) => ({
 
 export default function InteractiveListe(props: any) {
     const friendCtx = React.useContext(FriendContext);
-    // const [friends, setFriends] = React.useState<any[]>([]);
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
     const authCtx = useContext(AuthContext);
@@ -40,7 +39,7 @@ export default function InteractiveListe(props: any) {
     const owner = participants.filter((p: any) => p.role === 'OWNER');
     const users = participants.filter((p: any) => p.role === 'USER');
     const [sendMessage, addListener] = useSocket();
-    const [bannedUsers, setBannedUsers] = useState([]);
+    const [bannedUsers, setBannedUsers] = React.useState([]);
 
 
 	const showParticipants = React.useCallback(async (channelId: string) => {

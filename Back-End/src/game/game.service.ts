@@ -57,22 +57,22 @@ export class GameService {
 
 
 	enterGame = async (userId: number, socket: Socket) => {
-console.log("0 enterGame");
+// console.log("0 enterGame");
 		// was waiting
 
 		if (isNaN(userId)) return;
 
 	    if(this.players.length == 1 && this.players.some(id => id == userId)){
-console.log("1 enterGame waiting");
+// console.log("1 enterGame waiting");
 			socket.emit('status', {status: 'waiting'});
 		}
 		// was playing
 		else{
-console.log("2 enterGame game");
+// console.log("2 enterGame game");
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
-console.log("3 enterGame game");
+// console.log("3 enterGame game");
 				const game: GameRoom = this.gameMap[index];
 				game.init(playerDto);
 				game.initMoveEvents();
