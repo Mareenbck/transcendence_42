@@ -68,7 +68,6 @@ export class FriendshipService {
 
 	async showFriends(id: string){
 		// const { id } = userId;
-		console.log("ID DANS SHOW FRIEND ", id)
 		try {
 			const user = await this.prisma.user.findUnique({
 				where: { id: parseInt(id) },
@@ -79,20 +78,6 @@ export class FriendshipService {
 			console.error(error);
 		}
 	}
-
-	// async showFriendsUser(ids: any){
-	// 	const { id, friendId } = ids;
-	// 	console.log("ID DANS SHOW FRIEND USER", id)
-	// 	try {
-	// 		const user = await this.prisma.user.findUnique({
-	// 			where: { id: parseInt(friendId) },
-	// 			include: { friends: true, friendOf: true }
-	// 		});
-	// 		return user;
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// }
 
 	async findFriendship(userOne: number, userTwo: number) {
 		const friendships = await this.prisma.friendship.findMany({

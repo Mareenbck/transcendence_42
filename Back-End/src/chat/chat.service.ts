@@ -43,7 +43,6 @@ export class ChatService {
     // SENDING MESSAGES
     sendRoomMessage:any = (authorId: number, chatroomId: number, content: string) => {
         const roomU = this.roomUsers.filter( room => +room.roomId === +chatroomId);
-        // console.log("room message", chatroomId)
         if (roomU.length > 1) {
             for(const room of roomU) {
                 this.server.to(room.socketId).emit("getMessageRoom", {
@@ -146,15 +145,15 @@ export class ChatService {
 
     chatLeavedChannel: any = (channelId: number , socketId: string) => {
         this.server.to(socketId).emit('leavedChannel', channelId);
-    };  
-    
+    };
+
     invitedToPriv: any = (channelId: number, invitedId: number, socketId: string) => {
         const userTo = this.getUser(invitedId);
         this.server.to(userTo.socketId).emit('invitedToChannel');
-    };  
+    };
 
     acceptedToPriv: any = (socketId: string) => {
         this.server.to(socketId).emit('newPriv');
-    };  
+    };
 }
 

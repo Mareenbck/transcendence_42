@@ -24,16 +24,16 @@ export default function UsersWithDirectMessage(props: any) {
 	const [sendMessage, addListener] = useSocket();
 	const [latestsMsgs, setLatestsMsgs] = useState<any>(null);
 
-	// console.log("User with DM ", props)
-// scroll
-
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({behavior: "smooth"})
 	}, [usersWith]);
 
 	useEffect(() => {
-		addListener("getNewDirectUser", data => setAUsersWith(data));
+		addListener("getNewDirectUser", data => {
+			setAUsersWith(data)
+		});
 	}, [addListener]);
+
 
 	useEffect(() => {
 		if (AUsersWith) {
@@ -54,7 +54,9 @@ export default function UsersWithDirectMessage(props: any) {
 			const avatar = await friendCtx.fetchAvatar(friend.id);
 			return { ...friend, avatar };
 		}));
-		// setUsersWith(updatedFriends);
+		if (AUsersWith) { // check if newUserWith has a value
+			setAUsersWith(null); // reset the state
+		}
 		return updatedFriends;
 	};
 
@@ -105,10 +107,7 @@ export default function UsersWithDirectMessage(props: any) {
 	}
 	return false;
   }
-//   console.log("usersWith --->")
-//   console.log(usersWith)
-//   console.log("latestsMsgs --->")
-//   console.log(latestsMsgs)
+
 	return (
 		<Box style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
 			{usersWith && usersWith.map((o) => (
@@ -138,7 +137,7 @@ export default function UsersWithDirectMessage(props: any) {
 					</ListItemAvatar>
 					<div className='directMess-info'>
 						<ListItemText className="dicuss-link" primary={o?.username} onClick={props.isHeBlocked(o.id) ? () => props.getDirect(o) : undefined}/>
-						<DirectMessageInfo userWithDM={o} type='msg'/>
+						<DirectMessageInfo userWithDM={o} type='msg' latestsMsgs={latestsMsgs}/>
 					</div>
 				</ListItem>
 			))}
