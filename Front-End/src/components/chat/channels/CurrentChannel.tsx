@@ -65,6 +65,12 @@ export default function CurrentChannel(props: any) {
 			setParticipants(data))
 	}, [addListener])
 
+	useEffect(() => {
+		addListener('leavedChannel', (channelId: number) => {
+			setParticipants(channelId);
+		});
+	});
+
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
 		if (author !== undefined) { return (author) }
