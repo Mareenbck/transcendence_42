@@ -78,7 +78,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         this.userSockets.removeSocket(socket)
         socket.disconnect(true);
     }
-console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.keys());
+// console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.keys());
   }
 
   async handleDisconnect(client: Socket) {
@@ -116,7 +116,8 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
 
   @SubscribeMessage('sendMessageDirect')
   async chatSendDirectM(@MessageBody() data: {content: string, author: string, receiver: string}, @ConnectedSocket() socket: Socket,): Promise<void>
-  { this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  }
+  { console.log("data ", data)
+    this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  }
 
   @SubscribeMessage('sendConv')
   async chatSendConversation(@MessageBody() data: {channelId: number, name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean}, @ConnectedSocket() socket: Socket,): Promise<void>
@@ -141,13 +142,13 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
   @SubscribeMessage('leaveChannel')
 	async leaveChannel(@MessageBody() data: {channelId: any}, @ConnectedSocket() socket: Socket): Promise<void>
   { this.chatService.chatLeavedChannel(data.channelId, socket.id) };
-  
+
   @SubscribeMessage('inviteToPriv')
-	async inviteToPriv(@MessageBody() data: {channelId: number, invitedId: number}, @ConnectedSocket() socket: Socket): Promise<void> 
+	async inviteToPriv(@MessageBody() data: {channelId: number, invitedId: number}, @ConnectedSocket() socket: Socket): Promise<void>
   { this.chatService.invitedToPriv(data.channelId, data.invitedId, socket.id) };
 
   @SubscribeMessage('acceptedChannelInvite')
-	async acceptedToPriv(@ConnectedSocket() socket: Socket): Promise<void> 
+	async acceptedToPriv(@ConnectedSocket() socket: Socket): Promise<void>
   { this.chatService.acceptedToPriv(socket.id) };
 
 

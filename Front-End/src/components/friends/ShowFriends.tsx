@@ -13,7 +13,6 @@ const ShowFriends = (props: any) => {
 	const [sendMessage, addListener] = useSocket();
 	const [hoveredFriendId, setHoveredFriendId] = useState<any>();
 
-
 	const handleRemoveFriend = async (event: FormEvent, friendId: number) => {
 		event.preventDefault();
 		friendCtx.removeFriend(friendId, authCtx.userId, authCtx.token);
@@ -30,7 +29,6 @@ const ShowFriends = (props: any) => {
 
 	useEffect(() => {
 		addListener('removeFriend', (updatedFriends: Friend[]) => {
-		  console.log("YO")
 			friendCtx.setFriends(updatedFriends);
 		  setUpdatedFriends(updatedFriends);
 		});
