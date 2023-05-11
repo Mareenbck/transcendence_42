@@ -64,7 +64,7 @@ export class ChatroomService {
 
   	async findOne(id: number) {
     	const chatRoom = await this.prisma.chatroom.findUnique({where: {id: id}});;
-		return chatRoom  
+		return chatRoom
 	}
 
   async getUserTable(userId: number, channelId: number) {
@@ -213,7 +213,7 @@ export class ChatroomService {
 		  // delete invitation if chatroom PRIVATE
 			const chatRoomX: Chatroom = await this.findOne(channelId);
 			if (chatRoomX.visibility === "PRIVATE")
-			{ 
+			{
 				this.deleteInvitationsForLeftRooms(channelId, userId)
 			}
 		return result;
@@ -225,7 +225,7 @@ export class ChatroomService {
 	async deleteInvitationsForLeftRooms(channelId, invitedId)
 	{
 		await this.prisma.chatroomInvitations.deleteMany({
-			where: { 
+			where: {
 				AND:[
 					{chatroomId: +channelId},
 					{receiverId: +invitedId},
@@ -243,7 +243,6 @@ export class ChatroomService {
 		  where: { id: channelId },
 		  data: { hash: newpassword},
 		});
-		console.log("updatedPassword", updatedChatroom)
 		return updatedChatroom;
 	  }
 

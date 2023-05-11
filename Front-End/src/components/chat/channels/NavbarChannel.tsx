@@ -143,7 +143,7 @@ export function NavbarChannel(props: any) {
 				throw new Error(message);
 			}
 			const data = await response.json();
-			console.log('Password changed:', data);
+			// console.log('Password changed:', data);
 		} catch (err) {
 			console.log(err);
 		}

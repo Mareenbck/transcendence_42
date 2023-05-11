@@ -57,22 +57,22 @@ export class GameService {
 
 
 	enterGame = async (userId: number, socket: Socket) => {
-console.log("0 enterGame");
+// console.log("0 enterGame");
 		// was waiting
 
 		if (isNaN(userId)) return;
 
 	    if(this.players.length == 1 && this.players.some(id => id == userId)){
-console.log("1 enterGame waiting");
+// console.log("1 enterGame waiting");
 			socket.emit('status', {status: 'waiting'});
 		}
 		// was playing
 		else{
-console.log("2 enterGame game");
+// console.log("2 enterGame game");
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
-console.log("3 enterGame game");
+// console.log("3 enterGame game");
 				const game: GameRoom = this.gameMap[index];
 				game.init(playerDto);
 				game.initMoveEvents();
@@ -83,13 +83,13 @@ console.log("3 enterGame game");
 		}
 	}
 	exitGame = async (userId: number, status: string, socket: Socket) => {
-console.log("0 exitGame");
+// console.log("0 exitGame");
 		// if it was waiting
 		if (status == 'waiting'){
-console.log("1 exitGame waiting");
+// console.log("1 exitGame waiting");
 			// waiting a new game
 			if(this.players.some(id => +id == +userId)){
-console.log("1 exitGame waiting");
+// console.log("1 exitGame waiting");
 				this.players = [];
 			}
 			//waiting invited game
@@ -102,11 +102,11 @@ console.log("1 exitGame waiting");
 		}
 		// if is game
 		else if (status == 'game'){
-console.log("1 exitGame game");
+// console.log("1 exitGame game");
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
-console.log("2 exitGame game");
+// console.log("2 exitGame game");
 				const game: GameRoom = this.gameMap[index];
 				game.exitGame(playerDto);
 			}
@@ -151,15 +151,15 @@ console.log("2 exitGame game");
 //		const room = `room${roomN}`;
 //		this.userSockets.leaveRoom(room);
 
-console.log("0 gameMap", this.gameMap.length);
+// console.log("0 gameMap", this.gameMap.length);
 		const filteredGameMap = this.gameMap.filter(i => i.roomN !== roomN);
 		this.gameMap = filteredGameMap;
-console.log("1 gameMap", this.gameMap.length);
+// console.log("1 gameMap", this.gameMap.length);
 
-console.log("0 roomArray", this.roomArray.length);
+// console.log("0 roomArray", this.roomArray.length);
 		this.roomArray = this.roomArray.filter(i => i.roomN != roomN);
 		this.sendListRooms();
-console.log("105 roomArray", this.roomArray.length);
+// console.log("105 roomArray", this.roomArray.length);
 	}
 
 // emit to all users in all rooms that play
