@@ -28,7 +28,7 @@ function Chat(props: any) {
   const friendCtx = useContext(FriendContext);
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<OnlineU[]> ([]);
-  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChat, setCurrentChat] = useState<any | null>(null);
   const [currentDirect, setCurrentDirect] = useState<UserChat | null> (null);
   const [otherUsers, setOtherUsers] = useState <UserChat[]> ([]);
   const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
@@ -440,7 +440,7 @@ function Chat(props: any) {
 		  </div>
 		  <div className="chatBox">
 			<div className="chatBoxW">
-			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
+			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > </PopupChallenge>
 			  {currentChat ? (
           <CurrentChannel
           currentChatroom={currentChat}
@@ -465,13 +465,16 @@ function Chat(props: any) {
 			  }
 			</div>
 		  </div>
+			{/* <div className="chatOnline" style={{ display: isChannelSelected ? "none" : "block" }}>
+			</div> */}
+			{/* <PersonnalInfoChat /> */}
       {/* <div className="navbar-welcome">
 	  <ThemeProvider theme={theme}>
 	  <i className="fa-solid fa-comment-left"></i>
 				<Typography variant="h3">Welcome to the chat
 				</Typography>
 				<i className="fa-solid fa-comment"></i>
-			</ThemeProvider>
+			</ThemeProvider>  
       </div> */}
 
 			{(!currentChat || showUserList) && (
