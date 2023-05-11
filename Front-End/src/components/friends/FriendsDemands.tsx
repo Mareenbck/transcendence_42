@@ -61,19 +61,6 @@ const FriendsDemands = (props: any) => {
 			setPendingDemands(receiverDemands.filter((demand: Demand) => demand.status === 'PENDING'));
 		});
 	}, [addListener]);
-	console.log("pendingDemands --->")
-	console.log(pendingDemands)
-	// useEffect(() => {
-	// 	addListener('pendingDemands', (pendingDemands: any[]) => {
-	// 		const receiverDemands = pendingDemands.filter(
-	// 			(demand: Demand) => demand.receiverId === parseInt(authCtx.userId)
-	// 		);
-	// 		setPendingDemands(prevDemands => [
-	// 			...prevDemands,
-	// 			...receiverDemands.filter((demand: Demand) => demand.status === 'PENDING')
-	// 		]);
-	// 	});
-	// }, [addListener, authCtx.userId]);
 
 	return (
 		<>
