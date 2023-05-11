@@ -402,12 +402,13 @@ useEffect(() => {
             <h2 className='posH'>Live games</h2>
                 <div>
                     {games.map((game: gamesList) => (
-                    <div className='wrapList'>
+                    <div key={game.roomN} className='wrapList'>
 
                     {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
                         <div onClick={() => handleClick(game.roomN)}>
                             <div className="container-match">
-                                <button  style={{backgroundColor: "with", marginRight:"0", padding:"0"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>
+                            {!isInPlay() && 
+                                ( <button  style={{backgroundColor: "with", marginRight:"0", padding:"0"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>)}
                                 <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
                                 <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>
                                 <PlayerTwo player={game.playerR} winner={0} score={game.scoreR} />
