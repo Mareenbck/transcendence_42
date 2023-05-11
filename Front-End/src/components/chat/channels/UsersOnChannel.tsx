@@ -33,7 +33,7 @@ export default function InteractiveListe(props: any) {
     const owner = participants.filter((p: any) => p.role === 'OWNER');
     const users = participants.filter((p: any) => p.role === 'USER');
     const [sendMessage, addListener] = useSocket();
-    const [bannedUsers, setBannedUsers] = useState([]);
+    const [bannedUsers, setBannedUsers] = React.useState([]);
 
 
 	const showParticipants = React.useCallback(async (channelId: string) => {
@@ -308,7 +308,7 @@ export default function InteractiveListe(props: any) {
                 Users
                 </Typography>
             {users.map((participants: any) => (
-                <ListItem key={participants.user.username} className={`username ${bannedUsers.includes(participants.user.id) ? 'banned' : ''}`}>
+                <ListItem key={participants.user.username} className={`username ${isHeBanned(participants.user.id) ? 'banned' : ''}`}>
                 <ListItemAvatar>
                     <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
                 </ListItemAvatar>
