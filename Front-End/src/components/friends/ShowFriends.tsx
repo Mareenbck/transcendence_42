@@ -13,8 +13,6 @@ const ShowFriends = (props: any) => {
 	const [sendMessage, addListener] = useSocket();
 	const [hoveredFriendId, setHoveredFriendId] = useState<any>();
 
-	console.log("updatedFriends EN DEHORS--->")
-	console.log(updatedFriends)
 
 	const handleRemoveFriend = async (event: FormEvent, friendId: number) => {
 		event.preventDefault();

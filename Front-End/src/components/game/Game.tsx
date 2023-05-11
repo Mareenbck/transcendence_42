@@ -349,7 +349,7 @@ useEffect(() => {
                                 (getCurrentGame(curroom))
                                 // (<HeaderGame games = {games} room = {curroom}></HeaderGame>)
                                 :
-                                ( <h2 className='gametitle'>Game </h2>)
+                                ( <h2 className='gametitle'>Pong</h2>)
                             }
 
                             {(gamestatus.status == 'waiting') ?

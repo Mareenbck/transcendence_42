@@ -83,13 +83,10 @@ export class GameService {
 		}
 	}
 	exitGame = async (userId: number, status: string, socket: Socket) => {
-console.log("0 exitGame");
 		// if it was waiting
 		if (status == 'waiting'){
-console.log("1 exitGame waiting");
 			// waiting a new game
 			if(this.players.some(id => +id == +userId)){
-console.log("1 exitGame waiting");
 				this.players = [];
 			}
 			//waiting invited game
@@ -102,11 +99,9 @@ console.log("1 exitGame waiting");
 		}
 		// if is game
 		else if (status == 'game'){
-console.log("1 exitGame game");
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
-console.log("2 exitGame game");
 				const game: GameRoom = this.gameMap[index];
 				game.exitGame(playerDto);
 			}
