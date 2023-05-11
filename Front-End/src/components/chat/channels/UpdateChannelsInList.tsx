@@ -28,16 +28,18 @@ export default function UpdateChannelsInList(props: any) {
 	useEffect(() => {
 		addListener('leavedChannel', (channelId: number) => {
 			const updatedConversations = conversations.map((conversation) => {
-				if (+conversation.id === +channelId) {
-				  return {
-					...conversation,
-					participants: conversation.participants.filter(p => +p.userId !== +user.userId)
-				  };
+				if (+conversation.id === +channelId && conversation.visibility == "PRIVATE") {
+					return null;
+				} else if (+conversation.id === +channelId) {
+					return {
+						...conversation,
+						participants: conversation.participants.filter(p => +p.userId !== +user.userId)
+				  	};
 				} else {
 				  return conversation;
 				}
-			  });
-			  setConversations(updatedConversations);
+			});
+			setConversations(updatedConversations.filter(conversation => conversation !== null));
 		});
 	});
 
@@ -76,7 +78,7 @@ export default function UpdateChannelsInList(props: any) {
 	return (
 		<div className="conversation-list">
 			{conversations.map((c: any) => (
-				<div key={c.id} onClick={() => { setCurrentChat(c) }}>
+				<div key={c?.id} onClick={() => { setCurrentChat(c) }}>
 					<div className="channel-inlist">
 						<div className="conversation-name">
 							<Conversation name={c.name} id={c.id} visibility={c.visibility}/>

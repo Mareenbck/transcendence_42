@@ -44,8 +44,8 @@ export default function InteractiveListe(props: any) {
     // const [toMute, setToMute] = useState<UserMute | null>(null);
     // const [mutedParticipants, setMutedParticipants] = React.useState<string[]>([]);
 
-	console.log("participants --->")
-	console.log(participants)
+//	console.log("participants --->")
+//	console.log(participants)
 
 	const showParticipants = React.useCallback(async (channelId: string) => {
 		try {
@@ -60,6 +60,7 @@ export default function InteractiveListe(props: any) {
 			);
 			if (response.ok) {
 				const data = await response.json();
+
 				const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
 					const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
 					return {
