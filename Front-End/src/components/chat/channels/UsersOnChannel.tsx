@@ -98,6 +98,7 @@ export default function InteractiveListe(props: any) {
         setParticipants(updatedParticipants);
         showParticipants(channelId);
 		sendMessage('toMute', {channelId: channelId})
+        sendMessage("sendConv", {channelId: channelId, userId: userId})
         } catch (error) {
             console.error(error);
         }
