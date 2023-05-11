@@ -59,7 +59,6 @@ React.useEffect(() => {
 		if (props.type === "invite-admin") 
 		{
 			const data = await Fetch.fetch(authCtx.token, "GET", `chatroom2`, props.channelId, 'participants');
-			console.log("update adm", data);
 			setFriends(data.filter(u => +u.userId !== +authCtx.userId));
 		}
 		else
@@ -69,7 +68,6 @@ React.useEffect(() => {
 				const avatar = await friendCtx.fetchAvatar(friend.id);
 				return { ...friend, avatar };
 			}));
-			console.log("update all", updatedFriends);
 			setFriends(updatedFriends.filter(u => +u.id !== +authCtx.userId));
 		}
 	}

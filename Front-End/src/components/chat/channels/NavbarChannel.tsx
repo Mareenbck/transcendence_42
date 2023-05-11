@@ -51,6 +51,7 @@ export function NavbarChannel(props: any) {
 				throw new Error(message);
 			}
 			const data = await resp.json();
+			sendMessage("inviteToPriv", {channelId: channelId, invitedId: invitedId});
 		} catch (err) {
 			console.log(err)
 		}

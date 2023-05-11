@@ -141,7 +141,14 @@ console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.k
   @SubscribeMessage('leaveChannel')
 	async leaveChannel(@MessageBody() data: {channelId: any}, @ConnectedSocket() socket: Socket): Promise<void>
   { this.chatService.chatLeavedChannel(data.channelId, socket.id) };
+  
+  @SubscribeMessage('inviteToPriv')
+	async inviteToPriv(@MessageBody() data: {channelId: number, invitedId: number}, @ConnectedSocket() socket: Socket): Promise<void> 
+  { this.chatService.invitedToPriv(data.channelId, data.invitedId, socket.id) };
 
+  @SubscribeMessage('acceptedChannelInvite')
+	async acceptedToPriv(@ConnectedSocket() socket: Socket): Promise<void> 
+  { this.chatService.acceptedToPriv(socket.id) };
 
 
 ///////////////////////////
