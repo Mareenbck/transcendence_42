@@ -27,6 +27,7 @@ export class GameController {
       score1,
       score2
     });
+
     return game;
   }
 
@@ -34,9 +35,6 @@ export class GameController {
 	@UseGuards(JwtGuard)
 	async getAllUserGames(@Param('id') userId: string) {
 		const allGames = await this.gameService.getUserGames(parseInt(userId));
-		if (allGames.length > 0) {
-			await this.userService.updateAchievement(parseInt(userId), 'Rookie')
-		}
 		return allGames;
 	}
 
@@ -47,7 +45,7 @@ export class GameController {
 		const userWins = allGames.filter((game) => {
 			return game.winnerId === parseInt(userId);
 		});
-		if (userWins.length > 0) {
+		if (userWins.length === 1) {
 			await this.userService.updateAchievement(parseInt(userId), 'Winner');
 		}
 		const user = await this.gameService.updateUserXPAndLevel(parseInt(userId), allGames);

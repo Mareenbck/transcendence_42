@@ -469,17 +469,14 @@ function Chat(props: any) {
 			  }
 			</div>
 		  </div>
-			{/* <div className="chatOnline" style={{ display: isChannelSelected ? "none" : "block" }}>
-			</div> */}
-			{/* <PersonnalInfoChat /> */}
-      <div className="navbar-welcome">
+      {/* <div className="navbar-welcome">
 	  <ThemeProvider theme={theme}>
 	  <i className="fa-solid fa-comment-left"></i>
-				<Typography variant="h3">Welcome to the chat 
+				<Typography variant="h3">Welcome to the chat
 				</Typography>
 				<i className="fa-solid fa-comment"></i>
-			</ThemeProvider>  
-      </div>
+			</ThemeProvider>
+      </div> */}
 
 			{(!currentChat || showUserList) && (
 				<UsersChat
@@ -491,7 +488,6 @@ function Chat(props: any) {
 					setToUnblock={setToUnblock}
 				/>
 			)}
-
 			{currentChat && showUsersOnChannel && (
 				<UsersOnChannel
 					currentChatroom={currentChat}
@@ -503,7 +499,6 @@ function Chat(props: any) {
           setToMute={props.setToMute}
 				/>
 			)}
-
 	</div>
     </>
   )
