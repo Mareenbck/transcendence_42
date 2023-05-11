@@ -42,6 +42,7 @@ export class GameRoom {
 		winner: null,
 		playerR: {} as UserDto,
 		playerL: {} as UserDto,
+		player: null,
 		status: null};
 
 	private ballSpeedX: number = ballSpeed;
@@ -73,6 +74,7 @@ console.log("constructor Class.game");
 		this.playerL.score = 0;
 		this.playerR.score = 0;
 	}
+
 
 // function: emit game - tacking the changing coordinates of rackets and ball> sends message to the room
 	private emit2all(){
@@ -226,9 +228,8 @@ console.log("constructor Class.game");
 
 		this.status.playerL = (this.playerL.user == this.status.winner ? this.status.winner : this.playerL.user);
 		this.status.playerR = (this.playerR.user == this.status.winner ? this.status.winner : this.playerR.user);
-		console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)
 		
-		this.server.to(this.room).emit('status', { winner: this.status.winner, playerR:this.status.playerL, playerL: this.status.playerR, status: 'winner',});
+		this.server.to(this.room).emit('status', { winner: this.status.winner, playerR:this.status.playerL, playerL: this.status.playerR, status: 'winner'});
 
 		// leave room
 console.log("leave room");
@@ -268,6 +269,9 @@ console.log("game.class.run");
 	public exitGame(player: UserDto): void {
 console.log("exit in gameClass", player.id, this.playerR.user.id, this.playerL.user.id)
 		clearInterval(this.interval);
+		this.status.player = player.username;
+		this.server.to(this.room).emit('status', {player:this.status.player, status: 'false_game'} );
+
 		if (player.id == this.playerR.user.id){
 			this.playerL.score = MAX_SCORE;
 			this.status.winner =  this.playerL.user;

@@ -4,6 +4,7 @@ import Canvas from './Canvas'
 import type { gameInit, gameState, gameStatus, gamesList, players, UserGame } from './interface_game'
 import ColorModal from './modal/ColorModal';
 import RefusModal from './modal/RefusModal';
+import ExitModal from './modal/RefusModal';
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
 import '../../style/OptionGame.css';
@@ -16,10 +17,8 @@ import SelectColor from './SelectColor';
 import PlayerOne from './PlayerOne';
 import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
-// import HeaderGame from './HeaderGame';
 import "./Game.css"
 import HeaderGame from './HeaderGame';
-
 
 
 function Game() {
@@ -33,6 +32,7 @@ function Game() {
         {   winner: null,
             playerR: {} as UserGame,
             playerL: {} as UserGame,
+            player: null,
             status: "null"} 
     );  
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
@@ -64,29 +64,59 @@ function Game() {
         }
     }, []);
 
+//event: go back
+const {history} = useRouter();
     useEffect(() => {
-        const handleBackButton = (event: PopStateEvent) => {
-// alert("2 handlePopstate");
-            // Handle the back button press
-            // Add your custom logic here
-            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                sendMessage("exitGame", {status: gamestatus.status } as any);
-            }
-        };
-    
-        // Add the event listener when the component mounts
-        window.addEventListener("popstate", handleBackButton);
-    
-        // Remove the event listener when the component unmounts
-        return () => {
-            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                alert("1 handlePopstate");
-            }
-            window.removeEventListener("popstate", handleBackButton);
-        };
-      }, []);
+    return () => {
+        if (history.actions === "POP") { // && history.location.pathname === "any specific path"
+            alert("handlePopstate");
+        } 
+    };
+}, [])
 
+function useRouter(): { history: any; } {
+    throw new Error('Function not implemented.');
+}
+
+const router = useRouter();
+
+  useEffect(() => {
+    const handlePopstate = () => {
+      if (router.action === 'POP') {
+        alert('handlePopstate');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopstate);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopstate);
+    };
+  }, [router]);
+
+//     useEffect(() => {
+//         const handleBackButton = (event: PopStateEvent) => {
+// // alert("2 handlePopstate");
+//             // Handle the back button press
+//             // Add your custom logic here
+//             if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+//                 sendMessage("exitGame", {status: gamestatus.status } as any);
+//             }
+//         };
     
+//         // Add the event listener when the component mounts
+//         window.addEventListener("popstate", handleBackButton);
+    
+//         // Remove the event listener when the component unmounts
+//         return () => {
+//             if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+//                 alert("1 handlePopstate");
+//             }
+//             window.removeEventListener("popstate", handleBackButton);
+//         };
+//       }, []);
+
+ //for header oo game   
     const getCurrentGame = (roomN: number): React.JSX.Element | undefined => {
         if (games){
             const index = games.findIndex((game:gamesList) => game.roomN == roomN);
@@ -131,7 +161,6 @@ function Game() {
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 // onKeyDown handler function
-
     const onkeyPress = (event: KeyboardEvent) => {
         event.preventDefault();
         if (event.code === "ArrowUp") {
@@ -151,6 +180,7 @@ function Game() {
             window.removeEventListener('keydown', onkeyPress);
         }
     }, []);
+
 
 // Pour partis de Modal select Color,
 const [ShowColorModal, setShowColorModal] = useState(false);
@@ -192,8 +222,6 @@ useEffect(() => {
 }, [backColorGame])
 
 
-/************************* */
-
 //initialization of the initial parameters of the game
     const [gameinit, setGameInit] = useState<gameInit>(
         {
@@ -204,7 +232,6 @@ useEffect(() => {
             racket_height: 0.100,
             scoreR: 0,
             scoreL: 0,
-            // winner: null,
         }
     );
 
@@ -244,7 +271,7 @@ useEffect(() => {
     const initListener = (data: gameInit)=>{
         const width = Math.floor(0.6 * window.innerWidth);
         if(width){
-            data.table_width = width;""
+            data.table_width = width;
         }
         if(curroom == -1){
             gamestatus.status == 'game';
@@ -265,11 +292,14 @@ useEffect(() => {
         addListener('init-pong', initListener);
         addListener('pong', updateListener);
         addListener('status', updateStatus);
+console.log('satatus', gamestatus.status)
     }, [initListener, updateListener, updateStatus]);
+
 
     const isInPlay = (): boolean => {
         return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
     };
+
 
 // action when clicking on "PlayGame"
     const [clicked_play, setClicked] = useState(false);
@@ -280,20 +310,10 @@ useEffect(() => {
         if(roomN == -1){
             gamestatus.status == 'game';
         }
-        gamestatus.winner = {} as UserGame;
+        gamestatus.winner = null;
         setClicked(true);
     };
 
- // for Disable after click
-//  const [activeLinkk, setActiveLinkk] = useState('');
-//  useEffect(() => {
-//     setActiveLinkk(location.pathname);
-//   }, []);
-
-//  const handleLinkClick = (path: string) => {
-//     setActiveLinkk(path);
-//   };   
-  
 //////////////////////////////////////////////////////////////////////////////  
 
     return (
@@ -342,13 +362,17 @@ useEffect(() => {
                     {(!gamestatus.winner) ? (
                     <>
                         {/* <div className='wrapWaiting'>*/}
-                            {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
+                            {(gamestatus.status == 'false_invite') && 
+                                                        (<RefusModal handelClose={handleClose} player = {gamestate.player}/>)}
+                            {(gamestatus.status == 'false_game') && 
+                                                        (<ExitModal handelClose={handleClose} player = {gamestate.player}/>)}
+
                         
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
                                 (getCurrentGame(curroom))
                                 // (<HeaderGame games = {games} room = {curroom}></HeaderGame>)
                                 :  
-                                ( <h2 className='gametitle'>Game </h2>)
+                                ( <h2 className='gametitle'>Game</h2>)
                             } 
                             
                             {(gamestatus.status == 'waiting') ?
@@ -379,7 +403,7 @@ useEffect(() => {
                                                                     border: "solid" ,
                                                                     borderBlockColor:"black" } } >
                                 <PlayerOne  style={{backgroundColor: "white"}} player={gamestatus.playerL} winner={gamestatus.winner} sizeAvatar={"l"} />
-                                <p className='vs'> VS</p>
+                                <p className='vs'>VS</p>
                             
                                 <PlayerTwo  player={gamestatus.playerR} winner={gamestatus.winner}  sizeAvatar={"l"} />
                             </div>
@@ -402,7 +426,7 @@ useEffect(() => {
             <h2 className='posH'>Live games</h2>
                 <div>
                     {games.map((game: gamesList) => (
-                    <div className='wrapList'>
+                    <div key={game.roomN} className='wrapList'>
 
                     {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
                         <div onClick={() => handleClick(game.roomN)}>
@@ -424,3 +448,5 @@ useEffect(() => {
 }
                                    
 export default Game;
+
+

@@ -58,10 +58,8 @@ export class GameService {
 
 	enterGame = async (userId: number, socket: Socket) => {
 console.log("0 enterGame");	
-		// was waiting
-
 		if (isNaN(userId)) return;
-
+		// was waiting
 	    if(this.players.length == 1 && this.players.some(id => id == userId)){
 console.log("1 enterGame waiting");	
 			socket.emit('status', {status: 'waiting'}); 
@@ -82,6 +80,8 @@ console.log("3 enterGame game");
 			}
 		}
 	}
+
+
 	exitGame = async (userId: number, status: string, socket: Socket) => {
 console.log("0 exitGame");	
 		// if it was waiting
@@ -107,7 +107,7 @@ console.log("1 exitGame game");
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
 console.log("2 exitGame game");	
-				const game: GameRoom = this.gameMap[index];
+				const game: GameRoom = this.gameMap[index];		
 				game.exitGame(playerDto);
 			}
 			socket.emit('status', {status: 'null'}); 
@@ -148,9 +148,6 @@ console.log("2 exitGame game");
 
 // removing room in gameMap and roomArray
 	removeRoom = (roomN: number): void => {
-//		const room = `room${roomN}`;
-//		this.userSockets.leaveRoom(room);
-
 console.log("0 gameMap", this.gameMap.length);	
 		const filteredGameMap = this.gameMap.filter(i => i.roomN !== roomN);
 		this.gameMap = filteredGameMap;
@@ -169,7 +166,7 @@ console.log("105 roomArray", this.roomArray.length);
 
 //after pressing "playGame" or "watch"
 	playGame = async (userId: number, roomN: number): Promise<void> => {
-//if player comes in to random game
+	//if player comes in to random game
 		if (roomN == -1){ //
 			this.addPlayer(userId);
 			this.userSockets.emitToId(userId,'status', {status: 'waiting'} ); 
@@ -181,7 +178,7 @@ console.log("105 roomArray", this.roomArray.length);
 				this.addNewRoom(playerR, playerL);
 			}
 		}
-//if spectator comes to watch
+	//if spectator comes to watch
 		else {
 			let game = this.gameMap.find(i => i.roomN == roomN);
 			const playerDto: UserDto = await this.userService.getUser(userId);
@@ -207,9 +204,8 @@ console.log("105 roomArray", this.roomArray.length);
 	};
 		
 	refusalGame = (author: UserDto, player: UserDto): void => {
-console.log("///////// GAME REFUSAL", author, player);
 		if(this.searchPair(author.id, player.id)) {
-			this.userSockets.emitToId(author.id,'status', {status: 'false'} ); 
+			this.userSockets.emitToId(author.id,'status', {player: player, status: 'false_invite'} ); 
 			this.userSockets.emitToId(player.id,'status', {status: 'null'} ); 
 
 		};
@@ -226,8 +222,8 @@ async create({playerOneId, playerTwoId, winnerId, score1, score2}) {//+async
 }
 
 async getGames() {
-return await this.prisma.game.findMany(
-	{ include: {playerOne: true, playerTwo: true, winner: true}});
+	return await this.prisma.game.findMany(
+		{ include: {playerOne: true, playerTwo: true, winner: true}});
 }
 
 async getUserGames(userId: number): Promise<Game[]> {

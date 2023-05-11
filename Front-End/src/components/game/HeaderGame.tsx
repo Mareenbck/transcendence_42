@@ -20,7 +20,6 @@ const HeaderGame = (props: {games: gamesList[], room: number }) => {
             const index = games.findIndex((game:gamesList) => +game.roomN == +roomN);
             if (index != -1){
                 setPlayers( {playerL: games[index].playerL, playerR: games[index].playerR} );
-console.log("Header component", players.playerL, players.playerR )
             }
         }
 	}, [games]);

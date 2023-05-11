@@ -46,6 +46,7 @@ export interface statuses{
 	winner: UserDto;
 	playerR: UserDto;
 	playerL: UserDto;
+	player: string;
 	status: string;
 }
  
