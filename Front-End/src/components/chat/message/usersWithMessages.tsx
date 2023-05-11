@@ -26,6 +26,7 @@ export default function UsersWithDirectMessage(props: any) {
 
 	// console.log("User with DM ", props)
 // scroll
+
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({behavior: "smooth"})
 	}, [usersWith]);
