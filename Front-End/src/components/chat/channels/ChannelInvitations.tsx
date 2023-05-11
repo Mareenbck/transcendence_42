@@ -8,18 +8,20 @@ import PasswordIcon from '@mui/icons-material/Password';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import IconButton from "@mui/material/IconButton";
 import CancelIcon from '@mui/icons-material/Cancel';
+import useSocket from '../../../service/socket';
 
 const ChannelInvitations = (props: any) => {
 	const [invitations, setInvitations] = useState<any[]>([]);
 	const authCtx = useContext(AuthContext);
-	const pendingInvitations = invitations.filter((invitation: any) => invitation.status === 'PENDING');
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [icon, setIcon] = useState<any>();
-
+	const [sendMessage, addListener] = useSocket();
 
 	useEffect(() => {
 		getInvitations();
 	}, [])
+
+//	const pendingInvitations = invitations.filter((invitation: any) => invitation.status === 'PENDING');
 
 	const getInvitations = async () => {
 		const response = await fetch(
@@ -29,11 +31,16 @@ const ChannelInvitations = (props: any) => {
 				"Content-Type": "application/json",
 				Authorization: `Bearer ${authCtx.token}`
 			},
-		}
-		)
+		})
 		const data = await response.json();
-		setInvitations(data);
+		setInvitations(data.filter((invitation: any) => invitation.status === 'PENDING'));
 	}
+
+	useEffect(() => {
+		addListener("invitedToChannel", () => {
+			getInvitations();
+		});
+	});
 
 	const updateDemand = async (invitId: number, res: string) => {
 		try {
@@ -53,6 +60,7 @@ const ChannelInvitations = (props: any) => {
 		} catch (error) {
 			console.log("error", error);
 		}
+		if (res === 'ACCEPTED') { sendMessage("acceptedChannelInvite"); };
 		getInvitations();
 	}
 
@@ -80,7 +88,7 @@ const ChannelInvitations = (props: any) => {
 
 	return (
 		<>
-		{pendingInvitations.map((invit: any) => (
+		{invitations.map((invit: any) => (
 			<div key={invit.id} >
 				<div className="invitations-inlist">
 					<div className="invitation-name">

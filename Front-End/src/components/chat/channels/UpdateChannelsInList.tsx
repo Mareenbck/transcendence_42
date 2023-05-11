@@ -22,6 +22,12 @@ export default function UpdateChannelsInList(props: any) {
 	});
 
 	useEffect(() => {
+		addListener("newPriv", () => {
+			getAllConv(user);
+		});
+	});
+
+	useEffect(() => {
 		addListener("deleteChannel", data => {setAConversation(data)});
 	});
 
@@ -50,21 +56,20 @@ export default function UpdateChannelsInList(props: any) {
 	// 	});
 	// }, [AConversation]);
 
+	async function getAllConv(user: AuthContext) {
+		if (user) {
+			const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
+			const filteredConversations = response.filter(c =>
+				c.visibility === 'PUBLIC' || c.visibility === 'PWD_PROTECTED' ||
+				(c.visibility === 'PRIVATE' && c.participants.some(p => p.userId === user.userId))
+			);
+			setConversations(filteredConversations);
+		}
+	};
 
 	useEffect(() => {
-		async function getAllConv(user: AuthContext) {
-			if (user) {
-				const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
-				const filteredConversations = response.filter(c =>
-					c.visibility === 'PUBLIC' || c.visibility === 'PWD_PROTECTED' ||
-					(c.visibility === 'PRIVATE' && c.participants.some(p => p.userId === user.userId))
-				);
-				setConversations(filteredConversations);
-			}
-		};
 		getAllConv(user);
 	}, [AConversation]);
-
 
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
