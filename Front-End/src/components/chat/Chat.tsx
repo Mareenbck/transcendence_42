@@ -309,8 +309,10 @@ function Chat(props: any) {
 	}, [showUsersOnChannel]);
 
 	const handleTabChange = (newValue: string) => {
+		localStorage.setItem("activeTab", newValue);
 		setActiveTab(newValue);
 	  };
+
 
 	return (
 	  <>
