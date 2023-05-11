@@ -391,6 +391,12 @@ export class ChatroomService {
 		  await this.prisma.userOnChannel.deleteMany({
 			where: { channelId: id },
 		  });
+		  await this.prisma.chatroomInvitations.deleteMany({
+			where: { chatroomId: id },
+		  });
+		  await this.prisma.chatroomMessage.deleteMany({
+			where: { chatroomId: id },
+		  });
 
 		  const response = await this.prisma.chatroom.delete({
 			where: { id },
