@@ -141,6 +141,7 @@ export class ChatService {
 
     chatJoinedChannel: any = (channelId: number , socketId: string) => {
         this.server.to(socketId).emit('joinedChannelR2', channelId);
+        this.server.emit('joinedChannelR3');
 	};
 
     chatLeavedChannel: any = (channelId: number , socketId: string) => {

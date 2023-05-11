@@ -15,6 +15,7 @@ import { faCrown, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import Tooltip from '@mui/material/Tooltip';
 import Fetch from "../../interfaces/Fetch"
+import useSocket from '../../service/socket';
 
 
 export default function DialogSelect(props: { channelId:number, onSelect: (userId: string) => void, onInvite: (userId: string) => void, onAddAdmin: (userId: string) => void, type: string}) {
@@ -24,6 +25,7 @@ export default function DialogSelect(props: { channelId:number, onSelect: (userI
 	const friendCtx = React.useContext(FriendContext);
 	const [invitedUser, setInvitedUser] = React.useState<string | null>(''); // Ajouter une variable d'état pour stocker l'ID de l'utilisateur sélectionné
 	const [button, setButton] = React.useState<any>()
+	const [sendMessage, addListener] = useSocket()
 
 	const handleChange = (event: SelectChangeEvent) => {
 		setInvitedUser(event.target.value ? event.target.value : ''); // Mettre à jour l'ID de l'utilisateur sélectionné
@@ -54,7 +56,6 @@ export default function DialogSelect(props: { channelId:number, onSelect: (userI
 		handleClose(event, '');
 	}
 
-React.useEffect(() => {
 	const fetchUsers = async () => {
 		if (props.type === "invite-admin") 
 		{
@@ -71,8 +72,16 @@ React.useEffect(() => {
 			setFriends(updatedFriends.filter(u => +u.id !== +authCtx.userId));
 		}
 	}
+
+React.useEffect(() => {
 	fetchUsers();
 }, [props.channelId, props.type])
+
+React.useEffect(() => {
+	addListener("joinedChannelR3", () => {
+		fetchUsers();
+	});
+});
 
 	React.useEffect (() => {
 		// console.log("props.type--->")
