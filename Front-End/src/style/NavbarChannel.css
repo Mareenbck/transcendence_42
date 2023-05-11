@@ -108,3 +108,15 @@
 	flex-direction: row;
 	margin-top: -10px;
 }
+
+.fa-comment {
+	margin-left: 20.3rem;
+	font-size: 2rem;
+	margin-right: 3.3rem;
+}
+
+.fa-comment-left {
+	margin-left: 20rem;
+	font-size: 2rem;
+	margin-right: 1rem;
+}

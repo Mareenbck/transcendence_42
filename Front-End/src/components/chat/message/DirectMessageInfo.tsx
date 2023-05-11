@@ -51,7 +51,7 @@ const DirectMessageInfo = (props: any) => {
 	  }, [addListener]);
 
 	  useEffect(() => {
-		console.log("latestMessage changed:", latestMessage);
+		// console.log("latestMessage changed:", latestMessage);
 	  }, [latestMessage]);
 
 	  useEffect(() => {
