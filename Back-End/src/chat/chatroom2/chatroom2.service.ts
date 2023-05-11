@@ -203,19 +203,36 @@ export class ChatroomService {
 		const { channelId } = chatroom;
 		try {
 		  const result = await this.prisma.userOnChannel.deleteMany({
-			where: {
-				AND: [
-					{userId: userId},
-					{channelId: channelId},
-				]
-			},
-		  });
-		//   console.log("result ===", result);
-		  return result;
+				where: {
+					AND: [
+						{userId: userId},
+						{channelId: channelId},
+					]
+				},
+			});
+		  // delete invitation if chatroom PRIVATE
+			const chatRoomX: Chatroom = await this.findOne(channelId);
+			if (chatRoomX.visibility === "PRIVATE")
+			{ 
+				this.deleteInvitationsForLeftRooms(channelId, userId)
+			}
+		return result;
 		} catch (err) {
 		  console.log(err);
 		}
 	  }
+
+	async deleteInvitationsForLeftRooms(channelId, invitedId)
+	{
+		await this.prisma.chatroomInvitations.deleteMany({
+			where: { 
+				AND:[
+					{chatroomId: +channelId},
+					{receiverId: +invitedId},
+				]
+			},
+		});
+	}
 
 	async updatePassword(channelId: number, newPasswordHash: any): Promise<Chatroom> {
 		// const chatroom = await this.prisma.chatroom.findOne({ where: { id: channelId } });
