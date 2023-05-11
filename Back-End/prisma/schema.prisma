@@ -138,6 +138,7 @@ enum UserChannelVisibility {
 enum UserRoleInChannel {
 	USER
 	ADMIN
+	OWNER
 }
 
 enum UserStatusOnChannel {

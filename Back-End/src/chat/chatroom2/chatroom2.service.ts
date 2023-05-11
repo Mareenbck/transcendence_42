@@ -48,7 +48,7 @@ export class ChatroomService {
         data: {
           channelId: newChannel.id,
           userId: userId,
-          role: "ADMIN"
+          role: "OWNER"
         }
       });
       return newChannel;
