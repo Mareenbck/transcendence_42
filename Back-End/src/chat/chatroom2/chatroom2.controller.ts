@@ -60,7 +60,7 @@ export class Chatroom2Controller {
 @UseGuards(JwtGuard)
 async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: string) {
   const response = await this.chatRoomService.addAdmin(parseInt(channelId), parseInt(userId));
-  console.log("response in controller", response);
+//   console.log("response in controller", response);
   return response;
 }
 

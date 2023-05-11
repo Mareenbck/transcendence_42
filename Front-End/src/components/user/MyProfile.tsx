@@ -15,7 +15,7 @@ const MyProfile = (props: any) => {
 
 	return (
 		<>
-			<div className={style.mainPos}>
+			<div className="contain-page">
 				<SideBar title="Profile" />
 				<div className='container-profile'>
 					<div className='achievement-card'>

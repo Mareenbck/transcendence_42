@@ -17,7 +17,7 @@ const Sidebar = (props: any) => {
         { name: "Game", path: "/game" },
         { name: "Chat", path: "/chat/message" },
         { name: "Scores", path: "/scores" },
-        { name: "Show users", path: `/friends` },
+        // { name: "Show users", path: `/friends` },
       ];
 
       useEffect(() => {

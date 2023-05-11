@@ -3,6 +3,7 @@ import { DirMessService } from './dir-mess.service';
 import { DirMessDto } from './dir-mess.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtGuard} from 'src/auth/guard';
+import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
 
 @Controller('dir-mess')
 export class DirMessController {
@@ -29,6 +30,13 @@ export class DirMessController {
     {   throw new BadRequestException('Undefined user ID'); }
     return this.dirMessService.findSome(me, friend);
    };
+
+	@Get('/getMessages')
+	@UseGuards(JwtGuard)
+	async UserWithDirectMessages(@GetCurrentUserId() userId: string) {
+		const latestmessage = await this.dirMessService.getLastestMessage(parseInt(userId))
+		return latestmessage;
+	};
 }
 
 

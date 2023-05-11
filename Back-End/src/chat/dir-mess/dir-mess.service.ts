@@ -29,4 +29,27 @@ export class DirMessService {
       }
     });
   }
+
+	async getLastestMessage(userId: number) {
+	const user = await this.prisma.user.findUnique({
+		where: { id: userId },
+		include: {
+		dirMessReceived: {
+			orderBy: { createdAt: 'desc' },
+			take: 1,
+			include: { userA: true, userR: true },
+		},
+		dirMessEmited: {
+			orderBy: { createdAt: 'desc' },
+			take: 1,
+			include: { userA: true, userR: true },
+		},
+		},
+	});
+
+	return user;
+	};
 }
+
+
+

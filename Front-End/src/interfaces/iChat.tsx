@@ -41,6 +41,7 @@ export interface UserChat {
   blockedTo: UserChat[];
   blockedFrom: UserChat[];
 	dirMessEmited: DirectMessage[];
+  dirMessReceived: DirectMessage[];
 };
 
 export interface UserScore {

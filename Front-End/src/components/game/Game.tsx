@@ -33,17 +33,17 @@ function Game() {
         {   winner: null,
             playerR: {} as UserGame,
             playerL: {} as UserGame,
-            status: "null"} 
-    );  
+            status: "null"}
+    );
     const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
     const [curroom, setCurRoom] = useState<number>(-1);
-   
+
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
     useEffect(() => {
         const handleGameRooms = (games: gamesList[]) => {
             if(curroom == -1){
                 const index = games.findIndex(room => room.playerL.username == user.username || room.playerR.username == user.username);
-                if (index != -1) { 
+                if (index != -1) {
                     const roomN = games[index].roomN;
                     setCurRoom(roomN);
                 }
@@ -51,7 +51,7 @@ function Game() {
             setOnlinePlayers(games);
         }
         addListener("gameRooms", handleGameRooms);
-        sendMessage('listRooms', {} as any);      
+        sendMessage('listRooms', {} as any);
     }, []);
 
 //event: entre to game's page
@@ -73,10 +73,10 @@ function Game() {
                 sendMessage("exitGame", {status: gamestatus.status } as any);
             }
         };
-    
+
         // Add the event listener when the component mounts
         window.addEventListener("popstate", handleBackButton);
-    
+
         // Remove the event listener when the component unmounts
         return () => {
             if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
@@ -86,7 +86,7 @@ function Game() {
         };
       }, []);
 
-    
+
     const getCurrentGame = (roomN: number): React.JSX.Element | undefined => {
         if (games){
             const index = games.findIndex((game:gamesList) => game.roomN == roomN);
@@ -102,7 +102,7 @@ function Game() {
                                                             borderBlockColor:"black" } } >
                         <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
                         <p className='vs'> VS</p>
-                    
+
                         <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
                     </div>
                     </>
@@ -127,7 +127,7 @@ function Game() {
     //         }
     //     };
     // }, []);
-     
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 // onKeyDown handler function
@@ -145,7 +145,7 @@ function Game() {
     useEffect(() => {
 // Attach the event listener to the window object
         window.addEventListener('keydown', onkeyPress);
-        
+
         return () => {
         // Remove the event listener when the component unmounts
             window.removeEventListener('keydown', onkeyPress);
@@ -292,9 +292,9 @@ useEffect(() => {
 
 //  const handleLinkClick = (path: string) => {
 //     setActiveLinkk(path);
-//   };   
-  
-//////////////////////////////////////////////////////////////////////////////  
+//   };
+
+//////////////////////////////////////////////////////////////////////////////
 
     return (
         <React.Fragment key={user.userId}>
@@ -302,12 +302,12 @@ useEffect(() => {
         {" "}
         <div className="containerGame">
             <div className="gameSideL">
-                
+
                 <div className="title">
                     <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
                     <h4>{user.username}</h4>
                 </div>
-                
+
                 <SelectColor changColorToRed={changColorToRed}
                             changColorToBlue={changColorToBlue}
                             changColorToGreen={changColorToGreen}
@@ -331,26 +331,26 @@ useEffect(() => {
                             <ExitToAppIcon /> Exit
                         </button>
                     </Link>
-                                
+
                 </div>
-        
+
             </div>
 
             <div className="gameBox">
                 <div className="gameBoxW">
-                    
+
                     {(!gamestatus.winner) ? (
                     <>
                         {/* <div className='wrapWaiting'>*/}
                             {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
-                        
-                            { (gamestatus.status == 'watch' || gamestatus.status == 'game') ? 
+
+                            { (gamestatus.status == 'watch' || gamestatus.status == 'game') ?
                                 (getCurrentGame(curroom))
                                 // (<HeaderGame games = {games} room = {curroom}></HeaderGame>)
-                                :  
+                                :
                                 ( <h2 className='gametitle'>Game </h2>)
-                            } 
-                            
+                            }
+
                             {(gamestatus.status == 'waiting') ?
                         (
                             <div className='wrapWaiting'>
@@ -360,7 +360,7 @@ useEffect(() => {
                                 </div>
                             </div>
                         ):(
-                            <div>                   
+                            <div>
                                 {ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
                                 {ShowColorModal && <ColorModal handelClose={handleClose}  changColorToRed={changColorToRed}
                                                                                             changColorToBlue={changColorToBlue}
@@ -368,7 +368,7 @@ useEffect(() => {
                                                                                             changColorToBlack={changColorToBlack}
                                                                                             />}
                                 { !ShowCamva && <Canvas gamestate={gamestate} gameinit={gameinit} backColorGame={backColorGame}  />}
-                                
+
                             </div>
                         )}
                     </>
@@ -380,16 +380,16 @@ useEffect(() => {
                                                                     borderBlockColor:"black" } } >
                                 <PlayerOne  style={{backgroundColor: "white"}} player={gamestatus.playerL} winner={gamestatus.winner} sizeAvatar={"l"} />
                                 <p className='vs'> VS</p>
-                            
+
                                 <PlayerTwo  player={gamestatus.playerR} winner={gamestatus.winner}  sizeAvatar={"l"} />
                             </div>
                         {/* </section> */}
 
-                        <section className='sctWin'>             
+                        <section className='sctWin'>
                             <h1> WINNER </h1>
-                            <div className='CapWinner'>    
+                            <div className='CapWinner'>
                                 <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
-                                
+
                                 <BrightnessLowIcon id = "win" className='star' />
                             </div>
                         </section>
@@ -418,9 +418,9 @@ useEffect(() => {
                 </div>
             </div>
         </div>
-       
+
     </React.Fragment>
     )
 }
-                                   
+
 export default Game;

@@ -6,7 +6,7 @@ import '../../style/Chat.css'
 import '../../style/Friends.css';
 import React from 'react';
 import PopupChallenge from './PopupChallenge';
-import { UserChat, ChatRoom, OnlineU} from "../../interfaces/iChat";
+import { UserChat, ChatRoom, OnlineU, DirectMessage} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import { Tab } from '@mui/material';
 import { Tabs } from '@mui/material';
@@ -37,6 +37,7 @@ function Chat(props: any) {
   const [sendMessage, addListener] = useSocket()
   const [blockForMe, setBlockForMe] = useState<number | null>();
   const [unblockForMe, setUnblockForMe] = useState<number | null>();
+  const [AMessageD, setAMessageD] = useState<DirectMessage | null> ();
 
 
 ///////////////////////////////////////////////////////////
@@ -117,7 +118,7 @@ function Chat(props: any) {
 
   async function getAllUsersWithBlocked(token: string) {
     const response = await Fetch.fetch(token, "GET", `users\/block\/users`);
-	const updatedFriends = await Promise.all(response.map(async (friend: UserChat) => {
+	  const updatedFriends = await Promise.all(response.map(async (friend: UserChat) => {
 		const avatar = await friendCtx.fetchAvatar(friend.id);
 		return { ...friend, avatar };
 	}));
@@ -366,21 +367,21 @@ function Chat(props: any) {
 	const [isMuted, setIsMuted] = useState(false);
   const [hide, setIsHide] = useState(false);
 
- 
-	
+
+
 	const handleShowList = () => {
 	  setShowUsersOnChannel(false);
 	  setShowInteractiveList(true);
 	}
-  
-	
+
+
 
 	const handleShowUserList = () => {
 	  setShowUsersOnChannel(false);
 	  setShowInteractiveList(false);
 	  setShowUserList(true);
 	}
-	
+
 	useEffect(() => {
 	  addListener("showUsersList", data => setUsersList(data));
 	  if (!showUsersOnChannel) {
@@ -426,10 +427,10 @@ function Chat(props: any) {
 			<div className="chatBoxW">
 			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 			  {currentChat ? (
-          <CurrentChannel 
-          currentChatroom={currentChat} 
-          allUsers={allUsers} 
-          isJoined={isJoined} 
+          <CurrentChannel
+          currentChatroom={currentChat}
+          allUsers={allUsers}
+          isJoined={isJoined}
           setIsJoined={setIsJoined}
           setShowList={handleShowList}
           setUsersList={handleShowUserList}
@@ -437,7 +438,7 @@ function Chat(props: any) {
           setToMute={props.setToMute}
           // mutedParticipants={props.mutedParticipants}
         />
-  
+
 			  ) : currentDirect ? (
 				  <CurrentDirectMessages
 					currentDirect={currentDirect}
@@ -473,7 +474,7 @@ function Chat(props: any) {
           setToMute={props.setToMute}
 				/>
 			)}
-			
+
 	</div>
     </>
   )

@@ -123,13 +123,18 @@
 	padding-left: 15px;
 }
 
-.users-list.MuiListItem-root {
+.users-list.MuiListItem-root,
+.users-list-blocked.MuiListItem-root {
 	width: 112%;
 	margin-left: -24px;
 	display: flex;
 	justify-content: space-between;
 	height: 62px;
 }
+
+.users-list-blocked .MuiListItemAvatar-root {
+    filter: grayscale(80%);
+  }
 
 .btn-inlist {
 	display: flex;

@@ -19,7 +19,7 @@ const racket_xboard = GameParams.RACKET_XBOARD;
 const racketSpeedY = GameParams.RACKET_SPEED_Y;
 const ballR = GameParams.BALL_RADIUS;
 // si tu changes MAX_SCORE il faut faire les changements dans: ./Front-End/src/components/scores/Scores.tsx et ./Front-End/src/components/scores/Table.tsx
-const MAX_SCORE = 3; 
+const MAX_SCORE = 3;
 const period = GameParams.PERIOD
 
 
@@ -49,12 +49,12 @@ export class GameRoom {
 	private ball: ball = {x: width/2, y: height/2};
 	private rackets_ypos : [number, number] = [0, 0];
 	private rackets_acel : [number, number] = [0, 0];
-  
+
 	private server: Server;
 	private room: string;
 	public roomN: number;
 	private gameService: GameService;
-	public userSockets: UsersSockets; 
+	public userSockets: UsersSockets;
 	public isrunning: boolean = false;
 
 
@@ -64,7 +64,7 @@ export class GameRoom {
 		gameService: GameService,
 		userSockets: UsersSockets,
 	) {
-console.log("constructor Class.game");
+// console.log("constructor Class.game");
 		this.server = server;
 		this.roomN = roomN;
 		this.room = `room${roomN}`;
@@ -88,7 +88,7 @@ console.log("constructor Class.game");
 
 // function: initialization of game during the ferst connection to the game
 	public init(player: UserDto){
-		this.userSockets.emitToId(player.id, 'init-pong', { 
+		this.userSockets.emitToId(player.id, 'init-pong', {
 			table_width: width,
 			table_height: height,
 			racket_width: racket_width,
@@ -186,7 +186,7 @@ console.log("constructor Class.game");
 				this.emit2all();
 			}
 		});
-		  
+
 		this.userSockets.onFromId(this.playerL.user.id,'move', (message: string) => {
 			if (message == 'up') {
 				if (this.playerL.racket.y > 0) {
@@ -227,7 +227,7 @@ console.log("constructor Class.game");
 		this.status.playerL = (this.playerL.user == this.status.winner ? this.status.winner : this.playerL.user);
 		this.status.playerR = (this.playerR.user == this.status.winner ? this.status.winner : this.playerR.user);
 		console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)
-		
+
 		this.server.to(this.room).emit('status', { winner: this.status.winner, playerR:this.status.playerL, playerL: this.status.playerR, status: 'winner',});
 
 		// leave room
@@ -252,12 +252,12 @@ console.log("game.class.run");
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
 			//score MAX - change here
-			if ((this.playerL.score >= MAX_SCORE || this.playerR.score >= MAX_SCORE)){ 
+			if ((this.playerL.score >= MAX_SCORE || this.playerR.score >= MAX_SCORE)){
 				clearInterval(this.interval);
 				this.status.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
 //////////////////// to DB /////////////////////////
 				this.save_results2DB();
-////////////////////////////////////////////////////		
+////////////////////////////////////////////////////
 				this.destroy_game();
 				this.interval = null;
 			}

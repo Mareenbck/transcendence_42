@@ -9,7 +9,7 @@ const TitleCard = (props: any) => {
 
 	useEffect(() => {
 		if (props.type === 'showFriends') {
-			setContent(<FriendsDemands token={props.authCtx.token} authCtx={props.authCtx}/>)
+			setContent(<FriendsDemands token={props.authCtx.token} authCtx={props.authCtx} friendCtx={props.friendCtx}/>)
 		}
 	}, [props.type]);
 

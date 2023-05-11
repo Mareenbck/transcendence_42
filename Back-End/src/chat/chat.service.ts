@@ -43,7 +43,7 @@ export class ChatService {
     // SENDING MESSAGES
     sendRoomMessage:any = (authorId: number, chatroomId: number, content: string) => {
         const roomU = this.roomUsers.filter( room => +room.roomId === +chatroomId);
-        console.log("room message", chatroomId)
+        // console.log("room message", chatroomId)
         if (roomU.length > 1) {
             for(const room of roomU) {
                 this.server.to(room.socketId).emit("getMessageRoom", {
@@ -68,7 +68,7 @@ export class ChatService {
             const usersDirectForReceiver = await this.userService.getUsersWithMessages(receiver);
             if (!usersDirectForReceiver || !(usersDirectForReceiver.find(u => +u.id === +author)))
             {
-                this.server.to(user.socketId).emit("getNewDirectUser", author);
+                this.server.to(user.socketId).emit("getNewDirectUser", receiver);
             };
         }
         if (a && user) {
@@ -76,7 +76,7 @@ export class ChatService {
             if (!usersDirectForAuthor || !(usersDirectForAuthor.find(u => +u.id === +author)))
             {
                 const a = this.getUser(author);
-                this.server.to(a.socketId).emit("getNewDirectUser", receiver)
+                this.server.to(a.socketId).emit("getNewDirectUser", author)
             };
         }
     };
@@ -145,13 +145,13 @@ export class ChatService {
         // const newList = await this.chatroomService.getParticipants(data.channelId);
 	    // this.server.emit('joinedChannelR', newList);
         this.server.to(socketId).emit('joinedChannelR2', channelId);
-	}  
+	}
 
     chatLeavedChannel: any = (channelId: number , socketId: string) => {
         console.log("leave kkkkkkkkk", channelId, "szzzzz", socketId )
         this.server.to(socketId).emit('leavedChannel', channelId);
-    }  
-    
+    }
+
 
 
 }

@@ -19,25 +19,25 @@ body{
 	width: 100vh;
 }
 
-
+/*
 .container-menu {
 	display: flex;
 	flex-direction: column;
     margin: 68px;
-}
+} */
 
 .card-wrapper {
     grid-template-columns: repeat(3, 1fr);
     grid-column: span 2;
 }
-
+/*
 .container-menu h2 {
 	font-style: normal;
 	font-weight: 900;
 	font-size: 48px;
 	line-height: 70px;
 	color: #54429F;
-}
+} */
 
 .card-option
 {
@@ -49,7 +49,7 @@ body{
     padding: 1rem;
     align-items: center;
     border: 3.19377px solid #000000;
-    box-shadow: 3.65002px 3.65002px 0px #000000; 
+    box-shadow: 3.65002px 3.65002px 0px #000000;
     border-radius: 20px;
 }
 
@@ -66,7 +66,7 @@ body{
     line-height: 40px;
     align-self: center;
     margin-right: 1rem;
-  
+
 }
 
 @media (max-width: 1100px) {
@@ -81,9 +81,9 @@ body{
         line-height: 30px;
         align-self: center;
         margin-right: 1rem;
-        
+
     }
-    
+
 }
 
 .poslogo{
@@ -108,7 +108,7 @@ body{
     width: 50px;
     height: 50px;
     /* border-radius: %;	 */
-} 
+}
 
 /* @media (max-width: 1100px) {
     .posColor__circlebtn{
@@ -118,6 +118,6 @@ body{
         padding: 0;
         width: 30px;
         height: 40px;
-        border-radius: 100%;  
+        border-radius: 100%;
     }
 } */
