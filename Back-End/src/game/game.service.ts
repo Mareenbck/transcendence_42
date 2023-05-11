@@ -221,7 +221,10 @@ console.log("105 roomArray", this.roomArray.length);
 //DataBase
 /////////////////////////////////////
 
-async create({playerOneId, playerTwoId, winnerId, score1, score2}) {//+async
+async create({playerOneId, playerTwoId, winnerId, score1, score2}) {
+	await this.userService.updateAchievement(parseInt(playerOneId), 'Rookie')
+	await this.userService.updateAchievement(parseInt(playerTwoId), 'Rookie')
+	//+async
 	return this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
 }
 

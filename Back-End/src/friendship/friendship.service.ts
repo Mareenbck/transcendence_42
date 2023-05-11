@@ -1,10 +1,9 @@
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, Friendship } from '@prisma/client';
 import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import path = require('path');
 import { Response } from 'express';
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 import UsersSockets from "src/gateway/socket.class";
 
 
