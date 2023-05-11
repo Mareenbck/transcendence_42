@@ -48,7 +48,7 @@ const UsersChat = (props: any) => {
 	return (
 		<>
 		<div className='contain-users'>
-		<PersonnalInfoChat />
+		<PersonnalInfoChat style="chat"/>
 			<UsersAction title="Online" users={onlineFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
 			<UsersAction title="Offline" users={offlineFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
 			<UsersAction title="Playing" users={playingFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>

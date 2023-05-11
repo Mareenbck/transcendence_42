@@ -6,7 +6,7 @@ import '../../style/Chat.css'
 import '../../style/Friends.css';
 import React from 'react';
 import PopupChallenge from './PopupChallenge';
-import { UserChat, ChatRoom, OnlineU, DirectMessage} from "../../interfaces/iChat";
+import { UserChat, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import { Tab } from '@mui/material';
 import { Tabs } from '@mui/material';
@@ -18,9 +18,6 @@ import UsersWithDirectMessage from './message/usersWithMessages';
 import CurrentDirectMessages from './message/CurrentDirectMessages';
 import UsersChat from './message/UsersChat';
 import { FriendContext } from '../../store/FriendshipContext';
-import PersonnalInfoChat from './PersonnalInfoChat';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 
 
 function Chat(props: any) {
@@ -40,21 +37,11 @@ function Chat(props: any) {
   const [sendMessage, addListener] = useSocket()
   const [blockForMe, setBlockForMe] = useState<number | null>();
   const [unblockForMe, setUnblockForMe] = useState<number | null>();
-  const [AMessageD, setAMessageD] = useState<DirectMessage | null> ();
 
 
 ///////////////////////////////////////////////////////////
 // Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
 ///////////////////////////////////////////////////////////
-
-//   useEffect(() => {
-//     addListener("getMessageDirect", (data)=> setAMessageD({
-//       content: data.content,
-//       author: data.author,
-//       receiver: data.receiver,
-//       createdAt: new Date(Date.now()),
-//     }));
-//   });
 
   useEffect(() => {
     sendMessage("addUserChat", user as any);
@@ -103,18 +90,6 @@ function Chat(props: any) {
     });
   });
 
-//   useEffect(() => {
-//     AMessageD && currentDirect && +currentDirect?.id === +AMessageD.author &&
-//     setMessagesD(prev => {
-//       const isDuplicate = prev.some(message => (message.createdAt === AMessageD.createdAt && message.content === AMessageD.content));
-//       if (!isDuplicate) {
-//         return [...prev, AMessageD];
-//       }
-//       return prev;
-//     });
-//   },[AMessageD, currentDirect])
-
-
 ////////////////////////////////////////////////
 // Partie II : va chercher les infos de la base de donnée
 ////////////////////////////////////////////////
@@ -132,19 +107,6 @@ function Chat(props: any) {
   useEffect(() => {
     getAllUsersWithBlocked(user.token);
   }, []);
-
-//   async function getDirMess() {
-//     try {
-//       setMessagesD(await Fetch.fetch(user.token, "GET", `dir-mess`, id, currentDirect?.id));
-//     } catch(err) {
-//       console.log(err);
-//     }
-//   };
-//   useEffect(() => {
-//     if (currentDirect)
-//     { getDirMess(); }
-//   }, [currentDirect]);
-
 
 ////////////////////////////////////////////////
 // Partie III : Gestion Block / unblock / I am blocked ...
@@ -284,14 +246,6 @@ function Chat(props: any) {
     return (null);
   };
 
-//   const amIBlocked = (userXid: number): string => {
-//     const u = getUser(+id)?.blockedFrom.find((u: UserChat) => +u.id === +userXid);
-//     if (u)
-//       { return "chatOnlineNotFriend"; }
-//     else
-//       {return "chatOnlineFriend";}
-//   };
-
   function isHeBlocked(userXid: number): true | undefined {
     const i = getUser(userXid);
     if (i && i.blockedFrom && !i?.blockedFrom.find((u: UserChat) => (+id === +u?.id))) {
@@ -320,55 +274,21 @@ function Chat(props: any) {
     } as any);
   }
 
-
-////////////////////////////////////////////////
-// Partie V : handle submit...
-////////////////////////////////////////////////
-
-
-// Direct message
-//   const handleSubmitD = async (e: FormEvent)=> {
-//     e.preventDefault();
-//     if (currentDirect?.id)
-//     {
-//       const messageD = {
-//       author: +id,
-//       content: newMessageD,
-//       receiver: currentDirect?.id,
-//       };
-//         sendMessage("sendMessageDirect", {
-//         author: +id,
-//         receiver: +currentDirect?.id,
-//         content: newMessageD,
-//       } as any)
-//       try {
-//         const res2 = await MessageReq.postDirMess(user, messageD);
-//         setMessagesD([...messagesD, res2]);
-//         setNewMessageD("");
-//       } catch(err) {console.log(err)}
-//     }
-//   }
-
-
 ////////////////////////////////////////////////
 // Partie VI : Scroll to view
 ////////////////////////////////////////////////
-
-// useEffect(() => {
-//   scrollRef.current?.scrollIntoView({behavior: "smooth"})
-// }, [messagesD]);
-
-
-	const [activeTab, setActiveTab] = useState<string>("Direct messages")
+	// const [activeTab, setActiveTab] = useState<string>("")
+	const [activeTab, setActiveTab] = useState<string>(() => {
+		const storedValue = localStorage.getItem("activeTab");
+		return storedValue !== null ? storedValue : "Direct messages";
+	  });
 	const [isJoined, setIsJoined] = useState(false);
 	const [isChannelClicked, setIsChannelClicked] = useState(false);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
 	const [showInteractiveList, setShowInteractiveList] = useState<boolean>(false);
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
-  const [unMutedUsers, setUnMutedUsers] = useState<string[]>([]);
-	const [isMuted, setIsMuted] = useState(false);
-  const [hide, setIsHide] = useState(false);
+	const [unMutedUsers, setUnMutedUsers] = useState<string[]>([]);
 
 	const handleShowList = () => {
 	  setShowUsersOnChannel(false);
@@ -388,25 +308,9 @@ function Chat(props: any) {
 	  }
 	}, [showUsersOnChannel]);
 
-
-	// console.log("muted", props.mutedParticipants)
-
-	const theme = createTheme();
-
-	theme.typography.h3 = {
-		// fontSize: '8rem',
-		'@media (min-width:600px)': {
-		// fontSize: '8rem',
-		color: '#699BF7',
-		marginTop: '3rem',
-		marginBottom: '2.5rem',
-		// marginLeft: '2.5rem',
-	},
-		[theme.breakpoints.up('md')]: {
-		fontSize: '3rem',
-	},
-	};
-
+	const handleTabChange = (newValue: string) => {
+		setActiveTab(newValue);
+	  };
 
 	return (
 	  <>
@@ -414,12 +318,12 @@ function Chat(props: any) {
 		<div className="messenger">
 		  <div className="chatMenu">
 			<Tabs
-			  value={activeTab}
-			  onChange={(e: any, newValue: string) => setActiveTab(newValue)}
-			  aria-label="icon position tabs example"
-			  >
-			  <Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
-			  <Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
+				value={activeTab}
+				onChange={(e: any, newValue: string) => handleTabChange(newValue)}
+				aria-label="icon position tabs example"
+				>
+				<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
+				<Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
 			</Tabs>
 			{activeTab === 'Channels' && (
 			  <UpdateChannelsInList
@@ -442,38 +346,32 @@ function Chat(props: any) {
 			<div className="chatBoxW">
 			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
 			  {currentChat ? (
-          <CurrentChannel
-          currentChatroom={currentChat}
-          allUsers={allUsers}
-          isJoined={isJoined}
-          setIsJoined={setIsJoined}
-          setShowList={handleShowList}
-          setUsersList={handleShowUserList}
-          setUnMutedUsers={setUnMutedUsers}
-          setToMute={props.setToMute}
-          // mutedParticipants={props.mutedParticipants}
-        />
-
-			  ) : currentDirect ? (
-				  <CurrentDirectMessages
-					currentDirect={currentDirect}
-					allUsers={allUsers}
-					setToBlock={setToBlock}
-					inviteGame={inviteGame}
-					/>
-			  ) : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
-			  }
-			</div>
-		  </div>
-      {/* <div className="navbar-welcome">
-	  <ThemeProvider theme={theme}>
-	  <i className="fa-solid fa-comment-left"></i>
-				<Typography variant="h3">Welcome to the chat
-				</Typography>
-				<i className="fa-solid fa-comment"></i>
-			</ThemeProvider>
-      </div> */}
-
+				<CurrentChannel
+				currentChatroom={currentChat}
+				allUsers={allUsers}
+				isJoined={isJoined}
+				setIsJoined={setIsJoined}
+				setShowList={handleShowList}
+				setUsersList={handleShowUserList}
+				setUnMutedUsers={setUnMutedUsers}
+				setToMute={props.setToMute}
+				// mutedParticipants={props.mutedParticipants}
+				/>
+			) : currentDirect ? (
+				<CurrentDirectMessages
+				currentDirect={currentDirect}
+				allUsers={allUsers}
+				setToBlock={setToBlock}
+				inviteGame={inviteGame}
+				/>
+			) : (
+				<div className='home-chat'>
+					<div className="navbar-welcome"></div>
+					<div className='home-msg'>Open a conversation</div>
+				</div>
+			)}
+		</div>
+		</div>
 			{(!currentChat || showUserList) && (
 				<UsersChat
 					isHeBlocked={isHeBlocked}

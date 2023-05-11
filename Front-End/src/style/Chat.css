@@ -384,7 +384,7 @@
 	height: 100%;
 }
 
-.border-perso {
+.border-perso-chat {
 	height: 86px;
 	border-bottom: 1px solid rgb(211, 211, 211);
 	margin-left: -20px;
@@ -392,11 +392,32 @@
 
 }
 
+.border-perso-channel {
+  height: 91px;
+  border-bottom: 1px solid rgb(211, 211, 211);
+  margin-top: 10px;
+}
+
 .navbar-welcome {
 	display: flex;
-	height: 100px;
+	height: 101px;
+  width: 100%;
 	padding: 10px;
 	background-color: #F0F0F0;
 	border-bottom: 1px solid #80808038;
 	align-items: center;
+}
+
+.home-chat {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-msg {
+    font-size: 17px;
+    font-family: 'Noto Sans', sans-serif;
+    margin-top: 20pc;
+    color: #808080a6;
+    font-weight: 300;
+    letter-spacing: 6px;
 }
