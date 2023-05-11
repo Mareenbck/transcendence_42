@@ -228,7 +228,7 @@ export class GameRoom {
 		this.status.playerR = (this.playerR.user == this.status.winner ? this.status.winner : this.playerR.user);
 		console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)
 
-		this.server.to(this.room).emit('status', { winner: this.status.winner, playerR:this.status.playerL, playerL: this.status.playerR, status: 'winner',});
+		this.server.to(this.room).emit('status', { winner: this.status.winner, playerR:this.status.playerR, playerL: this.status.playerL, status: 'winner',});
 
 		// leave room
 console.log("leave room");

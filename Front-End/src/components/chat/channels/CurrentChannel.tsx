@@ -61,7 +61,8 @@ export default function CurrentChannel(props: any) {
 	  }, [participants, authCtx.userId]);
 
 	useEffect(() => {
-		addListener('toMute', data => setParticipants(data))
+		addListener('toMute', data => 
+			setParticipants(data))
 	}, [addListener])
 
 	const getUser = (userId: number): UserChat | null => {
@@ -88,6 +89,10 @@ export default function CurrentChannel(props: any) {
 		}
 	}, [AMessageChat, currentChatroom])
 
+	useEffect(() => {
+		setParticipants(currentChatroom.participants);
+	}, [currentChatroom]);
+
 	async function getMess() {
 		try {
 			if (currentChatroom) {
@@ -102,7 +107,6 @@ export default function CurrentChannel(props: any) {
 			console.log(err);
 		}
 	};
-
 
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => setAMessageChat({
@@ -151,8 +155,6 @@ export default function CurrentChannel(props: any) {
 		props.setUsersList(true);
 		setIsJoined(false);
 	};
-
-
 
 	return (
 		<>

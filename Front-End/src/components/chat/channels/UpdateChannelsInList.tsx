@@ -33,28 +33,9 @@ export default function UpdateChannelsInList(props: any) {
 
 	useEffect(() => {
 		addListener('leavedChannel', (channelId: number) => {
-			const updatedConversations = conversations.map((conversation) => {
-				if (+conversation.id === +channelId && conversation.visibility == "PRIVATE") {
-					return null;
-				} else if (+conversation.id === +channelId) {
-					return {
-						...conversation,
-						participants: conversation.participants.filter(p => +p.userId !== +user.userId)
-				  	};
-				} else {
-				  return conversation;
-				}
-			});
-			setConversations(updatedConversations.filter(conversation => conversation !== null));
+			getAllConv(user);
 		});
 	});
-
-	// useEffect(() => {
-	// 	AConversation && setConversations(prev => {
-	// 		const conversationExists = prev.find((conversation: { id: number; }) => conversation.id === AConversation.id);
-	// 		if (conversationExists) { return prev;} else {return [AConversation, ...prev];}
-	// 	});
-	// }, [AConversation]);
 
 	async function getAllConv(user: AuthContext) {
 		if (user) {
@@ -78,7 +59,6 @@ export default function UpdateChannelsInList(props: any) {
 	const handleJoinChannel = () => {
 		props.showParticipantsList(true);
 	};
-
 
 	return (
 		<div className="conversation-list">

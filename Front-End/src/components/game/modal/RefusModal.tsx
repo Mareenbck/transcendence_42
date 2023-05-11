@@ -15,7 +15,7 @@ const Modal = (props:any) => {
 					<h2>Sorry, not right now</h2>
 				</header>
           <footer className='actions'>  
-            <Link to="/menu">
+            <Link to="/chat/message">
                   <button className="btnn" onClick={props.handelClose}>Close</button>
             </Link>   
           </footer>
