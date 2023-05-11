@@ -524,7 +524,7 @@ function Chat(props: any) {
 				/>
 			)}
 
-	</div>
+	{/* </div> */}
     </>
   )
 }
