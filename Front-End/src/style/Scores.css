@@ -39,9 +39,9 @@ body{
     position: fixed;
     margin: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5rem;
+    /* justify-content:first baseline;
+    /* align-items: center;*/
+    gap: 5rem; 
     
 
     /* flex-direction: column-reverse; */
