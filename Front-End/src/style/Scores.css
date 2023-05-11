@@ -33,13 +33,25 @@ body{
 }
 
 .pos {
+    margin: 0;
+    padding: 0;
+    padding-left: 5rem;
+    position: fixed;
+    margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10rem;
-    display: flex;
-    align-items: flex-end;
+    gap: 5rem;
+    
+
     /* flex-direction: column-reverse; */
+  }
+
+  .pos .card-wrapper{
+    margin: 0;
+    padding: 0;
+    height: fit-content;
+    position: relative;
   }
 
 
