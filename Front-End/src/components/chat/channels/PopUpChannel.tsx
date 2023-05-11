@@ -34,6 +34,9 @@ function PopUp(props: any) {
 
         let idConv: number | undefined = undefined;
         if (channelName === "") { return; }
+        // if (isProtected && !passwordInputRef.current?.value) {
+            // return; // Arrêter l'exécution de la fonction si le canal est protégé et aucun mot de passe n'est saisi
+        // }
         const newConv = {
             name: channelName,
             isPublic: isPublic,
@@ -59,6 +62,10 @@ function PopUp(props: any) {
     const createAndClose = async (e:FormEvent) => {
         try {
             await createNewChannel(e);
+            // if (isProtected && !passwordInputRef.current?.value) {
+            //     return;
+            // }
+
             setShowPopUp(false);
             props.onClick();
         } catch (err) { console.log(err);}

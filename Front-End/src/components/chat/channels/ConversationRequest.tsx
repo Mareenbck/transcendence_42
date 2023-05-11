@@ -5,6 +5,7 @@ import AuthContext from '../../store/AuthContext';
 // static async postRoom(user, newConv) : Promise<ConversationDf[]> {
 
 export class ConversationReq {
+
   static async getAll(user: AuthContext) {
     try {
       const resp = await fetch("http://localhost:3000/chatroom2",

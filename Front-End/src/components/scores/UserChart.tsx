@@ -4,16 +4,15 @@ import { Link, useLocation } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 
 
-const UserChart= (props: any) => {
 
-    const h = (props.h) * (100) / 18
+
+const UserChart= (props: any) => {
 
     return (
         <div className="combPos">
-            <div className="cadre" style={{height: h}}>
-               
+             <div className="cadre" >
                 <p>{props.userName} </p>
-                <p>{props.h}</p>
+                <p>{props.h} pts</p>
             </div>
 
         </div> 

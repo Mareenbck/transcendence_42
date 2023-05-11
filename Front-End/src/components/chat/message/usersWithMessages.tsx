@@ -26,6 +26,22 @@ export default function UsersWithDirectMessage(props: any) {
 
 	// console.log("User with DM ", props)
 // scroll
+//   const {currentDirect, setCurrentDirect} = props;
+//   const [usersWith, setUsersWith] = useState<UserChat[]>([]);
+//   const [me, setMe] = useState<UserChat | null>(null);
+//   const [AUsersWith, setAUsersWith] = useState<UserChat | null>(null);
+//   const authCtx = useContext(AuthContext);
+//   const friendCtx = useContext(FriendContext);
+//   const scrollRef: RefObject<HTMLDivElement> = useRef(null);
+//   const [sendMessage, addListener] = useSocket();
+//   const [toBlock, setToBlock] = useState<UserChat | null>(null);
+//   const [toUnblock, setToUnblock] = useState<UserChat | null>(null);
+//   const [fromBlock, setFromBlock] = useState<number | null>(null);
+//   const [unfromBlock, setUnfromBlock] = useState<number | null>();
+//   const [blockForMe, setBlockForMe] = useState<number | null>();
+//   const [unblockForMe, setUnblockForMe] = useState<number | null>();
+
+
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView({behavior: "smooth"})
 	}, [usersWith]);

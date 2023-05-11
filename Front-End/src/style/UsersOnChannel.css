@@ -4,11 +4,10 @@
     height: 100%;
     background-color: white;
     overflow-y: auto;
-    flex: 3;
     right: 0; /* Ajout de la propriété right */
   }
-  
-  
+
+
   .name-participants {
     text-align: left;
     color: #699af7;
@@ -19,7 +18,7 @@
     text-align: left;
     color: black;
   }
-  
+
   .ul-participants {
     display: flex;
     align-items: center;
@@ -28,24 +27,24 @@
     justify-content: space-between;
     padding-left: 0;
   }
-  
+
   .username-participants {
     display: flex;
     align-items: center;
     border-radius: 5px;
     cursor: pointer;
   }
-  
+
   .fa-crown {
     color: gold;
-    margin-left: 10px;
+    /* margin-left: 10px; */
   }
-  
+
   .fa-trash {
     color: red;
     margin-left: 10px;
   }
-  
+
   .fa-trash:hover {
     color: darkred;
   }
@@ -68,4 +67,29 @@
     pointer-events: none;
     opacity: 0.5;
   }
-  
+
+  .send-btn-chat.muted {
+    display: none;
+  }
+
+  .been-muted {
+	display: flex;
+	height: 105px;
+	align-items: center;
+	justify-content: space-around;
+	background-color: #FDFAF9;
+  }
+
+  .been-muted p {
+	margin: 0px;
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: 2px;
+  }
+
+  .been-muted-icon {
+	height: 45px;
+    width: 45px;
+    color: #ab1414;
+  }

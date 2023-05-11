@@ -16,6 +16,7 @@ import { GameService } from './game/game.service';
 //import { GameGateway } from './game/game.gateway';
 import { FriendshipModule } from './friendship/friendship.module';
 import { GlobalService } from './gateway/global.service';
+import { ChatroomService } from './chat/chatroom2/chatroom2.service';
 
 @Module({
 	imports: [
@@ -41,6 +42,8 @@ import { GlobalService } from './gateway/global.service';
 		GlobalService,
 		GameService,
 		ChatService,
+		ChatroomService,
+		UserModule,
     ],
 	exports: [JwtModule],
 })
