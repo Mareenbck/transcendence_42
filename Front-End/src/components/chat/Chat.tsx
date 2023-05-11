@@ -370,14 +370,10 @@ function Chat(props: any) {
 	const [isMuted, setIsMuted] = useState(false);
   const [hide, setIsHide] = useState(false);
 
-
-
 	const handleShowList = () => {
 	  setShowUsersOnChannel(false);
 	  setShowInteractiveList(true);
 	}
-
-
 
 	const handleShowUserList = () => {
 	  setShowUsersOnChannel(false);
@@ -491,8 +487,12 @@ function Chat(props: any) {
 					setToUnblock={setToUnblock}
 				/>
 			)}
+<<<<<<< HEAD
 
 			{currentChat && showUsersOnChannel && (
+=======
+			{currentChat && showUsersOnChannel  && (
+>>>>>>> cecd5e1 (select channel again after left one)
 				<UsersOnChannel
 					currentChatroom={currentChat}
 					channelId={currentChat?.id}
