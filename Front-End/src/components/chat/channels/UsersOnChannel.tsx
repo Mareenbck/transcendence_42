@@ -16,7 +16,7 @@ import { Avatar, Tooltip } from '@mui/material';
 import "../../../style/UsersChat.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FriendContext } from "../../../store/FriendshipContext";
-import { faTrash, faBan, faMicrophoneSlash, faMicrophone, faCircle } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faBan, faMicrophoneSlash, faMicrophone, faCircle, faUserChef } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
 import { UserMute } from '../../../interfaces/iChannels';
 import { UserChat } from '../../../interfaces/iChat';
@@ -37,6 +37,7 @@ export default function InteractiveListe(props: any) {
     const [isMuted, setIsMuted] = React.useState(false);
     const [participants, setParticipants] = React.useState<any []>([]);
     const admins = participants.filter((p: any) => p.role === 'ADMIN');
+    const owner = participants.filter((p: any) => p.role === 'OWNER');
     const users = participants.filter((p: any) => p.role === 'USER');
     const [sendMessage, addListener] = useSocket();
     const [bannedUsers, setBannedUsers] = useState([]);
@@ -265,7 +266,8 @@ export default function InteractiveListe(props: any) {
 		}
 	}
 
-    
+    // console.log(participants)
+
     return (
         <Box className="participants-container" style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
         <PersonnalInfoChat />
@@ -274,9 +276,30 @@ export default function InteractiveListe(props: any) {
         </Typography>
         <Demo style={{ backgroundColor: '#f2f2f2' }}>
         <List dense={dense}>
-        <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-             Admins
-        </Typography>
+        
+            <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                Owner Gros Boss
+            </Typography>
+            {owner.map((participants: any) => (
+                <ListItem key={participants.user.username} 
+                secondaryAction={
+                    <div>
+                    <i className="fa-sharp fa-solid fa-crown"></i>                    
+                    </div>
+                }
+                >
+                <ListItemAvatar>
+                    <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
+                </ListItemAvatar>
+                <ListItemText
+                    primary={participants?.user.username}
+                    secondary={secondary ? 'Secondary text' : null}
+                    />
+                </ListItem>
+            ))}
+            <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+                Admins
+            </Typography>
             {admins.map((participants: any) => (
                 <ListItem key={participants.user.username} 
                 secondaryAction={
@@ -307,8 +330,8 @@ export default function InteractiveListe(props: any) {
                     secondary={secondary ? 'Secondary text' : null}
                 />
                 {/* {showList} */}
-                {admins.some(admin => admin.user.id === authCtx.userId) && (
-                    <>
+                {(admins.concat(owner)).some(admin => admin.user.id === authCtx.userId) && (                    
+                <>
                     <Tooltip title="Kick">
                         <FontAwesomeIcon icon={faTrash} onClick={() => kickSomeone(props.channelId, participants.user.id)} className={`btn-chatlist`}/>
                     </Tooltip>
