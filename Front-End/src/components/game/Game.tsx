@@ -19,6 +19,7 @@ import PlayerTwo from './PlayerTwo';
 // import HeaderGame from './HeaderGame';
 import "./Game.css"
 import HeaderGame from './HeaderGame';
+import MyAccountMenu from '../AccountMenu';
 
 
 
@@ -280,7 +281,7 @@ useEffect(() => {
         if(roomN == -1){
             gamestatus.status == 'game';
         }
-        gamestatus.winner = {} as UserGame;
+        gamestatus.winner = null;
         setClicked(true);
     };
 
@@ -304,7 +305,7 @@ useEffect(() => {
             <div className="gameSideL">
 
                 <div className="title">
-                    <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
+                    <MyAccountMenu authCtx={authCtx}></MyAccountMenu>
                     <h4>{user.username}</h4>
                 </div>
 
@@ -348,7 +349,7 @@ useEffect(() => {
                                 (getCurrentGame(curroom))
                                 // (<HeaderGame games = {games} room = {curroom}></HeaderGame>)
                                 :
-                                ( <h2 className='gametitle'>Game </h2>)
+                                ( <h2 className='gametitle'>Pong</h2>)
                             }
 
                             {(gamestatus.status == 'waiting') ?

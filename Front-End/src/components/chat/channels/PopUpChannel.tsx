@@ -24,7 +24,7 @@ function PopUp(props: any) {
     const [sendMessage, addListener] = useSocket()
 
     const handleChannelNameChange = (e: FormEvent) => {
-        const value = e.target.value;
+        const value = (e.target as HTMLInputElement).value;        
         setchannelName(value);
         setIsDisabled(value === "");
     };
