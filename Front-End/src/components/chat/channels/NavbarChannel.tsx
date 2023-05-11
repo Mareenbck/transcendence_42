@@ -67,7 +67,7 @@ export function NavbarChannel(props: any) {
 			  },
 			});
 			const data = await response.json();
-			// console.log("DATA IN FETCH", data)
+			sendMessage('toMute', {channelId: channelId})
 			return data;
 		} catch(err) {
 			console.log(err);

@@ -391,3 +391,12 @@
 	margin-right: -20px;
 
 }
+
+.navbar-welcome {
+	display: flex;
+	height: 100px;
+	padding: 10px;
+	background-color: #F0F0F0;
+	border-bottom: 1px solid #80808038;
+	align-items: center;
+}

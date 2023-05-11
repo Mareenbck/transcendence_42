@@ -19,6 +19,9 @@ import CurrentDirectMessages from './message/CurrentDirectMessages';
 import UsersChat from './message/UsersChat';
 import { FriendContext } from '../../store/FriendshipContext';
 import PersonnalInfoChat from './PersonnalInfoChat';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+
 
 function Chat(props: any) {
   const user = useContext(AuthContext);
@@ -392,6 +395,22 @@ function Chat(props: any) {
 
 	// console.log("muted", props.mutedParticipants)
 
+	const theme = createTheme();
+
+	theme.typography.h3 = {
+		// fontSize: '8rem',
+		'@media (min-width:600px)': {
+		// fontSize: '8rem',
+		color: '#699BF7',
+		marginTop: '3rem',
+		marginBottom: '2.5rem',
+		// marginLeft: '2.5rem',
+	},
+		[theme.breakpoints.up('md')]: {
+		fontSize: '3rem',
+	},
+	};
+
 
 	return (
 	  <>
@@ -453,6 +472,15 @@ function Chat(props: any) {
 			{/* <div className="chatOnline" style={{ display: isChannelSelected ? "none" : "block" }}>
 			</div> */}
 			{/* <PersonnalInfoChat /> */}
+      <div className="navbar-welcome">
+	  <ThemeProvider theme={theme}>
+	  <i className="fa-solid fa-comment-left"></i>
+				<Typography variant="h3">Welcome to the chat 
+				</Typography>
+				<i className="fa-solid fa-comment"></i>
+			</ThemeProvider>  
+      </div>
+
 			{(!currentChat || showUserList) && (
 				<UsersChat
 					isHeBlocked={isHeBlocked}
@@ -463,6 +491,7 @@ function Chat(props: any) {
 					setToUnblock={setToUnblock}
 				/>
 			)}
+
 			{currentChat && showUsersOnChannel && (
 				<UsersOnChannel
 					currentChatroom={currentChat}
