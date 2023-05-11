@@ -16,6 +16,7 @@ const ChannelInvitations = (props: any) => {
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [icon, setIcon] = useState<any>();
 
+
 	useEffect(() => {
 		getInvitations();
 	}, [])
@@ -52,6 +53,7 @@ const ChannelInvitations = (props: any) => {
 		} catch (error) {
 			console.log("error", error);
 		}
+		getInvitations();
 	}
 
 	const handleCloseSnackbar = () => {

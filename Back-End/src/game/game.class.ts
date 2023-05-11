@@ -3,7 +3,7 @@ import { GameService } from 'src/game/game.service';
 import { player,
 		 ball,
 		 GameParams,
-		 status } from './game.interfaces';
+		 statuses } from './game.interfaces';
 import UsersSockets from 'src/gateway/socket.class';
 import { GameDto } from './dto/game.dto';
 import { UserDto } from 'src/user/dto/user.dto';
@@ -18,6 +18,7 @@ const racket_width = GameParams.RACKET_WIDTH;
 const racket_xboard = GameParams.RACKET_XBOARD;
 const racketSpeedY = GameParams.RACKET_SPEED_Y;
 const ballR = GameParams.BALL_RADIUS;
+// si tu changes MAX_SCORE il faut faire les changements dans: ./Front-End/src/components/scores/Scores.tsx et ./Front-End/src/components/scores/Table.tsx
 const MAX_SCORE = 3;
 const period = GameParams.PERIOD
 
@@ -32,12 +33,15 @@ export class GameRoom {
 	};
 	private playerR: player = {
 		user: {} as UserDto,
-		racket: {x: width - racket_width - racket_xboard, y: (height - racket_height)/2},		score: 0,
+		racket: {x: width - racket_width - racket_xboard, y: (height - racket_height)/2},
+		score: 0,
 	};
 
-	private interval: NodeJS.Timeout; // define the interval property
-	private status: status = {
+	private interval: any; // define the interval property NodeJS.Timeout
+	private status: statuses = {
 		winner: null,
+		playerR: {} as UserDto,
+		playerL: {} as UserDto,
 		status: null};
 
 	private ballSpeedX: number = ballSpeed;
@@ -84,7 +88,7 @@ export class GameRoom {
 
 // function: initialization of game during the ferst connection to the game
 	public init(player: UserDto){
-		this.userSockets.emitToUser(player.username, 'init-pong', {
+		this.userSockets.emitToId(player.id, 'init-pong', {
 			table_width: width,
 			table_height: height,
 			racket_width: racket_width,
@@ -104,10 +108,8 @@ export class GameRoom {
 		this.playerL.user = playerL;
 	}
 
-	public checkPlayer(
-		player: UserDto,
-	): boolean {
-		return this.playerR.user == player || this.playerL.user == player;
+	public checkPlayer(player: UserDto): boolean {
+		return +this.playerR.user.id == +player.id || +this.playerL.user.id == +player.id;
 	}
 
 
@@ -121,18 +123,18 @@ export class GameRoom {
 		this.rackets_ypos[1] = this.playerL.racket.y;
 
 	// racket reflections
-		if (this.ball.y > this.playerL.racket.y
-			&& this.ball.y < this.playerL.racket.y + racket_height
-			&& this.ball.x - ballR < this.playerL.racket.x + racket_width
+		if (this.ball.y >= this.playerL.racket.y
+			&& this.ball.y <= this.playerL.racket.y + racket_height
+			&& this.ball.x - ballR <= this.playerL.racket.x + racket_width
 			&& this.ballSpeedX < 0) {
 	// left racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
 //			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
 			this.ballSpeedY = 0.4*this.rackets_acel[0] + this.ballSpeedY + 0.001*(1 - 2 * Math.random()) * ballSpeed;
 		}
-		else if (this.ball.y > this.playerR.racket.y
-			&& this.ball.y < this.playerR.racket.y + racket_height
-			&& this.ball.x + ballR > this.playerR.racket.x
+		else if (this.ball.y >= this.playerR.racket.y
+			&& this.ball.y <= this.playerR.racket.y + racket_height
+			&& this.ball.x + ballR >= this.playerR.racket.x
 			&& this.ballSpeedX > 0) {
 	// right racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
@@ -161,7 +163,6 @@ export class GameRoom {
 			// this.ball.y = height / 2 - this.ballSpeedX;
 			ballSpeed += ballDeltaSpeed;
 			this.ballSpeedX = -ballSpeed;
-//console.log('ballSpeed = ', ballSpeed);
 		} else if ((this.ball.y < ballR && this.ballSpeedY < 0)
 		 || (this.ball.y > height - ballR && this.ballSpeedY > 0)) {
 			this.ballSpeedY = -this.ballSpeedY;
@@ -170,9 +171,9 @@ export class GameRoom {
 			this.ball.y += this.ballSpeedY;
 	}
 
-// move rakets event
+// init move rakets event
 	public initMoveEvents(): void {
-		this.userSockets.onFromUser(this.playerR.user.username,'move', (message: string) => {
+		this.userSockets.onFromId(this.playerR.user.id,'move', (message: string) => {
 			if (message == 'up') {
 				if (this.playerR.racket.y > 0) {
 					this.playerR.racket.y -= racketSpeedY;
@@ -186,8 +187,7 @@ export class GameRoom {
 			}
 		});
 
-		this.userSockets.onFromUser(this.playerL.user .username,'move', (message: string) => {
-// console.log("game_class_playerL socket message", message);
+		this.userSockets.onFromId(this.playerL.user.id,'move', (message: string) => {
 			if (message == 'up') {
 				if (this.playerL.racket.y > 0) {
 					this.playerL.racket.y -= racketSpeedY;
@@ -215,36 +215,70 @@ export class GameRoom {
 	private destroy_game(): void{
 		this.isrunning = false;
 
-		clearInterval(this.interval);
-
 		// disconnect Move Events
-		this.userSockets.offFromUser(this.playerR.user.username, 'move', (message: string)=>{});
-		this.userSockets.offFromUser(this.playerL.user.username, 'move', (message: string)=>{});
+		this.userSockets.offFromId(this.playerR.user.id, 'move', (message: string)=>{});
+		this.userSockets.offFromId(this.playerL.user.id, 'move', (message: string)=>{});
 
-		// player disconect
-		this.server.to(this.room).emit('status', {winner: this.status.winner, status: 'winner',});
+		this.gameService.updateStatusGameOver(this.playerL.user.id);
+		this.gameService.updateStatusGameOver(this.playerR.user.id);
 
+		// send winner
+
+		this.status.playerL = (this.playerL.user == this.status.winner ? this.status.winner : this.playerL.user);
+		this.status.playerR = (this.playerR.user == this.status.winner ? this.status.winner : this.playerR.user);
+		console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)
+
+		this.server.to(this.room).emit('status', { winner: this.status.winner, playerR:this.status.playerL, playerL: this.status.playerR, status: 'winner',});
+
+		// leave room
+console.log("leave room");
+		this.userSockets.leaveRoom(this.room);
+
+		// remove game by roomN
+console.log("remove game by roomN");
 		this.gameService.removeRoom(this.roomN);
+console.log("destroy_game: finish");
 	}
 
 // function: run game
 	public run(): void {
 		this.isrunning = true;
-// console.log("game.class.run");
+console.log("game.class.run");
+		this.gameService.updateStatusGame(this.playerL.user.id);
+		this.gameService.updateStatusGame(this.playerR.user.id);
 	//interval function: update the game at the certain period until the score reaches MAX
 		this.interval = setInterval(() => {
 			this.updatePositions();
-// console.log("162_game_class", this.playerR.user.username, this.playerR.score , "vs", this.playerL.user.username, this.playerL.score )
 			// Emit the updated positions of the ball and the rocket to all connected clients
 			this.emit2all();
 			//score MAX - change here
 			if ((this.playerL.score >= MAX_SCORE || this.playerR.score >= MAX_SCORE)){
+				clearInterval(this.interval);
 				this.status.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
 //////////////////// to DB /////////////////////////
 				this.save_results2DB();
 ////////////////////////////////////////////////////
 				this.destroy_game();
+				this.interval = null;
 			}
 		}, period);
+	}
+
+	// exit Game if exit buttonis pressed
+	public exitGame(player: UserDto): void {
+console.log("exit in gameClass", player.id, this.playerR.user.id, this.playerL.user.id)
+		clearInterval(this.interval);
+		if (player.id == this.playerR.user.id){
+			this.playerL.score = MAX_SCORE;
+			this.status.winner =  this.playerL.user;
+		}
+		else {
+			this.playerR.score = MAX_SCORE;
+			this.status.winner =  this.playerR.user;
+		}
+
+		this.save_results2DB();
+		this.destroy_game();
+		this.interval = null;
 	}
 }

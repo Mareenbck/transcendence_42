@@ -25,7 +25,7 @@ function Chat(props: any) {
   const friendCtx = useContext(FriendContext);
   const id = user.userId;
   const [onlineUsers, setOnlineUsers] = useState<OnlineU[]> ([]);
-  const [currentChat, setCurrentChat] = useState<ChatRoom | null> (null);
+  const [currentChat, setCurrentChat] = useState(null);
   const [currentDirect, setCurrentDirect] = useState<UserChat | null> (null);
   const [otherUsers, setOtherUsers] = useState <UserChat[]> ([]);
   const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
@@ -92,13 +92,13 @@ function Chat(props: any) {
         { setBlockForMe(+data.id);}
     });
   });
+
   useEffect(() => {
     addListener("unblockForMe", data => {
       if (+data.id !== +user.userId)
         { setUnblockForMe(+data.id);}
     });
   });
-
 
 //   useEffect(() => {
 //     AMessageD && currentDirect && +currentDirect?.id === +AMessageD.author &&
@@ -359,40 +359,58 @@ function Chat(props: any) {
 	const [activeTab, setActiveTab] = useState<string>("Direct messages")
 	const [isJoined, setIsJoined] = useState(false);
 	const [isChannelClicked, setIsChannelClicked] = useState(false);
-	const [isChannelSelected, setIsChannelSelected] = useState(true);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
 	const [showInteractiveList, setShowInteractiveList] = useState<boolean>(false);
+	const [showUserList, setShowUserList] = useState<boolean>(false);
+	const [UsersList, setUsersList] = useState(null);
+  const [unMutedUsers, setUnMutedUsers] = useState<string[]>([]);
+	const [isMuted, setIsMuted] = useState(false);
+  const [hide, setIsHide] = useState(false);
 
 
-  const handleShowList = () => {
-    setShowUsersOnChannel(false);
-    setShowInteractiveList(true);
-  }
 
-  const handleShowUserList = () => {
-    setShowUsersOnChannel(false);
-    setShowInteractiveList(true);
-  }
+	const handleShowList = () => {
+	  setShowUsersOnChannel(false);
+	  setShowInteractiveList(true);
+	}
 
 
-return (
-  <>
-  {" "}
-	<div className="messenger">
-		<div className="chatMenu">
+
+	const handleShowUserList = () => {
+	  setShowUsersOnChannel(false);
+	  setShowInteractiveList(false);
+	  setShowUserList(true);
+	}
+
+	useEffect(() => {
+	  addListener("showUsersList", data => setUsersList(data));
+	  if (!showUsersOnChannel) {
+		setShowUserList(true);
+	  }
+	}, [showUsersOnChannel]);
+
+
+	// console.log("muted", props.mutedParticipants)
+
+
+	return (
+	  <>
+	  {" "}
+		<div className="messenger">
+		  <div className="chatMenu">
 			<Tabs
-				value={activeTab}
-				onChange={(e: any, newValue: string) => setActiveTab(newValue)}
-				aria-label="icon position tabs example"
-				>
-				<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
-				<Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
+			  value={activeTab}
+			  onChange={(e: any, newValue: string) => setActiveTab(newValue)}
+			  aria-label="icon position tabs example"
+			  >
+			  <Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
+			  <Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
 			</Tabs>
 			{activeTab === 'Channels' && (
-				<UpdateChannelsInList
-					currentChat={currentChat}
-					setCurrentChat={setCurrentChat}
-					/>
+			  <UpdateChannelsInList
+				currentChat={currentChat}
+				setCurrentChat={setCurrentChat}
+				/>
 			)}
 			{activeTab === "Direct messages" && (
 				<UsersWithDirectMessage
@@ -444,8 +462,6 @@ return (
 				isHeBlocked={isHeBlocked}
 				getDirect={getDirect}
 				getUser={getUser}
-				inviteGame={inviteGame}
-				setToBlock={setToBlock}
 				setToUnblock={setToUnblock}
 				toUnblock={toUnblock}
 				toBlock={toBlock}
@@ -454,16 +470,60 @@ return (
 				blockForMe={blockForMe}
 				unblockForMe={unblockForMe}
 				/>
-		)}
-		{currentChat && showUsersOnChannel &&(
-			<UsersOnChannel
-				currentChatroom={currentChat}
-				channelId={currentChat?.id}
-				channelVisibility={currentChat?.visibility}
-				channelName={currentChat?.name}
-				isChannelClicked={isChannelClicked}
-			/>
-		)}
+			)}
+		  </div>
+		  <div className="chatBox">
+			<div className="chatBoxW">
+			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
+			  {currentChat ? (
+          <CurrentChannel
+          currentChatroom={currentChat}
+          allUsers={allUsers}
+          isJoined={isJoined}
+          setIsJoined={setIsJoined}
+          setShowList={handleShowList}
+          setUsersList={handleShowUserList}
+          setUnMutedUsers={setUnMutedUsers}
+          setToMute={props.setToMute}
+          // mutedParticipants={props.mutedParticipants}
+        />
+
+			  ) : currentDirect ? (
+				  <CurrentDirectMessages
+					currentDirect={currentDirect}
+					allUsers={allUsers}
+					setToBlock={setToBlock}
+					inviteGame={inviteGame}
+					/>
+			  ) : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
+			  }
+			</div>
+		  </div>
+			{/* <div className="chatOnline" style={{ display: isChannelSelected ? "none" : "block" }}>
+			</div> */}
+			{/* <PersonnalInfoChat /> */}
+			{(!currentChat || showUserList) && (
+				<UsersChat
+					isHeBlocked={isHeBlocked}
+					getDirect={getDirect}
+					getUser={getUser}
+					inviteGame={inviteGame}
+					setToBlock={setToBlock}
+					setToUnblock={setToUnblock}
+				/>
+			)}
+			{currentChat && showUsersOnChannel && (
+				<UsersOnChannel
+					currentChatroom={currentChat}
+					channelId={currentChat?.id}
+					channelVisibility={currentChat?.visibility}
+					channelName={currentChat?.name}
+					isChannelClicked={isChannelClicked}
+          // mutedParticipants={props.mutedParticipants}
+          setToMute={props.setToMute}
+				/>
+			)}
+
 	</div>
     </>
   )

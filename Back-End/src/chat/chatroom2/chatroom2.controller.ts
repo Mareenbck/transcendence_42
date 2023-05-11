@@ -52,7 +52,7 @@ export class Chatroom2Controller {
   @Get(':channelId/participants')
   @UseGuards(JwtGuard)
   async getParticipants(@Param('channelId') channelId: string) {
-    const participants = await this.chatRoomService.getParticipants(parseInt(channelId));
+	const participants = await this.chatRoomService.getParticipants(parseInt(channelId));
     return participants;
   }
 
@@ -111,9 +111,7 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@Post('/:channelId/kick/:userId')
 	@UseGuards(JwtGuard)
 	async kick(@Param('channelId') channelId: string, @Param('userId') userId: string) {
-		// console.log("entre dans le controller ")
 		const kickSomeone = await this.chatRoomService.kick(parseInt(channelId), parseInt(userId));
-		// console.log("KICK SOMEONE", kickSomeone);
 		return kickSomeone;
 	}
 
@@ -121,6 +119,8 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@UseGuards(JwtGuard)
 	async ban(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const banSomeone = await this.chatRoomService.ban(parseInt(channelId), parseInt(userId));
+		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
+		console.log("muted", allUser)
 		return banSomeone;
 	}
 
@@ -128,6 +128,8 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@UseGuards(JwtGuard)
 	async unBan(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const unBanSomeone = await this.chatRoomService.unBan(parseInt(channelId), parseInt(userId));
+		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
+		console.log("muted", allUser)
 		return unBanSomeone;
 	}
 
@@ -135,16 +137,16 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@UseGuards(JwtGuard)
 	async mute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const muted = await this.chatRoomService.mute(parseInt(channelId), parseInt(userId));
-		console.log("muted", muted)
-		return muted ;
+		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
+		return allUser ;
 	}
 
 	@Post('/:channelId/unmute/:userId')
 	@UseGuards(JwtGuard)
 	async unmute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const unmuted = await this.chatRoomService.unmute(parseInt(channelId), parseInt(userId));
-		// console.log("unmuted", unmuted)
-		return unmuted ;
+		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
+		return allUser ;
 	}
 
 

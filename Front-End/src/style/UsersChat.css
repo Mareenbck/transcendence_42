@@ -59,6 +59,8 @@
 }
 
 .users-chatlist-avatar.MuiAvatar-root {
+	height: 50px;
+	width: 51px;
 	color: rgb(241, 234, 241);
 	background-color: black;
 	border-radius: 25px;

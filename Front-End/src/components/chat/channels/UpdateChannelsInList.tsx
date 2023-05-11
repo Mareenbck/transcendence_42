@@ -2,7 +2,6 @@ import React, { RefObject, useContext, useEffect, useRef, useState } from "react
 import useSocket from '../../../service/socket';
 import Conversation from "./Conversation";
 import ChannelVisibility from "./ChannelVisibility";
-// import io, { Socket } from "socket.io-client";
 import AuthContext from "../../../store/AuthContext";
 import CreateChannelButton from "./CreateChannelBtn";
 import ChannelInvitations from "./ChannelInvitations";
@@ -11,24 +10,46 @@ import UsersOnChannel from "./UsersOnChannel";
 
 export default function UpdateChannelsInList(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
-	const [conversations, setConversations] = useState([]);
+	const [conversations, setConversations] = useState<any []>([]);
 	const [AConversation, setAConversation] = useState(null);
 	const user = useContext(AuthContext);
 	const { currentChat, setCurrentChat } = props;
-	// const [openModal, setOpenModal] = useState(false);
 	const [sendMessage, addListener] = useSocket();
 
+
 	useEffect(() => {
-		addListener("getConv", data => setAConversation({
-			id: data.channelId,
-			name: data.name,
-			visibility: data.visibility,
-		}));
+		addListener("getConv", data => {setAConversation(data)});
 	});
 
 	useEffect(() => {
-		AConversation && setConversations(prev => [AConversation, ...prev]);
-	}, [AConversation]);
+		addListener("deleteChannel", data => {setAConversation(data)});
+	});
+
+	useEffect(() => {
+		addListener('leavedChannel', (channelId: number) => {
+			const updatedConversations = conversations.map((conversation) => {
+				if (+conversation.id === +channelId && conversation.visibility == "PRIVATE") {
+					return null;
+				} else if (+conversation.id === +channelId) {
+					return {
+						...conversation,
+						participants: conversation.participants.filter(p => +p.userId !== +user.userId)
+				  	};
+				} else {
+				  return conversation;
+				}
+			});
+			setConversations(updatedConversations.filter(conversation => conversation !== null));
+		});
+	});
+
+	// useEffect(() => {
+	// 	AConversation && setConversations(prev => {
+	// 		const conversationExists = prev.find((conversation: { id: number; }) => conversation.id === AConversation.id);
+	// 		if (conversationExists) { return prev;} else {return [AConversation, ...prev];}
+	// 	});
+	// }, [AConversation]);
+
 
 	useEffect(() => {
 		async function getAllConv(user: AuthContext) {
@@ -48,17 +69,27 @@ export default function UpdateChannelsInList(props: any) {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 	}, [conversations]);
 
+	const handleJoinChannel = () => {
+		props.showParticipantsList(true);
+	};
+
+
 	return (
 		<div className="conversation-list">
-			{conversations.map((c) => (
-				<div key={c.id} onClick={() => { setCurrentChat(c) }}>
+			{conversations.map((c: any) => (
+				<div key={c?.id} onClick={() => { setCurrentChat(c) }}>
 					<div className="channel-inlist">
 						<div className="conversation-name">
 							<Conversation name={c.name} id={c.id} visibility={c.visibility}/>
 						</div>
 						<div className="conversation-icon">
 						{c.participants && !c.participants.some(p => p.userId === user.userId) && (
-							<ChannelVisibility visibility={c.visibility} id={c.id} isJoined={c.isJoined} />
+							<ChannelVisibility
+								visibility={c.visibility}
+								id={c.id}
+								isJoined={c.isJoined}
+								setIsJoined={c.setIsJoined}
+							/>
 						)}
 						</div>
 					</div>
@@ -71,4 +102,5 @@ export default function UpdateChannelsInList(props: any) {
 		</div>
 	);
 }
+
 

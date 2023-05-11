@@ -112,18 +112,19 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	const refreshHandler = async () => {
-		try {
-			const response = await fetch('http://localhost:3000/auth/refresh', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					// Authorization: `Bearer ${token}`
-				},
-				body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
-			});
-			const data = await response.json();
-			if (response.ok) {
-				setToken(data.access_token);
+		if (userIsLoggedIn) {
+			try {
+				const response = await fetch('http://localhost:3000/auth/refresh', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						// Authorization: `Bearer ${token}`
+					},
+					body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
+				});
+				const data = await response.json();
+				if (response.ok) {
+					setToken(data.access_token);
 				setRefreshToken(data.refresh_token);
 				localStorage.setItem('token', data.access_token);
 				localStorage.setItem('Rtoken', data.refresh_token);
@@ -132,6 +133,7 @@ export const AuthContextProvider = (props: any) => {
 		} catch (error) {
 			return console.log("error", error);
 		}
+	}
 	};
 
 	const fetchLogout = async () => {

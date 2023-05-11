@@ -1,14 +1,21 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
-import { BadRequestException, Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, ForbiddenException, NotFoundException, Logger } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { plainToClass } from 'class-transformer';
 import path = require('path');
 import { Response } from 'express';
+import { Server, Socket } from "socket.io";
+import UsersSockets from "src/gateway/socket.class";
+
 
 
 @Injectable()
 export class UserService {
+	public server: Server = null;
+	private readonly logger = new Logger(UserService.name);
+	public userSockets: UsersSockets;
+
 	constructor(private readonly prisma: PrismaService) { }
 
 	async createUser(email: string, username: string, hash: string, avatar = '', ftAvatar = ''): Promise<User> {
@@ -305,6 +312,9 @@ export class UserService {
 			  achievementId: achievement.id,
 			},
 		});
+		if (existingUserAchievement) {
+			return null
+		}
 		if (!existingUserAchievement) {
 			await this.prisma.userAchievement.create({
 				data: {

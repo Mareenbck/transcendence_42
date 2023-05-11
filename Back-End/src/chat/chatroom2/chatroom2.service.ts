@@ -3,15 +3,21 @@ import { CreateChatroomDto } from './dto/create-chatroom2.dto';
 import { Prisma, UserChannelVisibility } from '@prisma/client';
 import { UserRoleInChannel} from '@prisma/client'
 import { UserStatusOnChannel } from '@prisma/client'
-import { BadRequestException, Injectable, ForbiddenException} from '@nestjs/common';
+import { BadRequestException, Injectable, ForbiddenException, Logger} from '@nestjs/common';
 import { Chatroom } from '@prisma/client';
 import { UserOnChannel} from '@prisma/client'
 import * as argon from 'argon2';
+import { Server, Socket } from "socket.io";
 import { UserService } from 'src/user/user.service';
+import UsersSockets from "src/gateway/socket.class";
 
 
 @Injectable()
 export class ChatroomService {
+	public server: Server = null;
+	private readonly logger = new Logger(ChatroomService.name);
+	public userSockets: UsersSockets;
+
 	constructor(private prisma: PrismaService,
 				private userService: UserService) { }
 
@@ -56,9 +62,10 @@ export class ChatroomService {
 		});
 	}
 
-  findOne(id: number) {
-    return this.prisma.chatroom.findUnique({where: {id: id}});;
-  }
+  	async findOne(id: number) {
+    	const chatRoom = await this.prisma.chatroom.findUnique({where: {id: id}});;
+		return chatRoom  
+	}
 
   async getUserTable(userId: number, channelId: number) {
     const users = await this.prisma.userOnChannel.findMany( {where:
@@ -103,7 +110,9 @@ export class ChatroomService {
 	}
 
   async getParticipants(channelId: number) {
-    // console.log("ENTRE DANS LE SERVICE")
+	if (typeof channelId !== 'number') {
+		throw new Error('Invalid value for channelId');
+	}
     const channel = await this.prisma.userOnChannel.findMany({
       where: { channelId },
       include: { user: true },
@@ -116,14 +125,12 @@ export class ChatroomService {
 		where: { channelId },
 		include: { user: true },
 	  });
-
 	if (!users || users.length === 0) {
 	  throw new ForbiddenException(`User with ID ${userId} is not on channel with ID ${channelId}`);
 	}
-
-	const updatedrole = await this.prisma.userOnChannel.update({
+	const updatedrole = await this.prisma.userOnChannel.updateMany({
 	  where: {
-		id: userId,
+		userId, channelId,
 	  },
 	  data: {
 		role: UserRoleInChannel.ADMIN,
@@ -247,7 +254,8 @@ export class ChatroomService {
 					status: UserStatusOnChannel.BAN,
 				},
 			});
-			return `User with ID ${userId} has been banned from channel with ID ${channelId}`;
+			return (updatedStatus)
+			// return `User with ID ${userId} has been banned from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to ban user from channel.");
@@ -278,7 +286,8 @@ export class ChatroomService {
 					status: UserStatusOnChannel.CLEAN,
 				},
 			});
-			return `User with ID ${userId} has been unbanned from channel with ID ${channelId}`;
+			return (updatedStatus)
+			// return `User with ID ${userId} has been unbanned from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to unban user from channel.");
@@ -309,8 +318,9 @@ export class ChatroomService {
 					status: UserStatusOnChannel.MUTE,
 				},
 			});
-			console.log("updated status------>", updatedStatus)
-			return `User with ID ${userId} has been muted from channel with ID ${channelId}`;
+			return updatedStatus;
+			// console.log("updated status------>", updatedStatus)
+			// return `User with ID ${userId} has been muted from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to mute user from channel.");
@@ -342,7 +352,8 @@ export class ChatroomService {
 					status: UserStatusOnChannel.CLEAN,
 				},
 			});
-			return `User with ID ${userId} has been unmuted from channel with ID ${channelId}`;
+			return updatedStatus;
+			// return `User with ID ${userId} has been unmuted from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to unmute user from channel.");

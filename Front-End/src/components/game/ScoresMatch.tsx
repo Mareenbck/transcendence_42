@@ -20,9 +20,9 @@ const ScoresMatch = (props: any) => {
 					<span className="score">-</span>
 					<span>{props.score2}</span>
 				</div>
-				<div className="date">
+				{(props.date) && <div className="date">
 					{formattedDate(props.date)}
-				</div>
+				</div>}
 			</div>
 		</>
 	)
