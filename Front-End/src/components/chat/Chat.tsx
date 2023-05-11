@@ -413,13 +413,62 @@ function Chat(props: any) {
 				/>
 			)}
 			{activeTab === "Direct messages" && (
-			  <UsersWithDirectMessage
-				currentDirect={currentDirect}
-				setCurrentDirect={setCurrentDirect}
+				<UsersWithDirectMessage
+					currentDirect={currentDirect}
+					setCurrentDirect={setCurrentDirect}
+					isHeBlocked={isHeBlocked}
+					getDirect={getDirect}
+					getUser={getUser}
+					setToUnblock={setToUnblock}
+					toUnblock={toUnblock}
+					toBlock={toBlock}
+					fromBlock={fromBlock}
+					unfromBlock={unfromBlock}
+					blockForMe={blockForMe}
+					unblockForMe={unblockForMe}
+					/>
+			)}
+		</div>
+		<div className="chatBox">
+			<div className="chatBoxW">
+				<PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > <h3></h3></PopupChallenge>
+				{currentChat ? (
+					 <CurrentChannel
+						currentChatroom={currentChat}
+						allUsers={allUsers}
+						isJoined={isJoined}
+						setIsJoined={setIsJoined}
+						setShowList={handleShowList}
+						setUsersList={handleShowUserList}
+						/>
+				) : currentDirect ? (
+					<CurrentDirectMessages
+						currentDirect={currentDirect}
+						allUsers={allUsers}
+						setToBlock={setToBlock}
+						inviteGame={inviteGame}
+						setAMessageD={setAMessageD}
+						AMessageD={AMessageD}
+						/>
+				) : <span className="noConversationText" > Open a Room or choose a friend to start a chat. </span>
+				}
+			</div>
+		</div>
+        {/* <div className="chatOnline" style={{ display: isChannelSelected ? "none" : "block" }}>
+        </div> */}
+		{/* <PersonnalInfoChat /> */}
+		{!currentChat && (
+			<UsersChat
 				isHeBlocked={isHeBlocked}
 				getDirect={getDirect}
 				getUser={getUser}
 				setToUnblock={setToUnblock}
+				toUnblock={toUnblock}
+				toBlock={toBlock}
+				fromBlock={fromBlock}
+				unfromBlock={unfromBlock}
+				blockForMe={blockForMe}
+				unblockForMe={unblockForMe}
 				/>
 			)}
 		  </div>
