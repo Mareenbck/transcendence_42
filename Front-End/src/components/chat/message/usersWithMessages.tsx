@@ -40,6 +40,8 @@ export default function UsersWithDirectMessage(props: any) {
 			async function getUserFromBack() {
 				if (AUsersWith) {
 					const response = await Fetch.fetch(authCtx.token, "GET", `users/block`, +AUsersWith);
+					const avatar = await friendCtx.fetchAvatar(response.id);
+					response.avatar = avatar;
 					setUsersWith(prev => [response, ...prev]);
 				}
 			};

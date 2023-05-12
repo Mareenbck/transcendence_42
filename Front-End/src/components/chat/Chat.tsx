@@ -274,7 +274,6 @@ function Chat(props: any) {
     } as any);
   }
 
-
 	const [activeTab, setActiveTab] = useState<string>(() => {
 		const storedValue = localStorage.getItem("activeTab");
 		return storedValue !== null ? storedValue : "Direct messages";
@@ -310,7 +309,7 @@ function Chat(props: any) {
 		setActiveTab(newValue);
 	  };
 
-	useEffect(() => { 
+	useEffect(() => {
   if (currentChat)
     {
       setShowUserList(false);
@@ -318,7 +317,8 @@ function Chat(props: any) {
     }
   }, [currentChat]);
 
-
+	console.log("currentChat --->")
+	console.log(currentChat)
 	return (
 	  <>
 	  {" "}
@@ -355,22 +355,24 @@ function Chat(props: any) {
 			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > </PopupChallenge>
 			  {currentChat ? (
 				<CurrentChannel
-				currentChatroom={currentChat}
-				allUsers={allUsers}
-				isJoined={isJoined}
-				setIsJoined={setIsJoined}
-				setShowList={handleShowList}
-				setUsersList={handleShowUserList}
-				setUnMutedUsers={setUnMutedUsers}
-				setToMute={props.setToMute}
-				/>
+					currentChatroom={currentChat}
+					allUsers={allUsers}
+					isJoined={isJoined}
+					setIsJoined={setIsJoined}
+					setShowList={handleShowList}
+					setUsersList={handleShowUserList}
+					setUnMutedUsers={setUnMutedUsers}
+					setToMute={props.setToMute}
+					setCurrentChat={setCurrentChat}
+					// mutedParticipants={props.mutedParticipants}
+					/>
 			) : currentDirect ? (
 				<CurrentDirectMessages
-				currentDirect={currentDirect}
-				allUsers={allUsers}
-				setToBlock={setToBlock}
-				inviteGame={inviteGame}
-				/>
+					currentDirect={currentDirect}
+					allUsers={allUsers}
+					setToBlock={setToBlock}
+					inviteGame={inviteGame}
+					/>
 			) : (
 				<div className='home-chat'>
 					<div className="navbar-welcome"></div>

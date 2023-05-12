@@ -61,7 +61,7 @@ export default function CurrentChannel(props: any) {
 	  }, [participants, authCtx.userId]);
 
 	useEffect(() => {
-		addListener('toMute', data => 
+		addListener('toMute', data =>
 			setParticipants(data))
 	}, [addListener])
 
@@ -187,6 +187,7 @@ export default function CurrentChannel(props: any) {
 						onSubmit={handleFormSubmit}
 						onLeaveChannel={handleLeaveChannel}
 						onDeleteChannel={handleDeleteChannel}
+						setCurrentChat={props.setCurrentChat}
 					/>
 					<div className="chatBoxTop">
 						{messages2.length ? (

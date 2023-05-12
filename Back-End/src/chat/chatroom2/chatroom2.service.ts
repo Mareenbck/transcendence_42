@@ -140,17 +140,24 @@ export class ChatroomService {
 	return updatedrole;
 }
 
-
 	async openInvitations(senderId: number, channelId: number, receiverId: number) {
-		const demand = await this.prisma.chatroomInvitations.create({
+		let demand;
+		demand = await this.prisma.chatroomInvitations.findMany({
+			where: {
+				chatroomId: channelId,
+				receiverId: receiverId,
+			},
+		});
+		if (demand.length === 0) {
+		demand = await this.prisma.chatroomInvitations.create({
 			data: {
 				senderId: senderId,
 				chatroomId: channelId,
 				receiverId: receiverId,
 			},
-		});
-		// console.log("demand", demand)
-		return demand
+			});
+		}
+		return demand;
 	}
 
 

@@ -27,6 +27,7 @@ export function NavbarChannel(props: any) {
 	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
 	const [sendMessage, addListener] = useSocket()
 	const [passwordError, setPasswordError] = React.useState(true);
+	const [usersCount, setUsersCount] = useState<number>(props.chatroom.participants.length);
 
 
 
@@ -35,7 +36,15 @@ export function NavbarChannel(props: any) {
 		if (currentUser) {
 			setIsAdmin(currentUser.role);
 		}
+		setUsersCount(props.chatroom.participants.length)
 	}, [props.chatroom.participants, userContext.userId]);
+
+	useEffect(() => {
+		addListener("toMute", (participants: any[]) => {
+			const newUserCount = participants.length;
+			setUsersCount(newUserCount);
+		});
+	  }, [addListener, props.chatroom.participants.length]);
 
 	const inviteUserOnChannel = async (channelId: number, invitedId: number) => {
 		try {
@@ -90,6 +99,7 @@ export function NavbarChannel(props: any) {
 			sendMessage("showUsersList", data);
 			sendMessage('toMute', {channelId: channelId})
 			props.onLeaveChannel();
+			props.setCurrentChat(null)
 			return data;
 		} catch(err) {
 			console.log(err);
@@ -190,7 +200,7 @@ export function NavbarChannel(props: any) {
 			</Avatar>
 			<div className="name-channel">
 				<h4>{props.chatroom.name}</h4>
-				<p>{props.chatroom.participants.length} members</p>
+				<p>{usersCount} members</p>
 			</div>
 
 			{isAdmin === 'ADMIN' || isAdmin === 'OWNER' &&
@@ -242,11 +252,11 @@ export function NavbarChannel(props: any) {
 					/>
 					 <div className="button-popup-global">
 						<VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
-						<button 
-							className="btnn" 
-							type='submit' 
+						<button
+							className="btnn"
+							type='submit'
 							onSubmit={handleFormSubmit}
-							disabled={passwordError} 
+							disabled={passwordError}
 
 							onClick={changeAndClose}>OK</button>
 
