@@ -1,13 +1,13 @@
 import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
-import SideBar from '../SideBar';
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import style from '../../style/Menu.module.css';
+// import SideBar from '../SideBar';
+// import { Link, Navigate, useNavigate } from "react-router-dom";
+// import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
-import {UserScore, Game} from "../interfaces/iChat";
+import {UserScore, Games} from "../interfaces/iChat";
 import '../../style/Profile.css'
 import '../../style/Table.css'
 
@@ -16,7 +16,7 @@ import '../../style/Table.css'
 
 const Podium = (props: any) => {
   const MAX_SCORE = 3;
-  const [games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<Games[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
   
   const authCtx = useContext(AuthContext);
@@ -31,7 +31,7 @@ const Podium = (props: any) => {
   };
   useEffect(() => {
     fetchGames();
-  }, []);
+  },[]);
 
   //aller chercher les users
   async function getAllUsers() {
@@ -43,14 +43,14 @@ const Podium = (props: any) => {
   };
   useEffect(() => {
     getAllUsers();
-  }, []);
+  },[]);
 
 
-  const getScore = (user: UserScore): number => {
+  const getScore = (user: UserScore): any => {
     if (games) {
-      const p1 = games.filter(u => +u.playerOneId === +user.id).length;
-      const p2 = games.filter(u => +u.playerTwoId === +user.id).length;
-      const win = games.filter(u => +u.winnerId === +user.id).length;
+      const p1 = games.filter((u: Games) => +u.playerOneId === +user.id).length;
+      const p2 = games.filter((u: Games) => +u.playerTwoId === +user.id).length;
+      const win = games.filter((u: Games) => +u.winnerId === +user.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
       if (total < 0)
         total = 0; 
@@ -58,46 +58,44 @@ const Podium = (props: any) => {
     }
   }
  
- 
-  var sorted = [...allUsers];
-  //console.log("sorted", sorted);
-  sorted.sort((a, b) => (getScore(b) - getScore(a)));
-  let firts = sorted[0];
-  let second = sorted[1];
-  var third = sorted[2];
+  if (!allUsers){
+    fetchGames();
+    getAllUsers();
+  }
+  else{ 
+    var sorted = [...allUsers];
+    sorted.sort((a, b) => (getScore(b) - getScore(a)));
+    var firts = sorted[0];
+    var second = sorted[1];
+    var third = sorted[2];
+  }
   
- // console.log("wqwretyt", firts?.avatar);
-    return(
-
+  return(
     <>
-           	<div className="midPos">
-                <div className={`rangAvatar ${getScore(firts) === getScore(second) ? "" : "podium-first"}`}>
-                    <MyAvatar authCtx={authCtx} id={second?.id} style="m" avatar={second?.avatar} ftAvatar={second?.ftavatar}/>
-                    <UserChart userName={second?.username} h={getScore(second)} />
+        <div className="midPos">
+            <div className={`rangAvatar ${getScore(firts) === getScore(second) ? "" : "podium-first"}`}>
+                <MyAvatar authCtx={authCtx} id={second?.id} style="m" avatar={second?.avatar} ftAvatar={second?.ftavatar}/>
+                <UserChart userName={second?.username} h={getScore(second)} />
 
-                    <p className="rank-podium">2</p>
-
-                </div>
-
-                <div className='rangAvatar - one'>       
-                    <MyAvatar authCtx={authCtx } id={firts?.id} style="m" avatar={firts?.avatar} ftAvatar={firts?.ftavatar}/>
-                    <UserChart   userName={firts?.username}  h={(getScore(firts))} />
-                    <p className="rank-podium">1</p>
-
-                </div>
-
-                <div className={`rangAvatar ${getScore(firts) === getScore(third) ? "" : "podium-first"}`}>
-                    <MyAvatar authCtx={authCtx } id={third?.id}  style="m" avatar={third?.avatar} ftAvatar={third?.ftavatar}/> 
-                    <UserChart  userName={third?.username}  h={(getScore(third))} color={"black"}/>
-                    <p className="rank-podium">3</p>
-                </div>
+                <p className="rank-podium">2</p>
             </div>
- 
 
+            <div className='rangAvatar - one'>       
+                <MyAvatar authCtx={authCtx } id={firts?.id} style="m" avatar={firts?.avatar} ftAvatar={firts?.ftavatar}/>
+                <UserChart   userName={firts?.username}  h={(getScore(firts))} />
+                <p className="rank-podium">1</p>
+            </div>
 
-        </>
-    )
-    }
+            <div className={`rangAvatar ${getScore(firts) === getScore(third) ? "" : "podium-first"}`}>
+                <MyAvatar authCtx={authCtx } id={third?.id}  style="m" avatar={third?.avatar} ftAvatar={third?.ftavatar}/> 
+                <UserChart  userName={third?.username}  h={(getScore(third))} color={"black"}/>
+                <p className="rank-podium">3</p>
+            </div>
+        </div>
+
+      </>
+  )
+}
 
 
 export default Podium;

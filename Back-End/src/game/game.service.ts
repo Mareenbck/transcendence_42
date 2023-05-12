@@ -3,14 +3,13 @@ import { Game } from '@prisma/client';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { GameDto } from './dto/game.dto';
-// import { TwoFaUserDto } from 'src/auth/dto/2fa.dto';
 import { UserDto } from 'src/user/dto/user.dto';
 import { Server, Socket } from "socket.io";
 import UsersSockets from "src/gateway/socket.class";
 import {
 	roomsList,
 	invited,
-	statuses
+	// statuses
 	} from './game.interfaces';
 import { GameRoom } from './game.class';
 
@@ -59,7 +58,6 @@ export class GameService {
 	enterGame = async (userId: number, socket: Socket) => {
 // console.log("0 enterGame");
 		// was waiting
-
 		if (isNaN(userId)) return;
 
 	    if(this.players.length == 1 && this.players.some(id => id == userId)){
@@ -200,6 +198,7 @@ export class GameService {
 
 	acceptGame = (author: UserDto, player: UserDto): void => {
 		if(this.searchPair(author.id, player.id)){
+console.log('cu-cu');
 			this.userSockets.emitToId(author.id,'status', { status:'game'});
 			this.userSockets.emitToId(player.id,'status', { status:'game'});
 			this.addNewRoom(author, player);
@@ -207,7 +206,6 @@ export class GameService {
 	};
 
 	refusalGame = (author: UserDto, player: UserDto): void => {
-// console.log("///////// GAME REFUSAL", author, player);
 		if(this.searchPair(author.id, player.id)) {
 			this.userSockets.emitToId(author.id,'status', {status: 'false'} );
 			this.userSockets.emitToId(player.id,'status', {status: 'null'} );

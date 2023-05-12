@@ -6,10 +6,6 @@ export interface UserGame {
 	avatar: string;
 	ftAvatar: string;
 	is2FA: boolean;
-    // eceivedFriendships: FriendsDto[];
-    // blockedTo: UserDto[];
-    // blockedFrom: UserDto[];
-    // dirMessEmited: DirMessDto[];
 };
 
 export interface gamesList{
@@ -19,12 +15,6 @@ export interface gamesList{
     scoreR: number;
     scoreL: number;
 }
-
-// export interface player{
-// 	profile: profile;
-// 	racket: racket;
-// 	score: number;
-// }
 
 export interface ball {
     x: number;
@@ -65,7 +55,3 @@ export interface players {
     playerR: UserGame;
     playerL: UserGame;
 }
-
-// export  interface backColorGame{
-//     backColorGame: string;
-// }

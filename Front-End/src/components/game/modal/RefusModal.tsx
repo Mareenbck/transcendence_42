@@ -12,7 +12,7 @@ const Modal = (props:any) => {
     <div className='global-popup-refus' >
 			<h3>Sorry, you can't play right now</h3>
           <footer className='actions'>  
-            <Link to="/chat/message">
+            <Link to="/menu">
                   <button className="btnn" onClick={props.handelClose}>Close</button>
             </Link>   
           </footer>
