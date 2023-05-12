@@ -1,14 +1,9 @@
 import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
-// import SideBar from '../SideBar';
-// import { Link, Navigate, useNavigate } from "react-router-dom";
-// import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
-// import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
 import {UserScore, Game} from "../../interfaces/iChat";
-// import Card from "../../components/utils/Card";
 import { ListItem } from '@mui/material';
 import '../../style/Profile.css'
 import '../../style/Table.css'
@@ -70,11 +65,26 @@ const Table = (props: any) => {
   //     }
   // }
 
+  // const getScore = (user: UserScore): number => {
+  //   if (games) {
+  //     const p1 = games.filter(u => +u.playerOneId === +user.id).length;
+  //     const p2 = games.filter(u => +u.playerTwoId === +user.id).length;
+  //     const win = games.filter(u => +u.winnerId === +user.id).length;
+  //     let total:number = win * MAX_SCORE - (p1 + p2 - win);
+  //     if (total < 0)
+  //       total = 0; 
+  //     return (total);
+  //   }
+  // }
+
   const getScore = (user: UserScore): number => {
     if (games) {
-      const p1 = games.filter(u => +u.playerOneId === +user.id).length;
-      const p2 = games.filter(u => +u.playerTwoId === +user.id).length;
-      const win = games.filter(u => +u.winnerId === +user.id).length;
+      const p1: number = games.filter((u: Game) => +u.playerOneId.id === +user.id).length;
+      const p2: number = games.filter((u: Game) => +u.playerTwoId.id === +user.id).length;
+      const win: number = games.filter((u: Game) => +u.winnerId.id === +user?.id).length;
+      // const p1 = games.filter((u: {playerOneId: string | number}) => +u.playerOneId === +user.id).length;
+      // const p2 = games.filter((u: {playerTwoId: string | number}) => +u.playerTwoId === +user.id).length;
+      // const win = games.filter((u: {winnerId: string | number;}) => +u.winnerId === +user?.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
       if (total < 0)
         total = 0; 

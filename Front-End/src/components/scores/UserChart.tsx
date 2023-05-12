@@ -1,7 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
+import React from "react";
 import '../../style/UserChart.css'
-import { Link, useLocation } from "react-router-dom";
-import AuthContext from "../../store/AuthContext";
 
 
 

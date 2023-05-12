@@ -53,29 +53,32 @@ const Scores = () => {
 
   // const getScore_ = (user: UserScore) => {
   //   if (games) {
-  //     const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user?.id);
-  //     const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user?.id);
-  //     const w = games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user?.id);
-  //     let total:number = 0;
+    //     const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user?.id);
+    //     const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user?.id);
+    //     const w = games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user?.id);
+    //     let total:number = 0;
+    //      if (p1.length > 0) {total = p1.reduce((score: number, game: { score1: string | number; }) => score = score + +game.score1, 0)};
+    //      if (p2.length > 0) {total = total + p2.reduce((score: number, game: { score2: string | number; }) => score = score + +game.score2, 0)};
   //     return (total);
   //   }
   // }
 
   const getScore = (user: UserScore): number => {
     if (games) {
-      const p1 = games.filter(u => +u.playerOneId === +user.id).length;
-      const p2 = games.filter(u => +u.playerTwoId === +user.id).length;
-      const win = games.filter(u => +u.winnerId === +user.id).length;
+      const p1: number = games.filter((u: Game) => +u.playerOneId.id === +user.id).length;
+      const p2: number = games.filter((u: Game) => +u.playerTwoId.id === +user.id).length;
+      const win: number = games.filter((u: Game) => +u.winnerId.id === +user?.id).length;
+      // const p1 = games.filter((u: {playerOneId: string | number}) => +u.playerOneId === +user.id).length;
+      // const p2 = games.filter((u: {playerTwoId: string | number}) => +u.playerTwoId === +user.id).length;
+      // const win = games.filter((u: {winnerId: string | number;}) => +u.winnerId === +user?.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
       if (total < 0)
         total = 0; 
       return (total);
     }
   }
-  // console.log("fffffffffff");
  
   var sorted = [...allUsers];
-  //console.log("sorted", sorted);
   sorted.sort((a, b) => (getScore(b) - getScore(a)));
   let firts = sorted[0];
   let second = sorted[1];
