@@ -33,10 +33,12 @@ function PopUp(props: any) {
         e.preventDefault();
 
         let idConv: number | undefined = undefined;
-        if (channelName === "") { return; }
-        // if (isProtected && !passwordInputRef.current?.value) {
-            // return; // Arrêter l'exécution de la fonction si le canal est protégé et aucun mot de passe n'est saisi
-        // }
+        if (channelName === "") { 
+            return; 
+        }
+        if (isProtected && !passwordInputRef.current?.value) {
+            return; 
+        }
         const newConv = {
             name: channelName,
             isPublic: isPublic,
@@ -85,7 +87,13 @@ return (
                 <h2>{props.title}</h2>
             </header>
                 <h5>New channel name:</h5>
-            <TextField id="outlined-basic" label="Outlined" variant="outlined" value={channelName} onChange={handleChannelNameChange}/>
+            <TextField 
+                id="outlined-basic" 
+                label="Outlined" 
+                variant="outlined" 
+                value={channelName}
+                onChange={handleChannelNameChange}
+            />
             <div className='content-button'>
                 <h5>{props.message}</h5>
                 <label className='wrap-circle'>
