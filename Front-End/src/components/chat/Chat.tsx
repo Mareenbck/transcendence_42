@@ -332,7 +332,7 @@ function Chat(props: any) {
 				onChange={(e: any, newValue: string) => handleTabChange(newValue)}
 				aria-label="icon position tabs example"
 				>
-				<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" />
+				<Tab icon={<MailIcon />} iconPosition="start" label="Direct messages" value="Direct messages" onClick={handleShowUserList}/>
 				<Tab icon={<ChatBubbleIcon />} iconPosition="start" label="Channels" value="Channels" />
 			</Tabs>
 			{activeTab === 'Channels' && (
@@ -349,6 +349,7 @@ function Chat(props: any) {
 				getDirect={getDirect}
 				getUser={getUser}
 				setToUnblock={setToUnblock}
+        onClick={handleShowList}
 				/>
 			)}
 		  </div>
@@ -365,7 +366,6 @@ function Chat(props: any) {
 				setUsersList={handleShowUserList}
 				setUnMutedUsers={setUnMutedUsers}
 				setToMute={props.setToMute}
-				// mutedParticipants={props.mutedParticipants}
 				/>
 			) : currentDirect ? (
 				<CurrentDirectMessages
@@ -399,7 +399,6 @@ function Chat(props: any) {
 					channelVisibility={currentChat?.visibility}
 					channelName={currentChat?.name}
 					isChannelClicked={isChannelClicked}
-          // mutedParticipants={props.mutedParticipants}
           setToMute={props.setToMute}
 				/>
 			)}

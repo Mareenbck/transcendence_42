@@ -1,19 +1,13 @@
-html, body {
-    margin: 0;  
-    padding: 0;
-    height: 100%;
-}
-
-body {
-    background-color:#134771;
-}
-
-
-.not-found {
+.not-found-page {
+    background-color: #134771;
+  }
+  
+  .not-found {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;
     color: #fda7fa;
-}
+  }
+  
