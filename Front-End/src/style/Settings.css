@@ -38,6 +38,10 @@ p {
 	display: flex;
 }
 
+.form-set .MuiFormControl-root.MuiTextField-root {
+	width: 70%;
+}
+
 #username {
 	background: #e4e4e4;
 	border: 1px solid rgba(0, 0, 0, 0.41);
@@ -55,7 +59,7 @@ p {
 }
 
 .custom-field .MuiFilledInput-underline {
-	width: calc(95% + 2px);
+	width: calc(81% + 2px);
 	box-sizing: border-box;
 }
 

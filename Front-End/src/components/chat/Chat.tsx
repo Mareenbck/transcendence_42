@@ -314,7 +314,7 @@ function Chat(props: any) {
 	  };
 
   // TESTS
-	useEffect(() => { 
+	useEffect(() => {
   if (currentChat)
     {
       setShowUserList(false);
