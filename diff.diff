@@ -1,0 +1,239 @@
+diff --git a/Back-End/src/chat/chat.service.ts b/Back-End/src/chat/chat.service.ts
+index 53189fa..092efff 100644
+--- a/Back-End/src/chat/chat.service.ts
++++ b/Back-End/src/chat/chat.service.ts
+@@ -98,6 +98,7 @@ export class ChatService {
+         }
+     };
+ 
++
+     chatBlock:any = (blockFrom: number, blockTo: number,) => {
+         const userTo = this.getUser(blockTo);
+         const userFrom = this.getUser(blockFrom);
+@@ -140,12 +141,11 @@ export class ChatService {
+ 
+     chatJoinedChannel: any = (channelId: number , socketId: string) => {
+         this.server.to(socketId).emit('joinedChannelR2', channelId);
+-        this.server.emit('changeParticipants');
++        this.server.emit('joinedChannelR3');
+ 	};
+ 
+     chatLeavedChannel: any = (channelId: number , socketId: string) => {
+         this.server.to(socketId).emit('leavedChannel', channelId);
+-        this.server.emit('changeParticipants');
+     };
+ 
+     invitedToPriv: any = (channelId: number, invitedId: number, socketId: string) => {
+@@ -155,7 +155,7 @@ export class ChatService {
+ 
+     acceptedToPriv: any = (socketId: string) => {
+         this.server.to(socketId).emit('newPriv');
+-        this.server.emit('changeParticipants');
++        this.server.emit('newPriv2');
+     };
+ }
+ 
+diff --git a/Back-End/src/chat/chatroom2/chatroom2.service.ts b/Back-End/src/chat/chatroom2/chatroom2.service.ts
+index 75168b4..20b5454 100644
+--- a/Back-End/src/chat/chatroom2/chatroom2.service.ts
++++ b/Back-End/src/chat/chatroom2/chatroom2.service.ts
+@@ -149,6 +149,7 @@ export class ChatroomService {
+ 				receiverId: receiverId,
+ 			},
+ 		});
++		// console.log("demand", demand)
+ 		return demand
+ 	}
+ 
+@@ -214,8 +215,9 @@ export class ChatroomService {
+ 			const chatRoomX: Chatroom = await this.findOne(channelId);
+ 			if (chatRoomX.visibility === "PRIVATE")
+ 			{
+-				this.deleteInvitationsForLeftRooms(channelId, userId)
++				this.deleteRefusedInvitations
+ 			}
++			console.log("result", result)
+ 		return result;
+ 		} catch (err) {
+ 		  console.log(err);
+diff --git a/Back-End/src/gateway/global.gateway.ts b/Back-End/src/gateway/global.gateway.ts
+index 1ac04e8..c3a6b3a 100644
+--- a/Back-End/src/gateway/global.gateway.ts
++++ b/Back-End/src/gateway/global.gateway.ts
+@@ -219,8 +219,9 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
+ 	}
+ 
+   @SubscribeMessage('removeConv')
+-	async removeConv(@MessageBody() data: {channelId: number }): Promise<void> {
+-		this.server.emit('deleteChannel', data);
++	async removeConv(@MessageBody() data: any ): Promise<void> {
++		const newList = await this.chatroomService.findAll();
++		this.server.emit('deleteChannel', newList);
+ 	}
+ 
+   @SubscribeMessage('showUsersList')
+diff --git a/Front-End/src/components/chat/Chat.tsx b/Front-End/src/components/chat/Chat.tsx
+index 26c0151..39f1698 100644
+--- a/Front-End/src/components/chat/Chat.tsx
++++ b/Front-End/src/components/chat/Chat.tsx
+@@ -313,12 +313,13 @@ function Chat(props: any) {
+ 		setActiveTab(newValue);
+ 	  };
+ 
++  // TESTS
+ 	useEffect(() => { 
+   if (currentChat)
+     {
+       setShowUserList(false);
+       setShowUsersOnChannel(true);
+-    }
++    };
+   }, [currentChat]);
+ 
+ 
+diff --git a/Front-End/src/components/chat/channels/ChannelInvitations.tsx b/Front-End/src/components/chat/channels/ChannelInvitations.tsx
+index a74ac33..6797977 100644
+--- a/Front-End/src/components/chat/channels/ChannelInvitations.tsx
++++ b/Front-End/src/components/chat/channels/ChannelInvitations.tsx
+@@ -52,15 +52,18 @@ const ChannelInvitations = (props: any) => {
+ 				},
+ 				body: JSON.stringify({ invitId: invitId, response: res }),
+ 			});
+-			await response.json();
++			const data = await response.json();
+ 			if (!response.ok) {
+ 				console.log("POST error on /chatroom/update");
+ 				return "error";
+ 			}
++			// sendMessage('toMute', {channelId: invit.chatroom.id})
+ 		} catch (error) {
+ 			console.log("error", error);
+ 		}
+-		if (res === 'ACCEPTED') { sendMessage("acceptedChannelInvite"); };
++		if (res === 'ACCEPTED') { 
++			sendMessage("acceptedChannelInvite"); 
++		};
+ 		getInvitations();
+ 	}
+ 
+diff --git a/Front-End/src/components/chat/channels/CurrentChannel.tsx b/Front-End/src/components/chat/channels/CurrentChannel.tsx
+index 1a54ebb..a170487 100644
+--- a/Front-End/src/components/chat/channels/CurrentChannel.tsx
++++ b/Front-End/src/components/chat/channels/CurrentChannel.tsx
+@@ -65,6 +65,12 @@ export default function CurrentChannel(props: any) {
+ 			setParticipants(data))
+ 	}, [addListener])
+ 
++	useEffect(() => {
++		addListener('leavedChannel', (channelId: number) => {
++			setParticipants(channelId);
++		});
++	});
++
+ 	const getUser = (userId: number): UserChat | null => {
+ 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
+ 		if (author !== undefined) { return (author) }
+@@ -156,13 +162,6 @@ export default function CurrentChannel(props: any) {
+ 		setIsJoined(false);
+ 	};
+ 
+-	useEffect(() => {
+-		addListener("deleteChannel", (channelId: any) => {
+-			if (currentChatroom.id === channelId.channelId)
+-			{	handleDeleteChannel()};
+-		});
+-	});
+-
+ 	return (
+ 		<>
+ 			{isJoined && !isBanned && (
+diff --git a/Front-End/src/components/chat/channels/NavbarChannel.tsx b/Front-End/src/components/chat/channels/NavbarChannel.tsx
+index 72dd8d2..d68cd66 100644
+--- a/Front-End/src/components/chat/channels/NavbarChannel.tsx
++++ b/Front-End/src/components/chat/channels/NavbarChannel.tsx
+@@ -106,7 +106,7 @@ export function NavbarChannel(props: any) {
+             });
+             const data = await response.json();
+             props.onDeleteChannel();
+-			sendMessage("removeConv", {channelId: channelId})
++			sendMessage("removeConv", data)
+ 			sendMessage("showUsersList", data)
+             return data;
+ 
+diff --git a/Front-End/src/components/chat/channels/PopUpChannel.tsx b/Front-End/src/components/chat/channels/PopUpChannel.tsx
+index 3cc05a9..b5329d4 100644
+--- a/Front-End/src/components/chat/channels/PopUpChannel.tsx
++++ b/Front-End/src/components/chat/channels/PopUpChannel.tsx
+@@ -33,10 +33,12 @@ function PopUp(props: any) {
+         e.preventDefault();
+ 
+         let idConv: number | undefined = undefined;
+-        if (channelName === "") { return; }
+-        // if (isProtected && !passwordInputRef.current?.value) {
+-            // return; // Arrêter l'exécution de la fonction si le canal est protégé et aucun mot de passe n'est saisi
+-        // }
++        if (channelName === "") { 
++            return; 
++        }
++        if (isProtected && !passwordInputRef.current?.value) {
++            return; 
++        }
+         const newConv = {
+             name: channelName,
+             isPublic: isPublic,
+@@ -85,7 +87,13 @@ return (
+                 <h2>{props.title}</h2>
+             </header>
+                 <h5>New channel name:</h5>
+-            <TextField id="outlined-basic" label="Outlined" variant="outlined" value={channelName} onChange={handleChannelNameChange}/>
++            <TextField 
++                id="outlined-basic" 
++                label="Outlined" 
++                variant="outlined" 
++                value={channelName}
++                onChange={handleChannelNameChange}
++            />
+             <div className='content-button'>
+                 <h5>{props.message}</h5>
+                 <label className='wrap-circle'>
+diff --git a/Front-End/src/components/chat/channels/UpdateChannelsInList.tsx b/Front-End/src/components/chat/channels/UpdateChannelsInList.tsx
+index 324b82b..4ec325b 100644
+--- a/Front-End/src/components/chat/channels/UpdateChannelsInList.tsx
++++ b/Front-End/src/components/chat/channels/UpdateChannelsInList.tsx
+@@ -28,9 +28,7 @@ export default function UpdateChannelsInList(props: any) {
+ 	});
+ 
+ 	useEffect(() => {
+-		addListener("deleteChannel", () => {
+-			getAllConv(user);
+-		});
++		addListener("deleteChannel", data => {setAConversation(data)});
+ 	});
+ 
+ 	useEffect(() => {
+diff --git a/Front-End/src/components/chat/channels/UsersOnChannel.tsx b/Front-End/src/components/chat/channels/UsersOnChannel.tsx
+index 473a672..e5be0d6 100644
+--- a/Front-End/src/components/chat/channels/UsersOnChannel.tsx
++++ b/Front-End/src/components/chat/channels/UsersOnChannel.tsx
+@@ -67,7 +67,7 @@ export default function InteractiveListe(props: any) {
+ 	}, [authCtx.token]);
+ 
+ 	useEffect(() => {
+-		addListener("changeParticipants", () => {
++		addListener("newPriv2", () => {
+             showParticipants(props.channelId);
+ 		});
+ 	});
+diff --git a/Front-End/src/components/utils/SelectDialog.tsx b/Front-End/src/components/utils/SelectDialog.tsx
+index 39a282a..4e2c424 100644
+--- a/Front-End/src/components/utils/SelectDialog.tsx
++++ b/Front-End/src/components/utils/SelectDialog.tsx
+@@ -78,7 +78,7 @@ React.useEffect(() => {
+ }, [props.channelId, props.type])
+ 
+ React.useEffect(() => {
+-	addListener("changeParticipants", () => {
++	addListener("joinedChannelR3", () => {
+ 		fetchUsers();
+ 	});
+ });

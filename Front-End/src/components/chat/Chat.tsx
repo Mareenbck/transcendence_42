@@ -277,7 +277,6 @@ function Chat(props: any) {
 ////////////////////////////////////////////////
 // Partie VI : Scroll to view
 ////////////////////////////////////////////////
-	// const [activeTab, setActiveTab] = useState<string>("")
 	const [activeTab, setActiveTab] = useState<string>(() => {
 		const storedValue = localStorage.getItem("activeTab");
 		return storedValue !== null ? storedValue : "Direct messages";
@@ -321,7 +320,8 @@ function Chat(props: any) {
     }
   }, [currentChat]);
 
-
+	console.log("currentChat --->")
+	console.log(currentChat)
 	return (
 	  <>
 	  {" "}
@@ -357,23 +357,24 @@ function Chat(props: any) {
 			  <PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > </PopupChallenge>
 			  {currentChat ? (
 				<CurrentChannel
-				currentChatroom={currentChat}
-				allUsers={allUsers}
-				isJoined={isJoined}
-				setIsJoined={setIsJoined}
-				setShowList={handleShowList}
-				setUsersList={handleShowUserList}
-				setUnMutedUsers={setUnMutedUsers}
-				setToMute={props.setToMute}
-				// mutedParticipants={props.mutedParticipants}
-				/>
+					currentChatroom={currentChat}
+					allUsers={allUsers}
+					isJoined={isJoined}
+					setIsJoined={setIsJoined}
+					setShowList={handleShowList}
+					setUsersList={handleShowUserList}
+					setUnMutedUsers={setUnMutedUsers}
+					setToMute={props.setToMute}
+					setCurrentChat={setCurrentChat}
+					// mutedParticipants={props.mutedParticipants}
+					/>
 			) : currentDirect ? (
 				<CurrentDirectMessages
-				currentDirect={currentDirect}
-				allUsers={allUsers}
-				setToBlock={setToBlock}
-				inviteGame={inviteGame}
-				/>
+					currentDirect={currentDirect}
+					allUsers={allUsers}
+					setToBlock={setToBlock}
+					inviteGame={inviteGame}
+					/>
 			) : (
 				<div className='home-chat'>
 					<div className="navbar-welcome"></div>
@@ -400,7 +401,7 @@ function Chat(props: any) {
 					channelName={currentChat?.name}
 					isChannelClicked={isChannelClicked}
           // mutedParticipants={props.mutedParticipants}
-          setToMute={props.setToMute}
+					setToMute={props.setToMute}
 				/>
 			)}
 	</div>
