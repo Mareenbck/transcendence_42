@@ -22,21 +22,33 @@ function PopUp(props: any) {
     const [openModal, setOpenModal] = useState(true);
     const passwordInputRef = useRef<HTMLInputElement>(null);
     const [sendMessage, addListener] = useSocket()
+    const [stringError, setStringError] = React.useState(true);
+    const [passwordError, setPasswordError] = React.useState(true);
 
     const handleChannelNameChange = (e: FormEvent) => {
         const value = (e.target as HTMLInputElement).value;        
         setchannelName(value);
         setIsDisabled(value === "");
+        setStringError(value === '');
     };
+
+    const handlePasswordChange = (e: FormEvent) => {
+        const value = (e.target as HTMLInputElement).value;
+        setPasswordError(value.trim() === '');
+      };
+      
 
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
 
         let idConv: number | undefined = undefined;
-        if (channelName === "") { return; }
-        // if (isProtected && !passwordInputRef.current?.value) {
-            // return; // Arrêter l'exécution de la fonction si le canal est protégé et aucun mot de passe n'est saisi
-        // }
+        if (channelName === "") { 
+            setStringError(true)
+            return; 
+        }
+        if (isProtected && !passwordInputRef.current?.value) {
+            return; 
+        }
         const newConv = {
             name: channelName,
             isPublic: isPublic,
@@ -60,17 +72,19 @@ function PopUp(props: any) {
     };
 
     const createAndClose = async (e:FormEvent) => {
+        if (!stringError) {
+            setShowPopUp(true)
+        }
         try {
             await createNewChannel(e);
-            // if (isProtected && !passwordInputRef.current?.value) {
-            //     return;
-            // }
-
             setShowPopUp(false);
             props.onClick();
         } catch (err) { console.log(err);}
     }
     const handleFormSubmit = (e:FormEvent) => {
+        if (stringError) {
+            return;
+        }
         e.preventDefault();
         setShowPopUp(false);
     };
@@ -85,7 +99,13 @@ return (
                 <h2>{props.title}</h2>
             </header>
                 <h5>New channel name:</h5>
-            <TextField id="outlined-basic" label="Outlined" variant="outlined" value={channelName} onChange={handleChannelNameChange}/>
+            <TextField 
+                id="outlined-basic" 
+                label="Name" 
+                variant="outlined" 
+                value={channelName}
+                onChange={handleChannelNameChange}
+            />
             <div className='content-button'>
                 <h5>{props.message}</h5>
                 <label className='wrap-circle'>
@@ -112,6 +132,8 @@ return (
                             variant="filled"
                             placeholder="Type a password..."
                             inputRef={passwordInputRef}
+                            onChange={handlePasswordChange}
+                            error={isProtected && passwordError} 
                         />
                         <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
                     </div>
@@ -144,10 +166,19 @@ return (
                     Public
                 </label>
             </div>
-            <footer className='actions'>
-                <button type='submit' onSubmit={handleFormSubmit} onClick={createAndClose}>OK</button>
-                <button onSubmit={handleFormSubmit} onClick={props.onCancel}>Cancel</button>
-            </footer>
+                
+            <button
+                className='btnn'
+                type='submit'
+                onSubmit={handleFormSubmit}
+                onClick={createAndClose}
+                disabled={stringError || (isProtected && passwordError)}
+                >
+                OK
+            </button>
+
+
+            <button className="btnn" onSubmit={handleFormSubmit} onClick={props.onCancel}>Cancel</button>
             <ChannelsSettings openModal={openModal} setOpenModal={setOpenModal} role={props.role} />
 
         </div>

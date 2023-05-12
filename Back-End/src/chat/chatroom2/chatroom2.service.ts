@@ -149,6 +149,7 @@ export class ChatroomService {
 				receiverId: receiverId,
 			},
 		});
+		// console.log("demand", demand)
 		return demand
 	}
 
@@ -214,8 +215,9 @@ export class ChatroomService {
 			const chatRoomX: Chatroom = await this.findOne(channelId);
 			if (chatRoomX.visibility === "PRIVATE")
 			{
-				this.deleteInvitationsForLeftRooms(channelId, userId)
+				this.deleteRefusedInvitations
 			}
+			console.log("result", result)
 		return result;
 		} catch (err) {
 		  console.log(err);
