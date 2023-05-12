@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import useSocket from '../../../service/socket';
 import AuthContext from "../../../store/AuthContext";
 import Fetch from "../../../interfaces/Fetch"
-import { UserChat } from "../../../interfaces/iChat";
+import { DirectMessage, UserChat } from "../../../interfaces/iChat";
 import { Avatar } from '@mui/material';
 import { FriendContext } from '../../../store/FriendshipContext';
 import { faBan } from '@fortawesome/free-solid-svg-icons'
@@ -40,11 +40,9 @@ export default function UsersWithDirectMessage(props: any) {
 			async function getUserFromBack() {
 				if (AUsersWith) {
 					const response = await Fetch.fetch(authCtx.token, "GET", `users/block`, +AUsersWith);
-					const updatedFriends = await Promise.all(response.map(async (friend: UserChat) => {
-						const avatar = await friendCtx.fetchAvatar(friend.id);
-						return { ...friend, avatar };
-					}));
-					setUsersWith(updatedFriends);
+					const avatar = await friendCtx.fetchAvatar(response.id);
+					response.avatar = avatar;
+					setUsersWith(prev => [response, ...prev]);
 				}
 			};
 		getUserFromBack();

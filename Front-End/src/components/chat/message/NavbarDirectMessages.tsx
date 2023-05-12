@@ -16,14 +16,9 @@ export function NavbarChannel(props: any) {
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [status, setStatus] = useState<string>('');
 
-	// console.log("props dans navbar")
-	// console.log(props)
 	const handleCloseSnackbar = () => {
 		setSnackbarOpen(false);
 	}
-
-	console.log("icon --->")
-	console.log(icon)
 
 	const fetchAvatar = async (id: string) => {
 		const avat: any = await friendCtx.fetchAvatar(parseInt(id));
