@@ -44,7 +44,8 @@ export default function UpdateChannelsInList(props: any) {
 			const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
 			const filteredConversations = response.filter(c =>
 				c.visibility === 'PUBLIC' || c.visibility === 'PWD_PROTECTED' ||
-				(c.visibility === 'PRIVATE' && c.participants.some(p => p.userId === user.userId))
+				(c.visibility === 'PRIVATE' && 
+				c.participants.some(p => +p.userId === +user.userId))
 			);
 			setConversations(filteredConversations);
 		}
