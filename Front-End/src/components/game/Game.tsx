@@ -16,9 +16,7 @@ import SelectColor from './SelectColor';
 import PlayerOne from './PlayerOne';
 import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
-// import HeaderGame from './HeaderGame';
 import "./Game.css"
-import HeaderGame from './HeaderGame';
 import MyAccountMenu from '../AccountMenu';
 
 
@@ -65,27 +63,25 @@ function Game() {
         }
     }, []);
 
-    useEffect(() => {
-        const handleBackButton = (event: PopStateEvent) => {
-// alert("2 handlePopstate");
-            // Handle the back button press
-            // Add your custom logic here
-            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                sendMessage("exitGame", {status: gamestatus.status } as any);
-            }
-        };
+    // useEffect(() => {
+    //     const handleBackButton = (event: PopStateEvent) => {
+    //         // Handle the back button press
+    //         if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+    //             sendMessage("exitGame", {status: gamestatus.status } as any);
+    //         }
+    //     };
 
-        // Add the event listener when the component mounts
-        window.addEventListener("popstate", handleBackButton);
+    //     // Add the event listener when the component mounts
+    //     window.addEventListener("popstate", handleBackButton);
 
-        // Remove the event listener when the component unmounts
-        return () => {
-            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                alert("1 handlePopstate");
-            }
-            window.removeEventListener("popstate", handleBackButton);
-        };
-      }, []);
+    //     // Remove the event listener when the component unmounts
+    //     return () => {
+    //         if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+    //             alert("1 handlePopstate");
+    //         }
+    //         window.removeEventListener("popstate", handleBackButton);
+    //     };
+    //   }, []);
 
 
     const getCurrentGame = (roomN: number): React.JSX.Element | undefined => {
@@ -112,27 +108,8 @@ function Game() {
         }
     };
 
-/////////////////////////////////////////////////leave the page////////////////////////////////////
-    // useEffect(() => {
-
-    //     return () => {
-    //     // unmount component event (works at mount too)
-    //         if (gamestatus.status == 'game'){
-    //             alert("Alert of sortie game");
-    //         }
-    //         else if (gamestatus.status == 'waiting'){
-    //             alert("Alert of sortie waiting");
-    //         }
-    //         else {
-    //             alert(`Alert of sortie gamestatus.status = ${gamestatus.status}`);
-    //         }
-    //     };
-    // }, []);
-
-//////////////////////////////////////////////////////////////////////////////////////////////
 
 // onKeyDown handler function
-
     const onkeyPress = (event: KeyboardEvent) => {
         event.preventDefault();
         if (event.code === "ArrowUp") {
@@ -143,6 +120,7 @@ function Game() {
         }
     };
 
+
     useEffect(() => {
 // Attach the event listener to the window object
         window.addEventListener('keydown', onkeyPress);
@@ -152,6 +130,7 @@ function Game() {
             window.removeEventListener('keydown', onkeyPress);
         }
     }, []);
+
 
 // Pour partis de Modal select Color,
 const [ShowColorModal, setShowColorModal] = useState(false);
@@ -193,8 +172,6 @@ useEffect(() => {
 }, [backColorGame])
 
 
-/************************* */
-
 //initialization of the initial parameters of the game
     const [gameinit, setGameInit] = useState<gameInit>(
         {
@@ -205,7 +182,6 @@ useEffect(() => {
             racket_height: 0.100,
             scoreR: 0,
             scoreL: 0,
-            // winner: null,
         }
     );
 
@@ -235,7 +211,6 @@ useEffect(() => {
                     racket_height: gameinit.racket_height,
                     scoreR: gameinit.scoreR,
                     scoreL: gameinit.scoreL})
-                    // winner: gameinit.winner});
             }
         };
         window.addEventListener("resize", updateWidth);
@@ -259,6 +234,8 @@ useEffect(() => {
 
     const updateStatus = (data: gameStatus)=>{
         setGameStatus(data);
+    console.log('status', gamestatus.status)
+
     }
 
 //get data from the server and redraw canvas
@@ -269,7 +246,7 @@ useEffect(() => {
     }, [initListener, updateListener, updateStatus]);
 
     const isInPlay = (): boolean => {
-        return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
+        return games.some((room:gamesList)  => room.playerL.username == user.username || room.playerR.username == user.username);
     };
 
 // action when clicking on "PlayGame"
@@ -284,16 +261,6 @@ useEffect(() => {
         gamestatus.winner = null;
         setClicked(true);
     };
-
- // for Disable after click
-//  const [activeLinkk, setActiveLinkk] = useState('');
-//  useEffect(() => {
-//     setActiveLinkk(location.pathname);
-//   }, []);
-
-//  const handleLinkClick = (path: string) => {
-//     setActiveLinkk(path);
-//   };
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -317,9 +284,6 @@ useEffect(() => {
 
                 <div className='posBtnn' >
                     {/* /BUTTON FOR GAME START */}
-                    {/* <div >
-                        <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/>Play</button>
-                    </div> */}
                     {!isInPlay() && (
                         <div >
                             <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/>Play</button>
@@ -342,12 +306,10 @@ useEffect(() => {
 
                     {(!gamestatus.winner) ? (
                     <>
-                        {/* <div className='wrapWaiting'>*/}
                             {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
 
                             { (gamestatus.status == 'watch' || gamestatus.status == 'game') ?
                                 (getCurrentGame(curroom))
-                                // (<HeaderGame games = {games} room = {curroom}></HeaderGame>)
                                 :
                                 ( <h2 className='gametitle'>Pong</h2>)
                             }
@@ -375,7 +337,6 @@ useEffect(() => {
                     </>
                     ):(
                     <>
-                        {/* <section className='headerWin'> */}
                         <div className="container-match" style={{backgroundColor: "white",
                                                                     border: "solid" ,
                                                                     borderBlockColor:"black" } } >
@@ -384,13 +345,11 @@ useEffect(() => {
 
                                 <PlayerTwo  player={gamestatus.playerR} winner={gamestatus.winner}  sizeAvatar={"l"} />
                             </div>
-                        {/* </section> */}
 
                         <section className='sctWin'>
                             <h1> WINNER </h1>
                             <div className='CapWinner'>
                                 <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
-
                                 <BrightnessLowIcon id = "win" className='star' />
                             </div>
                         </section>
@@ -404,8 +363,6 @@ useEffect(() => {
                 <div>
                     {games.map((game: gamesList) => (
                     <div key={game.roomN} className='wrapList'>
-
-                    {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
                         <div onClick={() => handleClick(game.roomN)}>
                             <div className="container-match">
                             {!isInPlay() && 

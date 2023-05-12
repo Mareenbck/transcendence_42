@@ -96,7 +96,6 @@ export class GameRoom {
 			ballR: ballR,
 			scoreR: this.playerR.score,
 			scoreL: this.playerL.score,
-		//	winner: this.winner
 		});
 	}
 
@@ -223,7 +222,6 @@ export class GameRoom {
 		this.gameService.updateStatusGameOver(this.playerR.user.id);
 
 		// send winner
-
 		this.status.playerL = (this.playerL.user == this.status.winner ? this.status.winner : this.playerL.user);
 		this.status.playerR = (this.playerR.user == this.status.winner ? this.status.winner : this.playerR.user);
 		// console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)

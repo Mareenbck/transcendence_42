@@ -21,9 +21,7 @@ const PlayerTwo = (props: any) => {
 
 	return (
 		<>
-			{/* {props.score} */}
 			<ListItemAvatar>
-				{/* <MyAvatar style="s" alt={"avatar"} avatar={props.player.avatar} ftAvatar={props.player.ftAvatar} id={props.player.id} /> */}
 				<MyAvatar style={props.sizeAvatar} alt={"avatar"} avatar={props.player.avatar} ftAvatar={props.player.ftAvatar} id={props.player.id} />
 			</ListItemAvatar>
 			<Link to={`/users/profile/${props.player.id}`} className="profile-link">{props.player.username}</Link>
