@@ -66,6 +66,11 @@ export default function InteractiveListe(props: any) {
 		}
 	}, [authCtx.token]);
 
+	useEffect(() => {
+		addListener("newPriv2", () => {
+            showParticipants(props.channelId);
+		});
+	});
 
     const kickSomeone = async (channelId: string, userId: string) => {
         try {
@@ -91,7 +96,6 @@ export default function InteractiveListe(props: any) {
             console.error(error);
         }
     };
-
 
     const banSomeone = async (channelId: string, userId: string) => {
         try {
