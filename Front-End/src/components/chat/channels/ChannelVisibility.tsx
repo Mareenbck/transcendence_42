@@ -22,7 +22,6 @@ export default function ChannelVisibility(props: any) {
 	const [showPassword, setShowPassword] = useState(false);
 	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
 	const [passwordError, setPasswordError] = useState(false);
-	const [joinButton, setJoinButton] = useState(null);
 	const [sendMessage, addListener] = useSocket();
 
 
@@ -68,7 +67,6 @@ export default function ChannelVisibility(props: any) {
     return icon;
   }
 
-// ...
 
 const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();

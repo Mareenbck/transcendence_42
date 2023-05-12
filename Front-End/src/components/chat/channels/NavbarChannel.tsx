@@ -13,7 +13,6 @@ import Avatar from '@mui/material/Avatar';
 import '../../../style/NavbarChannel.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-import { isAnyArrayBuffer } from "util/types";
 import { faCrown, faUserPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
 
@@ -27,6 +26,8 @@ export function NavbarChannel(props: any) {
 	const [showPassword, setShowPassword] = useState(false);
 	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
 	const [sendMessage, addListener] = useSocket()
+	const [passwordError, setPasswordError] = React.useState(true);
+
 
 
 	useEffect(() => {
@@ -177,6 +178,11 @@ export function NavbarChannel(props: any) {
 			// sendMessage("removeConv")
 	}
 
+    const handlePasswordChange = (e: FormEvent) => {
+        const value = (e.target as HTMLInputElement).value;
+        setPasswordError(value.trim() === '');
+      };
+
 	return (
 		<div className="navbar-channel">
 			<Avatar variant="rounded" className="channel-avatar-navbar" >
@@ -231,11 +237,20 @@ export function NavbarChannel(props: any) {
 						variant="filled"
 						placeholder="Type a new password..."
 						inputRef={passwordInputRef}
+						onChange={handlePasswordChange}
+
 					/>
 					 <div className="button-popup-global">
 						<VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
-						<button className="button-popup" type='submit' onSubmit={handleFormSubmit} onClick={changeAndClose}>OK</button>
-						<button className="button-popup" onClick={() => setOpenModal(false)}>Cancel</button>
+						<button 
+							className="btnn" 
+							type='submit' 
+							onSubmit={handleFormSubmit}
+							disabled={passwordError} 
+
+							onClick={changeAndClose}>OK</button>
+
+						<button className="btnn" onClick={() => setOpenModal(false)}>Cancel</button>
 					 </div>
 				</Box>
 			</Modal>
