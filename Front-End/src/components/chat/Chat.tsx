@@ -274,10 +274,7 @@ function Chat(props: any) {
     } as any);
   }
 
-////////////////////////////////////////////////
-// Partie VI : Scroll to view
-////////////////////////////////////////////////
-	// const [activeTab, setActiveTab] = useState<string>("")
+
 	const [activeTab, setActiveTab] = useState<string>(() => {
 		const storedValue = localStorage.getItem("activeTab");
 		return storedValue !== null ? storedValue : "Direct messages";
