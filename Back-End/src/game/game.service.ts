@@ -224,6 +224,7 @@ export class GameService {
 async create({playerOneId, playerTwoId, winnerId, score1, score2}) {
 	await this.userService.updateAchievement(parseInt(playerOneId), 'Rookie')
 	await this.userService.updateAchievement(parseInt(playerTwoId), 'Rookie')
+	await this.userService.updateAchievement(parseInt(winnerId), 'Winner')
 	//+async
 	return this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
 }
