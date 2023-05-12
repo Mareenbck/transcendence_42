@@ -98,7 +98,6 @@ export class ChatService {
         }
     };
 
-
     chatBlock:any = (blockFrom: number, blockTo: number,) => {
         const userTo = this.getUser(blockTo);
         const userFrom = this.getUser(blockFrom);
@@ -141,11 +140,12 @@ export class ChatService {
 
     chatJoinedChannel: any = (channelId: number , socketId: string) => {
         this.server.to(socketId).emit('joinedChannelR2', channelId);
-        this.server.emit('joinedChannelR3');
+        this.server.emit('changeParticipants');
 	};
 
     chatLeavedChannel: any = (channelId: number , socketId: string) => {
         this.server.to(socketId).emit('leavedChannel', channelId);
+        this.server.emit('changeParticipants');
     };
 
     invitedToPriv: any = (channelId: number, invitedId: number, socketId: string) => {
@@ -155,7 +155,7 @@ export class ChatService {
 
     acceptedToPriv: any = (socketId: string) => {
         this.server.to(socketId).emit('newPriv');
-        this.server.emit('newPriv2');
+        this.server.emit('changeParticipants');
     };
 }
 

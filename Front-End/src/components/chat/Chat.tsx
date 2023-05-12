@@ -313,13 +313,12 @@ function Chat(props: any) {
 		setActiveTab(newValue);
 	  };
 
-  // TESTS
 	useEffect(() => { 
   if (currentChat)
     {
       setShowUserList(false);
       setShowUsersOnChannel(true);
-    };
+    }
   }, [currentChat]);
 
 	return (

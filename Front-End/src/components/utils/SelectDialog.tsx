@@ -78,7 +78,7 @@ React.useEffect(() => {
 }, [props.channelId, props.type])
 
 React.useEffect(() => {
-	addListener("joinedChannelR3", () => {
+	addListener("changeParticipants", () => {
 		fetchUsers();
 	});
 });
