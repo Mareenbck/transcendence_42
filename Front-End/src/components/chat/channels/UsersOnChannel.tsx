@@ -67,7 +67,7 @@ export default function InteractiveListe(props: any) {
 	}, [authCtx.token]);
 
 	useEffect(() => {
-		addListener("newPriv2", () => {
+		addListener("changeParticipants", () => {
             showParticipants(props.channelId);
 		});
 	});
