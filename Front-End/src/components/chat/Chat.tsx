@@ -322,6 +322,7 @@ function Chat(props: any) {
     };
   }, [currentChat]);
 
+
 	return (
 	  <>
 	  {" "}
