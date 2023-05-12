@@ -46,8 +46,10 @@ const ButtonSettings = (props: any) => {
 				}
 			};
 			input.click();
+		} else if (props.title === '2FA') {
+			return ;
 		} else {
-			props.onSubmit(event); // appel à la fonction onSubmit passée en tant que propriété
+			props.onSubmit(event);
 		}
 	}
 

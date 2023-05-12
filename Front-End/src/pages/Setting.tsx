@@ -10,8 +10,6 @@ import Switch2FA from '../components/settings/Switch2FA';
 import ButtonSettings from '../components/settings/ButtonSettings';
 import ButtonToggle from '../components/utils/ButtonToggle';
 
-
-
 const Setting = () => {
 	const authCtx = useContext(AuthContext);
 	const isLoggedIn = authCtx.isLoggedIn;
@@ -125,7 +123,6 @@ const Setting = () => {
 			<div className={style.mainPos}>
 				<SideBar title="Settings" />
 			<div className="contain-set">
-
 				<div className="section">
 					<h3>USERNAME</h3>
 					<p>Your username has to be unique and at most 20 characters long</p>
