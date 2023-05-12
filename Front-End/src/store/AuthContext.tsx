@@ -83,6 +83,9 @@ export const AuthContextProvider = (props: any) => {
 				},
 			});
 			if (response.ok) {
+				if (response.status === 204) {
+					return null
+				}
 				const blob = await response.blob();
 				setAvatar(URL.createObjectURL(blob));
 			}
