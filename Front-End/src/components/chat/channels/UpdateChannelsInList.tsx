@@ -28,7 +28,9 @@ export default function UpdateChannelsInList(props: any) {
 	});
 
 	useEffect(() => {
-		addListener("deleteChannel", data => {setAConversation(data)});
+		addListener("deleteChannel", () => {
+			getAllConv(user);
+		});
 	});
 
 	useEffect(() => {

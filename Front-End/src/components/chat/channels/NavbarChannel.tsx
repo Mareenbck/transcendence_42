@@ -106,7 +106,7 @@ export function NavbarChannel(props: any) {
             });
             const data = await response.json();
             props.onDeleteChannel();
-			sendMessage("removeConv", data)
+			sendMessage("removeConv", {channelId: channelId})
 			sendMessage("showUsersList", data)
             return data;
 
