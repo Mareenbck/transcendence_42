@@ -33,7 +33,7 @@ export class UserService {
 
 	async getUsers() {
 		try {
-		const allUsers = await this.prisma.user.findMany({});
+			const allUsers = await this.prisma.user.findMany({});
 		return allUsers;
 	} catch (error) {
 		throw new BadRequestException('getUser error : ' + error);

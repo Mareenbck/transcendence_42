@@ -21,6 +21,10 @@ const UsersChat = (props: any) => {
 	const offlineFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'OFFLINE' && friend.id !== parseInt(currentUserId));
 	const playingFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'PLAYING' && friend.id !== parseInt(currentUserId));
 
+	// useEffect(() => {
+	// 	addListener("showUsersList", data => setFriends(data))
+	// })
+
 	useEffect(() => {
 		const url = "http://localhost:3000/users/block/users/";
 		const fetchUsers = async () => {
