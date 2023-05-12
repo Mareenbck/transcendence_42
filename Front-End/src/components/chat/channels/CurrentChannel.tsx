@@ -162,6 +162,13 @@ export default function CurrentChannel(props: any) {
 		setIsJoined(false);
 	};
 
+	useEffect(() => {
+		addListener("deleteChannel", (channelId: any) => {
+			if (currentChatroom.id === channelId.channelId)
+			{	handleDeleteChannel()};
+		});
+	});
+
 	return (
 		<>
 			{isJoined && !isBanned && (

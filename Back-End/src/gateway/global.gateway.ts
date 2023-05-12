@@ -219,9 +219,8 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 	}
 
   @SubscribeMessage('removeConv')
-	async removeConv(@MessageBody() data: any ): Promise<void> {
-		const newList = await this.chatroomService.findAll();
-		this.server.emit('deleteChannel', newList);
+	async removeConv(@MessageBody() data: {channelId: number }): Promise<void> {
+		this.server.emit('deleteChannel', data);
 	}
 
   @SubscribeMessage('showUsersList')
