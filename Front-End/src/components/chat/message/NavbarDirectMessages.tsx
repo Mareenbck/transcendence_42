@@ -22,6 +22,9 @@ export function NavbarChannel(props: any) {
 		setSnackbarOpen(false);
 	}
 
+	console.log("icon --->")
+	console.log(icon)
+
 	const fetchAvatar = async (id: string) => {
 		const avat: any = await friendCtx.fetchAvatar(parseInt(id));
 		if (avat) {

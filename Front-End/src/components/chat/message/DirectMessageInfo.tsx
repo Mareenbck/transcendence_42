@@ -4,9 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AuthContext from '../../../store/AuthContext';
 import Fetch from '../../../interfaces/Fetch';
 import useSocket from '../../../service/socket';
+import { FriendContext } from '../../../store/FriendshipContext';
+import { UserChat } from '../../../interfaces/iChat';
 
 const DirectMessageInfo = (props: any) => {
 	const authCtx = useContext(AuthContext)
+	const friendCtx = useContext(FriendContext)
 	const [latestMessage, setLatestMessage] = useState<any>({});
 	const [lastReceivedMessage, setLastReceivedMessage] = useState<any>({});
 	const [lastEmittedMessage, setLastEmittedMessage] = useState<any>({});
@@ -38,6 +41,8 @@ const DirectMessageInfo = (props: any) => {
 
 	const fetchUserWithDirectMessages = async () => {
 	  const response = await Fetch.fetch(authCtx.token, "GET", `dir-mess/getMessages/`);
+		const avatar = await friendCtx.fetchAvatar(response.id);
+		response.avatar = avatar;
 		setLatestMessageCurrent(response.dirMessReceived[0]);
 	};
 
@@ -49,10 +54,6 @@ const DirectMessageInfo = (props: any) => {
 		  fetchUserWithDirectMessages();
 		}
 	  }, [addListener]);
-
-	  useEffect(() => {
-		// console.log("latestMessage changed:", latestMessage);
-	  }, [latestMessage]);
 
 	  useEffect(() => {
 		if (lastReceivedMessage && lastEmittedMessage) {
@@ -67,28 +68,6 @@ const DirectMessageInfo = (props: any) => {
 		  setLatestMessage(lastEmittedMessage);
 		}
 	  }, [lastReceivedMessage, lastEmittedMessage]);
-
-	// useEffect(() => {
-	// 	let lastReceivedMessageDate;
-	// 	let lastEmittedMessageDate;
-	// 	if (lastReceivedMessage) {
-	// 		lastReceivedMessageDate = new Date(lastReceivedMessage.createdAt);
-	// 	}
-	// 	if (lastEmittedMessage) {
-	// 		lastEmittedMessageDate = new Date(lastEmittedMessage.createdAt);
-	// 	}
-	// 	if (lastReceivedMessageDate && lastEmittedMessageDate) {
-	// 		if (lastReceivedMessageDate > lastEmittedMessageDate) {
-	// 			setLatestMessage(lastReceivedMessage);
-	// 		} else {
-	// 			setLatestMessage(lastEmittedMessage);
-	// 		}
-	// 	} else if (lastReceivedMessageDate && !lastEmittedMessageDate) {
-	// 		setLatestMessage(lastReceivedMessage);
-	// 	} else if (!lastReceivedMessageDate && lastEmittedMessageDate) {
-	// 		setLatestMessage(lastEmittedMessage);
-	// 	}
-	// }, [lastReceivedMessage, lastEmittedMessage, isCurrentUser]);
 
 	const formattedTime = latestMessage.createdAt
 	? new Date(latestMessage.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })

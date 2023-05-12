@@ -38,7 +38,6 @@ const PersonnalInfoChat = (props: any) => {
 		}
 	}, [props.style]);
 
-
 	return (
 		<div className={style}>
 		{/* // <div className="border-perso-channel"> */}

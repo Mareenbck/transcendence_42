@@ -15,7 +15,6 @@ const UsersChat = (props: any) => {
 	const friendCtx = useContext(FriendContext);
 	const [sendMessage, addListener] = useSocket()
 
-
 	const currentUserId = authCtx.userId;
 	const onlineFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'ONLINE' && friend.id !== parseInt(currentUserId));
 	const offlineFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'OFFLINE' && friend.id !== parseInt(currentUserId));
