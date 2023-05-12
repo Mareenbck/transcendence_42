@@ -313,7 +313,6 @@ function Chat(props: any) {
 		setActiveTab(newValue);
 	  };
 
-//com
 	return (
 	  <>
 	  {" "}
