@@ -14,6 +14,7 @@ import Menu from './pages/Menu';
 import TwoFaForm from './components/auth/TwoFA';
 import Setting from './pages/Setting';
 import Scores from'./components/scores/Scores';
+import NotFound from './pages/404';
 // import { fab } from '@fortawesome/free-brands-svg-icons'
 
 
@@ -31,7 +32,7 @@ function App() {
 			<Route path='/menu' element={<Menu />} />
 			<Route path='/settings' element={<Setting />} />
 			<Route path='/scores' element={<Scores />} />
-			{/* <Route path={`/users/profile/${authCtx.userId}`} element={<Profile />} /> */}
+			<Route path='/*' element={<NotFound />} />			
 			<Route path={`/users/profile/:id`} element={<Profile />} />
 		</Routes>
 	);

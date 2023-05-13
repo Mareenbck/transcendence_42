@@ -222,7 +222,7 @@ export class ChatroomService {
 			const chatRoomX: Chatroom = await this.findOne(channelId);
 			if (chatRoomX.visibility === "PRIVATE")
 			{
-				this.deleteRefusedInvitations
+				this.deleteInvitationsForLeftRooms(channelId, userId);
 			}
 			console.log("result", result)
 		return result;

@@ -169,6 +169,13 @@ export default function CurrentChannel(props: any) {
 		});
 	});
 
+	const handleKeyDown = (e: KeyboardEvent) => {
+		if (e.key === 'Enter') {
+		  handleSubmit(e);
+		}
+	  };
+	  
+
 	return (
 		<>
 			{isJoined && !isBanned && (
@@ -199,6 +206,7 @@ export default function CurrentChannel(props: any) {
 								className="chatMessageInput"
 								placeholder="write something..."
 								onChange={(e) => setNewMessage2(e.target.value)}
+								onKeyDown={handleKeyDown}
 								value={newMessage2}
 							></input>
 								<FontAwesomeIcon

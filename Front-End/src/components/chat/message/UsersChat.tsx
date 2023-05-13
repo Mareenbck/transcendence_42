@@ -20,6 +20,10 @@ const UsersChat = (props: any) => {
 	const offlineFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'OFFLINE' && friend.id !== parseInt(currentUserId));
 	const playingFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'PLAYING' && friend.id !== parseInt(currentUserId));
 
+	// useEffect(() => {
+	// 	addListener("showUsersList", data => setFriends(data))
+	// })
+
 	useEffect(() => {
 		const url = "http://localhost:3000/users/block/users/";
 		const fetchUsers = async () => {
@@ -44,12 +48,13 @@ const UsersChat = (props: any) => {
 		fetchUsers();
 	}, [])
 
+
 	return (
 		<>
 		<div className='contain-users'>
 		<PersonnalInfoChat style="chat"/>
 			<UsersAction title="Online" users={onlineFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
-			<UsersAction title="Offline" users={offlineFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
+			<UsersAction title="Offline" users={offlineFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock} offlineFriends={offlineFriends}/>
 			<UsersAction title="Playing" users={playingFriends} chat={props} getDirect={props.getDirect} isHeBlocked={props.isHeBlocked} inviteGame={props.inviteGame} setToBlock={props.setToBlock} getUser={props.getUser} setToUnblock={props.setToUnblock}/>
 		</div>
 		</>

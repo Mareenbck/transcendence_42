@@ -11,6 +11,7 @@ import Fetch from '../../../interfaces/Fetch';
 const UsersAction = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const [me, setMe] = useState<UserChat | null>(null);
+	const [isOffline, setisOffLine] = useState<any | null>(null);
 
 	// pour le mécanisme des blocked,j'ai besoin de ME as user puisque je ne suis pas dans allWith direct messsage
 	async function getMe() {
@@ -23,6 +24,7 @@ const UsersAction = (props: any) => {
 	useEffect(() => {
 		getMe();
 	}, [props.chat]);
+
 
   // suis-je bloqué
   const amIBlocked = (userXid: number): string => {
@@ -54,11 +56,13 @@ const UsersAction = (props: any) => {
 							<Tooltip title="Block">
 								<FontAwesomeIcon icon={faBan} onClick={() => {props.chat.setToBlock(props.chat.getUser(user.id))}} className={`btn-chatlist`}/>
 							</Tooltip>
+							{!props.offlineFriends && (
 							<Tooltip title="Invite to Play">
-								<Link to={'/game/'}  className='violet-icon' onClick={() => props.chat.inviteGame(user.id)}>
-									<FontAwesomeIcon icon={faTableTennisPaddleBall} className={`btn-chatlist`}/>
+								<Link to={'/game/'} className='violet-icon' onClick={() => props.chat.inviteGame(user.id)}>
+								<FontAwesomeIcon icon={faTableTennisPaddleBall} className={`btn-chatlist`}/>
 								</Link>
 							</Tooltip>
+							)}
 						</div>
 						</>
 						) : (

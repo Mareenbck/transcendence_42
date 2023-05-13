@@ -1,4 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
+import useSocket from '../service/socket';
+
 
 //creation du context pour auth
 //pour stocker les  data user
@@ -34,6 +36,8 @@ export const AuthContextProvider = (props: any) => {
 	const [email, setEmail] = useState<string | null>('');
 	const [ftAvatar, setftAvatar] = useState<string | null>(ftAvatarLocalStorage);
 	const [is2FA, setIs2FA] = useState<boolean>();
+	const [sendMessage, addListener] = useSocket()
+
 
 	useEffect(() => {
 		if (userId) {
@@ -148,6 +152,7 @@ export const AuthContextProvider = (props: any) => {
 				// body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
 			});
 			const data = await response.json();
+			sendMessage("showUsersList", {userId: userId});
 			if (response.ok) {
 				setToken("");
 				setUserId("");
