@@ -108,17 +108,41 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage('userRoom')
   async chatUserRoom(@MessageBody() data: {roomId: number, userId: number}, @ConnectedSocket() socket: Socket,): Promise<void>
-  { this.chatService.addRoomUser(data.roomId, data.userId, socket.id);  }
+  { 
+    if (data.userId !== null) {
+      const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+      if (!user) {
+        throw new WsException('Invalid credentials.');
+      }
+      this.chatService.addRoomUser(data.roomId, data.userId, socket.id);
+    }
+  }
 
   @SubscribeMessage('sendMessageRoom')
   async chatSendChatM(@MessageBody() message2 : {id: number, authorId: number, chatroomId: number, content: string, createdAt: any}, @ConnectedSocket() socket: Socket,)
-  { console.log("data BE : ", message2);
-    this.chatService.sendRoomMessage(message2.id, message2.authorId, message2.chatroomId, message2.content, message2.createdAt) }
+  { 
+    if (message2.authorId !== null) {
+      const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+      if (!user) {
+        throw new WsException('Invalid credentials.');
+      }
+    console.log("data BE : ", message2);
+    this.chatService.sendRoomMessage(message2.id, message2.authorId, message2.chatroomId, message2.content, message2.createdAt) 
+    }
+  }
 
   @SubscribeMessage('sendMessageDirect')
   async chatSendDirectM(@MessageBody() data: {content: string, author: string, receiver: string}, @ConnectedSocket() socket: Socket,): Promise<void>
-  { this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  }
-
+  { 
+    if (message2.authorId !== null) {
+      const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+      if (!user) {
+        throw new WsException('Invalid credentials.');
+      }
+      this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  
+    }
+  }
+  
   @SubscribeMessage('sendConv')
   async chatSendConversation(@MessageBody() data: {channelId: number, name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean}, @ConnectedSocket() socket: Socket,): Promise<void>
   { this.chatService.sendConv(data.channelId, data.name, data.isPublic, data.isPrivate, data.isProtected) };
