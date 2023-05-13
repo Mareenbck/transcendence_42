@@ -1,8 +1,8 @@
 import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
-import type {gameInit, gameState} from './interface_game'
+import type {GameInit, GameState} from './interface_game'
 
-const Canvas = (props: {gamestate: gameState, gameinit: gameInit, backColorGame: string} ) => {
+const Canvas = (props: {gamestate: GameState, gameinit: GameInit, backColorGame: string} ) => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
     const backColorGame = props.backColorGame;

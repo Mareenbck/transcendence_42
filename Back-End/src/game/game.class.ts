@@ -3,7 +3,7 @@ import { GameService } from 'src/game/game.service';
 import { player,
 		 ball,
 		 GameParams,
-		 statuses } from './game.interfaces';
+		 winners } from './game.interfaces';
 import UsersSockets from 'src/gateway/socket.class';
 import { GameDto } from './dto/game.dto';
 import { UserDto } from 'src/user/dto/user.dto';
@@ -38,12 +38,12 @@ export class GameRoom {
 	};
 
 	private interval: any; // define the interval property NodeJS.Timeout
-	private status: statuses = {
+	private winners: winners = {
 		winner: null,
 		playerR: {} as UserDto,
 		playerL: {} as UserDto,
-		status: null};
-
+		};
+	private status: string = 'null'
 	private ballSpeedX: number = ballSpeed;
 	private ballSpeedY: number = ballSpeed;
 	private ball: ball = {x: width/2, y: height/2};
@@ -128,8 +128,7 @@ export class GameRoom {
 			&& this.ballSpeedX < 0) {
 	// left racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
-//			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
-			this.ballSpeedY = 0.4*this.rackets_acel[0] + this.ballSpeedY + 0.001*(1 - 2 * Math.random()) * ballSpeed;
+			this.ballSpeedY = 0.4*this.rackets_acel[0] + this.ballSpeedY + 0.002*(1 - 2 * Math.random()) * ballSpeed;
 		}
 		else if (this.ball.y >= this.playerR.racket.y
 			&& this.ball.y <= this.playerR.racket.y + racket_height
@@ -137,8 +136,7 @@ export class GameRoom {
 			&& this.ballSpeedX > 0) {
 	// right racket reflection
 			this.ballSpeedX = -this.ballSpeedX;
-//			this.ballSpeedY = Math.sign(this.ballSpeedY) * Math.floor((0.3 + 1.1 * Math.random()) * ballSpeed);
-			this.ballSpeedY = 0.4*this.rackets_acel[1] + this.ballSpeedY + 0.001*(1 - 2 * Math.random()) * ballSpeed;
+			this.ballSpeedY = 0.4*this.rackets_acel[1] + this.ballSpeedY + 0.002*(1 - 2 * Math.random()) * ballSpeed;
 		}
 		if(Math.abs(this.ballSpeedY)>1.6*ballSpeed)
       		this.ballSpeedY = Math.sign(this.ballSpeedY)*1.6*ballSpeed;
@@ -150,7 +148,6 @@ export class GameRoom {
 
 			this.ball.x = width / 2 - this.ballSpeedX;
 			this.ball.y = (0.25 + 0.5*Math.random()) * height;
-			// this.ball.y = height / 2;
 			ballSpeed += ballDeltaSpeed;
 			this.ballSpeedX = ballSpeed;
 		} else if (this.ball.x > width - ballR) {
@@ -159,7 +156,6 @@ export class GameRoom {
 			this.gameService.changeScore(this.roomN, this.playerR.score, this.playerL.score);
 			this.ball.x = width / 2 - this.ballSpeedX;
 			this.ball.y = (0.25 + 0.5*Math.random()) * height;
-			// this.ball.y = height / 2 - this.ballSpeedX;
 			ballSpeed += ballDeltaSpeed;
 			this.ballSpeedX = -ballSpeed;
 		} else if ((this.ball.y < ballR && this.ballSpeedY < 0)
@@ -205,7 +201,7 @@ export class GameRoom {
 		const game: GameDto = await this.gameService.create({
 			playerOneId: this.playerR.user.id,
 			playerTwoId: this.playerL.user.id,
-			winnerId: this.status.winner.id,
+			winnerId: this.winners.winner.id,
 			score1: this.playerR.score,
 			score2: this.playerL.score,
 		});
@@ -222,11 +218,12 @@ export class GameRoom {
 		this.gameService.updateStatusGameOver(this.playerR.user.id);
 
 		// send winner
-		this.status.playerL = (this.playerL.user == this.status.winner ? this.status.winner : this.playerL.user);
-		this.status.playerR = (this.playerR.user == this.status.winner ? this.status.winner : this.playerR.user);
+		this.winners.playerL = (this.playerL.user == this.winners.winner ? this.winners.winner : this.playerL.user);
+		this.winners.playerR = (this.playerR.user == this.winners.winner ? this.winners.winner : this.playerR.user);
 		// console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)
 
-		this.server.to(this.room).emit('status', { winner: this.status.winner, playerR:this.status.playerR, playerL: this.status.playerL, status: 'winner',});
+		this.server.to(this.room).emit('winner', { winner: this.winners.winner, playerR:this.winners.playerR, playerL: this.winners.playerL, status: 'winner',});
+		this.server.to(this.room).emit('status', 'winner');
 
 		// leave room
 // console.log("leave room");
@@ -252,7 +249,7 @@ export class GameRoom {
 			//score MAX - change here
 			if ((this.playerL.score >= MAX_SCORE || this.playerR.score >= MAX_SCORE)){
 				clearInterval(this.interval);
-				this.status.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
+				this.winners.winner =  this.playerL.score > this.playerR.score ? this.playerL.user : this.playerR.user;
 //////////////////// to DB /////////////////////////
 				this.save_results2DB();
 ////////////////////////////////////////////////////
@@ -264,15 +261,14 @@ export class GameRoom {
 
 	// exit Game if exit buttonis pressed
 	public exitGame(player: UserDto): void {
-// console.log("exit in gameClass", player.id, this.playerR.user.id, this.playerL.user.id)
 		clearInterval(this.interval);
 		if (player.id == this.playerR.user.id){
 			this.playerL.score = MAX_SCORE;
-			this.status.winner =  this.playerL.user;
+			this.winners.winner =  this.playerL.user;
 		}
 		else {
 			this.playerR.score = MAX_SCORE;
-			this.status.winner =  this.playerR.user;
+			this.winners.winner =  this.playerR.user;
 		}
 
 		this.save_results2DB();

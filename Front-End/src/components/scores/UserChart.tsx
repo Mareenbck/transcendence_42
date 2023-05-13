@@ -4,8 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 
 
-
-
 const UserChart= (props: any) => {
 
     return (

@@ -1,3 +1,11 @@
+export enum GameStatus {
+    NULL = 1,
+    WAIT,
+    GAME,
+    WATCH,
+    CLOSE,
+}
+
 export interface UserGame {
 	id: number;
 	username: string;
@@ -8,7 +16,7 @@ export interface UserGame {
 	is2FA: boolean;
 };
 
-export interface gamesList{
+export interface GamesList{
     roomN: number;
 	playerR: UserGame;
 	playerL: UserGame;
@@ -26,7 +34,7 @@ export interface racket {
     y: number;
 }
 
-export interface gameState {
+export interface GameState {
     racket1: racket;
     racket2: racket;
     ball: ball;
@@ -34,7 +42,7 @@ export interface gameState {
     scoreL: number
 }
 
-export interface gameInit {
+export interface GameInit {
     table_width: number;
     table_height: number;
     racket_width: number;
@@ -44,14 +52,9 @@ export interface gameInit {
     scoreL: number;
 }
 
-export interface gameStatus {
-    winner: UserGame;
+export interface GameWinner {
+    winner: UserGame | null;
     playerR: UserGame;
     playerL: UserGame;
-    status: string;
 }
 
-export interface players {
-    playerR: UserGame;
-    playerL: UserGame;
-}

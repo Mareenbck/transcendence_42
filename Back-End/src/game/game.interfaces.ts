@@ -1,3 +1,12 @@
+
+export enum GameStatus {
+    NULL = 1,
+    WAIT,
+    GAME,
+    WATCH,
+    CLOSE,
+}
+
 import { UserDto } from "src/user/dto/user.dto";
 
 export interface player{
@@ -16,7 +25,7 @@ export interface racket {
 	y: number;
 }
   
-export interface gameInit {
+export interface GameInit {
 	table_width: number;
 	table_height: number;
 	ballR: number;
@@ -25,7 +34,6 @@ export interface gameInit {
 	racketHeight: number;
 	scoreR: number;
 	scoreL: number;
-//	winner: any;
 }
 
 
@@ -42,20 +50,12 @@ export interface invited{
 	player: UserDto;
 }
 
-export interface statuses{
+export interface winners{
 	winner: UserDto;
 	playerR: UserDto;
 	playerL: UserDto;
-	status: string;
 }
  
-// export enum GameStatus {
-// 	STARTING = 'starting',
-// 	PLAYING = 'playing',
-// 	ENDED = 'ended',
-// 	ABORTED = 'aborted',
-// }
-
 
 export const GameParams = {
 	GAME_WIDTH: 1.0,
@@ -69,3 +69,4 @@ export const GameParams = {
 	BALL_DELTA_SPEED: 0.0005,
 	PERIOD: 50 // fps
 };
+
