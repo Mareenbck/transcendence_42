@@ -84,30 +84,36 @@ export default function CurrentChannel(props: any) {
 	useEffect(() => {
 		AMessageChat && currentChatroom?.id === AMessageChat.chatroomId &&
 			setMessages2(prev => {
-				const isDuplicate = prev.some(message => (message.createdAt === AMessageChat.createdAt && message.content === AMessageChat.content));
+				const isDuplicate = prev.some(message => (message.id === AMessageChat.id));
+				console.log("Received duplicate ?", isDuplicate)
 				if (!isDuplicate) {
 					return [...prev, AMessageChat];
 				}
 				return prev;
 			});
-		if (currentChatroom) {
-			getMess();
-		}
-	}, [AMessageChat, currentChatroom])
+	//	if (currentChatroom) {
+	//		console.log("eeeeeeeeeeee   5 " )
+	//		getMess();
+	//	}
+	}, [AMessageChat
+	//	, currentChatroom
+]);
 
 	useEffect(() => {
+		console.log("SETUP effect on currentChatRoom " )
+		getMess();
 		setParticipants(currentChatroom.participants);
 	}, [currentChatroom]);
 
 	async function getMess() {
 		try {
 			if (currentChatroom) {
-				const response = await Fetch.fetch(authCtx.token, "GET", `chat-mess\/room`, currentChatroom?.id);
-				setMessages2(response);
 				sendMessage("userRoom", {
 					userId: +authCtx.userId,
 					roomId: +currentChatroom.id,
 				} as any)
+				const response = await Fetch.fetch(authCtx.token, "GET", `chat-mess\/room`, currentChatroom?.id);
+				setMessages2(response);
 			}
 		} catch (err) {
 			console.log(err);
@@ -115,32 +121,38 @@ export default function CurrentChannel(props: any) {
 	};
 
 	useEffect(() => {
-		addListener("getMessageRoom", (data) => setAMessageChat({
-			authorId: data.authorId,
-			chatroomId: data.chatroomId,
-			content: data.content,
-			createdAt: new Date(Date.now()),
-		}));
-	}, []);
+		addListener("getMessageRoom", (data) => 
+		{
+			console.log("received ", data );
+			setAMessageChat({
+				authorId: data.authorId,
+				chatroomId: data.chatroomId,
+				content: data.content,
+				id: data.id,
+				createdAt: data.createdAt,
+			});}		
+		);
+	});
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
+	console.log("chatroom hasID ? " , currentChatroom.id) 
 		if (currentChatroom.id) {
-			const message2 = {
+			let message2 = {
 				authorId: currentId,
 				content: newMessage2,
 				chatroomId: currentChatroom.id,
 			};
-			sendMessage("sendMessageRoom", {
-				authorId: currentId,
-				chatroomId: +currentChatroom.id,
-				content: newMessage2,
-			} as any)
-			try {
-				const res = await MessageReq.postMess(authCtx, message2);
-				setMessages2([...messages2, res]);
-				setNewMessage2("");
-			} catch (err) { console.log(err) }
+		try {
+			const res = await MessageReq.postMess(authCtx, message2);
+	console.log("registered ?" , res); 
+			message2.id = res.id;
+			message2.createdAt = res.createdAt;
+	console.log("res with id ?" , message2); 
+			setMessages2([...messages2, res]);
+			sendMessage("sendMessageRoom", message2 as any)
+			setNewMessage2("");
+		} catch (err) { console.log(err) }
 		}
 	}
 

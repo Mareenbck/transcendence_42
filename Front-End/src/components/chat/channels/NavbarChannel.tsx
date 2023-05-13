@@ -230,7 +230,7 @@ export function NavbarChannel(props: any) {
 					}
 				</div>
 			}
-			{isAdmin === 'USER' &&
+			{(isAdmin === 'USER' || isAdmin === 'ADMIN') &&
 				<FontAwesomeIcon onClick={() => leaveChannel(props.chatroom.id)} icon={faArrowRightFromBracket} className="btn-dialog-navbar-leave"/>
 			}
 			 {/* <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button> */}
