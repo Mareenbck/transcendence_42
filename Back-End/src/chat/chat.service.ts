@@ -41,14 +41,13 @@ export class ChatService {
     }
 
     // SENDING MESSAGES
-    sendRoomMessage:any = (authorId: number, chatroomId: number, content: string) => {
+    sendRoomMessage:any = (id:number, authorId: number, chatroomId: number, content: string, createdAt: any) => {
         const roomU = this.roomUsers.filter( room => +room.roomId === +chatroomId);
+        console.log("be : send room message", roomU, "eee", this.roomUsers, "messageId", id)
         if (roomU.length > 1) {
             for(const room of roomU) {
                 this.server.to(room.socketId).emit("getMessageRoom", {
-                    authorId,
-                    chatroomId,
-                    content,
+                    id, authorId, chatroomId, content, createdAt
                 });
             }
         }

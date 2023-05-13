@@ -111,13 +111,13 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   { this.chatService.addRoomUser(data.roomId, data.userId, socket.id);  }
 
   @SubscribeMessage('sendMessageRoom')
-  async chatSendChatM(@MessageBody()  data: {authorId: number, chatroomId: number, content: string,}, @ConnectedSocket() socket: Socket,)
-  { this.chatService.sendRoomMessage(data.authorId, data.chatroomId, data.content,) }
+  async chatSendChatM(@MessageBody() message2 : {id: number, authorId: number, chatroomId: number, content: string, createdAt: any}, @ConnectedSocket() socket: Socket,)
+  { console.log("data BE : ", message2);
+    this.chatService.sendRoomMessage(message2.id, message2.authorId, message2.chatroomId, message2.content, message2.createdAt) }
 
   @SubscribeMessage('sendMessageDirect')
   async chatSendDirectM(@MessageBody() data: {content: string, author: string, receiver: string}, @ConnectedSocket() socket: Socket,): Promise<void>
-  { console.log("data ", data)
-    this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  }
+  { this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  }
 
   @SubscribeMessage('sendConv')
   async chatSendConversation(@MessageBody() data: {channelId: number, name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean}, @ConnectedSocket() socket: Socket,): Promise<void>
