@@ -16,9 +16,8 @@ import Setting from './pages/Setting';
 import Scores from'./components/scores/Scores';
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import useSocket from './service/socket';
-import { UserChat} from "./interfaces/iChat";
-import PopupChallenge from './components/chat/PopupChallenge';
-import AuthContext from './store/AuthContext';
+import { UserChat } from "./interfaces/iChat";
+import PopupChallenge from './components/modal/PopupChallengeApp';
 
 
 
@@ -26,31 +25,10 @@ import AuthContext from './store/AuthContext';
 
 function App() {
 
-	const [invited, setInvited] = useState<UserChat | null> (null);
-	const [sendMessage, addListener] = useSocket();
-	const [allUsers, setAllUsers] = useState <UserChat[]> ([]);
-	const user = useContext(AuthContext);
-	const id = user.userId;
-
-
-	useEffect(() => {
-		addListener("wasInvited", data => {
-		  setInvited(data);
-		  
-		});
-	  });
-
-	const getUser  = (userId: number): UserChat | null => {
-		const a = allUsers.find(user => +user?.id === +userId);
-		if (a !== undefined)
-			{ return(a)}
-		return (null);
-	};
-
 	
 	return (
 		<>
-		<PopupChallenge trigger={invited} setTrigger={setInvited} sendMessage={sendMessage} player={(getUser(+id))} > </PopupChallenge>
+		<PopupChallenge> </PopupChallenge>
 
 		<Routes>
 			<Route path='/' element={<Home />} />

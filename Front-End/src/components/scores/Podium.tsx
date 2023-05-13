@@ -1,8 +1,5 @@
 import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
-// import SideBar from '../SideBar';
-// import { Link, Navigate, useNavigate } from "react-router-dom";
-// import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"

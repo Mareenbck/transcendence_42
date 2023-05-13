@@ -9,7 +9,7 @@ import UsersSockets from "src/gateway/socket.class";
 import {
 	roomsList,
 	invited,
-	// statuses
+	GameStatus,
 	} from './game.interfaces';
 import { GameRoom } from './game.class';
 
@@ -35,7 +35,6 @@ export class GameService {
 	private roomN: number = 0;
 
 
-// ...
 	changeScore = (roomN: number, scoreR: number, scoreL: number) => {
 		const index = this.roomArray.findIndex(i => i.roomN == roomN);
 		if (index !== -1) {
@@ -62,7 +61,7 @@ export class GameService {
 
 	    if(this.players.length == 1 && this.players.some(id => id == userId)){
 // console.log("1 enterGame waiting");
-			socket.emit('status', {status: 'waiting'});
+			socket.emit('status', GameStatus.WAIT);
 		}
 		// was playing
 		else{
@@ -75,15 +74,15 @@ export class GameService {
 				game.init(playerDto);
 				game.initMoveEvents();
 				socket.join(`room${game.roomN}`);
-				socket.emit('status', {status: 'game'});
+				socket.emit('status', GameStatus.GAME);
 				this.sendListRooms();
 			}
 		}
 	}
-	exitGame = async (userId: number, status: string, socket: Socket) => {
+	exitGame = async (userId: number, status: number, socket: Socket) => {
 // console.log("0 exitGame");
 		// if it was waiting
-		if (status == 'waiting'){
+		if (status == GameStatus.WAIT){
 // console.log("1 exitGame waiting");
 			// waiting a new game
 			if(this.players.some(id => +id == +userId)){
@@ -96,10 +95,10 @@ export class GameService {
 				this.invited = this.invited.filter(p => p.author.id != userId); //send message
 			}
 
-			socket.emit('status', {status: 'null'});
+			socket.emit('status', GameStatus.NULL);
 		}
 		// if is game
-		else if (status == 'game'){
+		else if (status == GameStatus.GAME){
 // console.log("1 exitGame game");
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
@@ -108,7 +107,7 @@ export class GameService {
 				const game: GameRoom = this.gameMap[index];
 				game.exitGame(playerDto);
 			}
-			socket.emit('status', {status: 'null'});
+			socket.emit('status', GameStatus.NULL);
 		}
 	}
 
@@ -146,8 +145,6 @@ export class GameService {
 
 // removing room in gameMap and roomArray
 	removeRoom = (roomN: number): void => {
-//		const room = `room${roomN}`;
-//		this.userSockets.leaveRoom(room);
 
 // console.log("0 gameMap", this.gameMap.length);
 		const filteredGameMap = this.gameMap.filter(i => i.roomN !== roomN);
@@ -162,53 +159,52 @@ export class GameService {
 
 // emit to all users in all rooms that play
 	sendListRooms = () => {
-		this.server.emit("gameRooms", this.roomArray); // send to Front
+		this.server.emit("gameRooms", this.roomArray); 
 	}
 
 //after pressing "playGame" or "watch"
 	playGame = async (userId: number, roomN: number): Promise<void> => {
-//if player comes in to random game
-		if (roomN == -1){ //
+		if (roomN == -1){ //if player comes in to random game
 			this.addPlayer(userId);
-			this.userSockets.emitToId(userId,'status', {status: 'waiting'} );
+			this.userSockets.emitToId(userId, 'status', GameStatus.WAIT );
 			if (this.players.length == 2){
 				const playerR: UserDto = await this.userService.getUser(this.players[0]);
 				const playerL: UserDto = await this.userService.getUser(this.players[1]);
-				this.userSockets.emitToId(playerR.id,'status', {status: 'game'});
-				this.userSockets.emitToId(playerL.id,'status', {status: 'game'});
+				this.userSockets.emitToId(playerR.id,'status', GameStatus.GAME );
+				this.userSockets.emitToId(playerL.id,'status', GameStatus.GAME );
 				this.addNewRoom(playerR, playerL);
 			}
 		}
-//if spectator comes to watch
-		else {
+		else {//if spectator comes to watch
 			let game = this.gameMap.find(i => i.roomN == roomN);
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			game.init(playerDto);
 			game.initMoveEvents();
 			this.userSockets.joinToRoomId(playerDto.id, `room${roomN}`);
-			this.userSockets.emitToId(playerDto.id,'status', {status:'watch'});
+			this.userSockets.emitToId(playerDto.id,'status', GameStatus.WATCH );
 		}
 	}
 
 //processing function the messages "InviteGame", 'acceptGame', 'refuseGame'
 	gameInvite = (author: UserDto, player: UserDto): void => {
-		this.userSockets.emitToId(author.id,'status', {status: 'waiting'} );
+		this.userSockets.emitToId(author.id,'status', GameStatus.WAIT );
 		this.invited.push({author, player});
 	}
 
-	acceptGame = (author: UserDto, player: UserDto): void => {
-		if(this.searchPair(author.id, player.id)){
-console.log('cu-cu');
-			this.userSockets.emitToId(author.id,'status', { status:'game'});
-			this.userSockets.emitToId(player.id,'status', { status:'game'});
-			this.addNewRoom(author, player);
+	acceptGame = async (authorId: number, playerId: number): Promise<void> => {
+		if(this.searchPair(authorId, playerId)){
+			this.userSockets.emitToId(authorId,'status', GameStatus.GAME );
+			this.userSockets.emitToId(playerId,'status', GameStatus.GAME );
+			const playerR: UserDto = await this.userService.getUser(authorId);
+			const playerL: UserDto = await this.userService.getUser(playerId);
+			this.addNewRoom(playerR, playerL);
 		}
 	};
 
-	refusalGame = (author: UserDto, player: UserDto): void => {
-		if(this.searchPair(author.id, player.id)) {
-			this.userSockets.emitToId(author.id,'status', {status: 'false'} );
-			this.userSockets.emitToId(player.id,'status', {status: 'null'} );
+	refusalGame = (authorId: number, playerId: number): void => {
+		if(this.searchPair(authorId, playerId)) {
+			this.userSockets.emitToId(authorId,'status', GameStatus.CLOSE );
+			this.userSockets.emitToId(playerId,'status', GameStatus.NULL );
 
 		};
 	};
@@ -222,7 +218,6 @@ console.log('cu-cu');
 async create({playerOneId, playerTwoId, winnerId, score1, score2}) {
 	await this.userService.updateAchievement(parseInt(playerOneId), 'Rookie')
 	await this.userService.updateAchievement(parseInt(playerTwoId), 'Rookie')
-	//+async
 	return this.prisma.game.create({data: { playerOneId, playerTwoId, winnerId, score1, score2}});
 }
 

@@ -64,8 +64,6 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   async handleConnection(socket: Socket) {
     try {
-// console.log("Enter Global Soket server");
-// console.log(socket.handshake.auth.token);
       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
       if (!user) {
         throw new WsException('Invalid credentials.');
@@ -78,7 +76,6 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         this.userSockets.removeSocket(socket)
         socket.disconnect(true);
     }
-// console.log("GlobalGateway - handleConnect, clients :", this.userSockets.users.keys());
   }
 
   async handleDisconnect(client: Socket) {
@@ -160,15 +157,15 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   { this.gameService.enterGame(socket.data.id, socket); };
 
   @SubscribeMessage('exitGame')
-  async exitGame(@MessageBody() data: {status: string}, @ConnectedSocket() socket: Socket): Promise<void> ///
+  async exitGame(@MessageBody() data: {status: number}, @ConnectedSocket() socket: Socket): Promise<void> ///
   { this.gameService.exitGame(socket.data.id, data.status, socket); };
 
   @SubscribeMessage('acceptGame')
-  async acceptGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void>
+  async acceptGame(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket): Promise<void>
   { this.gameService.acceptGame(data.author, data.player) };
 
   @SubscribeMessage('refuseGame')
-  async refusalGame(@MessageBody() data: {author: UserDto, player: UserDto}, @ConnectedSocket() socket: Socket): Promise<void>
+  async refusalGame(@MessageBody() data: {author: number, player: number}, @ConnectedSocket() socket: Socket): Promise<void>
   { this.gameService.refusalGame(data.author, data.player) };
 
   @SubscribeMessage('InviteGame')
