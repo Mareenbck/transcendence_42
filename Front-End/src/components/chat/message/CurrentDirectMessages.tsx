@@ -90,7 +90,7 @@ export default function CurrentDirectMessages(props: any) {
 		}
 	  }
 	  
-	  const handleKeyDown = (e: KeyboardEvent) => {
+	  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === 'Enter') {
 		  if (newMessageD.trim().length > 0) {
 			handleSubmitD(e); 
@@ -98,7 +98,7 @@ export default function CurrentDirectMessages(props: any) {
 		  e.preventDefault();
 		}
 	  };
-
+	  
 	  const handleIconClick = (e: FormEvent) => {
 		if (newMessageD.trim().length > 0) {
 		  handleSubmitD(e);
