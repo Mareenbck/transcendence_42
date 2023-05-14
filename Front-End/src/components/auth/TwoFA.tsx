@@ -26,7 +26,9 @@ export function TwoFaForm (){
 			},
 			body: JSON.stringify({twoFAcode: digitCodeInputRef.current!.value}),
 		});
+		console.log("response ---->", response)
 		const data = await response.json();
+		console.log("data --->", data)
 		if (data.access_token) {
 			setRedirectToHome(true);
 		} else {

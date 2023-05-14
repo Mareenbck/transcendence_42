@@ -63,7 +63,11 @@ export class TwoFactorAuthenticationController {
 				twoFAcode,
 				user
 				);
-			return this.twoFactorAuthService.loginWith2fa(user);
+			if (isCodeValid) {
+				return this.twoFactorAuthService.loginWith2fa(user);
+			} else {
+				return false
+			}
 		} catch {
 			console.error("Error in isTwoFactorAuthenticationCodeValid: ");
 			return false;
