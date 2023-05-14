@@ -34,6 +34,8 @@ export default function UsersWithDirectMessage(props: any) {
 		});
 	}, [addListener]);
 
+	
+
 
 	useEffect(() => {
 		if (AUsersWith) {
@@ -48,6 +50,8 @@ export default function UsersWithDirectMessage(props: any) {
 		getUserFromBack();
 	}
 	}, [AUsersWith]);
+
+
 
   // aller chercher la liste des users avec active conv
 	async function getAllUsersWith() {
@@ -70,6 +74,7 @@ export default function UsersWithDirectMessage(props: any) {
 		fetchData();
 	  }, [AUsersWith]);
 
+
 // pour le mécanisme des blocked,j'ai besoin de ME as user puisque je ne suis pas dans allWith direct messsage
 	async function getMe() {
 		if (authCtx) {
@@ -88,7 +93,15 @@ export default function UsersWithDirectMessage(props: any) {
       { return "chatOnlineNotFriend"; }
     else
       {return "chatOnlineFriend";}
+
   };
+
+  useEffect(() => {
+	addListener("changeParticipants", () => {
+		amIBlocked();
+	});
+});
+
 
   useEffect(() => {
 	const fetchUserWithDirectMessages = async () => {

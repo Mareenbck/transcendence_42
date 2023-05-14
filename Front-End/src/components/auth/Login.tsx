@@ -4,6 +4,9 @@ import '../../style/Form.css'
 import AuthContext from '../../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
+import useSocket from "../../service/socket";
+
+
 
 
 interface ErrorMsg {
@@ -15,14 +18,15 @@ function AuthForm() {
 	const emailInputRef = useRef<HTMLInputElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 	const usernameLocalStorage = localStorage.getItem("username");
-
+	
 	let navigate = useNavigate();
-
+	
 	const authCtx = useContext(AuthContext);
 	const [error, setError] = useState<ErrorMsg | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [is2FA, setIs2FA] = useState(false);
+	const [sendMessage, addListener] = useSocket();
 
 	useEffect(() => {
 		if (isAuthenticated && is2FA) {
@@ -100,6 +104,7 @@ function AuthForm() {
 		};
 		fetchHandleLogin();
 		setIsLoading(true);
+
 
 		//pour vider les champs du formulaire
 		emailInputRef.current!.value = ""

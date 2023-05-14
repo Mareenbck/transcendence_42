@@ -34,7 +34,7 @@ export default function MyAccountMenu(props: any) {
 	}, [])
 
 	const handleLogout = () => {
-		console.log("FE LOGOUT", authCtx.userId)
+		// console.log("FE LOGOUT", authCtx.userId)
 		sendMessage("logout", authCtx.userId);
 		authCtx.logout();
 	};

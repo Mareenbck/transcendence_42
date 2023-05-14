@@ -71,7 +71,7 @@ export default function ChannelVisibility(props: any) {
 const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const password = passwordInputRef.current?.value;
-	if (!passwordInputRef.current?.value) {
+	if (!passwordInputRef.current?.value && props.visibility === "PWD_PROTECTED") {
 		setPasswordError(true)
 		alert("wrongpassword")
 		return;
@@ -129,7 +129,7 @@ const handlePassword= (e: FormEvent) => {
               variant="filled"
               placeholder="Type a new password..."
               inputRef={passwordInputRef}
-			  onChange={handlePassword}
+			        onChange={handlePassword}
               error={passwordError}
             />
             <VisibilityIcon

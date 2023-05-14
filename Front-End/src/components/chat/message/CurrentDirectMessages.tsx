@@ -105,7 +105,6 @@ export default function CurrentDirectMessages(props: any) {
 		}
 	  };
 	  
-	  
 
 	  return (
 		<>
