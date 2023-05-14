@@ -71,6 +71,11 @@ export default function ChannelVisibility(props: any) {
 const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const password = passwordInputRef.current?.value;
+	if (!password) {
+		console.log("coucou")
+		setPasswordError(true)
+		return;
+	}
     try {
         const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
             method: "POST",
@@ -90,7 +95,7 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
         } else {
             setIsJoined(true);
             setOpenJoinModal(false);
-			      sendMessage("joinedChannel", data)
+			sendMessage("joinedChannel", data)
             sendMessage("toMute", {channelId: channelId})
         }
     } catch (err) {
@@ -125,7 +130,11 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
             <Typography variant="caption" color="error">
               {passwordError && "Incorrect password"}
             </Typography>
-            <button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
+            <button 
+			className="btnn"
+			disabled={passwordError}
+			onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
+			
           </Box>
         </Modal>
       </div>
