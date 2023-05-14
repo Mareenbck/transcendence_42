@@ -7,8 +7,6 @@ import jwtDecode from 'jwt-decode';
 import useSocket from "../../service/socket";
 
 
-
-
 interface ErrorMsg {
 	title: string;
 	message: string
@@ -91,6 +89,7 @@ function AuthForm() {
 						setIs2FA(false);
 					}
 					setIsAuthenticated(true);
+					sendMessage("login", authCtx.userId)
 				} else {
 					//CHANGER LES MSG DANS BACK -> A DATE FORBIDDEN
 					setError({

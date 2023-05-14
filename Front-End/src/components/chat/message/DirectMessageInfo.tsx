@@ -70,11 +70,19 @@ const DirectMessageInfo = (props: any) => {
 	  }, [lastReceivedMessage, lastEmittedMessage]);
 
 
-	
-
-	  useEffect(() => {
+	useEffect(() => {
 		addListener("changeParticipants", () => {
 			setStatus('offline');
+		});
+	});
+
+
+	useEffect(() => {
+		addListener("changeParticipants", () => {
+			if (status === 'online')
+				setStatus('offline')
+			if (status === 'offline')
+				setStatus('online')
 		});
 	});
 

@@ -158,8 +158,11 @@ export class ChatService {
     };
 
     logout: any = () => {
-        // console.log("BE LOGOUT service");
          this.server.emit('changeParticipants');
     };
+
+    login: any = () => {
+        this.server.emit('changeParticipants');
+   };
 }
 

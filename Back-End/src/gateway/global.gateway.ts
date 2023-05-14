@@ -184,6 +184,18 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     };
   }
 
+  @SubscribeMessage('login')
+  async appLogin(@MessageBody() data: {userId: number}, @ConnectedSocket() socket: Socket): Promise<void>
+  { 
+    if (data.userId !== null) {
+      const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+      if (!user) {
+        throw new WsException('Invalid credentials.');
+      }
+      this.chatService.logout();
+    };
+  }
+
 ///////////////////////////
 // Messages for Game: Invite et random
 //////////////////////////

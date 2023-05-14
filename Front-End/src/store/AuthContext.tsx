@@ -154,7 +154,7 @@ export const AuthContextProvider = (props: any) => {
 				// body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
 			});
 			const data = await response.json();
-			sendMessage("showUsersList", {userId: userId});
+			// sendMessage("showUsersList", {userId: userId});
 			if (response.ok) {
 				setToken("");
 				setUserId("");
@@ -181,6 +181,7 @@ export const AuthContextProvider = (props: any) => {
 
 	const logoutHandler = async () => {
 		await fetchLogout();
+		sendMessage("login", userId)
 	};
 	//si presence du token -> logged
 	const userIsLoggedIn = !!token;
