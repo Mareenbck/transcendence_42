@@ -33,7 +33,6 @@ export default function InteractiveListe(props: any) {
     const owner = participants.filter((p: any) => p.role === 'OWNER');
     const users = participants.filter((p: any) => p.role === 'USER');
     const [sendMessage, addListener] = useSocket();
-    const [bannedUsers, setBannedUsers] = React.useState([]);
 
 
 	const showParticipants = React.useCallback(async (channelId: string) => {
@@ -117,11 +116,9 @@ export default function InteractiveListe(props: any) {
             setParticipants(data)
             const updatedParticipants = participants.filter(p => p.user.id !== userId);
             setParticipants(updatedParticipants);
-            setIsBanned(true);
             showParticipants(channelId);
             setIsBanned(true)
             sendMessage('toMute', {channelId: channelId, userId: userId})
-            setBannedUsers([...bannedUsers, userId]);
         } catch (error) {
             console.error(error);
         }
@@ -149,7 +146,6 @@ export default function InteractiveListe(props: any) {
                 showParticipants(channelId);
                 setIsBanned(false)
                 sendMessage('toMute', {channelId: channelId, userId: userId})
-                setBannedUsers(bannedUsers.filter(id => id !== userId));
             } catch (error) {
                 console.error(error);
             }

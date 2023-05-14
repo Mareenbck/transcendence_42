@@ -94,6 +94,29 @@
   color: #ab1414;
 }
 
+.been-banned {
+	display: flex;
+	height: 105px;
+	align-items: center;
+	justify-content: space-around;
+	background-color: #FDFAF9;
+  }
+
+.been-banned p {
+  margin: 0px;
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 2px;
+}
+
+.been-banned-icon {
+  height: 45px;
+  width: 45px;
+  color: #ab1414;
+}
+
+
 .banned {
   color: red;
 }

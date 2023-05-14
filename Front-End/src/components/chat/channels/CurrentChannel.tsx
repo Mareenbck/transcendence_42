@@ -23,13 +23,15 @@ export default function CurrentChannel(props: any) {
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
 	const [isMuted, setIsMuted] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'MUTE'));
+	const [isBanned, setIsBanned] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'BAN'));
 	const [showPopUp, setShowPopUp] = useState(true);
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
-	const [isBanned, setIsBanned] = useState(false);
+	// const [isBanned, setIsBanned] = useState(false);
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
 	const [toMute, setToMute] = useState(props.setToMute);
+	const [toBan, setToBan] = useState(props.setToBan);
 
 	useEffect(() => {
 		addListener("joinedChannelR2", (channelId: number) => {
@@ -65,11 +67,6 @@ export default function CurrentChannel(props: any) {
 			setParticipants(data))
 	}, [addListener])
 
-	// useEffect(() => {
-	// 	addListener('leavedChannel', (channelId: number) => {
-	// 		setParticipants(channelId);
-	// 	});
-	// });
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -85,22 +82,15 @@ export default function CurrentChannel(props: any) {
 		AMessageChat && currentChatroom?.id === AMessageChat.chatroomId &&
 			setMessages2(prev => {
 				const isDuplicate = prev.some(message => (message.id === AMessageChat.id));
-				console.log("Received duplicate ?", isDuplicate)
+				// console.log("Received duplicate ?", isDuplicate)
 				if (!isDuplicate) {
 					return [...prev, AMessageChat];
 				}
 				return prev;
 			});
-	//	if (currentChatroom) {
-	//		console.log("eeeeeeeeeeee   5 " )
-	//		getMess();
-	//	}
-	}, [AMessageChat
-	//	, currentChatroom
-]);
+	}, [AMessageChat]);
 
 	useEffect(() => {
-		console.log("SETUP effect on currentChatRoom " )
 		getMess();
 		setParticipants(currentChatroom.participants);
 	}, [currentChatroom]);
@@ -123,7 +113,6 @@ export default function CurrentChannel(props: any) {
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => 
 		{
-			console.log("received ", data );
 			setAMessageChat({
 				authorId: data.authorId,
 				chatroomId: data.chatroomId,
@@ -136,7 +125,6 @@ export default function CurrentChannel(props: any) {
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-	console.log("chatroom hasID ? " , currentChatroom.id) 
 		if (currentChatroom.id) {
 			let message2 = {
 				authorId: currentId,
@@ -145,10 +133,8 @@ export default function CurrentChannel(props: any) {
 			};
 		try {
 			const res = await MessageReq.postMess(authCtx, message2);
-	console.log("registered ?" , res); 
 			message2.id = res.id;
 			message2.createdAt = res.createdAt;
-	console.log("res with id ?" , message2); 
 			setMessages2([...messages2, res]);
 			sendMessage("sendMessageRoom", message2 as any)
 			setNewMessage2("");
@@ -182,15 +168,21 @@ export default function CurrentChannel(props: any) {
 	});
 
 	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.key === 'Enter') {
+		if (e.key === 'Enter'  && newMessage2.trim() !== '') {
 		  handleSubmit(e);
 		}
 	  };
 	  
 
+	  const handleIconClick = (e: FormEvent) => {
+		if (newMessage2.trim().length > 0) {
+		  handleSubmit(e);
+		}
+	  };
+
 	return (
 		<>
-			{isJoined && !isBanned && (
+			{isJoined &&(
 				<>
 					<NavbarChannel
 						chatroom={currentChatroom}
@@ -201,18 +193,20 @@ export default function CurrentChannel(props: any) {
 						onDeleteChannel={handleDeleteChannel}
 						setCurrentChat={props.setCurrentChat}
 					/>
-					<div className="chatBoxTop">
-						{messages2.length ? (
-							messages2.map((m, i) => (
-								<div key={i} ref={scrollRef}>
-									<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
-								</div>
-							))
-						) : (
-							<div className="box-msg"><span className="noConversationText2">No message in this room yet.</span></div>
-						)}
-					</div>
-					{!isMuted ?
+					{!isBanned && 
+						<div className="chatBoxTop">
+							{messages2.length ? (
+								messages2.map((m, i) => (
+									<div key={i} ref={scrollRef}>
+										<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
+									</div>
+								))
+							) : (
+								<div className="box-msg"><span className="noConversationText2">No message in this room yet.</span></div>
+							)}
+						</div>
+					}
+					{!isBanned && !isMuted && 
 						(<div className="chatBoxBottom">
 							<input
 								className="chatMessageInput"
@@ -223,18 +217,24 @@ export default function CurrentChannel(props: any) {
 							></input>
 								<FontAwesomeIcon
 								icon={faPaperPlane}
-								onClick={handleSubmit}
-								className={`send-btn-chat ${isMuted ? 'muted' : ''}`} // Ajoute la classe 'muted' si l'utilisateur est muté
-								disabled={toMute}
+								onClick={handleIconClick}
+								className={`send-btn-chat ${isMuted ? 'muted' : ''}`} 
+								disabled={toBan}
 								/>
 							</div>
-								) : (
-									<div className="been-muted">
-									<p>Sorry, You've been muted by Admin</p>
-									<FontAwesomeIcon icon={faCommentSlash} className="been-muted-icon"/>
-									</div>
-								)
-					}
+						)}
+						{isBanned &&
+							<div className="been-banned">
+							<p>Sorry, You've been banned by Admin</p>
+							<FontAwesomeIcon icon={faCommentSlash} className="been-banned-icon"/>
+							</div>
+						}
+						{isMuted && 
+							<div className="been-muted">
+							<p>Sorry, You've been muted by Admin</p>
+							<FontAwesomeIcon icon={faCommentSlash} className="been-muted-icon"/>
+							</div>
+						}
 
 					</>
 				)}

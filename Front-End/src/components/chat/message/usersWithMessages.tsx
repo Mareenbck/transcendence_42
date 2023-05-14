@@ -128,7 +128,6 @@ export default function UsersWithDirectMessage(props: any) {
 							) : (
 								!me?.blockedTo.find((u: UserChat) => +o?.id === +u?.id) ? (
 									<DirectMessageInfo userWithDM={o} type='status' currentDirect={props.currentDirect} latestsMsgs={latestsMsgs} />
-									// <p>LOL</p>
 								) : null
 						)}
 						</>

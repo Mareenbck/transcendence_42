@@ -3,7 +3,7 @@ import { CreateChatroomDto } from './dto/create-chatroom2.dto';
 import { Prisma, UserChannelVisibility } from '@prisma/client';
 import { UserRoleInChannel} from '@prisma/client'
 import { UserStatusOnChannel } from '@prisma/client'
-import { BadRequestException, Injectable, ForbiddenException, Logger} from '@nestjs/common';
+import { BadRequestException, Injectable, ForbiddenException, Logger, UnauthorizedException} from '@nestjs/common';
 import { Chatroom } from '@prisma/client';
 import { UserOnChannel} from '@prisma/client'
 import * as argon from 'argon2';
@@ -96,7 +96,9 @@ export class ChatroomService {
 		}
 	}
 
+
 	async validatePassword(id: number, hash: string): Promise<boolean> {
+		
 		const channel = await this.prisma.chatroom.findUnique({ where: { id: id } });
 		if (channel.visibility === UserChannelVisibility.PWD_PROTECTED) {
 			if (!hash) {
@@ -104,10 +106,11 @@ export class ChatroomService {
 			}
 		const isPasswordMatch = await argon.verify(channel.hash, hash);
 		if (!isPasswordMatch) {
-			throw new ForbiddenException(`Invalid password`);
+			throw new ForbiddenException(`Password is required`);	
 		}}
 		return true;
 	}
+
 
   async getParticipants(channelId: number) {
 	if (typeof channelId !== 'number') {

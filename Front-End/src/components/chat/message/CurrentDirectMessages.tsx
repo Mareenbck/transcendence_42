@@ -89,6 +89,23 @@ export default function CurrentDirectMessages(props: any) {
 		  } catch(err) {console.log(err)}
 		}
 	  }
+	  
+	  const handleKeyDown = (e: KeyboardEvent) => {
+		if (e.key === 'Enter') {
+		  if (newMessageD.trim().length > 0) {
+			handleSubmitD(e); 
+		  }
+		  e.preventDefault();
+		}
+	  };
+
+	  const handleIconClick = (e: FormEvent) => {
+		if (newMessageD.trim().length > 0) {
+		  handleSubmitD(e);
+		}
+	  };
+	  
+	  
 
 	  return (
 		<>
@@ -112,13 +129,13 @@ export default function CurrentDirectMessages(props: any) {
 					className="chatMessageInput"
 					placeholder="write something..."
 					onChange={(e) => setNewMessageD(e.target.value)}
+					onKeyDown={handleKeyDown}
 					value={newMessageD}
-				></textarea>
+					></textarea>
 				<FontAwesomeIcon
 					icon={faPaperPlane}
-					onClick={handleSubmitD}
-					className={`send-btn-chat`} // ajouter la classe 'muted' si l'utilisateur est mute
-					// disabled={isMuted} // désactiver le bouton d'envoi si l'utilisateur est mute
+					onClick={handleIconClick}
+					className={`send-btn-chat`} 
 				/>
 			</div>
 		</>

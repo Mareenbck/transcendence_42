@@ -71,6 +71,11 @@ export default function ChannelVisibility(props: any) {
 const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const password = passwordInputRef.current?.value;
+	if (!passwordInputRef.current?.value) {
+		setPasswordError(true)
+		alert("wrongpassword")
+		return;
+	}
     try {
         const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
             method: "POST",
@@ -83,20 +88,28 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
                 userId: userContext.userId,
                 hash: password
             })
+		
         });
         const data = await resp.json();
-        if (!resp.ok) {
+        if (!data) {
             setPasswordError(true);
+			alert("wrong pasword");
+			return;
         } else {
             setIsJoined(true);
             setOpenJoinModal(false);
-			      sendMessage("joinedChannel", data)
+			sendMessage("joinedChannel", data)
             sendMessage("toMute", {channelId: channelId})
         }
     } catch (err) {
         console.log(err);
     }
 };
+
+const handlePassword= (e: FormEvent) => {
+	const value = (e.target as HTMLInputElement).value;
+	setPasswordError(value.trim() === '');
+  };
 
   return (
     <>
@@ -116,6 +129,7 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
               variant="filled"
               placeholder="Type a new password..."
               inputRef={passwordInputRef}
+			  onChange={handlePassword}
               error={passwordError}
             />
             <VisibilityIcon
@@ -125,7 +139,12 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
             <Typography variant="caption" color="error">
               {passwordError && "Incorrect password"}
             </Typography>
-            <button onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
+            <button 
+				className="btnn"
+				disabled={passwordError}
+				onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok
+			</button>
+			
           </Box>
         </Modal>
       </div>

@@ -361,8 +361,8 @@ function Chat(props: any) {
 					setUsersList={handleShowUserList}
 					setUnMutedUsers={setUnMutedUsers}
 					setToMute={props.setToMute}
+					setToBan={props.setToBan}
 					setCurrentChat={setCurrentChat}
-					// mutedParticipants={props.mutedParticipants}
 					/>
 			) : currentDirect ? (
 				<CurrentDirectMessages
@@ -397,6 +397,7 @@ function Chat(props: any) {
 					channelName={currentChat?.name}
 					isChannelClicked={isChannelClicked}
           setToMute={props.setToMute}
+          setToban={props.setToBan}
 				/>
 			)}
 	</div>
