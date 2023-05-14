@@ -4,7 +4,7 @@ import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
-import {UserScore, Games} from "../interfaces/iChat";
+import {UserScore, Games} from "../../interfaces/iChat";
 import '../../style/Profile.css'
 import '../../style/Table.css'
 
@@ -56,29 +56,29 @@ const Podium = (props: any) => {
     fetchGames();
     getAllUsers();
   }
-  else{
+  
     var sorted = [...allUsers];
     sorted.sort((a, b) => (getScore(b) - getScore(a)));
     var firts = sorted[0];
     var second = sorted[1];
     var third = sorted[2];
-  }
+  
 
   return(
     <>
         <div className="midPos">
             <div className={`rangAvatar ${getScore(firts) === getScore(second) ? "" : "podium-first"}`}>
-                <MyAvatar authCtx={authCtx} id={second?.id} style="m" avatar={second?.avatar} ftAvatar={second?.ftavatar}/>
+                <MyAvatar authCtx={authCtx} id={second?.id} style="m" avatar={second?.avatar} ftAvatar={second?.ftAvatar}/>
                 <UserChart userName={second?.username} h={getScore(second)} />
                 <p className="rank-podium">2</p>
             </div>
             <div className='rangAvatar - one'>
-                <MyAvatar authCtx={authCtx } id={firts?.id} style="m" avatar={firts?.avatar} ftAvatar={firts?.ftavatar}/>
+                <MyAvatar authCtx={authCtx } id={firts?.id} style="m" avatar={firts?.avatar} ftAvatar={firts?.ftAvatar}/>
                 <UserChart   userName={firts?.username}  h={(getScore(firts))} />
                 <p className="rank-podium">1</p>
             </div>
             <div className={`rangAvatar ${getScore(firts) === getScore(third) ? "" : "podium-first"}`}>
-                <MyAvatar authCtx={authCtx } id={third?.id}  style="m" avatar={third?.avatar} ftAvatar={third?.ftavatar}/>
+                <MyAvatar authCtx={authCtx } id={third?.id}  style="m" avatar={third?.avatar} ftAvatar={third?.ftAvatar}/>
                 <UserChart  userName={third?.username}  h={(getScore(third))} color={"black"}/>
                 <p className="rank-podium">3</p>
             </div>
