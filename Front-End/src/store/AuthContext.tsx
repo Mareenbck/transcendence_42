@@ -38,7 +38,6 @@ export const AuthContextProvider = (props: any) => {
 	const [is2FA, setIs2FA] = useState<boolean>();
 	const [sendMessage, addListener] = useSocket()
 
-
 	useEffect(() => {
 		if (userId) {
 			fetchHandler(token, userId);
