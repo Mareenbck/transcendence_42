@@ -85,22 +85,15 @@ export default function CurrentChannel(props: any) {
 		AMessageChat && currentChatroom?.id === AMessageChat.chatroomId &&
 			setMessages2(prev => {
 				const isDuplicate = prev.some(message => (message.id === AMessageChat.id));
-				console.log("Received duplicate ?", isDuplicate)
+				// console.log("Received duplicate ?", isDuplicate)
 				if (!isDuplicate) {
 					return [...prev, AMessageChat];
 				}
 				return prev;
 			});
-	//	if (currentChatroom) {
-	//		console.log("eeeeeeeeeeee   5 " )
-	//		getMess();
-	//	}
-	}, [AMessageChat
-	//	, currentChatroom
-]);
+	}, [AMessageChat]);
 
 	useEffect(() => {
-		console.log("SETUP effect on currentChatRoom " )
 		getMess();
 		setParticipants(currentChatroom.participants);
 	}, [currentChatroom]);
@@ -123,7 +116,6 @@ export default function CurrentChannel(props: any) {
 	useEffect(() => {
 		addListener("getMessageRoom", (data) => 
 		{
-			console.log("received ", data );
 			setAMessageChat({
 				authorId: data.authorId,
 				chatroomId: data.chatroomId,
@@ -136,7 +128,7 @@ export default function CurrentChannel(props: any) {
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-	console.log("chatroom hasID ? " , currentChatroom.id) 
+	// console.log("chatroom hasID ? " , currentChatroom.id) 
 		if (currentChatroom.id) {
 			let message2 = {
 				authorId: currentId,
@@ -145,10 +137,10 @@ export default function CurrentChannel(props: any) {
 			};
 		try {
 			const res = await MessageReq.postMess(authCtx, message2);
-	console.log("registered ?" , res); 
+	// console.log("registered ?" , res); 
 			message2.id = res.id;
 			message2.createdAt = res.createdAt;
-	console.log("res with id ?" , message2); 
+	// console.log("res with id ?" , message2); 
 			setMessages2([...messages2, res]);
 			sendMessage("sendMessageRoom", message2 as any)
 			setNewMessage2("");
