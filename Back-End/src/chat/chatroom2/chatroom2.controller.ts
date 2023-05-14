@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode} from '@nestjs/common';
 import { CreateChatroomDto } from './dto/create-chatroom2.dto';
 import { ChatroomService } from './chatroom2.service';
 
@@ -24,10 +24,16 @@ export class Chatroom2Controller {
 	}
 
 	@Post('join')
-	// @UseGuards(JwtGuard)
+	@HttpCode(200)
+	@UseGuards(JwtGuard)
 	async createUserTable(@Body() { userId, channelId, hash }: { userId: number, channelId: number, hash?: string }) {
-		const newUserTable = await this.chatRoomService.createUserTable({ userId, channelId }, hash);
-		return newUserTable;
+		try {
+			const newUserTable = await this.chatRoomService.createUserTable({ userId, channelId }, hash);
+			return newUserTable;
+		} catch (err) {
+			console.log('wrong password')
+			return false
+		}
 	}
 
 	@Post('/:channelId/delete')

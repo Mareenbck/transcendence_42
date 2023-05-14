@@ -81,6 +81,7 @@ function PopUp(props: any) {
             props.onClick();
         } catch (err) { console.log(err);}
     }
+    
     const handleFormSubmit = (e:FormEvent) => {
         if (stringError) {
             return;

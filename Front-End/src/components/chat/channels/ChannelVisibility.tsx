@@ -71,9 +71,9 @@ export default function ChannelVisibility(props: any) {
 const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const password = passwordInputRef.current?.value;
-	if (!password) {
-		console.log("coucou")
+	if (!passwordInputRef.current?.value) {
 		setPasswordError(true)
+		alert("wrongpassword")
 		return;
 	}
     try {
@@ -88,10 +88,13 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
                 userId: userContext.userId,
                 hash: password
             })
+		
         });
         const data = await resp.json();
-        if (!resp.ok) {
+        if (!data) {
             setPasswordError(true);
+			alert("wrong pasword");
+			return;
         } else {
             setIsJoined(true);
             setOpenJoinModal(false);
@@ -102,6 +105,11 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
         console.log(err);
     }
 };
+
+const handlePassword= (e: FormEvent) => {
+	const value = (e.target as HTMLInputElement).value;
+	setPasswordError(value.trim() === '');
+  };
 
   return (
     <>
@@ -121,6 +129,7 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
               variant="filled"
               placeholder="Type a new password..."
               inputRef={passwordInputRef}
+			  onChange={handlePassword}
               error={passwordError}
             />
             <VisibilityIcon
@@ -131,9 +140,10 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
               {passwordError && "Incorrect password"}
             </Typography>
             <button 
-			className="btnn"
-			disabled={passwordError}
-			onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok</button>
+				className="btnn"
+				disabled={passwordError}
+				onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok
+			</button>
 			
           </Box>
         </Modal>

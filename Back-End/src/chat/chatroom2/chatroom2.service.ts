@@ -96,19 +96,6 @@ export class ChatroomService {
 		}
 	}
 
-	// async validatePassword(id: number, hash: string): Promise<boolean> {
-		
-	// 	const channel = await this.prisma.chatroom.findUnique({ where: { id: id } });
-	// 	if (channel.visibility === UserChannelVisibility.PWD_PROTECTED) {
-	// 		if (!hash) {
-	// 			throw new ForbiddenException(`Password is required`);
-	// 		}
-	// 	const isPasswordMatch = await argon.verify(channel.hash, hash);
-	// 	if (!isPasswordMatch) {
-	// 		throw new ForbiddenException(`Invalid password`);
-	// 	}}
-	// 	return true;
-	// }
 
 	async validatePassword(id: number, hash: string): Promise<boolean> {
 		
