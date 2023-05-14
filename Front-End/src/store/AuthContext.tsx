@@ -180,14 +180,14 @@ export const AuthContextProvider = (props: any) => {
 
 	const logoutHandler = async () => {
 		await fetchLogout();
-		sendMessage("login", userId)
+		sendMessage("login", userId as any)
 	};
 
 	//si presence du token -> logged
 	const userIsLoggedIn = !!token;
 	console.log("CONTEXT >>userIsLoggedIn---->");
 	console.log(userIsLoggedIn);
-	const contextValue = {
+	const contextValue: any = {
 		token: token,
 		userId: userId,
 		username: username,
@@ -198,7 +198,7 @@ export const AuthContextProvider = (props: any) => {
 		setAvatar: setAvatar,
 		is2FA: is2FA,
 		login: loginHandler,
-		logout: fetchLogout,
+		logout: logoutHandler,
 		fetchHandler: fetchHandler,
 		fetchAvatar: fetchAvatar,
 		updateAvatar: updateAvatar,

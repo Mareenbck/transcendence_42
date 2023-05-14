@@ -13,14 +13,13 @@ const ProfileCard = (props: any) => {
 	const [ftAvatar, setFtAvatar] = useState<any>();
 	const [username, setUsername] = useState<any>();
 	const [user, setUser] = useState(null);
-
 	const isMyProfile = parseInt(authCtx.userId) === parseInt(id);
 
 	useEffect(() => {
 		getUser(id);
 	}, [id]);
 
-	const getUser = async (id: string) => {
+	const getUser = async (id: string | undefined) => {
 		try {
 			const response = await fetch(back_url + `/users/friends/${id}`, {
 				method: "GET",
@@ -47,7 +46,7 @@ const ProfileCard = (props: any) => {
 	};
 
 	const fetchAvatar = async (id: string) => {
-		const avat: any = await friendCtx.fetchAvatar(id);
+		const avat: any = await friendCtx.fetchAvatar(parseInt(id));
 		if (avat) {
 			setAvatar(avat);
 		}

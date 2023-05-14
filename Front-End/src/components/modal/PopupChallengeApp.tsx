@@ -9,7 +9,7 @@ import SportsTennisIcon from '@mui/icons-material/SportsTennis';
 import '../../style/Chat.css'
 import '../../style/ColorModal.css'
 
-function PopupChallenge(): React.JSX.Element | null {
+function PopupChallenge() {
   const user = useContext(AuthContext);
 
   const [sendMessage, addListener] = useSocket();

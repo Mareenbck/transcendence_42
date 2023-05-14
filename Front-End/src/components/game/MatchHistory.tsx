@@ -12,7 +12,6 @@ const MatchHistory = (props: any) => {
 	const [games, setGames] = useState<any[] | null>();
 	const { id } = useParams();
 	const authCtx = useContext(AuthContext)
-	const lastFiveGames = games?.slice(0, 5);
 
 	useEffect(() => {
 		const url = back_url + `/game/allGames/${id}`;
@@ -35,6 +34,7 @@ const MatchHistory = (props: any) => {
 	if (!games) {
 		return <div>Loading...</div>;
 	}
+	const lastFiveGames = games.slice(0, 5);
 
 	return (
 		<>

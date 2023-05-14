@@ -12,7 +12,7 @@ const Profile = (props: any) =>  {
 	const authCtx = useContext(AuthContext);
 	const isMyProfile = parseInt(authCtx.userId) === parseInt(id);
 	const isLoggedIn = authCtx.isLoggedIn;
-//m
+
 	return (
 		<>
 		<div className={style.mainPos}>

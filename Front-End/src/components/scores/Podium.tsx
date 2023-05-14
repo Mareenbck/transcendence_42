@@ -4,7 +4,7 @@ import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
-import {UserScore, Games} from "../interfaces/iChat";
+import {UserScore, Games} from "../../interfaces/iChat";
 import '../../style/Profile.css'
 import '../../style/Table.css'
 
