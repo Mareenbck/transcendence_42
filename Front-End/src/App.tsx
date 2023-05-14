@@ -16,9 +16,8 @@ import Setting from './pages/Setting';
 import Scores from'./components/scores/Scores';
 import NotFound from './pages/404';
 // import { fab } from '@fortawesome/free-brands-svg-icons'
-import useSocket from './service/socket';
-import { UserChat } from "./interfaces/iChat";
 import PopupChallenge from './components/modal/PopupChallengeApp';
+
 
 
 
@@ -29,7 +28,7 @@ function App() {
 	
 	return (
 		<>
-		<PopupChallenge> </PopupChallenge>
+		<PopupChallenge/>
 
 		<Routes>
 			<Route path='/' element={<Home />} />

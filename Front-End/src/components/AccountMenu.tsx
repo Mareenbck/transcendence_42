@@ -104,8 +104,8 @@ export default function MyAccountMenu(props: any) {
 			</ListItemIcon>
 			<Link to={`/menu`}>Home</Link>
 		</MenuItem>
-		<MenuItem onClick={()=>{sendMessage('exitGame',  { user: +authCtx.userId, status: GameStatus.GAME } as any); authCtx.logout();}}>
-		{/* <MenuItem onClick={authCtx.logout}> */}
+		<MenuItem onClick={authCtx.logout}>
+		{/* <MenuItem onClick={()=>{sendMessage('exitGame',  { user: +authCtx.userId, status: GameStatus.GAME } as any); authCtx.logout();}}> */}
 			<ListItemIcon>
 				<Logout fontSize="small"/>
 			</ListItemIcon>
