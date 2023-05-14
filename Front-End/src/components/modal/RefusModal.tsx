@@ -8,7 +8,7 @@ type props = {
 
 
 
-const Modal = (props: any) => {
+const Modal = (props: any): React.JSX.Element  => {
   return (
     <div className='modalgame' >
       <div className='global-popup-refus' >

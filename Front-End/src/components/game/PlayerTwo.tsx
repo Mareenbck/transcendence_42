@@ -4,7 +4,6 @@ import { ListItemAvatar } from '@mui/material';
 import { ListItem } from '@mui/material';
 import '../../style/Profile.css'
 import MyAvatar from "../user/Avatar";
-// import { useParams } from "react-router-dom";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 const PlayerTwo = (props: any) => {

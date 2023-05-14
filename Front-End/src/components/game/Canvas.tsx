@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from 'react'
 import './Game.css'
 import type {GameInit, GameState} from './interface_game'
 
-const Canvas = (props: {gamestate: GameState, gameinit: GameInit, backColorGame: string} ) => {
+const Canvas = (props: {gamestate: GameState, gameinit: GameInit, backColorGame: string} )  => {
     const gamestate = props.gamestate;
     const gameinit = props.gameinit;
     const backColorGame = props.backColorGame;

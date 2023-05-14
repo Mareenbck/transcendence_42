@@ -3,7 +3,8 @@ import { GameService } from 'src/game/game.service';
 import { player,
 		 ball,
 		 GameParams,
-		 winners } from './game.interfaces';
+		 winners,
+		 GameStatus } from './game.interfaces';
 import UsersSockets from 'src/gateway/socket.class';
 import { GameDto } from './dto/game.dto';
 import { UserDto } from 'src/user/dto/user.dto';
@@ -218,27 +219,22 @@ export class GameRoom {
 		this.gameService.updateStatusGameOver(this.playerR.user.id);
 
 		// send winner
-		this.winners.playerL = (this.playerL.user == this.winners.winner ? this.winners.winner : this.playerL.user);
-		this.winners.playerR = (this.playerR.user == this.winners.winner ? this.winners.winner : this.playerR.user);
-		// console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)
+		this.winners.playerL = (+this.playerL.user.id == +this.winners.winner.id ? this.winners.winner : this.playerL.user);
+		this.winners.playerR = (+this.playerR.user.id == +this.winners.winner.id ? this.winners.winner : this.playerR.user);
 
 		this.server.to(this.room).emit('winner', { winner: this.winners.winner, playerR:this.winners.playerR, playerL: this.winners.playerL, status: 'winner',});
-		this.server.to(this.room).emit('status', 'winner');
+		this.server.to(this.room).emit('status',  GameStatus.WINNER);
 
 		// leave room
-// console.log("leave room");
 		this.userSockets.leaveRoom(this.room);
 
 		// remove game by roomN
-// console.log("remove game by roomN");
 		this.gameService.removeRoom(this.roomN);
-// console.log("destroy_game: finish");
 	}
 
 // function: run game
 	public run(): void {
 		this.isrunning = true;
-// console.log("game.class.run");
 		this.gameService.updateStatusGame(this.playerL.user.id);
 		this.gameService.updateStatusGame(this.playerR.user.id);
 	//interval function: update the game at the certain period until the score reaches MAX
@@ -261,6 +257,7 @@ export class GameRoom {
 
 	// exit Game if exit buttonis pressed
 	public exitGame(player: UserDto): void {
+
 		clearInterval(this.interval);
 		if (player.id == this.playerR.user.id){
 			this.playerL.score = MAX_SCORE;
@@ -270,6 +267,7 @@ export class GameRoom {
 			this.playerR.score = MAX_SCORE;
 			this.winners.winner =  this.playerR.user;
 		}
+		this.server.to(this.room).emit('status', GameStatus.EXIT);
 
 		this.save_results2DB();
 		this.destroy_game();

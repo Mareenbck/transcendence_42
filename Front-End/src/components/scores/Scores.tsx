@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
 import SideBar from '../SideBar';
 import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
-import {UserScore, Games} from '../../interfaces/iChat'
+import {UserScore, TypeGames} from '../../interfaces/iChat'
 import Card from "../../components/utils/Card";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -13,10 +14,11 @@ import ButtonToggle from '../utils/ButtonToggle';
 
 const Scores = () => {
   const MAX_SCORE = 3;
-  const [games, setGames] = useState<Games[]>([]);
+  const [games, setGames] = useState<TypeGames[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
   
   const authCtx = useContext(AuthContext);
+  const isLoggedIn = authCtx.isLoggedIn;
 
   //aller chercher les games
   async function fetchGames() {
@@ -47,9 +49,9 @@ const Scores = () => {
   //score/ user
   const getScore = (user: UserScore): any=> {
     if (games) {
-      const p1 = games.filter((u: Games) => +u.playerOneId === +user.id).length;
-      const p2 = games.filter((u: Games) => +u.playerTwoId === +user.id).length;
-      const win = games.filter((u: Games) => +u.winnerId === +user.id).length;
+      const p1 = games.filter((u: TypeGames) => +u.playerOneId === +user.id).length;
+      const p2 = games.filter((u: TypeGames) => +u.playerTwoId === +user.id).length;
+      const win = games.filter((u: TypeGames) => +u.winnerId === +user.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
   
       if (total < 0)
@@ -88,6 +90,7 @@ const Scores = () => {
   return(
 
 		<>
+
     <section className= "main">
 
       <SideBar title="Scores" />   
@@ -116,7 +119,11 @@ const Scores = () => {
         </section>
       </section>
 
-    </section>    
+    </section>  
+    <div>
+			{!isLoggedIn && <Navigate to="/" replace={true} />}
+		</div> 
+  
 		<ButtonToggle/>
 	</>
   )

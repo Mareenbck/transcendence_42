@@ -100,3 +100,15 @@
     /* z-index: 2; */
 	/* margin-top: 30rem; */
 }
+
+.global-popup-exit {
+    padding: 10px;
+    border-radius: 17px;
+    background-color: #C7B9FF;
+    position: absolute;
+    top: 75%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+    /* z-index: 2; */
+	/* margin-top: 30rem; */
+}

@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useContext, useRef } from 'react'
+import React, { useEffect, useState, useContext} from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
 import type { GameInit, GameState, GameWinner, GamesList, UserGame } from './interface_game'
 import { GameStatus } from './interface_game'
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import BrightnessLowIcon from '@mui/icons-material/BrightnessLow';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -18,11 +18,14 @@ import ColorModal from '../modal/ColorModal';
 import RefusModal from '../modal/RefusModal';
 import '../../style/OptionGame.css';
 import "./Game.css"
+import ExitGame from './ExitGame';
 
 
-function Game() {
+function Game(): React.JSX.Element {
     const user = useContext(AuthContext);
     const id = user.userId;
+    const isLoggedIn = user.isLoggedIn;
+
     const [sendMessage, addListener] = useSocket();
     const [gamesWinner, setGameWinner] = useState<GameWinner>(
         {   winner: null,
@@ -60,27 +63,7 @@ function Game() {
         }
     }, []);
 
-    // useEffect(() => {
-    //     const handleBackButton = (event: PopStateEvent) => {
-    //         // Handle the back button press
-    //         if( gamestatus.status == GameStatus.GAME || gamestatus.status == GameStatus.WAIT) {
-    //             sendMessage("exitGame", {status: status } as any);
-    //         }
-    //     };
-
-    //     // Add the event listener when the component mounts
-    //     window.addEventListener("popstate", handleBackButton);
-
-    //     // Remove the event listener when the component unmounts
-    //     return () => {
-    //         if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-    //             alert("1 handlePopstate");
-    //         }
-    //         window.removeEventListener("popstate", handleBackButton);
-    //     };
-    //   }, []);
-
-
+        
     const getCurrentGame = (roomN: number): React.JSX.Element | undefined => {
         if (games){
             const index = games.findIndex((game:GamesList) => game.roomN == roomN);
@@ -103,6 +86,14 @@ function Game() {
             }
         }
     };
+
+    useEffect(() => {
+        console.log("status", status);
+        console.log("isLoggedIn", user.isLoggedIn)
+        if(!user.isLoggedIn){
+            sendMessage('exitGame',  { user: +user.userId, status: GameStatus.GAME } as any);
+        }
+    },[user.isLoggedIn]);
 
 
 // onKeyDown handler function
@@ -129,9 +120,7 @@ function Game() {
 
 // Pour partis de Modal select Color,
     const [ShowColorModal, setShowColorModal] = useState(false);
-    // const handleColorModal = () => {
-    //     setShowColorModal(true)
-    // }
+
     const handleClose = () => {
        setShowColorModal(false)
     }
@@ -165,10 +154,6 @@ function Game() {
         ShowCamva? setShowCamva(false): setShowCamva(true);
     }
 
-    // useEffect(() => {
-
-    // }, [backColorGame])
-
 
 //initialization of the initial parameters of the game
     const [gameinit, setGameInit] = useState<GameInit>(
@@ -200,7 +185,6 @@ function Game() {
             // window.screen.width
             const width = Math.floor(0.6 * window.innerWidth);
             if(width){
-                // gameinit.table_width = width;
                 setGameInit({
                     table_width: width,
                     table_height: gameinit.table_height,
@@ -241,7 +225,7 @@ function Game() {
         addListener('pong', updateListener);
         addListener('winner', updateWinner);
         addListener('status', updateStatus);
-
+console.log("ststus", status);
     }, [initListener, updateListener, updateWinner, updateStatus]);
 
     const isInPlay = (): boolean => {
@@ -349,6 +333,7 @@ function Game() {
                     </>
                     )}
 			</div>
+            {(status == GameStatus.EXIT) &&  <ExitGame exitplayer={+gamesWinner.playerR.id == +gamesWinner.winner?.id ? gamesWinner.playerL : gamesWinner.playerR}/>}
 		</div>
 
         <div className='gameSideR'>
@@ -370,6 +355,10 @@ function Game() {
                 </div>
             </div>
         </div>
+        <div>
+		{!isLoggedIn &&  <Navigate to="/" replace={true} /> }
+		</div>
+
 
     </React.Fragment>
     )

@@ -1,10 +1,12 @@
 
 export enum GameStatus {
-    NULL = 1,
-    WAIT,
-    GAME,
-    WATCH,
-    CLOSE,
+	NULL = 1,
+	WAIT,
+	GAME,
+	WATCH,
+	CLOSE,
+	WINNER,
+	EXIT
 }
 
 import { UserDto } from "src/user/dto/user.dto";

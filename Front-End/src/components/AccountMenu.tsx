@@ -13,11 +13,9 @@ import HomeIcon from '@mui/icons-material/Home';
 import AuthContext from '../store/AuthContext';
 import NotificationDemands from './friends/NotificationDemands';
 import useSocket from '../service/socket';
-import { GameStatus } from './game/interface_game';
 
 
 export default function MyAccountMenu(props: any) {
-    const [sendMessage, addListener] = useSocket();
 
 	const authCtx = React.useContext(AuthContext);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -105,7 +103,6 @@ export default function MyAccountMenu(props: any) {
 			<Link to={`/menu`}>Home</Link>
 		</MenuItem>
 		<MenuItem onClick={authCtx.logout}>
-		{/* <MenuItem onClick={()=>{sendMessage('exitGame',  { user: +authCtx.userId, status: GameStatus.GAME } as any); authCtx.logout();}}> */}
 			<ListItemIcon>
 				<Logout fontSize="small"/>
 			</ListItemIcon>

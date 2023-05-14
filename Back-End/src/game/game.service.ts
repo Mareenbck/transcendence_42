@@ -1,6 +1,6 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { Game } from '@prisma/client';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { GameDto } from './dto/game.dto';
 import { UserDto } from 'src/user/dto/user.dto';
@@ -55,21 +55,17 @@ export class GameService {
 
 
 	enterGame = async (userId: number, socket: Socket) => {
-// console.log("0 enterGame");
 		// was waiting
 		if (isNaN(userId)) return;
 
 	    if(this.players.length == 1 && this.players.some(id => id == userId)){
-// console.log("1 enterGame waiting");
 			socket.emit('status', GameStatus.WAIT);
 		}
 		// was playing
 		else{
-// console.log("2 enterGame game");
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
-// console.log("3 enterGame game");
 				const game: GameRoom = this.gameMap[index];
 				game.init(playerDto);
 				game.initMoveEvents();
@@ -80,13 +76,10 @@ export class GameService {
 		}
 	}
 	exitGame = async (userId: number, status: number, socket: Socket) => {
-// console.log("0 exitGame");
 		// if it was waiting
 		if (status == GameStatus.WAIT){
-// console.log("1 exitGame waiting");
 			// waiting a new game
 			if(this.players.some(id => +id == +userId)){
-// console.log("1 exitGame waiting");
 				this.players = [];
 			}
 			//waiting invited game
@@ -99,11 +92,9 @@ export class GameService {
 		}
 		// if is game
 		else if (status == GameStatus.GAME){
-// console.log("1 exitGame game");
 			const playerDto: UserDto = await this.userService.getUser(userId);
 			const index = this.gameMap.findIndex(game => game.checkPlayer(playerDto) );
 			if (index != -1) {
-// console.log("2 exitGame game");
 				const game: GameRoom = this.gameMap[index];
 				game.exitGame(playerDto);
 			}
@@ -145,16 +136,10 @@ export class GameService {
 
 // removing room in gameMap and roomArray
 	removeRoom = (roomN: number): void => {
-
-// console.log("0 gameMap", this.gameMap.length);
 		const filteredGameMap = this.gameMap.filter(i => i.roomN !== roomN);
 		this.gameMap = filteredGameMap;
-// console.log("1 gameMap", this.gameMap.length);
-
-// console.log("0 roomArray", this.roomArray.length);
 		this.roomArray = this.roomArray.filter(i => i.roomN != roomN);
 		this.sendListRooms();
-// console.log("105 roomArray", this.roomArray.length);
 	}
 
 // emit to all users in all rooms that play

@@ -4,15 +4,15 @@ import '../../style/Scores.css';
 // import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
-import {UserScore, Game} from "../../interfaces/iChat";
+import {UserScore, TypeGames} from "../../interfaces/iChat";
 // import Card from "../../components/utils/Card";
-import { ListItem, Games } from '@mui/material';
+import { ListItem } from '@mui/material';
 import '../../style/Profile.css'
 import '../../style/Table.css'
 
 const Table = (props: any) => {
   const MAX_SCORE = 3;
-  const [games, setGames] = useState<Games[]>([]);
+  const [games, setGames] = useState<TypeGames[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
   
   const authCtx = useContext(AuthContext);
@@ -44,23 +44,23 @@ const Table = (props: any) => {
   //score/ user
   const getNbGames = (user: UserScore) => {
     if (games) {
-      const p1 = games.filter((u: Games) => +u.playerOneId === +user.id);
-      const p2 = games.filter((u: Games) => +u.playerTwoId === +user.id);
+      const p1 = games.filter((u: TypeGames) => +u.playerOneId === +user.id);
+      const p2 = games.filter((u: TypeGames) => +u.playerTwoId === +user.id);
       return (p2.length + p1.length);
     }
   }
 
   const getWinner = (user: UserScore) => {
     if (games) {
-      return ((games.filter((u: Games) => +u.winnerId === +user.id).length));
+      return ((games.filter((u: TypeGames) => +u.winnerId === +user.id).length));
     }
   }
 
   const getScore = (user: UserScore): any=> {
     if (games) {
-      const p1 = games.filter((u: Games) => +u.playerOneId === +user.id).length;
-      const p2 = games.filter((u: Games) => +u.playerTwoId === +user.id).length;
-      const win = games.filter((u: Games) => +u.winnerId === +user.id).length;
+      const p1 = games.filter((u: TypeGames) => +u.playerOneId === +user.id).length;
+      const p2 = games.filter((u: TypeGames) => +u.playerTwoId === +user.id).length;
+      const win = games.filter((u: TypeGames) => +u.winnerId === +user.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
   
       if (total < 0)
@@ -96,7 +96,7 @@ const Table = (props: any) => {
         {sorted.map((g) => (
             <ListItem  className="lineTable" key={g?.id}>
               <div className="container-match">
-                  <span ><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></span>
+                  <span ><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftAvatar}/></span>
                   <p >{g?.username}</p>
                   <p >{getNbGames(g)}</p>
                   <p >{getScore(g)}</p>

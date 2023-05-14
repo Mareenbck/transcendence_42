@@ -4,6 +4,7 @@ export enum GameStatus {
     GAME,
     WATCH,
     CLOSE,
+    EXIT
 }
 
 export interface UserGame {

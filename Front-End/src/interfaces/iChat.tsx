@@ -25,7 +25,7 @@ export interface Game {
   createdAt: Date;
 };
 
-export interface Games {
+export interface TypeGames {
   id: number;
   playerOneId: number;
   playerTwoId: number;
