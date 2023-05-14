@@ -158,7 +158,7 @@ export class ChatService {
     };
 
     logout: any = () => {
-        console.log("BE LOGOUT service");
+        // console.log("BE LOGOUT service");
          this.server.emit('changeParticipants');
     };
 }

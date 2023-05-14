@@ -69,6 +69,15 @@ const DirectMessageInfo = (props: any) => {
 		}
 	  }, [lastReceivedMessage, lastEmittedMessage]);
 
+
+	
+
+	  useEffect(() => {
+		addListener("changeParticipants", () => {
+			setStatus('offline');
+		});
+	});
+
 	const formattedTime = latestMessage.createdAt
 	? new Date(latestMessage.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 	: "";
