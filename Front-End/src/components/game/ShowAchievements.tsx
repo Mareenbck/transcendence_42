@@ -10,9 +10,17 @@ const ShowAchievements = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const { id } = useParams();
 	const [achievements, setAchievements] = React.useState<any[]>([]);
-	const isMyProfile = parseInt(id) === parseInt(authCtx.userId);
+	const [isMyProfile, setIsMyProfile] = React.useState<boolean>();
 	const [style, setStyle] = useState<string>(isMyProfile ? "s" : "l");
 	let nameIconClass = 'name-icon';
+
+	useEffect(() => {
+		if (id && parseInt(id) === parseInt(authCtx.userId)) {
+			setIsMyProfile(true)
+		} else {
+			setIsMyProfile(false)
+		}
+	}, [id])
 
 	useEffect(() => {
 		fetchUserAchievements();
