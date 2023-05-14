@@ -87,16 +87,14 @@ export default function UsersWithDirectMessage(props: any) {
 			{ return "chatOnlineNotFriend"; }
 		else
 			{return "chatOnlineFriend";}
+	}
 
 
-  useEffect(() => {
-	addListener("changeParticipants", () => {
-		amIBlocked();
+	useEffect(() => {
+		addListener("changeParticipants", () => {
+			amIBlocked();
+		});
 	});
-});
-
-
-
 
 	useEffect(() => {
 		const fetchUserWithDirectMessages = async () => {
@@ -142,4 +140,5 @@ export default function UsersWithDirectMessage(props: any) {
 		</Box>
 	);
 }
+
 

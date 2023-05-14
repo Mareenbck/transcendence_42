@@ -170,34 +170,21 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 	async acceptedToPriv(@ConnectedSocket() socket: Socket): Promise<void>
   { this.chatService.acceptedToPriv(socket.id) };
 
-  // @SubscribeMessage('logout')
-  // async appLogout(@MessageBody() data: any, @ConnectedSocket() socket: Socket): Promise<void>
-  // {
-  //   // if (data !== null) {
-  //   //   const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
-  //   //   if (!user) {
-  //   //     throw new WsException('Invalid credentials.');
-  //   //   }
-  //     this.chatService.logout();
-  //   // };
-  // }
-
-
-  @SubscribeMessage('logout')
-  async appLogout(@MessageBody() data: {userId: number}, @ConnectedSocket() socket: Socket): Promise<void>
-  { 
-    if (data.userId !== null) {
-      const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
-      if (!user) {
-        throw new WsException('Invalid credentials.');
-      }
-      this.chatService.logout();
-    };
-  }
+//   @SubscribeMessage('logout')
+//   async appLogout(@MessageBody() data: {userId: number}, @ConnectedSocket() socket: Socket): Promise<void>
+//   {
+//     if (data.userId !== null) {
+//       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+//       if (!user) {
+//         throw new WsException('Invalid credentials.');
+//       }
+//       this.chatService.logout();
+//     };
+//   }
 
   @SubscribeMessage('login')
   async appLogin(@MessageBody() data: {userId: number}, @ConnectedSocket() socket: Socket): Promise<void>
-  { 
+  {
     if (data.userId !== null) {
       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
       if (!user) {
