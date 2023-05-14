@@ -149,7 +149,7 @@ export class ChatService {
 
     invitedToPriv: any = (channelId: number, invitedId: number, socketId: string) => {
         const userTo = this.getUser(invitedId);
-        this.server.to(userTo.socketId).emit('invitedToChannel');
+        if (userTo) {this.server.to(userTo.socketId).emit('invitedToChannel');}
     };
 
     acceptedToPriv: any = (socketId: string) => {
