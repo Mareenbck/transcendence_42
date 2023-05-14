@@ -81,7 +81,7 @@ function Game() {
     //   }, []);
 
 
-    const getCurrentGame = (roomN: number): React.JSX.Element | undefined => {
+    const getCurrentGame = (roomN: number) => {
         if (games){
             const index = games.findIndex((game:GamesList) => game.roomN == roomN);
             if (index != -1){

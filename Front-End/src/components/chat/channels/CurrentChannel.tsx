@@ -27,7 +27,7 @@ export default function CurrentChannel(props: any) {
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
-	const [toBan, setToBan] = useState(props.setToBan);
+	const [toBan, setToBan] = useState<boolean>(props.setToBan);
 
 	useEffect(() => {
 		addListener("joinedChannelR2", (channelId: number) => {
@@ -141,7 +141,7 @@ export default function CurrentChannel(props: any) {
 		  }
 		}
 	  };
-	  
+
 
 	const handleFormSubmit = (e: FormEvent) => {
 		e.preventDefault();
@@ -216,11 +216,10 @@ export default function CurrentChannel(props: any) {
 								value={newMessage2}
 							></input>
 								<FontAwesomeIcon
-								icon={faPaperPlane}
-								onClick={handleIconClick}
-								className={`send-btn-chat ${isMuted ? 'muted' : ''}`}
-								disabled={toBan}
-								/>
+									icon={faPaperPlane}
+									onClick={handleIconClick}
+									className={`send-btn-chat ${isMuted ? 'muted' : ''}`}
+									/>
 							</div>
 						)}
 						{isBanned &&
