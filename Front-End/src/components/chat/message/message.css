@@ -2,11 +2,16 @@
   display: flex;
   flex-direction: column;
       align-items: flex-start;
+
 }
 
 .messageTop{
     display: flex;
     align-items: center;
+    align-items: flex-start;
+    height: 50px; /* hauteur minimale */
+    word-wrap: break-word; /* force les mots à se couper */
+    white-space: pre-wrap; /* empêche les espaces de se rompre */
 }
 
 .messageImg {
@@ -25,19 +30,18 @@
     max-width: 300px;
 	margin-bottom: 0px;
 	font-size: 13px;
-	height: 40px;
+	/* height: 40px; */
+    line-height: 1.5em;
 }
-/*
-.messageText p {
-	margin-bottom: 0px;
-} */
 
 .messageBottom{
 	font-size: 10px;
 	margin-top: 3px;
 	margin-left: 20px;
 	font-weight: 200;
+    margin-top: auto;
 	font-family: 'Noto Sans';
+    margin-bottom: 20px;
 }
 
 .message.own{
@@ -47,6 +51,7 @@
 .message.own .messageTop{
 	display: flex;
 	flex-direction: row-reverse;
+    height: 100%;
 }
 
 .message.own .messageText{

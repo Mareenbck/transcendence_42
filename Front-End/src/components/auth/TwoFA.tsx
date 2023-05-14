@@ -13,6 +13,11 @@ export function TwoFaForm (){
 
 	const handleSubmit = async (event: any) => {
 		event.preventDefault();
+		const digitCode = digitCodeInputRef.current!.value;
+		if (digitCode === '') {
+			alert("Le code saisi est vide");
+			return;
+		}
 		const response = await fetch('http://localhost:3000/auth/2fa/authenticate', {
 			method: "POST",
 			headers: {
@@ -28,24 +33,6 @@ export function TwoFaForm (){
 			alert("Le code saisi est incorrect.");
 		}
 	}
-
-	// const handleSubmit = async (event: any) => {
-	// 	event.preventDefault();
-	// 	const response = await fetch('http://localhost:3000/auth/2fa/turn-on', {
-	// 		method: "POST",
-	// 		headers: {
-	// 			"Content-Type": "application/json",
-	// 			Authorization: `Bearer ${authCtx.token}`,
-	// 		},
-	// 		body: JSON.stringify({twoFAcode: digitCodeInputRef.current!.value}),
-	// 	});
-	// 	const data = await response.json();
-	// 	if (data.access_token) {
-	// 		setRedirectToHome(true);
-	// 	} else {
-	// 		alert("Le code saisi est incorrect.");
-	// 	}
-	// }
 
 	async function generateQRCode() {
 		const response = await fetch('http://localhost:3000/auth/2fa/generate', {

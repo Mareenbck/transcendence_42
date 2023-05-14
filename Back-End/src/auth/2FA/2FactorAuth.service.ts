@@ -7,6 +7,7 @@ import { ConfigService } from "@nestjs/config";
 import { UserService } from 'src/user/user.service';
 import { TwoFactorDto, TwoFaUserDto } from 'src/auth/dto/2fa.dto';
 import { Response } from 'express';
+import { Body, Controller, Get, HttpCode, HttpStatus, BadRequestException, Post, Req, Res, UseGuards } from '@nestjs/common';
 
 
 @Injectable()
@@ -43,10 +44,18 @@ export class TwoFactorAuthService {
 
 	// Check is 2FA code is valid
 	public isTwoFactorAuthenticationCodeValid(twoFAcode: string, user: TwoFactorDto) {
-		return authenticator.verify({
-			token: twoFAcode,
-			secret: user.twoFAsecret
-		})
+		if (!twoFAcode || !user.twoFAsecret) {
+			throw new BadRequestException('Missing authentication code or user secret');
+		  }
+		  try {
+			const isValid = authenticator.verify({
+			  token: twoFAcode,
+			  secret: user.twoFAsecret
+			});
+			return isValid;
+		  } catch (error) {
+			return false;
+		  }
 	}
 
 	/* Turn on 2FA for existing user */
