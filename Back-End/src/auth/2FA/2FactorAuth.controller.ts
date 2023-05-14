@@ -58,16 +58,20 @@ export class TwoFactorAuthenticationController {
 	@HttpCode(200)
 	@UseGuards(AuthGuard)
 	async authenticate(@Body() { twoFAcode }: any, @GetUser() user: TwoFactorDto) {
-		const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthenticationCodeValid(
-			twoFAcode,
-			user
-			);
-		if (!isCodeValid) {
-			throw new UnauthorizedException('Wrong authentication code');
+		try {
+			const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthenticationCodeValid(
+				twoFAcode,
+				user
+				);
+			if (isCodeValid) {
+				return this.twoFactorAuthService.loginWith2fa(user);
+			} else {
+				return false
+			}
+		} catch {
+			console.error("Error in isTwoFactorAuthenticationCodeValid: ");
+			return false;
 		}
-		return this.twoFactorAuthService.loginWith2fa(user);
 	}
-
-
 }
 
