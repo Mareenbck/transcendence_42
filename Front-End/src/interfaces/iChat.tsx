@@ -25,6 +25,16 @@ export interface Game {
   createdAt: Date;
 };
 
+export interface Games {
+  id: number;
+  playerOneId: number;
+  playerTwoId: number;
+  winnerId: number;
+  score1: number;
+  score2: number;
+  createdAt: Date;
+};
+
 export interface ChatRoom {
   id: number;
   name:  string;

@@ -16,10 +16,20 @@ import Setting from './pages/Setting';
 import Scores from'./components/scores/Scores';
 import NotFound from './pages/404';
 // import { fab } from '@fortawesome/free-brands-svg-icons'
+import PopupChallenge from './components/modal/PopupChallengeApp';
+
+
+
+
 
 
 function App() {
+
+	
 	return (
+		<>
+		<PopupChallenge/>
+
 		<Routes>
 			<Route path='/' element={<Home />} />
 			<Route path='/game' element={<Game />} />
@@ -35,6 +45,7 @@ function App() {
 			<Route path='/*' element={<NotFound />} />			
 			<Route path={`/users/profile/:id`} element={<Profile />} />
 		</Routes>
+		</>
 	);
 }
 {/* <Route path={`/users/profile/uploads`} element={<Profile />} /> */}

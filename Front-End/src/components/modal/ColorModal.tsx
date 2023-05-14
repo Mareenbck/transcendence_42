@@ -1,5 +1,5 @@
 import React from 'react';
-import'../../../style/ColorModal.css';
+import'../../style/ColorModal.css';
 
 type props = {
 	changcolor : any;

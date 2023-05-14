@@ -20,6 +20,7 @@ function PopupChallenge(props: PopupChallengeProps) {
       author: props.trigger,
       player: props.player,
     } as Invite);
+console.log("acceptGame")
   }
   
   const refuseGame = () => {
@@ -27,6 +28,10 @@ function PopupChallenge(props: PopupChallengeProps) {
       author: (props.trigger),
       player: (props.player),
     } as Invite);
+  console.log("refuseGame")
+  console.log("author", props.trigger)
+  console.log("player", props.player)
+
   }
 
   return (props.trigger) ? (

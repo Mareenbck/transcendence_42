@@ -1,26 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
 import SideBar from '../SideBar';
-// import { Link, Navigate, useNavigate } from "react-router-dom";
-// import style from '../../style/Menu.module.css';
 import '../../style/Scores.css';
 import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
-import MyAvatar from '../user/Avatar';
-import {UserScore, Game} from '../../interfaces/iChat'
+import {UserScore, Games} from '../../interfaces/iChat'
 import Card from "../../components/utils/Card";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ButtonToggle from '../utils/ButtonToggle';
 
 
-
-
-// import Table from "./Table";
-
 const Scores = () => {
   const MAX_SCORE = 3;
-  const [games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<Games[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
   
   const authCtx = useContext(AuthContext);
@@ -33,9 +26,11 @@ const Scores = () => {
       console.log(err);
     }
   };
+
   useEffect(() => {
     fetchGames();
   }, []);
+
 
   //aller chercher les users
   async function getAllUsers() {
@@ -50,35 +45,24 @@ const Scores = () => {
   }, []);
 
   //score/ user
-
-  // const getScore_ = (user: UserScore) => {
-  //   if (games) {
-  //     const p1 = games.filter((u: { playerOneId: string | number; }) => +u.playerOneId === +user?.id);
-  //     const p2 = games.filter((u: { playerTwoId: string | number; }) => +u.playerTwoId === +user?.id);
-  //     const w = games.filter((u: { winnerId: string | number; }) => +u.winnerId === +user?.id);
-  //     let total:number = 0;
-  //     return (total);
-  //   }
-  // }
-
-  const getScore = (user: UserScore): number => {
+  const getScore = (user: UserScore): any=> {
     if (games) {
-      const p1 = games.filter(u => +u.playerOneId === +user.id).length;
-      const p2 = games.filter(u => +u.playerTwoId === +user.id).length;
-      const win = games.filter(u => +u.winnerId === +user.id).length;
+      const p1 = games.filter((u: Games) => +u.playerOneId === +user.id).length;
+      const p2 = games.filter((u: Games) => +u.playerTwoId === +user.id).length;
+      const win = games.filter((u: Games) => +u.winnerId === +user.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
+  
       if (total < 0)
         total = 0; 
+   
       return (total);
     }
   }
-  // console.log("fffffffffff");
  
   var sorted = [...allUsers];
-  //console.log("sorted", sorted);
   sorted.sort((a, b) => (getScore(b) - getScore(a)));
-  let firts = sorted[0];
-  let second = sorted[1];
+  var firts = sorted[0];
+  var second = sorted[1];
   var third = sorted[2];
   
   function handleNewGame(event: React.FormEvent<HTMLFormElement>): void {
@@ -88,7 +72,6 @@ const Scores = () => {
   const theme = createTheme();
 
 		theme.typography.h3 = {
-			// fontSize: '8rem',
 			'@media (min-width:600px)': {
 			// fontSize: '8rem',
 			color: '#699BF7',
@@ -100,48 +83,44 @@ const Scores = () => {
 			[theme.breakpoints.up('md')]: {
 			fontSize: '4rem',
 		},
-		};
+	};
   
-    return(
+  return(
 
 		<>
-		<section className= "main">
+    <section className= "main">
 
-		<SideBar title="Scores" />   
+      <SideBar title="Scores" />   
+        
+      <section className= "one">  
+        
+        <ThemeProvider theme={theme}>
+          <Typography variant="h3">Leaderboard</Typography>
+        </ThemeProvider>  
+        <section className= "two">
+          <form onSubmit={(event: any) => handleNewGame(event)}>
+          
+          </form>
+        
+          <div className="pos">
+                    
+            <div className='card-wrapper'>
+              <Card  calssName="cardP" color='red' title="Podium" type="podium" width="100%" ></Card>
+            </div>
 
-		
-		
-		<section className= "one">  
-			
-			<ThemeProvider theme={theme}>
-				<Typography variant="h3">Leaderboard</Typography>
-			</ThemeProvider>  
-			<section className= "two">
-			<form onSubmit={(event: any) => handleNewGame(event)}>
-			
-			</form>
-			
-				
-				<div className="pos">
-				
-					
-						<div className='card-wrapper'>
-							<Card  calssName="cardP" color='red' title="Podium" type="podium" width="100%" ></Card>
-						</div>
+            <div className='card-wrapper'>
+              <Card  calssName="cardPodium" color='yellow' title="Players List" type="table" width="100%" ></Card>
+            </div>
 
-						<div className='card-wrapper'>
-							<Card  calssName="cardPodium" color='yellow' title="Players List" type="table" width="100%" ></Card>
-					</div>
+          </div>  
+        </section>
+      </section>
 
-				</div>  
-					</section>
-				</section>
-
-			</section>    
-			<ButtonToggle/>
-			</>
-    )
-    }
+    </section>    
+		<ButtonToggle/>
+	</>
+  )
+}
 
 
 export default Scores;

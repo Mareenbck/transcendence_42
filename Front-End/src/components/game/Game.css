@@ -55,7 +55,6 @@ h2{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
     align-items: center;
     margin-top: 150px;
 }
@@ -164,10 +163,9 @@ h2{
  .CapWinner{
     display: flex;
     flex-direction: column;
-     /* margin: auto; */
-     margin-top: 50px;
-     border: none;
-     align-items: center;
+    margin-top: 50px;
+    border: none;
+    align-items: center;
     
  }
 
@@ -185,7 +183,6 @@ h2{
 .CapWinner .custom-avatar.avatar-l {
    
     margin: auto;
-    /* margin-bottom: -10px; */
     border: none;
     position: fixed;
     margin-top: -100px;

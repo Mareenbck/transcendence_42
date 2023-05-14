@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import AuthContext from '../../store/AuthContext';
 import Canvas from './Canvas'
-import type { gameInit, gameState, gameStatus, gamesList, players, UserGame } from './interface_game'
-import ColorModal from './modal/ColorModal';
-import RefusModal from './modal/RefusModal';
+import type { GameInit, GameState, GameWinner, GamesList, UserGame } from './interface_game'
+import { GameStatus } from './interface_game'
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
-import '../../style/OptionGame.css';
-import { Link, useLocation, useBeforeUnload } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import BrightnessLowIcon from '@mui/icons-material/BrightnessLow';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -16,32 +14,29 @@ import SelectColor from './SelectColor';
 import PlayerOne from './PlayerOne';
 import ScoresMatch from './ScoresMatch';
 import PlayerTwo from './PlayerTwo';
-// import HeaderGame from './HeaderGame';
+import ColorModal from '../modal/ColorModal';
+import RefusModal from '../modal/RefusModal';
+import '../../style/OptionGame.css';
 import "./Game.css"
-import HeaderGame from './HeaderGame';
-import MyAccountMenu from '../AccountMenu';
-
 
 
 function Game() {
     const user = useContext(AuthContext);
-    const authCtx = useContext(AuthContext);
     const id = user.userId;
     const [sendMessage, addListener] = useSocket();
-    const [activeLink, setActiveLink] = useState('');
-    const location = useLocation();
-    const [gamestatus, setGameStatus] = useState<gameStatus>(
+    const [gamesWinner, setGameWinner] = useState<GameWinner>(
         {   winner: null,
             playerR: {} as UserGame,
             playerL: {} as UserGame,
-            status: "null"}
+        }
     );
-    const [games, setOnlinePlayers] = useState<gamesList[]> ([]);
+    const [status, setGameStatus] = useState<GameStatus> (GameStatus.NULL);
+    const [games, setOnlinePlayers] = useState<GamesList[]> ([]);
     const [curroom, setCurRoom] = useState<number>(-1);
 
 //getting data about all games: roomN, playerR, playerL, scoreR, scoreL
     useEffect(() => {
-        const handleGameRooms = (games: gamesList[]) => {
+        const handleGameRooms = (games: GamesList[]) => {
             if(curroom == -1){
                 const index = games.findIndex(room => room.playerL.username == user.username || room.playerR.username == user.username);
                 if (index != -1) {
@@ -59,40 +54,38 @@ function Game() {
     useEffect(() => {
         sendMessage("enterGame", {} as any);
         return () => {
-            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                sendMessage("exitGame", { user: user.userId, status: gamestatus.status } as any);
+            if( status == GameStatus.GAME || status == GameStatus.WAIT) {
+                sendMessage("exitGame", { user: user.userId, status: status } as any);
             }
         }
     }, []);
 
-    useEffect(() => {
-        const handleBackButton = (event: PopStateEvent) => {
-// alert("2 handlePopstate");
-            // Handle the back button press
-            // Add your custom logic here
-            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                sendMessage("exitGame", {status: gamestatus.status } as any);
-            }
-        };
+    // useEffect(() => {
+    //     const handleBackButton = (event: PopStateEvent) => {
+    //         // Handle the back button press
+    //         if( gamestatus.status == GameStatus.GAME || gamestatus.status == GameStatus.WAIT) {
+    //             sendMessage("exitGame", {status: status } as any);
+    //         }
+    //     };
 
-        // Add the event listener when the component mounts
-        window.addEventListener("popstate", handleBackButton);
+    //     // Add the event listener when the component mounts
+    //     window.addEventListener("popstate", handleBackButton);
 
-        // Remove the event listener when the component unmounts
-        return () => {
-            if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-                alert("1 handlePopstate");
-            }
-            window.removeEventListener("popstate", handleBackButton);
-        };
-      }, []);
+    //     // Remove the event listener when the component unmounts
+    //     return () => {
+    //         if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
+    //             alert("1 handlePopstate");
+    //         }
+    //         window.removeEventListener("popstate", handleBackButton);
+    //     };
+    //   }, []);
 
 
     const getCurrentGame = (roomN: number): React.JSX.Element | undefined => {
         if (games){
-            const index = games.findIndex((game:gamesList) => game.roomN == roomN);
+            const index = games.findIndex((game:GamesList) => game.roomN == roomN);
             if (index != -1){
-                const game:gamesList = games[index];
+                const game:GamesList = games[index];
                 const playerL = game.playerL;
                 const playerR = game.playerR;
 
@@ -103,7 +96,6 @@ function Game() {
                                                             borderBlockColor:"black" } } >
                         <PlayerOne  style={{backgroundColor: "white"}} player={playerL} winner={""} sizeAvatar={"l"} />
                         <p className='vs'> VS</p>
-
                         <PlayerTwo  player={playerR} winner={""}  sizeAvatar={"l"} />
                     </div>
                     </>
@@ -112,27 +104,8 @@ function Game() {
         }
     };
 
-/////////////////////////////////////////////////leave the page////////////////////////////////////
-    // useEffect(() => {
-
-    //     return () => {
-    //     // unmount component event (works at mount too)
-    //         if (gamestatus.status == 'game'){
-    //             alert("Alert of sortie game");
-    //         }
-    //         else if (gamestatus.status == 'waiting'){
-    //             alert("Alert of sortie waiting");
-    //         }
-    //         else {
-    //             alert(`Alert of sortie gamestatus.status = ${gamestatus.status}`);
-    //         }
-    //     };
-    // }, []);
-
-//////////////////////////////////////////////////////////////////////////////////////////////
 
 // onKeyDown handler function
-
     const onkeyPress = (event: KeyboardEvent) => {
         event.preventDefault();
         if (event.code === "ArrowUp") {
@@ -144,7 +117,7 @@ function Game() {
     };
 
     useEffect(() => {
-// Attach the event listener to the window object
+        // Attach the event listener to the window object
         window.addEventListener('keydown', onkeyPress);
 
         return () => {
@@ -153,50 +126,52 @@ function Game() {
         }
     }, []);
 
+
 // Pour partis de Modal select Color,
-const [ShowColorModal, setShowColorModal] = useState(false);
-const handleColorModal = () => {
-    setShowColorModal(true)
-}
-const handleClose = () => {
-    setShowColorModal(false)
-}
+    const [ShowColorModal, setShowColorModal] = useState(false);
+    // const handleColorModal = () => {
+    //     setShowColorModal(true)
+    // }
+    const handleClose = () => {
+       setShowColorModal(false)
+    }
+    const handleGameRefuse = () => {
+        setGameStatus(GameStatus.NULL);
+    }
+  
+    const [ShowCamva, setShowCamva] = useState(true);
+    const [backColorGame, setbackColorGame] = useState<string>("black");
+    const changColorToRed= () => {
+        setbackColorGame("#699BF7");
+        setShowColorModal(false);
+        ShowCamva? setShowCamva(false): setShowCamva(true);
+    }
 
-const [ShowCamva, setShowCamva] = useState(true);
-const [backColorGame, setbackColorGame] = useState<string>("black");
-const changColorToRed= () => {
-    setbackColorGame("#699BF7");
-    setShowColorModal(false);
-    ShowCamva? setShowCamva(false): setShowCamva(true);
-}
+    const changColorToBlue= () => {
+        setbackColorGame("#C7B9FF");
+        setShowColorModal(false);
+        ShowCamva? setShowCamva(false): setShowCamva(true);
+    }
 
-const changColorToBlue= () => {
-    setbackColorGame("#C7B9FF");
-    setShowColorModal(false);
-    ShowCamva? setShowCamva(false): setShowCamva(true);
-}
+    const changColorToGreen= () => {
+        setbackColorGame("#FF5166");
+        setShowColorModal(false);
+        ShowCamva? setShowCamva(false): setShowCamva(true);
+    }
 
-const changColorToGreen= () => {
-    setbackColorGame("#FF5166");
-    setShowColorModal(false);
-    ShowCamva? setShowCamva(false): setShowCamva(true);
-}
+    const changColorToBlack= () => {
+        setbackColorGame("black");
+        setShowColorModal(false);
+        ShowCamva? setShowCamva(false): setShowCamva(true);
+    }
 
-const changColorToBlack= () => {
-    setbackColorGame("black");
-    setShowColorModal(false);
-    ShowCamva? setShowCamva(false): setShowCamva(true);
-}
+    // useEffect(() => {
 
-useEffect(() => {
+    // }, [backColorGame])
 
-}, [backColorGame])
-
-
-/************************* */
 
 //initialization of the initial parameters of the game
-    const [gameinit, setGameInit] = useState<gameInit>(
+    const [gameinit, setGameInit] = useState<GameInit>(
         {
             table_width: Math.floor(0.6 * window.innerWidth),
             table_height: 0.5,
@@ -205,12 +180,11 @@ useEffect(() => {
             racket_height: 0.100,
             scoreR: 0,
             scoreL: 0,
-            // winner: null,
         }
     );
 
 // game parameters update (coordinates ball and racket)
-    const [gamestate, setGameState] = useState<gameState>(
+    const [gamestate, setGameState] = useState<GameState>(
         {
             ball: {x: 0.500, y: 0.250},
             racket1: {x: 0.010, y: 0.150},
@@ -226,7 +200,7 @@ useEffect(() => {
             // window.screen.width
             const width = Math.floor(0.6 * window.innerWidth);
             if(width){
-                gameinit.table_width = width;
+                // gameinit.table_width = width;
                 setGameInit({
                     table_width: width,
                     table_height: gameinit.table_height,
@@ -235,29 +209,29 @@ useEffect(() => {
                     racket_height: gameinit.racket_height,
                     scoreR: gameinit.scoreR,
                     scoreL: gameinit.scoreL})
-                    // winner: gameinit.winner});
             }
         };
         window.addEventListener("resize", updateWidth);
         return () => window.removeEventListener("resize", updateWidth);
-      });
+    });
 
-    const initListener = (data: gameInit)=>{
+    const initListener = (data: GameInit)=>{
         const width = Math.floor(0.6 * window.innerWidth);
         if(width){
-            data.table_width = width;""
-        }
-        if(curroom == -1){
-            gamestatus.status == 'game';
+            data.table_width = width;
         }
         setGameInit(data);
     }
-
-    const updateListener = (data: gameState)=>{
+ 
+    const updateListener = (data: GameState)=>{
         setGameState(data);
     }
 
-    const updateStatus = (data: gameStatus)=>{
+    const updateWinner = (data: GameWinner)=>{
+        setGameWinner(data);
+    }
+
+    const updateStatus = (data: GameStatus)=>{
         setGameStatus(data);
     }
 
@@ -265,35 +239,21 @@ useEffect(() => {
     useEffect(() => {
         addListener('init-pong', initListener);
         addListener('pong', updateListener);
+        addListener('winner', updateWinner);
         addListener('status', updateStatus);
-    }, [initListener, updateListener, updateStatus]);
+
+    }, [initListener, updateListener, updateWinner, updateStatus]);
 
     const isInPlay = (): boolean => {
-        return games.some(room => room.playerL.username == user.username || room.playerR.username == user.username);
+        return games.some((room:GamesList)  => room.playerL.username == user.username || room.playerR.username == user.username);
     };
 
 // action when clicking on "PlayGame"
-    const [clicked_play, setClicked] = useState(false);
-
     const handleClick = (roomN: number) => {
+        gamesWinner.winner = null;
         sendMessage("playGame", {roomN: roomN} as any);
         setCurRoom(roomN);
-        if(roomN == -1){
-            gamestatus.status == 'game';
-        }
-        gamestatus.winner = null;
-        setClicked(true);
     };
-
- // for Disable after click
-//  const [activeLinkk, setActiveLinkk] = useState('');
-//  useEffect(() => {
-//     setActiveLinkk(location.pathname);
-//   }, []);
-
-//  const handleLinkClick = (path: string) => {
-//     setActiveLinkk(path);
-//   };
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -305,7 +265,7 @@ useEffect(() => {
             <div className="gameSideL">
 
                 <div className="title">
-                    <MyAccountMenu authCtx={authCtx}></MyAccountMenu>
+                    <MyAvatar  id={user.userId} style="l" avatar={user.avatar} ftAvatar={user.ftAvatar}/>
                     <h4>{user.username}</h4>
                 </div>
 
@@ -317,9 +277,6 @@ useEffect(() => {
 
                 <div className='posBtnn' >
                     {/* /BUTTON FOR GAME START */}
-                    {/* <div >
-                        <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/>Play</button>
-                    </div> */}
                     {!isInPlay() && (
                         <div >
                             <button className="btnn" onClick={() => handleClick(-1)}><SportsTennisIcon/>Play</button>
@@ -328,7 +285,7 @@ useEffect(() => {
 
                     {/* /EXIT FROM THE GAME. IF GAME FINISHED*/}
                     <Link to="/menu">
-                        <button className="btnn" onClick={() => sendMessage("exitGame", { status: gamestatus.status } as any)} style={{ alignSelf: "flex-end" }}>
+                        <button className="btnn" onClick={() => sendMessage("exitGame", {status: status} as any)} style={{ alignSelf: "flex-end" }}>
                             <ExitToAppIcon /> Exit
                         </button>
                     </Link>
@@ -340,19 +297,17 @@ useEffect(() => {
             <div className="gameBox">
                 <div className="gameBoxW">
 
-                    {(!gamestatus.winner) ? (
+                    {(!gamesWinner.winner) ? (
                     <>
-                        {/* <div className='wrapWaiting'>*/}
-                            {(gamestatus.status == 'false') && (<RefusModal handelClose={handleClose}/>)}
-
-                            { (gamestatus.status == 'watch' || gamestatus.status == 'game') ?
+                            {(status == GameStatus.CLOSE) &&  <RefusModal handleClose={handleGameRefuse}/>}
+                           
+                            { (status == GameStatus.WATCH || status == GameStatus.GAME) ?
                                 (getCurrentGame(curroom))
-                                // (<HeaderGame games = {games} room = {curroom}></HeaderGame>)
                                 :
                                 ( <h2 className='gametitle'>Pong</h2>)
                             }
 
-                            {(gamestatus.status == 'waiting') ?
+                            {(status == GameStatus.WAIT) ?
                         (
                             <div className='wrapWaiting'>
                                 <div className="center">
@@ -375,22 +330,19 @@ useEffect(() => {
                     </>
                     ):(
                     <>
-                        {/* <section className='headerWin'> */}
                         <div className="container-match" style={{backgroundColor: "white",
                                                                     border: "solid" ,
                                                                     borderBlockColor:"black" } } >
-                                <PlayerOne  style={{backgroundColor: "white"}} player={gamestatus.playerL} winner={gamestatus.winner} sizeAvatar={"l"} />
+                                <PlayerOne  style={{backgroundColor: "white"}} player={gamesWinner.playerL} winner={gamesWinner.winner} sizeAvatar={"l"} />
                                 <p className='vs'> VS</p>
 
-                                <PlayerTwo  player={gamestatus.playerR} winner={gamestatus.winner}  sizeAvatar={"l"} />
+                                <PlayerTwo  player={gamesWinner.playerR} winner={gamesWinner.winner}  sizeAvatar={"l"} />
                             </div>
-                        {/* </section> */}
 
                         <section className='sctWin'>
                             <h1> WINNER </h1>
                             <div className='CapWinner'>
-                                <MyAvatar  id={gamestatus.winner.id} style="l" avatar={gamestatus.winner.avatar} ftAvatar={gamestatus.winner.ftAvatar}/>
-
+                                <MyAvatar  id={gamesWinner.winner.id} style="l" avatar={gamesWinner.winner.avatar} ftAvatar={gamesWinner.winner.ftAvatar}/>
                                 <BrightnessLowIcon id = "win" className='star' />
                             </div>
                         </section>
@@ -402,10 +354,8 @@ useEffect(() => {
         <div className='gameSideR'>
             <h2 className='posH'>Live games</h2>
                 <div>
-                    {games.map((game: gamesList) => (
+                    {games.map((game: GamesList) => (
                     <div key={game.roomN} className='wrapList'>
-
-                    {/* <button  onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button> */}
                         <div onClick={() => handleClick(game.roomN)}>
                             <div className="container-match">
                             {!isInPlay() && 
