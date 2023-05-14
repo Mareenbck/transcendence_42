@@ -125,7 +125,6 @@ export default function CurrentChannel(props: any) {
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-	// console.log("chatroom hasID ? " , currentChatroom.id) 
 		if (currentChatroom.id) {
 			let message2 = {
 				authorId: currentId,
@@ -134,10 +133,8 @@ export default function CurrentChannel(props: any) {
 			};
 		try {
 			const res = await MessageReq.postMess(authCtx, message2);
-	// console.log("registered ?" , res); 
 			message2.id = res.id;
 			message2.createdAt = res.createdAt;
-	// console.log("res with id ?" , message2); 
 			setMessages2([...messages2, res]);
 			sendMessage("sendMessageRoom", message2 as any)
 			setNewMessage2("");
@@ -171,13 +168,17 @@ export default function CurrentChannel(props: any) {
 	});
 
 	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.key === 'Enter') {
+		if (e.key === 'Enter'  && newMessage2.trim() !== '') {
 		  handleSubmit(e);
 		}
 	  };
 	  
 
-	// console.log('is banned ? ', isBanned)
+	  const handleIconClick = (e: FormEvent) => {
+		if (newMessage2.trim().length > 0) {
+		  handleSubmit(e);
+		}
+	  };
 
 	return (
 		<>
@@ -216,7 +217,7 @@ export default function CurrentChannel(props: any) {
 							></input>
 								<FontAwesomeIcon
 								icon={faPaperPlane}
-								onClick={handleSubmit}
+								onClick={handleIconClick}
 								className={`send-btn-chat ${isMuted ? 'muted' : ''}`} 
 								disabled={toBan}
 								/>

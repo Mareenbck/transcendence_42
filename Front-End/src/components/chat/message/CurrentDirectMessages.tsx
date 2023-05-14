@@ -92,9 +92,20 @@ export default function CurrentDirectMessages(props: any) {
 	  
 	  const handleKeyDown = (e: KeyboardEvent) => {
 		if (e.key === 'Enter') {
+		  if (newMessageD.trim().length > 0) {
+			handleSubmitD(e); 
+		  }
+		  e.preventDefault();
+		}
+	  };
+
+	  const handleIconClick = (e: FormEvent) => {
+		if (newMessageD.trim().length > 0) {
 		  handleSubmitD(e);
 		}
 	  };
+	  
+	  
 
 	  return (
 		<>
@@ -118,12 +129,12 @@ export default function CurrentDirectMessages(props: any) {
 					className="chatMessageInput"
 					placeholder="write something..."
 					onChange={(e) => setNewMessageD(e.target.value)}
-					value={newMessageD}
 					onKeyDown={handleKeyDown}
+					value={newMessageD}
 					></textarea>
 				<FontAwesomeIcon
 					icon={faPaperPlane}
-					onClick={handleSubmitD}
+					onClick={handleIconClick}
 					className={`send-btn-chat`} 
 				/>
 			</div>

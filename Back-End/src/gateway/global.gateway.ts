@@ -123,7 +123,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       if (!user) {
         throw new WsException('Invalid credentials.');
       }
-    console.log("data BE : ", message2);
+    // console.log("data BE : ", message2);
     this.chatService.sendRoomMessage(message2.id, message2.authorId, message2.chatroomId, message2.content, message2.createdAt) 
     }
   }
