@@ -20,7 +20,7 @@ const BodyStatsCard = (props: any) => {
 				setLevel(data.level);
 				setContent(<><h3>Lvl -</h3><h2>{data.level}</h2></>)
 			} else if (props.icon === 'rank') {
-				const rank = await fetchUserRank(id);
+				const rank = await fetchUserRank(parseInt(id));
 				setContent(<><h2>#{rank.rank}</h2></>)
 			}
 		};

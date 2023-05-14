@@ -233,12 +233,11 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   ////////////////////////////////////////////////////////////////////
 
 	@SubscribeMessage('updateDemands')
-	async updateDemands(@MessageBody() updatedDemands: any): Promise<void> {
-		const { response } = updatedDemands
-		if (response === 'ACCEPTED') {
-			const updatedDemand = await this.friendshipService.updateFriendship(updatedDemands);
+	async updateDemands(@MessageBody() data: any): Promise<void> {
+		if (data.status === 'ACCEPTED') {
+			const updatedDemand = await this.friendshipService.updateFriendship({demandId: data.id, response: data.status});
 			this.server.emit('demandsUpdated', updatedDemand);
-		} else if (response === 'REFUSED') {
+		} else if (data.status === 'REFUSED') {
 			// const updatedDemand = await this.friendshipService.updateFriendship(updatedDemands);
 			await this.friendshipService.deleteRefusedFriendship();
 		}
@@ -246,7 +245,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
 	@SubscribeMessage('removeFriend')
 	async removeFriend(@MessageBody() friendId: any, @ConnectedSocket() socket: Socket): Promise<void> {
-		const updatedFriendsCurrent = await this.friendshipService.showFriends(friendId.friendId);
+		const updatedFriendsCurrent = await this.friendshipService.showFriends(friendId);
 		const newFriendListCurrent = updatedFriendsCurrent.friendOf
 		this.userSockets.emitToId(updatedFriendsCurrent.id, 'removeFriend', newFriendListCurrent)
 	}
@@ -279,7 +278,6 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
 	@SubscribeMessage('logout')
 	async appLogout(@MessageBody() data: any): Promise<void> {
-		console.log("DANS GATEWAY", data)
 		const user = await this.authService.signout({userId: data});
 		const allUsers = await this.userService.getUsersWithBlocked();
 		this.server.emit('users_status', allUsers);

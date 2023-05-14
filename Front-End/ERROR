@@ -1,0 +1,29 @@
+// #0 2.807 src/components/auth/Login.tsx(92,27): error TS2345: Argument of type 'string' is not assignable to parameter of type '(data: any) => void'.
+// #0 2.807 src/components/auth/TwoFA.tsx(41,24): error TS2345: Argument of type 'string' is not assignable to parameter of type '(data: any) => void'.
+// #0 2.808 src/components/chat/channels/ConversationRequest.tsx(1,25): error TS2307: Cannot find module '../../store/AuthContext' or its corresponding type declarations.
+// #0 2.808 src/components/chat/channels/CurrentChannel.tsx(80,55): error TS2339: Property 'id' does not exist on type 'RoomMessage'.
+// #0 2.808 src/components/chat/channels/CurrentChannel.tsx(80,75): error TS2339: Property 'id' does not exist on type 'RoomMessage'.
+// #0 2.808 src/components/chat/channels/CurrentChannel.tsx(115,5): error TS2345: Argument of type '{ authorId: any; chatroomId: any; content: any; id: any; createdAt: any; }' is not assignable to parameter of type 'SetStateAction<RoomMessage | null>'.
+// #0 2.808   Object literal may only specify known properties, and 'id' does not exist in type 'RoomMessage | ((prevState: RoomMessage | null) => RoomMessage | null)'.
+// #0 2.808 src/components/chat/channels/CurrentChannel.tsx(131,13): error TS2339: Property 'id' does not exist on type '{ authorId: number; content: string; chatroomId: any; }'.
+// #0 2.808 src/components/chat/channels/CurrentChannel.tsx(132,13): error TS2339: Property 'createdAt' does not exist on type '{ authorId: number; content: string; chatroomId: any; }'.
+// #0 2.808 src/components/chat/channels/CurrentChannel.tsx(216,9): error TS2322: Type '{ icon: IconDefinition; onClick: (e: FormEvent<Element>) => void; className: string; disabled: any; }' is not assignable to type 'IntrinsicAttributes & FontAwesomeIconProps'.
+// #0 2.808   Property 'disabled' does not exist on type 'IntrinsicAttributes & FontAwesomeIconProps'.
+// #0 2.808 src/components/chat/channels/UpdateChannelsInList.tsx(42,34): error TS2749: 'AuthContext' refers to a value, but is being used as a type here. Did you mean 'typeof AuthContext'?
+// #0 2.808 src/components/chat/channels/UpdateChannelsInList.tsx(45,50): error TS7006: Parameter 'c' implicitly has an 'any' type.
+// #0 2.808 src/components/chat/channels/UpdateChannelsInList.tsx(48,25): error TS7006: Parameter 'p' implicitly has an 'any' type.
+// #0 2.808 src/components/chat/message/UsersChat.tsx(4,20): error TS2307: Cannot find module '../../interfaces/IFriendship' or its corresponding type declarations.
+// #0 2.808 src/components/chat/message/message.req.tsx(1,25): error TS2307: Cannot find module '../../store/AuthContext' or its corresponding type declarations.
+// #0 2.808 src/components/chat/message/usersWithMessages.tsx(95,4): error TS2554: Expected 1 arguments, but got 0.
+// #0 2.808 src/components/friends/FriendsList.tsx(16,20): error TS2307: Cannot find module '../interfaces/IFriendship' or its corresponding type declarations.
+// #0 2.808 src/components/game/Game.tsx(84,51): error TS2694: Namespace 'React' has no exported member 'JSX'.
+// #0 2.808 src/components/game/MatchHistory.tsx(15,24): error TS18049: 'games' is possibly 'null' or 'undefined'.
+// #0 2.808 src/components/game/ShowAchievements.tsx(13,31): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+// #0 2.808   Type 'undefined' is not assignable to type 'string'.
+
+
+
+// #0 2.808 src/components/user/ProfileCard.tsx(17,60): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+// #0 2.808   Type 'undefined' is not assignable to type 'string'.
+// #0 2.808 src/pages/Profile.tsx(13,60): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+// #0 2.808   Type 'undefined' is not assignable to type 'string'.

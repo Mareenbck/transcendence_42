@@ -34,7 +34,7 @@ export default function MyAccountMenu(props: any) {
 
 	const handleLogout = async () => {
 		authCtx.logout();
-		sendMessage("logout", authCtx.userId);
+		sendMessage("logout", authCtx.userId as any);
 	};
 
 	return (

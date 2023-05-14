@@ -46,7 +46,6 @@ export const FriendContextProvider = (props: any) => {
 		}
 	}, []);
 
-
 	useEffect(() => {
 		addListener('demandsUpdated', (updatedDemands: Demand[]) => {
 			setAcceptedDemands(updatedDemands);
@@ -74,7 +73,6 @@ export const FriendContextProvider = (props: any) => {
 				body: JSON.stringify({ requesterId: currentId, receiverId: receiverId }),
 			});
 			const data = await response.json();
-			sendMessage('createDemand', {id: receiverId});
 			if (!response.ok) {
 				console.log("POST error on /friendship/create");
 				return "error";
@@ -156,8 +154,7 @@ export const FriendContextProvider = (props: any) => {
 				body: JSON.stringify({ friendId: friendId, currentId: currentId }),
 			});
 			const data = await response.json();
-			sendMessage('removeFriend', { friendId: friendId, currentId: currentId });
-
+			sendMessage('removeFriend', friendId as any);
 			setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== friendId));
 			if (!response.ok) {
 				console.log("POST error on /friendship/delete");
@@ -179,7 +176,7 @@ export const FriendContextProvider = (props: any) => {
 				body: JSON.stringify({ demandId: demandId, response: res }),
 			});
 			const data = await response.json();
-			sendMessage('updateDemands', { demandId: demandId, response: res })
+			sendMessage('updateDemands', data)
 			if (!response.ok) {
 				console.log("POST error on /friendship/validate");
 				return "error";
@@ -197,7 +194,7 @@ export const FriendContextProvider = (props: any) => {
 		}
 	}
 
-	const contextValue = {
+	const contextValue: any = {
 		demands,
 		friends,
 		pendingDemandsCount,
