@@ -19,7 +19,6 @@ import CurrentDirectMessages from './message/CurrentDirectMessages';
 import UsersChat from './message/UsersChat';
 import { FriendContext } from '../../store/FriendshipContext';
 
-
 function Chat(props: any) {
   const user = useContext(AuthContext);
   const friendCtx = useContext(FriendContext);

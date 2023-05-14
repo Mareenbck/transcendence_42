@@ -5,7 +5,6 @@ import AuthContext from '../../../store/AuthContext';
 import Fetch from '../../../interfaces/Fetch';
 import useSocket from '../../../service/socket';
 import { FriendContext } from '../../../store/FriendshipContext';
-import { UserChat } from '../../../interfaces/iChat';
 
 const DirectMessageInfo = (props: any) => {
 	const authCtx = useContext(AuthContext)

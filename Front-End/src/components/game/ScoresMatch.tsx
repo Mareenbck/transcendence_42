@@ -1,7 +1,6 @@
 import React from "react";
 import '../../style/Profile.css'
 
-
 const ScoresMatch = (props: any) => {
 
 	const formattedDate = (dateString :string) => {

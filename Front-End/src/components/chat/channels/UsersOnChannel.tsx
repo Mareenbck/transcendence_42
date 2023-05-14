@@ -14,8 +14,9 @@ import { Avatar, Tooltip } from '@mui/material';
 import "../../../style/UsersChat.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FriendContext } from "../../../store/FriendshipContext";
-import { faTrash, faBan, faMicrophoneSlash, faMicrophone, faCircle, faUserChef } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faBan, faMicrophoneSlash, faMicrophone } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
+import { back_url } from '../../../config.json';
 
 const Demo = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -37,8 +38,7 @@ export default function InteractiveListe(props: any) {
 
 	const showParticipants = React.useCallback(async (channelId: string) => {
 		try {
-			const response = await fetch(
-				`http://localhost:3000/chatroom2/${channelId}/participants`, {
+			const response = await fetch(back_url + `/chatroom2/${channelId}/participants`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
@@ -71,153 +71,143 @@ export default function InteractiveListe(props: any) {
 		});
 	});
 
-    const kickSomeone = async (channelId: string, userId: string) => {
-        try {
-            const response = await fetch(
-                `http://localhost:3000/chatroom2/${channelId}/kick/${userId}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${authCtx.token}`,
-                    },
-                }
-        );
-        if (!response.ok) {
-            throw new Error("Failed to kick user.");
-        }
-        const updatedParticipants = participants.filter(p => p.user.id !== userId);
-        setParticipants(updatedParticipants);
-        showParticipants(channelId);
-		sendMessage('toMute', {channelId: channelId})
-        sendMessage("sendConv", {channelId: channelId, userId: userId})
-        } catch (error) {
-            console.error(error);
-        }
-    };
+	const kickSomeone = async (channelId: string, userId: string) => {
+		try {
+			const response = await fetch(back_url + `/chatroom2/${channelId}/kick/${userId}`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${authCtx.token}`,
+				},
+			});
+			if (!response.ok) {
+				throw new Error("Failed to kick user.");
+			}
+			const data = await response.json();
+			const updatedParticipants = participants.filter(p => p.user.id !== userId);
+			setParticipants(updatedParticipants);
+			showParticipants(channelId);
+			sendMessage('toMute', data.channelId)
+			sendMessage("sendConv", data)
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
     const banSomeone = async (channelId: string, userId: string) => {
-        try {
-            const response = await fetch(
-                `http://localhost:3000/chatroom2/${channelId}/ban/${userId}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${authCtx.token}`,
-                    },
+		try {
+			const response = await fetch(back_url + `/chatroom2/${channelId}/ban/${userId}`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${authCtx.token}`,
+					},
 
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Failed to ban user.");
-            }
-            const data = await response.json();
-            setParticipants(data)
-            const updatedParticipants = participants.filter(p => p.user.id !== userId);
-            setParticipants(updatedParticipants);
-            showParticipants(channelId);
-            setIsBanned(true)
-            sendMessage('toMute', {channelId: channelId, userId: userId})
-        } catch (error) {
-            console.error(error);
-        }
-    };
+				});
+			if (!response.ok) {
+				throw new Error("Failed to ban user.");
+			}
+			const data = await response.json();
+			// console.log("DATA DANS BAN SOMEONE : ", data)
+			setParticipants(data)
+			const updatedParticipants = participants.filter(p => p.user.id !== userId);
+			setParticipants(updatedParticipants);
+			showParticipants(channelId);
+			setIsBanned(true)
+			sendMessage('toMute', data.channelId)
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-        const unBanSomeone = async (channelId: string, userId: string) => {
-            try {
-                const response = await fetch(
-                    `http://localhost:3000/chatroom2/${channelId}/unban/${userId}`,
-                    {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${authCtx.token}`,
-                    },
-                }
-                );
-                if (!response.ok) {
-                    throw new Error("Failed to unban user.");
-                }
-                const data = await response.json();
-                setParticipants(data)
-                const updatedParticipants = participants.filter(p => p.user.id !== userId);
-                setParticipants(updatedParticipants);
-                showParticipants(channelId);
-                setIsBanned(false)
-                sendMessage('toMute', {channelId: channelId, userId: userId})
-            } catch (error) {
-                console.error(error);
-            }
-        };
+	const unBanSomeone = async (channelId: string, userId: string) => {
+		try {
+			const response = await fetch(back_url + `/chatroom2/${channelId}/unban/${userId}`,{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${authCtx.token}`,
+				},
+			});
+			if (!response.ok) {
+				throw new Error("Failed to unban user.");
+			}
+			const data = await response.json();
+			setParticipants(data)
+			const updatedParticipants = participants.filter(p => p.user.id !== userId);
+			setParticipants(updatedParticipants);
+			showParticipants(channelId);
+			setIsBanned(false)
+			sendMessage('toMute', data.channelId)
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-        const muteSomeone = async (channelId: string, userId: string) => {
-            try {
-                const response = await fetch(
-                    `http://localhost:3000/chatroom2/${channelId}/mute/${userId}`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${authCtx.token}`,
-                        },
-                    }
-                );
-                if (!response.ok) {
-                    throw new Error("Failed to mute user.");
-                }
-				const data = await response.json();
-				const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
-					const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
-					return {
-						...userOnChannel,
-						user: {
-						  ...userOnChannel.user,
-						  avatar: avatar
-						}
-					  };
-				}));
-				setParticipants(updatedUsersOnChannel)
-                setIsMuted(true);
-				sendMessage('toMute', {channelId: channelId, userId: userId})
-            } catch (error) {
-                console.error(error);
-            }
-        };
+	const muteSomeone = async (channelId: string, userId: string) => {
+		try {
+			const response = await fetch(
+				back_url + `/chatroom2/${channelId}/mute/${userId}`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${authCtx.token}`,
+					},
+				});
+			if (!response.ok) {
+				throw new Error("Failed to mute user.");
+			}
+			const data = await response.json();
+			console.log("MUTE DATA ", data)
+			const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
+				const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
+				return {
+					...userOnChannel,
+					user: {
+						...userOnChannel.user,
+						avatar: avatar
+					}
+				};
+			}));
+			setParticipants(updatedUsersOnChannel)
+			setIsMuted(true);
+			sendMessage('toMute', data[0].channelId)
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-        const unMuteSomeone = async (channelId: string, userId: string) => {
-            try {
-                const response = await fetch(
-                    `http://localhost:3000/chatroom2/${channelId}/unmute/${userId}`,
-                    {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${authCtx.token}`,
-                    },
-                }
-                );
-                if (!response.ok) {
-                    throw new Error("Failed to mute user.");
-                }
-				const data = await response.json();
-                setIsMuted(false)
-				const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
-					const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
-					return {
-						...userOnChannel,
-						user: {
-						  ...userOnChannel.user,
-						  avatar: avatar
-						}
-					  };
-				}));
-				setParticipants(updatedUsersOnChannel)
-				sendMessage('toMute', {channelId: channelId, userId: userId})
-            } catch (error) {
-                console.error(error);
-            }
-        };
+	const unMuteSomeone = async (channelId: string, userId: string) => {
+		try {
+			const response = await fetch(back_url + `/chatroom2/${channelId}/unmute/${userId}`,{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${authCtx.token}`,
+				},
+			});
+			if (!response.ok) {
+				throw new Error("Failed to mute user.");
+			}
+			const data = await response.json();
+			setIsMuted(false)
+			const updatedUsersOnChannel = await Promise.all(data.map(async (userOnChannel: any) => {
+				const avatar = await friendCtx.fetchAvatar(userOnChannel.user.id);
+				return {
+					...userOnChannel,
+					user: {
+						...userOnChannel.user,
+						avatar: avatar
+					}
+					};
+			}));
+			setParticipants(updatedUsersOnChannel)
+			sendMessage('toMute', data[0].channelId)
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
         useEffect(() => {
             showParticipants(props.channelId);

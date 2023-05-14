@@ -2,6 +2,7 @@ import React, { SyntheticEvent, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 import '../../style/Form.css'
 import ErrorModal from "./ErrorModal";
+import { back_url } from '../../config.json';
 
 interface ErrorMsg {
 	title: string;
@@ -49,7 +50,7 @@ function Signup() {
 			email: email,
 			password: password,
 		};
-		const url = 'http://localhost:3000/auth/signup';
+		const url = back_url + '/auth/signup';
 		const fetchHandler = async () => {
 			try {
 				const options = {

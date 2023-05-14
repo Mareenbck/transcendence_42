@@ -12,9 +12,9 @@ import AuthContext from "../../store/AuthContext";
 import { FriendContext } from "../../store/FriendshipContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown, faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import Tooltip from '@mui/material/Tooltip';
 import Fetch from "../../interfaces/Fetch"
+import Friend from "../../interfaces/IFriendship"
 import useSocket from '../../service/socket';
 
 
@@ -57,10 +57,10 @@ export default function DialogSelect(props: { channelId:number, onSelect: (userI
 	}
 
 	const fetchUsers = async () => {
-		if (props.type === "invite-admin") 
+		if (props.type === "invite-admin")
 		{
 			const data = await Fetch.fetch(authCtx.token, "GET", `chatroom2`, props.channelId, 'participants');
-			setFriends(data.filter(u => +u.userId !== +authCtx.userId));
+			setFriends(data.filter((u: any)=> +u.userId !== +authCtx.userId));
 		}
 		else
 		{
@@ -73,19 +73,17 @@ export default function DialogSelect(props: { channelId:number, onSelect: (userI
 		}
 	}
 
-React.useEffect(() => {
-	fetchUsers();
-}, [props.channelId, props.type])
-
-React.useEffect(() => {
-	addListener("changeParticipants", () => {
+	React.useEffect(() => {
 		fetchUsers();
+	}, [props.channelId, props.type])
+
+	React.useEffect(() => {
+		addListener("changeParticipants", () => {
+			fetchUsers();
+		});
 	});
-});
 
 	React.useEffect (() => {
-		// console.log("props.type--->")
-		// console.log(props.type)
 		if (props.type === 'invite-user') {
 			setButton(<Tooltip title="Invite User">
 						<FontAwesomeIcon icon={faUserPlus} onClick={handleClickOpen} className="btn-dialog-navbar"/></Tooltip>)
@@ -98,7 +96,6 @@ React.useEffect(() => {
 	return (
 		<div>
 			{button}
-			{/* <Button onClick={handleClickOpen}>{props.type === "invite-user" ? "Invite User" : "Add Admin"}</Button> */}
 			<Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
 				<DialogTitle>{props.type === "invite-user" ? "Invite User" : "Add Admin"}</DialogTitle>
 				<DialogContent>
@@ -113,8 +110,8 @@ React.useEffect(() => {
 								<option aria-label="None" value="" />
 								{friends?.map((friend: any) => (
 									props.type === "invite-user" ?
-										<option key={friend.id} value={friend.id}> {friend.username} </option> 
-									: 
+										<option key={friend.id} value={friend.id}> {friend.username} </option>
+									:
 										<option key={friend.userId} value={friend.userId}> {friend.user.username} </option>
 								))}
 							</Select>

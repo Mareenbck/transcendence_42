@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import AuthContext from '../../store/AuthContext';
+import { back_url } from '../../config.json';
 
 function Callback42() {
 	const authCtx = useContext(AuthContext);
@@ -10,7 +11,7 @@ function Callback42() {
 
 		const fetchCall = async () => {
 			try {
-					const response = await fetch('http://localhost:3000/auth/42/callback', {
+					const response = await fetch(back_url + '/auth/42/callback', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -20,8 +21,6 @@ function Callback42() {
 
 				const data = await response.json();
 				if (response.ok) {
-					// const token = data.newtokens.access_token;
-					// const userId = data.user.id;
 					const username = data.user.username;
 					const avatar = data.user.avatar;
 					const ftAvatar = data.user.ftAvatar;

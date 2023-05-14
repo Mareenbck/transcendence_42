@@ -1,11 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import { Avatar, ListItem, Tooltip } from '@mui/material';
-import { ListItemAvatar } from '@mui/material';
-import { faBan, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { Avatar } from '@mui/material';
+import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Friend from '../interfaces/IFriendship';
-import { UserChat } from '../../../interfaces/iChat';
 import AuthContext from '../../store/AuthContext';
 
 const styleChannel = `

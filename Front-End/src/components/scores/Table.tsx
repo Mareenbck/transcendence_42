@@ -4,9 +4,9 @@ import '../../style/Scores.css';
 // import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
-import {UserScore, Game} from "../../interfaces/iChat";
+import {UserScore, Game, Games} from "../../interfaces/iChat";
 // import Card from "../../components/utils/Card";
-import { ListItem, Games } from '@mui/material';
+import { ListItem } from '@mui/material';
 import '../../style/Profile.css'
 import '../../style/Table.css'
 
@@ -14,7 +14,7 @@ const Table = (props: any) => {
   const MAX_SCORE = 3;
   const [games, setGames] = useState<Games[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
-  
+
   const authCtx = useContext(AuthContext);
 
   //aller chercher les games
@@ -62,29 +62,29 @@ const Table = (props: any) => {
       const p2 = games.filter((u: Games) => +u.playerTwoId === +user.id).length;
       const win = games.filter((u: Games) => +u.winnerId === +user.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
-  
+
       if (total < 0)
-        total = 0; 
-   
+        total = 0;
+
       return (total);
     }
   }
-  
+
   var sorted = [...allUsers];
   sorted.sort((a, b) => (getScore(b) - getScore(a)));
   let firts = sorted[0];
   let second = sorted[1];
   var third = sorted[2];
-  
+
   function handleNewGame(event: React.FormEvent<HTMLFormElement>): void {
     throw new Error('Function not implemented.');
   }
-  
+
     return(
 
     <>
       <form onSubmit={(event) => handleNewGame(event)}></form>
-             
+
         <ListItem  className="headTable">
             <p>Avatar</p>
             <p className='tdd'>Name</p>
@@ -96,7 +96,7 @@ const Table = (props: any) => {
         {sorted.map((g) => (
             <ListItem  className="lineTable" key={g?.id}>
               <div className="container-match">
-                  <span ><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftavatar}/></span>
+                  <span ><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftAvatar}/></span>
                   <p >{g?.username}</p>
                   <p >{getNbGames(g)}</p>
                   <p >{getScore(g)}</p>

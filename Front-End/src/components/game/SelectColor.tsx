@@ -1,8 +1,5 @@
-import React , { useEffect, useState, useContext, useRef }  from "react";
-
+import React from "react";
 import '../../style/SelectColor.css';
-import Card from "../../components/utils/Card";
-
 
 type props = {
 	changcolor : any;
@@ -11,36 +8,21 @@ type props = {
 
 const SelectColor = (props: any) => {
 
-    const [ShowColorModal, setShowColorModal] = useState(false); 
-    const handleColorModal = () => {
-        setShowColorModal(true)
-    }
-
-	const formattedDate = (dateString :string) => {
-		
-		return ;
-	};
-
 	return (
 		<>
-			<div className="">
-
-            <div className="card-option">
-                        <div className="poslogo">
-                           
-                            <h2 >Change Color</h2>
-                         </div>
-                         <div className="posColor" style={{"cursor": "prompt"}}>
-                            <button  className = "posColor__circlebtn" onClick={props.changColorToRed}   style={{backgroundColor: "#699BF7"}} ></button>
-                            <button  className = "posColor__circlebtn" onClick={props.changColorToBlue} style={{backgroundColor: "#C7B9FF"}}></button>
-                            <button  className = "posColor__circlebtn" onClick={props.changColorToGreen} style={{backgroundColor: "#FF5166"}}></button>
-                            <button  className = "posColor__circlebtn " onClick={props.changColorToBlack} style={{backgroundColor: "black"}}></button>
-                         </div>
-                         
-                    </div>
-
-                    
+		<div className="">
+			<div className="card-option">
+				<div className="poslogo">
+					<h2 >Change Color</h2>
+				</div>
+				<div className="posColor" style={{"cursor": "prompt"}}>
+					<button  className = "posColor__circlebtn" onClick={props.changColorToRed}   style={{backgroundColor: "#699BF7"}} ></button>
+					<button  className = "posColor__circlebtn" onClick={props.changColorToBlue} style={{backgroundColor: "#C7B9FF"}}></button>
+					<button  className = "posColor__circlebtn" onClick={props.changColorToGreen} style={{backgroundColor: "#FF5166"}}></button>
+					<button  className = "posColor__circlebtn " onClick={props.changColorToBlack} style={{backgroundColor: "black"}}></button>
+				</div>
 			</div>
+		</div>
 		</>
 	)
 }

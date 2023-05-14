@@ -34,9 +34,6 @@ export default function UsersWithDirectMessage(props: any) {
 		});
 	}, [addListener]);
 
-	
-
-
 	useEffect(() => {
 		if (AUsersWith) {
 			async function getUserFromBack() {
@@ -51,17 +48,14 @@ export default function UsersWithDirectMessage(props: any) {
 	}
 	}, [AUsersWith]);
 
-
-
-  // aller chercher la liste des users avec active conv
 	async function getAllUsersWith() {
 		const response = await Fetch.fetch(authCtx.token, "GET", `users/userWith`, authCtx.userId);
 		const updatedFriends = await Promise.all(response.map(async (friend: UserChat) => {
 			const avatar = await friendCtx.fetchAvatar(friend.id);
 			return { ...friend, avatar };
 		}));
-		if (AUsersWith) { // check if newUserWith has a value
-			setAUsersWith(null); // reset the state
+		if (AUsersWith) {
+			setAUsersWith(null);
 		}
 		return updatedFriends;
 	};
@@ -72,7 +66,7 @@ export default function UsersWithDirectMessage(props: any) {
 		  setUsersWith(data);
 		};
 		fetchData();
-	  }, [AUsersWith]);
+	}, [AUsersWith]);
 
 
 // pour le mécanisme des blocked,j'ai besoin de ME as user puisque je ne suis pas dans allWith direct messsage
@@ -88,13 +82,12 @@ export default function UsersWithDirectMessage(props: any) {
 	}, [props]);
 
   // suis-je bloqué
-  const amIBlocked = (userXid: number): string => {
-  if (me && userXid && me?.blockedFrom.find((u: UserChat) => +u.id === +userXid))
-      { return "chatOnlineNotFriend"; }
-    else
-      {return "chatOnlineFriend";}
+	const amIBlocked = (userXid: number): string => {
+		if (me && userXid && me?.blockedFrom.find((u: UserChat) => +u.id === +userXid))
+			{ return "chatOnlineNotFriend"; }
+		else
+			{return "chatOnlineFriend";}
 
-  };
 
   useEffect(() => {
 	addListener("changeParticipants", () => {
@@ -103,25 +96,17 @@ export default function UsersWithDirectMessage(props: any) {
 });
 
 
-  useEffect(() => {
-	const fetchUserWithDirectMessages = async () => {
-	  if (authCtx && props.currentDirect && props.currentDirect.id) {
-		const response = await Fetch.fetch(authCtx.token, "GET", `dir-mess/getMessages/`);
-		setLatestsMsgs(response);
-	  }
-	};
-	fetchUserWithDirectMessages();
-  }, [authCtx, props.currentDirect]);
 
-  const isDirectMsg = (userWithId: number): boolean => {
-	const { currentDirect } = props;
-	if (currentDirect?.id) {
-	  if (userWithId === currentDirect.id) {
-		return true;
-	  }
-	}
-	return false;
-  }
+
+	useEffect(() => {
+		const fetchUserWithDirectMessages = async () => {
+			if (authCtx && props.currentDirect && props.currentDirect.id) {
+				const response = await Fetch.fetch(authCtx.token, "GET", `dir-mess/getMessages/`);
+				setLatestsMsgs(response);
+			}
+		};
+		fetchUserWithDirectMessages();
+	}, [authCtx, props.currentDirect]);
 
 	return (
 		<Box style={{ backgroundColor: '#f2f2f2'}} sx={{ flexGrow: 1, maxWidth: 752 }}>
@@ -144,8 +129,7 @@ export default function UsersWithDirectMessage(props: any) {
 								) : null
 						)}
 						</>
-					}
-					>
+					} >
 					<ListItemAvatar>
 						<Avatar variant="rounded" className="users-chatlist-avatar"  src={o.ftAvatar ? o.ftAvatar : o.avatar} />
 					</ListItemAvatar>

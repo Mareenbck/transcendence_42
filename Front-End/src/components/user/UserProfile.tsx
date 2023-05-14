@@ -1,12 +1,11 @@
 import '../../style/Profile.css'
-import React, { FormEvent, useContext, useEffect, useState } from 'react'
-import { Navigate, useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from 'react'
+import { Navigate } from "react-router-dom";
 import AuthContext from '../../store/AuthContext';
 import SideBar from '../SideBar';
-import style from '../../style/Menu.module.css'
-import { FriendContext } from '../../store/FriendshipContext';
 import ProfileCard from './ProfileCard';
 import Card from '../utils/Card';
+import { back_url } from '../../config.json';
 
 const UserProfile = (props: any) => {
 	const authCtx = useContext(AuthContext);
@@ -20,8 +19,7 @@ const UserProfile = (props: any) => {
 
 	const getUser = async (id: string) => {
 		try {
-			const response = await fetch(
-			`http://localhost:3000/users/friends/${id}`, {
+			const response = await fetch(back_url + `/users/friends/${id}`, {
 				method: "GET",
 			})
 			if (response.ok) {
@@ -38,19 +36,19 @@ const UserProfile = (props: any) => {
 
 	return (
 		<>
-			<div className="contain-page">
-				<SideBar title="Profile" />
-				<div className='container-profile'>
-					<ProfileCard authCtx={authCtx} user={user} id={props.id}></ProfileCard>
-					<Card color='blue' title="My Level" icon="level" type="stats" height="270px" width="355px"></Card>
-					<Card color='red' title="My Rank" icon="rank" type="stats" height="270px" width="355px"></Card>
-					<div className='card-wrapper'>
-						<Card color='yellow' title="Match History" type="match" width="100%" id={props.id} authCtx={authCtx}></Card>
-					</div>
-					<Card color='green' title="Achievements" type="achiev" width="355px" id={props.id} authCtx={authCtx}></Card>
+		<div className="contain-page">
+			<SideBar title="Profile" />
+			<div className='container-profile'>
+				<ProfileCard authCtx={authCtx} user={user} id={props.id}></ProfileCard>
+				<Card color='blue' title="My Level" icon="level" type="stats" height="270px" width="355px"></Card>
+				<Card color='red' title="My Rank" icon="rank" type="stats" height="270px" width="355px"></Card>
+				<div className='card-wrapper'>
+					<Card color='yellow' title="Match History" type="match" width="100%" id={props.id} authCtx={authCtx}></Card>
 				</div>
-				{!isLoggedIn && <Navigate to="/" replace={true} />}
+				<Card color='green' title="Achievements" type="achiev" width="355px" id={props.id} authCtx={authCtx}></Card>
 			</div>
+			{!isLoggedIn && <Navigate to="/" replace={true} />}
+		</div>
 		</>
 	)
 }

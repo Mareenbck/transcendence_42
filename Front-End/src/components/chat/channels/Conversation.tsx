@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import "./../../../style/Conversation.css"
 import React from "react";
-import UsersOnChannel from "./UsersOnChannel";
-import { Modal } from "@mui/material";
 import '../../../style/UsersOnChannel.css'
 import Avatar from '@mui/material/Avatar';
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
 import PasswordIcon from '@mui/icons-material/Password';
-import ChatInChatroom from "./ChatInChatroom";
-
 
 export default function Conversation(props: any) {
   const [showParticipants, setShowParticipants] = useState(false);

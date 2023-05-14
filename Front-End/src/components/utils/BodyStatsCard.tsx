@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import '../../style/Profile.css'
 import AuthContext from "../../store/AuthContext";
 import { useParams } from "react-router-dom";
+import { back_url } from '../../config.json';
 
 const BodyStatsCard = (props: any) => {
 	const [icon, setIcon] = useState<string>("");
@@ -26,11 +27,9 @@ const BodyStatsCard = (props: any) => {
 		fetchData();
 	}, [id])
 
-	const url = `http://localhost:3000/game/level/${id}`;
+	const url = back_url + `/game/level/${id}`;
 	const fetchUserLevel = async () => {
-		const response = await fetch(
-			url,
-			{
+		const response = await fetch(url,{
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -45,16 +44,13 @@ const BodyStatsCard = (props: any) => {
 	}
 
 	const fetchUserRank = async (id: number) => {
-		const response = await fetch(
-			`http://localhost:3000/game/rank/${id}`, // L'URL pour obtenir le rang en fonction du niveau
-			{
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${authCtx.token}`
-				}
+		const response = await fetch(back_url + `/game/rank/${id}`,{
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${authCtx.token}`
 			}
-		);
+		});
 		const data = await response.json();
 		if (response.ok) {
 			return data;

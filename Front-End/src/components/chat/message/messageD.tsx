@@ -4,7 +4,7 @@ import MyAvatar from '../../user/Avatar';
 import React from 'react';
 import { Avatar } from '@mui/material';
 
-export default function MessageD({ messageD, own, user, authCtx }) {
+export default function MessageD({ messageD, own, user, authCtx }: any) {
 
 	return (
 	<div className= {own ? "message own" : "message"}>

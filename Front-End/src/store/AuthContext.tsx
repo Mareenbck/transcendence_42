@@ -1,9 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import useSocket from '../service/socket';
+import { back_url } from '../config.json';
 
-
-//creation du context pour auth
-//pour stocker les  data user
 const defaultValue = {
 	token: '',
 	userId: '',
@@ -40,7 +38,7 @@ export const AuthContextProvider = (props: any) => {
 
 	useEffect(() => {
 		if (userId) {
-			fetchHandler(token, userId);
+			fetchHandler(userId);
 		}
 	}, [username])
 
@@ -79,7 +77,7 @@ export const AuthContextProvider = (props: any) => {
 			return ;
 		}
 		try {
-			const response = await fetch(`http://localhost:3000/users/${userId}/avatar`, {
+			const response = await fetch(back_url + `/users/${userId}/avatar`, {
 				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -98,9 +96,9 @@ export const AuthContextProvider = (props: any) => {
 		}
 	}
 
-	const fetchHandler = async (token: string, userId: string) => {
+	const fetchHandler = async (userId: string) => {
 		try {
-			const response = await fetch(`http://localhost:3000/users/profile/${userId}`, {
+			const response = await fetch(back_url + `/users/profile/${userId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
@@ -120,7 +118,7 @@ export const AuthContextProvider = (props: any) => {
 	const refreshHandler = async () => {
 		if (userIsLoggedIn) {
 			try {
-				const response = await fetch('http://localhost:3000/auth/refresh', {
+				const response = await fetch(back_url + '/auth/refresh', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -145,16 +143,17 @@ export const AuthContextProvider = (props: any) => {
 	const fetchLogout = async () => {
 		localStorage.clear();
 		try {
-			const response = await fetch('http://localhost:3000/auth/logout', {
+			const response = await fetch(back_url + '/auth/logout', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`
 				},
-				// body: JSON.stringify({ refresh_token: refreshToken, access_token: token}),
 			});
 			const data = await response.json();
-			// sendMessage("showUsersList", {userId: userId});
+			console.log("DATA DANS LGOUT", data)
+			sendMessage("showUsersList", data);
+			sendMessage("logout", data);
 			if (response.ok) {
 				setToken("");
 				setUserId("");
@@ -162,8 +161,8 @@ export const AuthContextProvider = (props: any) => {
 				setAvatar("");
 				setEmail("");
 				localStorage.clear();
+				return data;
 			}
-			return "success";
 		} catch (error) {
 			return console.log("error", error);
 		}
@@ -174,7 +173,7 @@ export const AuthContextProvider = (props: any) => {
 		setRefreshToken(refreshToken);
 		localStorage.setItem('token', token);
 		localStorage.setItem('Rtoken', refreshToken);
-		const data = await fetchHandler(token, userId);
+		const data = await fetchHandler(userId);
 		setIs2FA(data.twoFA);
 		return data.twoFA;
 	};
@@ -183,6 +182,7 @@ export const AuthContextProvider = (props: any) => {
 		await fetchLogout();
 		sendMessage("login", userId)
 	};
+
 	//si presence du token -> logged
 	const userIsLoggedIn = !!token;
 	console.log("CONTEXT >>userIsLoggedIn---->");
@@ -198,7 +198,7 @@ export const AuthContextProvider = (props: any) => {
 		setAvatar: setAvatar,
 		is2FA: is2FA,
 		login: loginHandler,
-		logout: logoutHandler,
+		logout: fetchLogout,
 		fetchHandler: fetchHandler,
 		fetchAvatar: fetchAvatar,
 		updateAvatar: updateAvatar,

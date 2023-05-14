@@ -98,7 +98,7 @@ export class ChatroomService {
 
 
 	async validatePassword(id: number, hash: string): Promise<boolean> {
-		
+
 		const channel = await this.prisma.chatroom.findUnique({ where: { id: id } });
 		if (channel.visibility === UserChannelVisibility.PWD_PROTECTED) {
 			if (!hash) {
@@ -106,7 +106,7 @@ export class ChatroomService {
 			}
 		const isPasswordMatch = await argon.verify(channel.hash, hash);
 		if (!isPasswordMatch) {
-			throw new ForbiddenException(`Password is required`);	
+			throw new ForbiddenException(`Password is required`);
 		}}
 		return true;
 	}
@@ -139,8 +139,7 @@ export class ChatroomService {
 		role: UserRoleInChannel.ADMIN,
 	},
 	});
-
-	return updatedrole;
+	return channelId;
 }
 
 	async openInvitations(senderId: number, channelId: number, receiverId: number) {
@@ -213,7 +212,7 @@ export class ChatroomService {
 	async removeUserFromChannel(userId: number, chatroom: any) {
 		const { channelId } = chatroom;
 		try {
-		  const result = await this.prisma.userOnChannel.deleteMany({
+			const result = await this.prisma.userOnChannel.deleteMany({
 				where: {
 					AND: [
 						{userId: userId},
@@ -221,18 +220,15 @@ export class ChatroomService {
 					]
 				},
 			});
-		  // delete invitation if chatroom PRIVATE
 			const chatRoomX: Chatroom = await this.findOne(channelId);
-			if (chatRoomX.visibility === "PRIVATE")
-			{
+			if (chatRoomX.visibility === "PRIVATE") {
 				this.deleteInvitationsForLeftRooms(channelId, userId);
 			}
-			console.log("result", result)
-		return result;
+			return chatRoomX;
 		} catch (err) {
-		  console.log(err);
+			console.log(err);
 		}
-	  }
+	}
 
 	async deleteInvitationsForLeftRooms(channelId, invitedId)
 	{
@@ -390,35 +386,31 @@ export class ChatroomService {
 
 	async delete(id: number) {
 		try {
-		  const channel = await this.prisma.chatroom.findUnique({
-			where: { id },
-			include: { participants: true },
-		  });
-
-		  if (!channel) {
-			throw new Error('Channel not found');
-		  }
-
-		  await this.prisma.userOnChannel.deleteMany({
-			where: { channelId: id },
-		  });
-		  await this.prisma.chatroomInvitations.deleteMany({
-			where: { chatroomId: id },
-		  });
-		  await this.prisma.chatroomMessage.deleteMany({
-			where: { chatroomId: id },
-		  });
-
-		  const response = await this.prisma.chatroom.delete({
-			where: { id },
-		  });
-
-		  return response;
+			const channel = await this.prisma.chatroom.findUnique({
+				where: { id },
+				include: { participants: true },
+			});
+			if (!channel) {
+				throw new Error('Channel not found');
+			}
+			await this.prisma.userOnChannel.deleteMany({
+				where: { channelId: id },
+			});
+			await this.prisma.chatroomInvitations.deleteMany({
+				where: { chatroomId: id },
+			});
+			await this.prisma.chatroomMessage.deleteMany({
+				where: { chatroomId: id },
+			});
+			const response = await this.prisma.chatroom.delete({
+				where: { id },
+			});
+			return response;
 		} catch (error) {
-		  console.log(error);
-		  throw error;
+			console.log(error);
+			throw error;
 		}
-	  }
+	}
 
 	async kick(channelId: number, userId: number) {
 	  try {
@@ -439,7 +431,7 @@ export class ChatroomService {
 			  },
 		  });
 
-		  return `User with ID ${userId} has been kicked from channel with ID ${channelId}`;
+		  return deletedUserOnChannel;
 	  } catch (error) {
 		  console.error(error);
 		  throw new Error("Failed to kick user from channel.");

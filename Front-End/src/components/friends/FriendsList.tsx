@@ -14,8 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useSocket from '../../service/socket';
 import { FriendContext } from '../../store/FriendshipContext';
 import Friend from '../interfaces/IFriendship';
-
-
+import { back_url } from '../../config.json';
 
 const FriendsList = (props: any) => {
 	const authCtx = useContext(AuthContext);
@@ -32,7 +31,7 @@ const FriendsList = (props: any) => {
 	const handleDemand = async (event: FormEvent, receiverId: number) => {
 		event.preventDefault();
 		try {
-			const response = await fetch(`http://localhost:3000/friendship/create`,{
+			const response = await fetch(back_url + `/friendship/create`,{
 				method: 'POST',
 				headers: {
 				  'Content-Type': 'application/json',
@@ -40,9 +39,9 @@ const FriendsList = (props: any) => {
 				},
 				body: JSON.stringify({requesterId: currentUserId, receiverId: receiverId}),
 			});
-			await response.json();
+			const data = await response.json();
 			setSnackbarOpen(true);
-			sendMessage('createDemand', {id: receiverId});
+			sendMessage('createDemand', data.receiverId);
 			if (!response.ok) {
 				console.log("POST error on /friendship/create");
 				return "error";

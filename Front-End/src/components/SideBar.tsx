@@ -6,18 +6,15 @@ import MyAccountMenu from "./AccountMenu";
 
 
 const Sidebar = (props: any) => {
-
     const authCtx = useContext(AuthContext);
     const [activeLink, setActiveLink] = useState('');
     const location = useLocation();
     const [username, setUsername] = useState(authCtx.username)
 
     const links = [
-        // { name: "Game", path: "/game/option" },
         { name: "Game", path: "/game" },
         { name: "Chat", path: "/chat/message" },
         { name: "Scores", path: "/scores" },
-        // { name: "Show users", path: `/friends` },
       ];
 
       useEffect(() => {

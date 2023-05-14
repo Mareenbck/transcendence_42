@@ -104,7 +104,6 @@ export default function CurrentDirectMessages(props: any) {
 		  handleSubmitD(e);
 		}
 	  };
-	  
 
 	  return (
 		<>
@@ -134,7 +133,7 @@ export default function CurrentDirectMessages(props: any) {
 				<FontAwesomeIcon
 					icon={faPaperPlane}
 					onClick={handleIconClick}
-					className={`send-btn-chat`} 
+					className={`send-btn-chat`}
 				/>
 			</div>
 		</>

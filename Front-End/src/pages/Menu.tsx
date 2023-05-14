@@ -5,9 +5,7 @@ import AuthContext from "../store/AuthContext";
 import SideBar from '../components/SideBar'
 import style from '../style/Menu.module.css'
 import '../style/MenuBis.css'
-import Friends from "../components/friends/FriendsDrawer";
 import ButtonToggle from "../components/utils/ButtonToggle";
-import { Drawer } from '@mui/material';
 import Card from "../components/utils/Card";
 
 const Menu = () => {
