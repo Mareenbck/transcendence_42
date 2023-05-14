@@ -23,13 +23,15 @@ export default function CurrentChannel(props: any) {
 	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
 	const [isMuted, setIsMuted] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'MUTE'));
+	const [isBanned, setIsBanned] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'BAN'));
 	const [showPopUp, setShowPopUp] = useState(true);
 	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
-	const [isBanned, setIsBanned] = useState(false);
+	// const [isBanned, setIsBanned] = useState(false);
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
 	const [toMute, setToMute] = useState(props.setToMute);
+	const [toBan, setToBan] = useState(props.setToBan);
 
 	useEffect(() => {
 		addListener("joinedChannelR2", (channelId: number) => {
@@ -65,11 +67,6 @@ export default function CurrentChannel(props: any) {
 			setParticipants(data))
 	}, [addListener])
 
-	// useEffect(() => {
-	// 	addListener('leavedChannel', (channelId: number) => {
-	// 		setParticipants(channelId);
-	// 	});
-	// });
 
 	const getUser = (userId: number): UserChat | null => {
 		const author = props.allUsers.find((user: any) => +user?.id === +userId);
@@ -180,9 +177,11 @@ export default function CurrentChannel(props: any) {
 	  };
 	  
 
+	// console.log('is banned ? ', isBanned)
+
 	return (
 		<>
-			{isJoined && !isBanned && (
+			{isJoined &&(
 				<>
 					<NavbarChannel
 						chatroom={currentChatroom}
@@ -193,18 +192,20 @@ export default function CurrentChannel(props: any) {
 						onDeleteChannel={handleDeleteChannel}
 						setCurrentChat={props.setCurrentChat}
 					/>
-					<div className="chatBoxTop">
-						{messages2.length ? (
-							messages2.map((m, i) => (
-								<div key={i} ref={scrollRef}>
-									<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
-								</div>
-							))
-						) : (
-							<div className="box-msg"><span className="noConversationText2">No message in this room yet.</span></div>
-						)}
-					</div>
-					{!isMuted ?
+					{!isBanned && 
+						<div className="chatBoxTop">
+							{messages2.length ? (
+								messages2.map((m, i) => (
+									<div key={i} ref={scrollRef}>
+										<Message2 message2={m} user={getUser(m?.authorId)} authCtx={authCtx} own={m?.authorId === currentId} />
+									</div>
+								))
+							) : (
+								<div className="box-msg"><span className="noConversationText2">No message in this room yet.</span></div>
+							)}
+						</div>
+					}
+					{!isBanned && !isMuted && 
 						(<div className="chatBoxBottom">
 							<input
 								className="chatMessageInput"
@@ -216,17 +217,23 @@ export default function CurrentChannel(props: any) {
 								<FontAwesomeIcon
 								icon={faPaperPlane}
 								onClick={handleSubmit}
-								className={`send-btn-chat ${isMuted ? 'muted' : ''}`} // Ajoute la classe 'muted' si l'utilisateur est muté
-								disabled={toMute}
+								className={`send-btn-chat ${isMuted ? 'muted' : ''}`} 
+								disabled={toBan}
 								/>
 							</div>
-								) : (
-									<div className="been-muted">
-									<p>Sorry, You've been muted by Admin</p>
-									<FontAwesomeIcon icon={faCommentSlash} className="been-muted-icon"/>
-									</div>
-								)
-					}
+						)}
+						{isBanned &&
+							<div className="been-banned">
+							<p>Sorry, You've been banned by Admin</p>
+							<FontAwesomeIcon icon={faCommentSlash} className="been-banned-icon"/>
+							</div>
+						}
+						{isMuted && 
+							<div className="been-muted">
+							<p>Sorry, You've been muted by Admin</p>
+							<FontAwesomeIcon icon={faCommentSlash} className="been-muted-icon"/>
+							</div>
+						}
 
 					</>
 				)}
