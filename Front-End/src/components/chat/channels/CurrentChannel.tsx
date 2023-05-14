@@ -19,7 +19,7 @@ export default function CurrentChannel(props: any) {
 	const [newMessage2, setNewMessage2] = useState<string>("");
 	const [messages2, setMessages2] = useState<RoomMessage[]>([]);
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
-	const [AMessageChat, setAMessageChat] = useState<RoomMessage | null>(null);
+	const [AMessageChat, setAMessageChat] = React.useState<RoomMessage | null>(null);
 	const [isJoined, setIsJoined] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId)));
 	const [isMuted, setIsMuted] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'MUTE'));
 	const [isBanned, setIsBanned] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'BAN'));
@@ -121,21 +121,27 @@ export default function CurrentChannel(props: any) {
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		if (currentChatroom.id) {
-			let message2 = {
-				authorId: currentId,
-				content: newMessage2,
-				chatroomId: currentChatroom.id,
-			};
-		try {
+		  let message2 = {
+			authorId: currentId,
+			content: newMessage2,
+			chatroomId: currentChatroom.id,
+		  };
+		  try {
 			const res = await MessageReq.postMess(authCtx, message2);
-			message2.id = res.id;
-			message2.createdAt = res.createdAt;
-			setMessages2([...messages2, res]);
-			sendMessage("sendMessageRoom", message2 as any)
+			const updatedMessage = {
+			  ...message2,
+			  id: res.id,
+			  createdAt: res.createdAt,
+			};
+			setMessages2([...messages2, updatedMessage]);
+			sendMessage("sendMessageRoom", updatedMessage as any);
 			setNewMessage2("");
-		} catch (err) { console.log(err) }
+		  } catch (err) {
+			console.log(err);
+		  }
 		}
-	}
+	  };
+	  
 
 	const handleFormSubmit = (e: FormEvent) => {
 		e.preventDefault();

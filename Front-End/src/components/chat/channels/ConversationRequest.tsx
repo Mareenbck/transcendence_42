@@ -1,9 +1,11 @@
-import AuthContext from '../../store/AuthContext';
+import AuthContext from '../../../store/AuthContext';
 import { back_url } from '../../../config.json';
 
 export class ConversationReq {
 
-  static async getAll(user: AuthContext) {
+
+
+  static async getAll(user: any) {
     try {
       const resp = await fetch(back_url + "/chatroom2",
       { method: "GET",
@@ -20,7 +22,7 @@ export class ConversationReq {
     }
   };
 
-	static async postRoom(user: AuthContext, newConv: any) {
+	static async postRoom(user: any, newConv: any) {
 		try {
 			const resp = await fetch(back_url + `/chatroom2`, {
 				method: "POST",
