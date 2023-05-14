@@ -20,31 +20,33 @@ const UsersChat = (props: any) => {
 	const offlineFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'OFFLINE' && friend.id !== parseInt(currentUserId));
 	const playingFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'PLAYING' && friend.id !== parseInt(currentUserId));
 
-	// useEffect(() => {
-	// 	addListener("showUsersList", data => setFriends(data))
-	// })
+	const fetchUsers = async () => {
+		const response = await fetch(
+			"http://localhost:3000/users/block/users/",
+			{
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${authCtx.token}`
+				}
+			}
+		)
+		const data = await response.json();
+		sendMessage("showUsersList", data)
+		const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
+			const avatar = await friendCtx.fetchAvatar(friend.id);
+			return { ...friend, avatar };
+		}));
+		setFriends(updatedFriends);
+	}
 
 	useEffect(() => {
-		const url = "http://localhost:3000/users/block/users/";
-		const fetchUsers = async () => {
-			const response = await fetch(
-				url,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${authCtx.token}`
-					}
-				}
-			)
-			const data = await response.json();
-			sendMessage("showUsersList", data)
-			const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
-				const avatar = await friendCtx.fetchAvatar(friend.id);
-				return { ...friend, avatar };
-			}));
-			setFriends(updatedFriends);
-		}
+		addListener("changeParticipants", () => {
+			fetchUsers();
+		});
+	});
+
+	useEffect(() => {
 		fetchUsers();
 	}, [])
 

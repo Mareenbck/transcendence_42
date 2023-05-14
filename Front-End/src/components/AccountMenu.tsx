@@ -15,10 +15,8 @@ import NotificationDemands from './friends/NotificationDemands';
 import useSocket from '../service/socket';
 import { GameStatus } from './game/interface_game';
 
-
 export default function MyAccountMenu(props: any) {
     const [sendMessage, addListener] = useSocket();
-
 	const authCtx = React.useContext(AuthContext);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -34,6 +32,13 @@ export default function MyAccountMenu(props: any) {
 			authCtx.fetchAvatar(authCtx.userId);
 		}
 	}, [])
+
+	const handleLogout = () => {
+		console.log("FE LOGOUT", authCtx.userId)
+		sendMessage("logout", authCtx.userId);
+		authCtx.logout();
+	};
+
 
 	return (
 	<React.Fragment>
@@ -104,7 +109,7 @@ export default function MyAccountMenu(props: any) {
 			</ListItemIcon>
 			<Link to={`/menu`}>Home</Link>
 		</MenuItem>
-		<MenuItem onClick={authCtx.logout}>
+		<MenuItem onClick={handleLogout}>
 		{/* <MenuItem onClick={()=>{sendMessage('exitGame',  { user: +authCtx.userId, status: GameStatus.GAME } as any); authCtx.logout();}}> */}
 			<ListItemIcon>
 				<Logout fontSize="small"/>
