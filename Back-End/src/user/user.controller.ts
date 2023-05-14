@@ -139,8 +139,6 @@ export class UserController {
 				const fileName = process.env.DEFAULT_AVATAR;
 				const result = res.sendFile(fileName, { root: process.env.PATH_DEFAULT_AVATAR });
 				return result
-			} else if (user.ftAvatar && !user.avatar) {
-				return res.status(204).send();
 			}
 		} catch {
 			throw new ForbiddenException('Not Found');
