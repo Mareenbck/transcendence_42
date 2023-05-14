@@ -410,7 +410,7 @@ li {
     font-size: 0.5rem;
     font-family: 'Noto Sans', sans-serif;
     line-height: 0;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
  }
 
  .name-icon {
@@ -423,6 +423,7 @@ li {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: -10px;
  }
 
  .tooltip {
