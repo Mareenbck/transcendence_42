@@ -14,8 +14,7 @@ export default function useSocket() {
 	    if (authCtx.isLoggedIn) {
 	      return manager.socket('/', { auth: { token: authCtx.token }})
 	    }
-	    // return manager.socket('/');
-	  }, [authCtx])
+	  }, [authCtx.isLoggedIn, authCtx.token])
 
 	  const addListener = useMemo<(signal: string, callback: (data: any) => void) => void>
 	  (() => (signal:any, message:any) => {
