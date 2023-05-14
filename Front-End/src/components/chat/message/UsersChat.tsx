@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../../store/AuthContext';
 import { FriendContext } from '../../../store/FriendshipContext';
-import Friend from '../../interfaces/IFriendship'
+import Friend from '.././../../interfaces/IFriendship'
 import '../../../style/UsersChat.css';
 import UsersAction from './UsersActions';
 import { UserChat } from '../../../interfaces/iChat';

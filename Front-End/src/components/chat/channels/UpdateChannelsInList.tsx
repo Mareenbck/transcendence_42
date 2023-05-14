@@ -39,13 +39,13 @@ export default function UpdateChannelsInList(props: any) {
 		});
 	});
 
-	async function getAllConv(user: AuthContext) {
+	async function getAllConv(user: any) {
 		if (user) {
 			const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
-			const filteredConversations = response.filter(c =>
+			const filteredConversations = response.filter((c: any) =>
 				c.visibility === 'PUBLIC' || c.visibility === 'PWD_PROTECTED' ||
 				(c.visibility === 'PRIVATE' && 
-				c.participants.some(p => +p.userId === +user.userId))
+				c.participants.some((p: any) => +p.userId === +user.userId))
 			);
 			setConversations(filteredConversations);
 		}

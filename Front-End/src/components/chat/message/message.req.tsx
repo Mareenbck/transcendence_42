@@ -1,8 +1,8 @@
-import AuthContext from '../../store/AuthContext';
+import AuthContext from '../../../store/AuthContext';
 import { back_url } from '../../../config.json';
 
 export class MessageReq {
-	static async getMess(user: AuthContext, roomId: number) {
+	static async getMess(user: any, roomId: number) {
 		try {
 			const resp = await fetch(back_url + `/chat-mess/room/${roomId}`,{
 				method: "GET",
@@ -18,7 +18,7 @@ export class MessageReq {
 		}
 	};
 
-	static async postMess(user: AuthContext, message2: any) {
+	static async postMess(user: any, message2: any) {
 		try {
 			const resp = await fetch(back_url + `/chat-mess`, {
 				method: "post",
@@ -39,7 +39,7 @@ export class MessageReq {
 		}
 	};
 
-	static async getDirMess(user: AuthContext, me: number, friend: number) {
+	static async getDirMess(user: any, me: number, friend: number) {
 		try {
 			const resp = await fetch(back_url + `/dir-mess/${me}/${friend}`,{
 				method: "GET",
@@ -55,7 +55,7 @@ export class MessageReq {
 		}
 	};
 
-	static async postDirMess(user: AuthContext, messageD: any) {
+	static async postDirMess(user: any, messageD: any) {
 		try {
 			const resp = await fetch(back_url + `/dir-mess`, {
 				method: "post",

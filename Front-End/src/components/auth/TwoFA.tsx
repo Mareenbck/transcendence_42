@@ -38,7 +38,7 @@ export function TwoFaForm (){
 	}
 	
 	const handleLogin = (e: FormEvent) => {
-		sendMessage("login", authCtx.userId)
+		sendMessage("login", authCtx.userId as any)
 		handleSubmit(e)
 	}
 

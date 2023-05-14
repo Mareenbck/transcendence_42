@@ -17,19 +17,19 @@ EXPOSE 8080
 
 CMD ["npm", "run", "dev"]
 
-FROM node:latest AS build
+# FROM node:latest AS build
 
-WORKDIR /usr/src/app
+# WORKDIR /usr/src/app
 
-COPY --chown=node:node --from=dev /usr/src/app/node_modules ./node_modules
+# COPY --chown=node:node --from=dev /usr/src/app/node_modules ./node_modules
 
-COPY --chown=node:node . .
+# COPY --chown=node:node . .
 
-RUN npm run build
+# RUN npm run build
 
-FROM nginx:latest AS production
+# FROM nginx:latest AS production
 
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+# COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+# COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]

@@ -8,7 +8,7 @@ export interface DirectMessage
 }
 
 export interface RoomMessage {
-   // id: number;
+   id: number;
     chatroomId: number;
     content:  string;
     authorId: number;
