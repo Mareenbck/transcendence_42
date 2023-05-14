@@ -162,12 +162,11 @@ export default function CurrentChannel(props: any) {
 		});
 	});
 
-	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.key === 'Enter'  && newMessage2.trim() !== '') {
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter' && newMessage2.trim() !== '') {
 		  handleSubmit(e);
 		}
 	  };
-
 
 	  const handleIconClick = (e: FormEvent) => {
 		if (newMessage2.trim().length > 0) {

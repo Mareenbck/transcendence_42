@@ -89,17 +89,16 @@ export default function CurrentDirectMessages(props: any) {
 		  } catch(err) {console.log(err)}
 		}
 	  }
-
-	const handleKeyDown = (e: React.FormEvent<HTMLFormElement>) => {
-		const submitEvent = e.nativeEvent as KeyboardEvent;
-		if (submitEvent.key === "Enter") {
-			if (newMessageD.trim().length > 0) {
-				handleSubmitD(e);
-			}
-			e.preventDefault();
+	  
+	  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+		if (e.key === 'Enter') {
+		  if (newMessageD.trim().length > 0) {
+			handleSubmitD(e); 
+		  }
+		  e.preventDefault();
 		}
-	};
-
+	  };
+	  
 	  const handleIconClick = (e: FormEvent) => {
 		if (newMessageD.trim().length > 0) {
 		  handleSubmitD(e);

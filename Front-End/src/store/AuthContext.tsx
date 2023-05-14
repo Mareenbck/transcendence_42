@@ -178,10 +178,11 @@ export const AuthContextProvider = (props: any) => {
 		return data.twoFA;
 	};
 
-	// const logoutHandler = async () => {
-	// 	const data = await fetchLogout();
-	// 	return data;
-	// };
+	const logoutHandler = async () => {
+		await fetchLogout();
+		sendMessage("login", userId)
+	};
+
 	//si presence du token -> logged
 	const userIsLoggedIn = !!token;
 	console.log("CONTEXT >>userIsLoggedIn---->");

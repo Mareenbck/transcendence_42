@@ -21,6 +21,7 @@ const UsersChat = (props: any) => {
 	const offlineFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'OFFLINE' && friend.id !== parseInt(currentUserId));
 	const playingFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'PLAYING' && friend.id !== parseInt(currentUserId));
 
+
 	const url = back_url + "/users/block/users/";
 	const fetchUsers = async () => {
 		const response = await fetch(
@@ -41,6 +42,12 @@ const UsersChat = (props: any) => {
 			}));
 			setFriends(updatedFriends);
 		}
+
+	useEffect(() => {
+		addListener("changeParticipants", () => {
+			fetchUsers();
+		});
+	});
 
 	useEffect(() => {
 		fetchUsers();

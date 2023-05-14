@@ -2,7 +2,7 @@ import React, { FormEvent, useContext, useRef, useState } from "react";
 import AuthContext from "../../store/AuthContext";
 import { Navigate } from 'react-router-dom';
 import { back_url } from '../../config.json';
-
+import useSocket from '../../service/socket';
 
 export function TwoFaForm (){
 	const digitCodeInputRef = useRef<HTMLInputElement>(null);
@@ -11,6 +11,8 @@ export function TwoFaForm (){
 	const [redirectToHome, setRedirectToHome] = useState(false);
 
 	const authCtx = useContext(AuthContext);
+	const [sendMessage, addListener] = useSocket();
+
 
 	const handleSubmit = async (event: any) => {
 		event.preventDefault();
@@ -33,6 +35,11 @@ export function TwoFaForm (){
 		} else {
 			alert("Le code saisi est incorrect.");
 		}
+	}
+	
+	const handleLogin = (e: FormEvent) => {
+		sendMessage("login", authCtx.userId)
+		handleSubmit(e)
 	}
 
 	async function generateQRCode() {
@@ -64,7 +71,7 @@ export function TwoFaForm (){
 					<input type="digit-code" ref={digitCodeInputRef} className="form-fields" placeholder="6 digits code" />
 				</div>
 				<div className="position">
-					<button className="submit-form" type="submit"> <i className="fa-solid fa-arrow-right"></i> Submit</button>
+					<button className="submit-form" type="submit" onClick={handleLogin}> <i className="fa-solid fa-arrow-right"></i> Submit</button>
 				</div>
 				</form>
 				<div>
