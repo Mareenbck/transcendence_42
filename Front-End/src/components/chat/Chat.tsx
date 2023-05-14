@@ -317,8 +317,6 @@ function Chat(props: any) {
     }
   }, [currentChat]);
 
-	console.log("currentChat --->")
-	console.log(currentChat)
 	return (
 	  <>
 	  {" "}

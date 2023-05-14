@@ -60,10 +60,10 @@ export class UserController {
     if (id === undefined || isNaN(id))
     {   throw new BadRequestException('Undefined user ID in getWithDirectMessages of users'); }
     const usersW = await this.userService.getUsersWithMessages(+id);
-	return usersW;   
+	return usersW;
 	};
 
-  
+
 	@Get('/profile/:id')
 	@UseGuards(JwtGuard)
 	async getMe(@GetCurrentUserId() id: string) {
@@ -139,6 +139,8 @@ export class UserController {
 				const fileName = process.env.DEFAULT_AVATAR;
 				const result = res.sendFile(fileName, { root: process.env.PATH_DEFAULT_AVATAR });
 				return result
+			} else if (user.ftAvatar && !user.avatar) {
+				return res.status(204).send();
 			}
 		} catch {
 			throw new ForbiddenException('Not Found');

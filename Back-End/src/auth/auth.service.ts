@@ -168,8 +168,9 @@ export class AuthService {
 		const userId = decodedToken.payload.sub;
 		const user = await this.userService.getUser(parseInt(userId));
 		// Check if user exists and is logged in
-		if (!user || !user.hashedRtoken)
+		if (!user || !user.hashedRtoken) {
 			throw new ForbiddenException('Invalid Credentials');
+		}
 		// Verify hashed Refresh Token
 		const pwMatches = await argon.verify(user.hashedRtoken, refreshToken);
 		if (!pwMatches) {
@@ -186,7 +187,7 @@ export class AuthService {
 		// hash le refresh token
 		const hash = await argon.hash(refreshToken);
 		// update le user refresh token (log in)
-		await this.prisma.user.update({
+		const user = await this.prisma.user.update({
 			where: {
 				id: userId,
 			},
