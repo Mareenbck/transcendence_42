@@ -8,14 +8,11 @@ import {UserScore, Games} from "../interfaces/iChat";
 import '../../style/Profile.css'
 import '../../style/Table.css'
 
-
-
-
 const Podium = (props: any) => {
   const MAX_SCORE = 3;
   const [games, setGames] = useState<Games[]>([]);
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
-  
+
   const authCtx = useContext(AuthContext);
 
   //aller chercher les games
@@ -50,41 +47,38 @@ const Podium = (props: any) => {
       const win = games.filter((u: Games) => +u.winnerId === +user.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
       if (total < 0)
-        total = 0; 
+        total = 0;
       return (total);
     }
   }
- 
+
   if (!allUsers){
     fetchGames();
     getAllUsers();
   }
-  else{ 
+  else{
     var sorted = [...allUsers];
     sorted.sort((a, b) => (getScore(b) - getScore(a)));
     var firts = sorted[0];
     var second = sorted[1];
     var third = sorted[2];
   }
-  
+
   return(
     <>
         <div className="midPos">
             <div className={`rangAvatar ${getScore(firts) === getScore(second) ? "" : "podium-first"}`}>
                 <MyAvatar authCtx={authCtx} id={second?.id} style="m" avatar={second?.avatar} ftAvatar={second?.ftavatar}/>
                 <UserChart userName={second?.username} h={getScore(second)} />
-
                 <p className="rank-podium">2</p>
             </div>
-
-            <div className='rangAvatar - one'>       
+            <div className='rangAvatar - one'>
                 <MyAvatar authCtx={authCtx } id={firts?.id} style="m" avatar={firts?.avatar} ftAvatar={firts?.ftavatar}/>
                 <UserChart   userName={firts?.username}  h={(getScore(firts))} />
                 <p className="rank-podium">1</p>
             </div>
-
             <div className={`rangAvatar ${getScore(firts) === getScore(third) ? "" : "podium-first"}`}>
-                <MyAvatar authCtx={authCtx } id={third?.id}  style="m" avatar={third?.avatar} ftAvatar={third?.ftavatar}/> 
+                <MyAvatar authCtx={authCtx } id={third?.id}  style="m" avatar={third?.avatar} ftAvatar={third?.ftavatar}/>
                 <UserChart  userName={third?.username}  h={(getScore(third))} color={"black"}/>
                 <p className="rank-podium">3</p>
             </div>

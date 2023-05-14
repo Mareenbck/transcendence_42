@@ -16,7 +16,6 @@ const ShowFriends = (props: any) => {
 	const handleRemoveFriend = async (event: FormEvent, friendId: number) => {
 		event.preventDefault();
 		friendCtx.removeFriend(friendId, authCtx.userId, authCtx.token);
-		// sendMessage('removeFriend', { friendId: friendId, currentId: authCtx.userId });
 	}
 
 	const handleMouseOver = (friendId: number) => {

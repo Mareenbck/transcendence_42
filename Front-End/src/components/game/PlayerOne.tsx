@@ -19,11 +19,11 @@ const PlayerOne = (props: any) => {
 
 	return (
 		<>
-			{trophy}
-			<Link to={`/users/profile/${props.player.id}`} className="profile-link">{props.player.username}</Link>
-			<ListItemAvatar>
-				<MyAvatar style={props.sizeAvatar} alt={"avatar"} avatar={props.player.avatar} ftAvatar={props.player.ftAvatar} id={props.player.id} />
-			</ListItemAvatar>
+		{trophy}
+		<Link to={`/users/profile/${props.player.id}`} className="profile-link">{props.player.username}</Link>
+		<ListItemAvatar>
+			<MyAvatar style={props.sizeAvatar} alt={"avatar"} avatar={props.player.avatar} ftAvatar={props.player.ftAvatar} id={props.player.id} />
+		</ListItemAvatar>
 		</>
 	)
 }

@@ -22,7 +22,7 @@ function PopupChallenge(): React.JSX.Element | null {
     } as any);
     setInvited(null);
 }
-  
+
   const refuseGame = () => {
     sendMessage("refuseGame", {
       author: +invited!.id,
@@ -34,10 +34,9 @@ function PopupChallenge(): React.JSX.Element | null {
   useEffect(() => {
 		addListener("wasInvited", (data : any) => {
 		  setInvited(data);
-		  
+
 		});
 	});
-
 
   return (invited) ? (
 		<div className="modalgame">
@@ -45,7 +44,7 @@ function PopupChallenge(): React.JSX.Element | null {
         <div className="popupChallenge-inner">
           <MyAvatar  id={invited.id} style="m" avatar={invited.avatar} ftAvatar={invited.ftAvatar}/>
           <div> {invited.username} invites you to play! </div>
-            <Link to={'/game'} > 
+            <Link to={'/game'} >
             <button className='btnn' onClick={acceptGame}><SportsTennisIcon/>Play</button>
             </Link>
             <button className="close-btn" onClick={refuseGame}>Close</button>

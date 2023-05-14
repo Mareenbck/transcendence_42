@@ -9,35 +9,26 @@ export default function useSocket() {
 
 	///////////////////////////////////////////////////
 	// PARTIE JUDLIN
-		const authCtx = useContext(AuthContext);
-	  const socket = useMemo(() => {
-	    if (authCtx.isLoggedIn) {
-	      return manager.socket('/', { auth: { token: authCtx.token }})
-	    }
-	  }, [authCtx.isLoggedIn, authCtx.token])
+	const authCtx = useContext(AuthContext);
+	const socket = useMemo(() => {
+		if (authCtx.isLoggedIn) {
+			return manager.socket('/', { auth: { token: authCtx.token }})
+		}
+	}, [authCtx.isLoggedIn, authCtx.token])
 
-	  const addListener = useMemo<(signal: string, callback: (data: any) => void) => void>
-	  (() => (signal:any, message:any) => {
-	    if (socket)
-	      { socket.on(signal, message)} ;
-	  }, [socket])
-	//
-	// // const sendMessage = useMemo<(signal: string, message: any) => void>
-	// // (() => (signal, message) => {
-	// //   if (socket) {
-	// //   socket.emit(signal, message)};
-	// // }, [socket])
+	const addListener = useMemo<(signal: string, callback: (data: any) => void) => void>
+	(() => (signal:any, message:any) => {
+		if (socket)
+			{ socket.on(signal, message)} ;
+	}, [socket])
 
-	  const sendMessage = useMemo<(signal: string, message: any) => void>
-	  (() => {
-	      return (signal:any, message:any) => {
-	        if (socket) {
-	          socket.emit(signal, message);
-	        }
-	      };
-	    },
-	    [socket]
-	  );
+	const sendMessage = useMemo<(signal: string, message: any) => void>(() => {
+		return (signal: string, message: any) => {
+			if (socket) {
+			socket.emit(signal, message);
+			}
+		};
+	}, [socket]);
 	////////////////////////////////////////////////////
 
 // export default function useSocket() {

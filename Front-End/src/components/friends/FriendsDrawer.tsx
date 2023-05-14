@@ -5,7 +5,7 @@ import { Container } from '@mui/material';
 import { FriendContext } from '../../store/FriendshipContext';
 import Friend from '../../interfaces/IFriendship'
 import FriendsList from './FriendsList';
-
+import { back_url } from '../../config.json';
 
 const Friends = () => {
 	const [friends, setFriends] = useState<any[]>([]);
@@ -18,7 +18,7 @@ const Friends = () => {
 	const playingFriends = friends.filter(friend => friend.status === 'PLAYING'&& friend.id !== currentUserId);
 
 	useEffect(() => {
-		const url = "http://localhost:3000/users/";
+		const url = back_url + "/users/";
 		const fetchUsers = async () => {
 			const response = await fetch(
 				url,

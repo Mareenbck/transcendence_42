@@ -3,12 +3,14 @@ import AuthContext from "./AuthContext";
 import Demand from '../interfaces/IFriendship'
 import Friend from '../interfaces/IFriendship'
 import useSocket from "../service/socket";
+import { back_url } from '../config.json';
 
 const defaultValue = {
 	demands: [] as Demand[],
 	friends: [] as Friend[],
 	pendingDemandsCount: 0,
 	pendingDemands: [] as Demand[],
+	acceptedDemands: [] as Demand[],
 	fetchAvatar: async (userId: number) => {},
 	createDemand: async (receiverId: number, currentId: string) => { },
 	getDemands: async (token: string, currentId: string) => { },
@@ -63,7 +65,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const createDemand = async (receiverId: number, currentId: string) => {
 		try {
-			const response = await fetch(`http://localhost:3000/friendship/create`, {
+			const response = await fetch(back_url + `/friendship/create`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -83,8 +85,7 @@ export const FriendContextProvider = (props: any) => {
 	}
 
 	const getDemands = async (token: string, currentId: string) => {
-		const response = await fetch(
-			"http://localhost:3000/friendship/received", {
+		const response = await fetch(back_url + "/friendship/received", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -106,8 +107,7 @@ export const FriendContextProvider = (props: any) => {
 	}
 
 	const getFriends = async (token: string, currentId: string) => {
-		const response = await fetch(
-			"http://localhost:3000/friendship/friends", {
+		const response = await fetch(back_url + "/friendship/friends", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -127,7 +127,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const fetchAvatar = async (userId: number) => {
 		try {
-			const response = await fetch(`http://localhost:3000/friendship/${userId}/avatar`, {
+			const response = await fetch(back_url + `/friendship/${userId}/avatar`, {
 				method: 'GET',
 			});
 			if (response.ok) {
@@ -147,7 +147,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const removeFriend = async (friendId: number, currentId: string, token: string) => {
 		try {
-			const response = await fetch(`http://localhost:3000/friendship/delete`, {
+			const response = await fetch(back_url + `/friendship/delete`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const updateDemand = async (demandId: number, res: string, token: string) => {
 		try {
-			const response = await fetch(`http://localhost:3000/friendship/update`, {
+			const response = await fetch(back_url + `/friendship/update`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -201,6 +201,7 @@ export const FriendContextProvider = (props: any) => {
 		demands,
 		friends,
 		pendingDemandsCount,
+		acceptedDemands,
 		setPendingDemandsCount,
 		fetchAvatar,
 		createDemand,

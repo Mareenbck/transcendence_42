@@ -7,6 +7,7 @@ import UsersAction from './UsersActions';
 import { UserChat } from '../../../interfaces/iChat';
 import PersonnalInfoChat from '../PersonnalInfoChat';
 import useSocket from '../../../service/socket';
+import { back_url } from '../../../config.json';
 
 
 const UsersChat = (props: any) => {
@@ -20,15 +21,10 @@ const UsersChat = (props: any) => {
 	const offlineFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'OFFLINE' && friend.id !== parseInt(currentUserId));
 	const playingFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'PLAYING' && friend.id !== parseInt(currentUserId));
 
-	// useEffect(() => {
-	// 	addListener("showUsersList", data => setFriends(data))
-	// })
-
-	useEffect(() => {
-		const url = "http://localhost:3000/users/block/users/";
-		const fetchUsers = async () => {
-			const response = await fetch(
-				url,
+	const url = back_url + "/users/block/users/";
+	const fetchUsers = async () => {
+		const response = await fetch(
+			url,
 				{
 					method: "GET",
 					headers: {
@@ -36,7 +32,7 @@ const UsersChat = (props: any) => {
 						Authorization: `Bearer ${authCtx.token}`
 					}
 				}
-			)
+				)
 			const data = await response.json();
 			sendMessage("showUsersList", data)
 			const updatedFriends = await Promise.all(data.map(async (friend: Friend) => {
@@ -45,8 +41,18 @@ const UsersChat = (props: any) => {
 			}));
 			setFriends(updatedFriends);
 		}
+
+	useEffect(() => {
 		fetchUsers();
 	}, [])
+
+	useEffect(() => {
+		addListener("users_status", data => {
+			console.log("DANS ADD LISNETAN")
+			fetchUsers();
+		});
+	}, [addListener]);
+
 
 
 	return (

@@ -15,8 +15,6 @@ import UsersSockets from "./socket.class";
 import { AuthService } from 'src/auth/auth.service';
 import { UserService } from "src/user/user.service";
 import { UserDto } from 'src/user/dto/user.dto';
-import { CreateChatMessDto } from 'src/chat/chat-mess/dto/create-chatMess.dto';
-import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
 import { ChatroomService } from 'src/chat/chatroom2/chatroom2.service';
 
 @WebSocketGateway(
@@ -52,7 +50,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.chatroomService.server = this.server;
     this.gameService.server = this.server;
     this.chatService.server = this.server;
-	  this.friendshipService.server = this.server;
+	this.friendshipService.server = this.server;
     this.globalService.userSockets = this.userSockets;
     this.chatService.userSockets = this.userSockets;
     this.gameService.userSockets = this.userSockets;
@@ -105,7 +103,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage('userRoom')
   async chatUserRoom(@MessageBody() data: {roomId: number, userId: number}, @ConnectedSocket() socket: Socket,): Promise<void>
-  { 
+  {
     if (data.userId !== null) {
       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
       if (!user) {
@@ -117,31 +115,31 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage('sendMessageRoom')
   async chatSendChatM(@MessageBody() message2 : {id: number, authorId: number, chatroomId: number, content: string, createdAt: any}, @ConnectedSocket() socket: Socket,)
-  { 
+  {
     if (message2.authorId !== null) {
       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
       if (!user) {
         throw new WsException('Invalid credentials.');
       }
     // console.log("data BE : ", message2);
-    this.chatService.sendRoomMessage(message2.id, message2.authorId, message2.chatroomId, message2.content, message2.createdAt) 
+    this.chatService.sendRoomMessage(message2.id, message2.authorId, message2.chatroomId, message2.content, message2.createdAt)
     }
   }
 
   @SubscribeMessage('sendMessageDirect')
   async chatSendDirectM(@MessageBody() data: {content: string, author: string, receiver: string}, @ConnectedSocket() socket: Socket,): Promise<void>
-  { 
+  {
     if (data.author !== null) {
       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
       if (!user) {
         throw new WsException('Invalid credentials.');
       }
-      this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)  
+      this.chatService.sendDirectMessage(data.content, data.author, data.receiver,)
     }
   }
 
   @SubscribeMessage('sendConv')
-  async chatSendConversation(@MessageBody() data: {channelId: number, name: string, isPublic: boolean, isPrivate: boolean, isProtected: boolean}, @ConnectedSocket() socket: Socket,): Promise<void>
+  async chatSendConversation(@MessageBody() data: any, @ConnectedSocket() socket: Socket,): Promise<void>
   { this.chatService.sendConv(data.channelId, data.name, data.isPublic, data.isPrivate, data.isProtected) };
 
   @SubscribeMessage('toBlock')
@@ -165,12 +163,24 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   { this.chatService.chatLeavedChannel(data.channelId, socket.id) };
 
   @SubscribeMessage('inviteToPriv')
-	async inviteToPriv(@MessageBody() data: {channelId: number, invitedId: number}, @ConnectedSocket() socket: Socket): Promise<void>
-  { this.chatService.invitedToPriv(data.channelId, data.invitedId, socket.id) };
+	async inviteToPriv(@MessageBody() data: any, @ConnectedSocket() socket: Socket): Promise<void>
+  { this.chatService.invitedToPriv(data.chatroomId, data.receiverId, socket.id) };
 
   @SubscribeMessage('acceptedChannelInvite')
 	async acceptedToPriv(@ConnectedSocket() socket: Socket): Promise<void>
   { this.chatService.acceptedToPriv(socket.id) };
+
+  // @SubscribeMessage('logout')
+  // async appLogout(@MessageBody() data: any, @ConnectedSocket() socket: Socket): Promise<void>
+  // {
+  //   // if (data !== null) {
+  //   //   const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
+  //   //   if (!user) {
+  //   //     throw new WsException('Invalid credentials.');
+  //   //   }
+  //     this.chatService.logout();
+  //   // };
+  // }
 
 
 ///////////////////////////
@@ -234,7 +244,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 	@SubscribeMessage('createDemand')
 	async createDemand(@MessageBody() receiverId: any ): Promise<void> {
 		// Récupérer les demandes mises à jour
-		const pendingDemands = await this.friendshipService.getReceivedFriendships(receiverId);
+		const pendingDemands = await this.friendshipService.getReceivedFriendships({id: receiverId});
 		// Envoyer les demandes mises à jour à tous les clients connectés
 		this.server.emit('pendingDemands', pendingDemands);
 	}
@@ -250,12 +260,18 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 		this.server.emit('showUsersList', showList);
 	}
 
-
   @SubscribeMessage('toMute')
 	async hidePaperPlane(@MessageBody() data: any): Promise<void> {
-    const { channelId } = data
-    const hidePaperPlane = await this.chatroomService.getParticipants(parseInt(channelId));
+		const hidePaperPlane = await this.chatroomService.getParticipants(parseInt(data));
 		this.server.emit('toMute', hidePaperPlane);
+	}
+
+	@SubscribeMessage('logout')
+	async appLogout(@MessageBody() data: any): Promise<void> {
+		console.log("DANS GATEWAY", data)
+		const user = await this.authService.signout({userId: data});
+		const allUsers = await this.userService.getUsersWithBlocked();
+		this.server.emit('users_status', allUsers);
 	}
 
 }

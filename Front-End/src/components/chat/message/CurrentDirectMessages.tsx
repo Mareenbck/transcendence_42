@@ -89,23 +89,22 @@ export default function CurrentDirectMessages(props: any) {
 		  } catch(err) {console.log(err)}
 		}
 	  }
-	  
-	  const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.key === 'Enter') {
-		  if (newMessageD.trim().length > 0) {
-			handleSubmitD(e); 
-		  }
-		  e.preventDefault();
+
+	const handleKeyDown = (e: React.FormEvent<HTMLFormElement>) => {
+		const submitEvent = e.nativeEvent as KeyboardEvent;
+		if (submitEvent.key === "Enter") {
+			if (newMessageD.trim().length > 0) {
+				handleSubmitD(e);
+			}
+			e.preventDefault();
 		}
-	  };
+	};
 
 	  const handleIconClick = (e: FormEvent) => {
 		if (newMessageD.trim().length > 0) {
 		  handleSubmitD(e);
 		}
 	  };
-	  
-	  
 
 	  return (
 		<>
@@ -135,7 +134,7 @@ export default function CurrentDirectMessages(props: any) {
 				<FontAwesomeIcon
 					icon={faPaperPlane}
 					onClick={handleIconClick}
-					className={`send-btn-chat`} 
+					className={`send-btn-chat`}
 				/>
 			</div>
 		</>

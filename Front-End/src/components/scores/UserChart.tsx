@@ -1,8 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
+import React from "react";
 import '../../style/UserChart.css'
-import { Link, useLocation } from "react-router-dom";
-import AuthContext from "../../store/AuthContext";
-
 
 const UserChart= (props: any) => {
 
@@ -12,8 +9,7 @@ const UserChart= (props: any) => {
                 <p>{props.userName} </p>
                 <p>{props.h} pts</p>
             </div>
-
-        </div> 
+        </div>
     )
 
 }

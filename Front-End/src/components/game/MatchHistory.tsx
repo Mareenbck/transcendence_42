@@ -6,25 +6,24 @@ import PlayerOne from "./PlayerOne";
 import PlayerTwo from "./PlayerTwo";
 import ScoresMatch from "./ScoresMatch";
 import AuthContext from "../../store/AuthContext";
+import { back_url } from '../../config.json';
 
 const MatchHistory = (props: any) => {
 	const [games, setGames] = useState<any[] | null>();
 	const { id } = useParams();
 	const authCtx = useContext(AuthContext)
+	const lastFiveGames = games.slice(0, 5);
 
 	useEffect(() => {
-		const url = `http://localhost:3000/game/allGames/${id}`;
+		const url = back_url + `/game/allGames/${id}`;
 		const fetchUserGames = async () => {
-			const response = await fetch(
-				url,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${authCtx.token}`
-					}
+			const response = await fetch(url,{
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${authCtx.token}`
 				}
-			)
+			})
 			if (response.ok) {
 				const data = await response.json();
 				setGames(data);
@@ -32,13 +31,10 @@ const MatchHistory = (props: any) => {
 		}
 		fetchUserGames();
 	}, [id])
-	{}
+
 	if (!games) {
 		return <div>Loading...</div>;
 	}
-
-	const lastFiveGames = games.slice(0, 5);
-
 
 	return (
 		<>

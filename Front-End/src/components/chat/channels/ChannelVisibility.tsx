@@ -1,16 +1,13 @@
-import React, { FormEvent, useContext, useEffect, useRef, useState } from "react";
+import React, { FormEvent, useContext, useRef, useState } from "react";
 import "../../../style/ChannelVisibility.css"
 import { Modal, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import AuthContext from "../../../store/AuthContext";
 import IconButton from "@mui/material/IconButton";
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import ChatInChatroom from "./ChatInChatroom";
-import ErrorModal from "../../auth/ErrorModal";
-import ErrorModalPassword from "./ErrorModalPassword";
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { addListener } from "process";
 import useSocket from "../../../service/socket";
+import { back_url } from '../../../config.json';
 
 
 export default function ChannelVisibility(props: any) {
@@ -71,13 +68,13 @@ export default function ChannelVisibility(props: any) {
 const joinChannel = async (e: FormEvent, channelId: number) => {
     e.preventDefault();
     const password = passwordInputRef.current?.value;
-	if (!passwordInputRef.current?.value) {
+	if (!passwordInputRef.current?.value && props.visibility === 'PWD_PROTECTED') {
 		setPasswordError(true)
 		alert("wrongpassword")
 		return;
 	}
     try {
-        const resp = await fetch(`http://localhost:3000/chatroom2/join`, {
+        const resp = await fetch(back_url + `/chatroom2/join`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
@@ -88,18 +85,17 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
                 userId: userContext.userId,
                 hash: password
             })
-		
         });
         const data = await resp.json();
         if (!data) {
             setPasswordError(true);
-			alert("wrong pasword");
+			  alert("wrong pasword");
 			return;
         } else {
             setIsJoined(true);
             setOpenJoinModal(false);
-			sendMessage("joinedChannel", data)
-            sendMessage("toMute", {channelId: channelId})
+			      sendMessage("joinedChannel", data)
+            sendMessage("toMute", data.channelId)
         }
     } catch (err) {
         console.log(err);
@@ -139,12 +135,12 @@ const handlePassword= (e: FormEvent) => {
             <Typography variant="caption" color="error">
               {passwordError && "Incorrect password"}
             </Typography>
-            <button 
+            <button
 				className="btnn"
 				disabled={passwordError}
 				onClick={(e: FormEvent) => joinChannel(e, props.id)}>ok
 			</button>
-			
+
           </Box>
         </Modal>
       </div>

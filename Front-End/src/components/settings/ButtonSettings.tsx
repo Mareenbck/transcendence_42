@@ -31,7 +31,6 @@ const customStyles = `
 `;
 
 const ButtonSettings = (props: any) => {
-
 	const [title, setTitle] = useState('');
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
@@ -63,7 +62,6 @@ const ButtonSettings = (props: any) => {
 			setTitle(props.title)
 		}
 	}, [props.is2FAEnabled, props.title]);
-
 
 	return (
 		<>

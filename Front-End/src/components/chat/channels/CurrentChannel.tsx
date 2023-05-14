@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faCommentSlash } from '@fortawesome/free-solid-svg-icons'
 import '../../../style/UsersOnChannel.css'
 
-
 export default function CurrentChannel(props: any) {
 	const currentChatroom = props.currentChatroom;
 	const authCtx = useContext(AuthContext);
@@ -25,12 +24,9 @@ export default function CurrentChannel(props: any) {
 	const [isMuted, setIsMuted] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'MUTE'));
 	const [isBanned, setIsBanned] = useState<boolean>(currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId) && p.status === 'BAN'));
 	const [showPopUp, setShowPopUp] = useState(true);
-	const userJoined = currentChatroom.participants.some((p: any)=> p.userId === parseInt(authCtx.userId))
-	// const [isBanned, setIsBanned] = useState(false);
 	const [showUserList, setShowUserList] = useState<boolean>(false);
 	const [UsersList, setUsersList] = useState(null);
 	const [showUsersOnChannel, setShowUsersOnChannel] = useState<boolean>(true);
-	const [toMute, setToMute] = useState(props.setToMute);
 	const [toBan, setToBan] = useState(props.setToBan);
 
 	useEffect(() => {
@@ -82,7 +78,6 @@ export default function CurrentChannel(props: any) {
 		AMessageChat && currentChatroom?.id === AMessageChat.chatroomId &&
 			setMessages2(prev => {
 				const isDuplicate = prev.some(message => (message.id === AMessageChat.id));
-				// console.log("Received duplicate ?", isDuplicate)
 				if (!isDuplicate) {
 					return [...prev, AMessageChat];
 				}
@@ -111,7 +106,7 @@ export default function CurrentChannel(props: any) {
 	};
 
 	useEffect(() => {
-		addListener("getMessageRoom", (data) => 
+		addListener("getMessageRoom", (data) =>
 		{
 			setAMessageChat({
 				authorId: data.authorId,
@@ -119,7 +114,7 @@ export default function CurrentChannel(props: any) {
 				content: data.content,
 				id: data.id,
 				createdAt: data.createdAt,
-			});}		
+			});}
 		);
 	});
 
@@ -172,7 +167,7 @@ export default function CurrentChannel(props: any) {
 		  handleSubmit(e);
 		}
 	  };
-	  
+
 
 	  const handleIconClick = (e: FormEvent) => {
 		if (newMessage2.trim().length > 0) {
@@ -193,7 +188,7 @@ export default function CurrentChannel(props: any) {
 						onDeleteChannel={handleDeleteChannel}
 						setCurrentChat={props.setCurrentChat}
 					/>
-					{!isBanned && 
+					{!isBanned &&
 						<div className="chatBoxTop">
 							{messages2.length ? (
 								messages2.map((m, i) => (
@@ -206,7 +201,7 @@ export default function CurrentChannel(props: any) {
 							)}
 						</div>
 					}
-					{!isBanned && !isMuted && 
+					{!isBanned && !isMuted &&
 						(<div className="chatBoxBottom">
 							<input
 								className="chatMessageInput"
@@ -218,7 +213,7 @@ export default function CurrentChannel(props: any) {
 								<FontAwesomeIcon
 								icon={faPaperPlane}
 								onClick={handleIconClick}
-								className={`send-btn-chat ${isMuted ? 'muted' : ''}`} 
+								className={`send-btn-chat ${isMuted ? 'muted' : ''}`}
 								disabled={toBan}
 								/>
 							</div>
@@ -229,7 +224,7 @@ export default function CurrentChannel(props: any) {
 							<FontAwesomeIcon icon={faCommentSlash} className="been-banned-icon"/>
 							</div>
 						}
-						{isMuted && 
+						{isMuted &&
 							<div className="been-muted">
 							<p>Sorry, You've been muted by Admin</p>
 							<FontAwesomeIcon icon={faCommentSlash} className="been-muted-icon"/>

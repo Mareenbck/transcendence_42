@@ -9,6 +9,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import IconButton from "@mui/material/IconButton";
 import CancelIcon from '@mui/icons-material/Cancel';
 import useSocket from '../../../service/socket';
+import { back_url } from '../../../config.json';
 
 const ChannelInvitations = (props: any) => {
 	const [invitations, setInvitations] = useState<any[]>([]);
@@ -21,11 +22,9 @@ const ChannelInvitations = (props: any) => {
 		getInvitations();
 	}, [])
 
-//	const pendingInvitations = invitations.filter((invitation: any) => invitation.status === 'PENDING');
-
 	const getInvitations = async () => {
 		const response = await fetch(
-			"http://localhost:3000/chatroom2/pending_invitations", {
+			back_url + "/chatroom2/pending_invitations", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -44,7 +43,7 @@ const ChannelInvitations = (props: any) => {
 
 	const updateDemand = async (invitId: number, res: string) => {
 		try {
-			const response = await fetch(`http://localhost:3000/chatroom2/invit_update`, {
+			const response = await fetch(back_url + `/chatroom2/invit_update`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -57,13 +56,13 @@ const ChannelInvitations = (props: any) => {
 				console.log("POST error on /chatroom/update");
 				return "error";
 			}
+			if (res === 'ACCEPTED') {
+				sendMessage("acceptedChannelInvite", data);
+			};
 			// sendMessage('toMute', {channelId: invit.chatroom.id})
 		} catch (error) {
 			console.log("error", error);
 		}
-		if (res === 'ACCEPTED') { 
-			sendMessage("acceptedChannelInvite"); 
-		};
 		getInvitations();
 	}
 
@@ -106,12 +105,12 @@ const ChannelInvitations = (props: any) => {
 						</IconButton>
 					</div>
 					<Snackbar
-					anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-					open={snackbarOpen}
-					autoHideDuration={1000}
-					onClose={handleCloseSnackbar}
-					message="Invitation Accepted"
-					/>
+						anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+						open={snackbarOpen}
+						autoHideDuration={1000}
+						onClose={handleCloseSnackbar}
+						message="Invitation Accepted"
+						/>
 					<div className="rejected-icon">
 						<IconButton onClick={(event: FormEvent) => { handleUpdate(event, invit.id, 'REJECTED') }} className='deny'>
 							<CancelIcon />

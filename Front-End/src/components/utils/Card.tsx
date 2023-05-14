@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import '../../style/Profile.css'
-import { useParams } from "react-router-dom";
 import ShowFriends from "../friends/ShowFriends";
 import TitleCard from "./CardTitle";
 import BodyStatsCard from "./BodyStatsCard";

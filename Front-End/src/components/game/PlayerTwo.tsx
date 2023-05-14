@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ListItemAvatar } from '@mui/material';
-import { ListItem } from '@mui/material';
 import '../../style/Profile.css'
 import MyAvatar from "../user/Avatar";
-// import { useParams } from "react-router-dom";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 const PlayerTwo = (props: any) => {
@@ -21,11 +19,11 @@ const PlayerTwo = (props: any) => {
 
 	return (
 		<>
-			<ListItemAvatar>
-				<MyAvatar style={props.sizeAvatar} alt={"avatar"} avatar={props.player.avatar} ftAvatar={props.player.ftAvatar} id={props.player.id} />
-			</ListItemAvatar>
-			<Link to={`/users/profile/${props.player.id}`} className="profile-link">{props.player.username}</Link>
-			{trophy}
+		<ListItemAvatar>
+			<MyAvatar style={props.sizeAvatar} alt={"avatar"} avatar={props.player.avatar} ftAvatar={props.player.ftAvatar} id={props.player.id} />
+		</ListItemAvatar>
+		<Link to={`/users/profile/${props.player.id}`} className="profile-link">{props.player.username}</Link>
+		{trophy}
 		</>
 	)
 }

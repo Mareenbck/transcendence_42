@@ -5,7 +5,7 @@ import type { GameInit, GameState, GameWinner, GamesList, UserGame } from './int
 import { GameStatus } from './interface_game'
 import useSocket from '../../service/socket';
 import MyAvatar from '../user/Avatar';
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import BrightnessLowIcon from '@mui/icons-material/BrightnessLow';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -138,7 +138,7 @@ function Game() {
     const handleGameRefuse = () => {
         setGameStatus(GameStatus.NULL);
     }
-  
+
     const [ShowCamva, setShowCamva] = useState(true);
     const [backColorGame, setbackColorGame] = useState<string>("black");
     const changColorToRed= () => {
@@ -222,7 +222,7 @@ function Game() {
         }
         setGameInit(data);
     }
- 
+
     const updateListener = (data: GameState)=>{
         setGameState(data);
     }
@@ -300,7 +300,7 @@ function Game() {
                     {(!gamesWinner.winner) ? (
                     <>
                             {(status == GameStatus.CLOSE) &&  <RefusModal handleClose={handleGameRefuse}/>}
-                           
+
                             { (status == GameStatus.WATCH || status == GameStatus.GAME) ?
                                 (getCurrentGame(curroom))
                                 :
@@ -358,7 +358,7 @@ function Game() {
                     <div key={game.roomN} className='wrapList'>
                         <div onClick={() => handleClick(game.roomN)}>
                             <div className="container-match">
-                            {!isInPlay() && 
+                            {!isInPlay() &&
                                 ( <button  style={{backgroundColor: "with", marginRight:"0", padding:"0"}} onClick={() => handleClick(game.roomN)}><RemoveRedEyeIcon/> </button>)}
                                 <PlayerOne player={game.playerL} winner={0} score={game.scoreL} />
                                 <ScoresMatch score1={game.scoreL} score2={game.scoreR}/>

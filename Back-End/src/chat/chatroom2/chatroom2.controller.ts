@@ -40,7 +40,7 @@ export class Chatroom2Controller {
 	async delete(@Param('channelId') channelId: string) {
 		const response = await this.chatRoomService.delete(parseInt(channelId));
 		return response;
-	  }
+	}
 
   @Get()
   @UseGuards(JwtGuard)
@@ -61,12 +61,12 @@ export class Chatroom2Controller {
     return participants;
   }
 
-@Post(':channelId/admin/:userId')
-@UseGuards(JwtGuard)
-async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: string) {
-  const response = await this.chatRoomService.addAdmin(parseInt(channelId), parseInt(userId));
-  return response;
-}
+	@Post(':channelId/admin/:userId')
+	@UseGuards(JwtGuard)
+	async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: string) {
+		const response = await this.chatRoomService.addAdmin(parseInt(channelId), parseInt(userId));
+		return response;
+	}
 
 
 	@Post('/invite_channel')
@@ -101,8 +101,8 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@Post('/leave_channel')
 	@UseGuards(JwtGuard)
 	async leaveChannel(@Body() chatroomId: number, @GetCurrentUserId() userId: string) {
-		const user = await this.chatRoomService.removeUserFromChannel(parseInt(userId), chatroomId);
-		return user;
+		const channel = await this.chatRoomService.removeUserFromChannel(parseInt(userId), chatroomId);
+		return channel;
 	}
 
 	@Post('/:channelId/newpassword')
@@ -116,6 +116,8 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	@UseGuards(JwtGuard)
 	async kick(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const kickSomeone = await this.chatRoomService.kick(parseInt(channelId), parseInt(userId));
+		console.log("kickSomeone --->")
+		console.log(kickSomeone)
 		return kickSomeone;
 	}
 
@@ -132,6 +134,7 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	async unBan(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const unBanSomeone = await this.chatRoomService.unBan(parseInt(channelId), parseInt(userId));
 		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
+
 		return unBanSomeone;
 	}
 
@@ -140,6 +143,7 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	async mute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const muted = await this.chatRoomService.mute(parseInt(channelId), parseInt(userId));
 		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
+		console.log("MUTED ", muted)
 		return allUser ;
 	}
 
@@ -148,6 +152,8 @@ async addAdmin(@Param('channelId') channelId: string, @Param('userId') userId: s
 	async unmute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const unmuted = await this.chatRoomService.unmute(parseInt(channelId), parseInt(userId));
 		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
+		console.log("UNMUTED  ", unmuted)
+
 		return allUser ;
 	}
 

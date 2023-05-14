@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../../store/AuthContext";
 import SelectDialog from "../../utils/SelectDialog";
 import ChannelsSettings from "./ChannelsSettings";
-import { Modal, TextField, Tooltip } from "@mui/material";
+import { Modal, TextField } from "@mui/material";
 import { Box } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import PublicIcon from '@mui/icons-material/Public';
@@ -13,8 +13,9 @@ import Avatar from '@mui/material/Avatar';
 import '../../../style/NavbarChannel.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-import { faCrown, faUserPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
+import { back_url } from '../../../config.json';
 
 
 export function NavbarChannel(props: any) {
@@ -28,8 +29,6 @@ export function NavbarChannel(props: any) {
 	const [sendMessage, addListener] = useSocket()
 	const [passwordError, setPasswordError] = React.useState(true);
 	const [usersCount, setUsersCount] = useState<number>(props.chatroom.participants.length);
-
-
 
 	useEffect(() => {
 		const currentUser = props.chatroom.participants.find((participant: any) => participant.userId === userContext.userId);
@@ -48,7 +47,7 @@ export function NavbarChannel(props: any) {
 
 	const inviteUserOnChannel = async (channelId: number, invitedId: number) => {
 		try {
-			const resp = await fetch(`http://localhost:3000/chatroom2/invite_channel`, {
+			const resp = await fetch(back_url + `/chatroom2/invite_channel`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -61,7 +60,7 @@ export function NavbarChannel(props: any) {
 				throw new Error(message);
 			}
 			const data = await resp.json();
-			sendMessage("inviteToPriv", {channelId: channelId, invitedId: invitedId});
+			sendMessage("inviteToPriv", data);
 		} catch (err) {
 			console.log(err)
 		}
@@ -69,7 +68,7 @@ export function NavbarChannel(props: any) {
 
 	const addAdminToChannel = async (channelId: number, userId: number) => {
 		try {
-			const response = await fetch(`http://localhost:3000/chatroom2/${channelId}/admin/${userId}`, {
+			const response = await fetch(back_url + `/chatroom2/${channelId}/admin/${userId}`, {
 			  method: 'POST',
 			  headers: {
 				'Content-Type': 'application/json',
@@ -77,7 +76,7 @@ export function NavbarChannel(props: any) {
 			  },
 			});
 			const data = await response.json();
-			sendMessage('toMute', {channelId: channelId})
+			sendMessage('toMute', data)
 			return data;
 		} catch(err) {
 			console.log(err);
@@ -86,7 +85,7 @@ export function NavbarChannel(props: any) {
 
 	const leaveChannel = async (channelId: number) => {
 		try {
-			const response = await fetch(`http://localhost:3000/chatroom2/leave_channel`, {
+			const response = await fetch(back_url + `/chatroom2/leave_channel`, {
 			  method: 'POST',
 			  headers: {
 				'Content-Type': 'application/json',
@@ -95,9 +94,9 @@ export function NavbarChannel(props: any) {
 			  body: JSON.stringify({ channelId: channelId }),
 			});
 			const data = await response.json();
-			sendMessage("leaveChannel", {channelId: channelId});
+			sendMessage("leaveChannel", data.id);
 			sendMessage("showUsersList", data);
-			sendMessage('toMute', {channelId: channelId})
+			sendMessage('toMute', data.id)
 			props.onLeaveChannel();
 			props.setCurrentChat(null)
 			return data;
@@ -108,7 +107,7 @@ export function NavbarChannel(props: any) {
 
 	const deleteChannel = async (channelId: string) => {
         try {
-            const response = await fetch(`http://localhost:3000/chatroom2/${channelId}/delete`, {
+            const response = await fetch(back_url + `/chatroom2/${channelId}/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,7 +116,7 @@ export function NavbarChannel(props: any) {
             });
             const data = await response.json();
             props.onDeleteChannel();
-			sendMessage("removeConv", {channelId: channelId})
+			sendMessage("removeConv", data.id)
 			sendMessage("showUsersList", data)
             return data;
 
@@ -141,7 +140,7 @@ export function NavbarChannel(props: any) {
 		e.preventDefault();
 		const newPassword = passwordInputRef.current?.value;
 		try {
-			const response = await fetch(`http://localhost:3000/chatroom2/${props.chatroom.id}/newpassword`, {
+			const response = await fetch(back_url + `/chatroom2/${props.chatroom.id}/newpassword`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -154,7 +153,6 @@ export function NavbarChannel(props: any) {
 				throw new Error(message);
 			}
 			const data = await response.json();
-			// console.log('Password changed:', data);
 		} catch (err) {
 			console.log(err);
 		}
@@ -185,7 +183,6 @@ export function NavbarChannel(props: any) {
 
 	const handleDeleteChannel = () => {
 		deleteChannel(props.chatroom.id)
-			// sendMessage("removeConv")
 	}
 
     const handlePasswordChange = (e: FormEvent) => {
@@ -233,7 +230,6 @@ export function NavbarChannel(props: any) {
 			{(isAdmin === 'USER' || isAdmin === 'ADMIN') &&
 				<FontAwesomeIcon onClick={() => leaveChannel(props.chatroom.id)} icon={faArrowRightFromBracket} className="btn-dialog-navbar-leave"/>
 			}
-			 {/* <Button onClick={() => leaveChannel(props.chatroom.id)}>Leave Channel</Button> */}
 				<>
 			<Modal className="modal-container" open={openModal} onClose={() => setOpenModal(false)}>
 				<Box className="modal-content-password">
@@ -257,9 +253,7 @@ export function NavbarChannel(props: any) {
 							type='submit'
 							onSubmit={handleFormSubmit}
 							disabled={passwordError}
-
 							onClick={changeAndClose}>OK</button>
-
 						<button className="btnn" onClick={() => setOpenModal(false)}>Cancel</button>
 					 </div>
 				</Box>

@@ -3,6 +3,7 @@ import '../../style/Profile.css'
 import { useParams } from "react-router-dom";
 import { FriendContext } from "../../store/FriendshipContext";
 import AuthContext from "../../store/AuthContext";
+import { back_url } from '../../config.json';
 
 const ProfileCard = (props: any) => {
 	const authCtx = useContext(AuthContext);
@@ -16,34 +17,33 @@ const ProfileCard = (props: any) => {
 	const isMyProfile = parseInt(authCtx.userId) === parseInt(id);
 
 	useEffect(() => {
-	  getUser(id);
+		getUser(id);
 	}, [id]);
 
 	const getUser = async (id: string) => {
-	  try {
-		const response = await fetch(`http://localhost:3000/users/friends/${id}`, {
-		  method: "GET",
-		});
-
-		if (response.ok) {
-		  const data = await response.json();
-		  setUser(data);
-		  setUsername(data.username);
-		  if (isMyProfile && authCtx.ftAvatar) {
-			setFtAvatar(authCtx.ftAvatar);
-		  } else if (data.ftAvatar) {
-			setFtAvatar(data.ftAvatar);
-		  } else {
-			setFtAvatar('');
-			fetchAvatar(id);
-		  }
-		} else {
-		  console.log("POST error on /friendship/create");
-		  return "error";
+		try {
+			const response = await fetch(back_url + `/users/friends/${id}`, {
+				method: "GET",
+			});
+			if (response.ok) {
+				const data = await response.json();
+				setUser(data);
+				setUsername(data.username);
+				if (isMyProfile && authCtx.ftAvatar) {
+					setFtAvatar(authCtx.ftAvatar);
+				} else if (data.ftAvatar) {
+					setFtAvatar(data.ftAvatar);
+				} else {
+					setFtAvatar('');
+					fetchAvatar(id);
+				}
+			} else {
+				console.log("POST error on /friendship/create");
+				return "error";
+			}
+		} catch (error) {
+			console.log("error", error);
 		}
-	  } catch (error) {
-		console.log("error", error);
-	  }
 	};
 
 	const fetchAvatar = async (id: string) => {

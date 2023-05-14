@@ -9,7 +9,6 @@ export default function NotFound(props: any) {
             src="https://giphy.com/embed/sIIhZliB2McAo"
             width="480"
             height="304"
-            frameBorder="0"
             className="giphy-embed"
             allowFullScreen
           ></iframe>
@@ -21,4 +20,3 @@ export default function NotFound(props: any) {
       </div>
     );
   }
-  

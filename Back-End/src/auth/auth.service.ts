@@ -132,7 +132,7 @@ export class AuthService {
 				status: 'OFFLINE',
 			},
 		});
-		return delog;
+		return userId;
 		//sending status update to the front
 		// this.appGateway.offlineFromService(userId);
 	}

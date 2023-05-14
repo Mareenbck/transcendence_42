@@ -20,18 +20,13 @@ function PopupChallenge(props: PopupChallengeProps) {
       author: props.trigger,
       player: props.player,
     } as Invite);
-console.log("acceptGame")
   }
-  
+
   const refuseGame = () => {
     props.sendMessage("refuseGame", {
       author: (props.trigger),
       player: (props.player),
     } as Invite);
-  console.log("refuseGame")
-  console.log("author", props.trigger)
-  console.log("player", props.player)
-
   }
 
   return (props.trigger) ? (
@@ -39,7 +34,7 @@ console.log("acceptGame")
       <div className="popupChallenge-inner">
         <MyAvatar  id={props.trigger.id} style="m" avatar={props.trigger.avatar} ftAvatar={props.trigger.ftAvatar}/>
         <div> {props.trigger.username} invites you to play! </div>
-          <Link to={'/game'} onClick={acceptGame} > 
+          <Link to={'/game'} onClick={acceptGame} >
           <button className='btnn'>Play pong</button>
           </Link>
           <button className="close-btn" onClick={() => { refuseGame(); props.setTrigger(null); }}>Close</button>

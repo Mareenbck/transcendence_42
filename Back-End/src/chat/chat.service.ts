@@ -156,5 +156,9 @@ export class ChatService {
         this.server.to(socketId).emit('newPriv');
         this.server.emit('changeParticipants');
     };
+
+    logout: any = () => {
+         this.server.emit('changeParticipants');
+    };
 }
 

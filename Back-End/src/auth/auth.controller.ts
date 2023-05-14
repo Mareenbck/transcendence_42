@@ -38,6 +38,7 @@ export class AuthController {
 	@HttpCode(200)
 	async logout(@GetUser() user: TwoFaUserDto) {
 		const delogUser = await this.authService.signout(user);
+		console.log("delogUser =>", delogUser)
 		return delogUser;
 	}
 
