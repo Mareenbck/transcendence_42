@@ -13,7 +13,7 @@ import { faUserPlus, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useSocket from '../../service/socket';
 import { FriendContext } from '../../store/FriendshipContext';
-import Friend from '../interfaces/IFriendship';
+import Friend from '../../interfaces/IFriendship';
 import { back_url } from '../../config.json';
 
 const FriendsList = (props: any) => {

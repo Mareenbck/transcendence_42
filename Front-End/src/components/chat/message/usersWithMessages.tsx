@@ -90,11 +90,11 @@ export default function UsersWithDirectMessage(props: any) {
 	}
 
 
-	useEffect(() => {
-		addListener("changeParticipants", () => {
-			amIBlocked();
-		});
-	});
+	// useEffect(() => {
+	// 	addListener("changeParticipants", () => {
+	// 		amIBlocked();
+	// 	});
+	// });
 
 	useEffect(() => {
 		const fetchUserWithDirectMessages = async () => {

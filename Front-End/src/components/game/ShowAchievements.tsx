@@ -9,7 +9,7 @@ import { back_url } from '../../config.json';
 const ShowAchievements = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const { id } = useParams();
-	const [achievements, setAchievements] = useState<any[]>([]);
+	const [achievements, setAchievements] = React.useState<any[]>([]);
 	const isMyProfile = parseInt(id) === parseInt(authCtx.userId);
 	const [style, setStyle] = useState<string>(isMyProfile ? "s" : "l");
 	let nameIconClass = 'name-icon';
