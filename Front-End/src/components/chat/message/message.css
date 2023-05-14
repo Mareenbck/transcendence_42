@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     align-items: flex-start;
-    height: 50px; /* hauteur minimale */
+    height: 100%;
     word-wrap: break-word; /* force les mots à se couper */
     white-space: pre-wrap; /* empêche les espaces de se rompre */
 }

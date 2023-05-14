@@ -10,7 +10,6 @@ export default function Message2({ message2, own, user, authCtx }) {
     <div className= {own ? "message own" : "message"}>
       <div className="messageTop">
 		    <Avatar variant="rounded" className="users-msgD-avatar"  src={user.ftAvatar ? user.ftAvatar : user.avatar} />
-       {/* <MyAvatar authCtx={authCtx} id={user.id} style="xs" avatar={user.avatar} ftAvatar={user.ftAvatar}/> */}
         <p className="messageText">
          {message2.content}
         </p>
