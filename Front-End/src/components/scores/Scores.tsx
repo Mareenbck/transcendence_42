@@ -9,6 +9,7 @@ import Card from "../../components/utils/Card";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ButtonToggle from '../utils/ButtonToggle';
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 
 const Scores = () => {
@@ -17,7 +18,7 @@ const Scores = () => {
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
   
   const authCtx = useContext(AuthContext);
-
+  const isLoggedIn = authCtx.isLoggedIn;
   //aller chercher les games
   async function fetchGames() {
     try {
@@ -116,7 +117,14 @@ const Scores = () => {
         </section>
       </section>
 
-    </section>    
+    </section>  
+
+     
+    <div>
+            {!isLoggedIn && <Navigate to="/" replace={true} />}
+    </div> 
+  
+        
 		<ButtonToggle/>
 	</>
   )
