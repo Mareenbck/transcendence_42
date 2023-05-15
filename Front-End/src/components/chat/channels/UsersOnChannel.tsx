@@ -33,11 +33,13 @@ export default function InteractiveListe(props: any) {
     const owner = participants.filter((p: any) => p.role === 'OWNER');
     const users = participants.filter((p: any) => p.role === 'USER');
     const [sendMessage, addListener] = useSocket();
+	const env = process.env.BACKEND_URL
+
 
 
 	const showParticipants = React.useCallback(async (channelId: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/chatroom2/${channelId}/participants`, {
+			const response = await fetch(env + `/chatroom2/${channelId}/participants`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
@@ -72,7 +74,7 @@ export default function InteractiveListe(props: any) {
 
 	const kickSomeone = async (channelId: string, userId: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/chatroom2/${channelId}/kick/${userId}`, {
+			const response = await fetch(env + `/chatroom2/${channelId}/kick/${userId}`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -95,7 +97,7 @@ export default function InteractiveListe(props: any) {
 
     const banSomeone = async (channelId: string, userId: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/chatroom2/${channelId}/ban/${userId}`, {
+			const response = await fetch(env + `/chatroom2/${channelId}/ban/${userId}`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -121,7 +123,7 @@ export default function InteractiveListe(props: any) {
 
 	const unBanSomeone = async (channelId: string, userId: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/chatroom2/${channelId}/unban/${userId}`,{
+			const response = await fetch(env + `/chatroom2/${channelId}/unban/${userId}`,{
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -146,7 +148,7 @@ export default function InteractiveListe(props: any) {
 	const muteSomeone = async (channelId: string, userId: string) => {
 		try {
 			const response = await fetch(
-				process.env.BACKEND_URL + `/chatroom2/${channelId}/mute/${userId}`,
+				env + `/chatroom2/${channelId}/mute/${userId}`,
 				{
 					method: "POST",
 					headers: {
@@ -179,7 +181,7 @@ export default function InteractiveListe(props: any) {
 
 	const unMuteSomeone = async (channelId: string, userId: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/chatroom2/${channelId}/unmute/${userId}`,{
+			const response = await fetch(env + `/chatroom2/${channelId}/unmute/${userId}`,{
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

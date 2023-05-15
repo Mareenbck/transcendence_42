@@ -16,6 +16,8 @@ const ChannelInvitations = (props: any) => {
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [icon, setIcon] = useState<any>();
 	const [sendMessage, addListener] = useSocket();
+	const env = process.env.BACKEND_URL
+
 
 	useEffect(() => {
 		getInvitations();
@@ -23,7 +25,7 @@ const ChannelInvitations = (props: any) => {
 
 	const getInvitations = async () => {
 		const response = await fetch(
-			process.env.BACKEND_URL + "/chatroom2/pending_invitations", {
+			env + "/chatroom2/pending_invitations", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -42,7 +44,7 @@ const ChannelInvitations = (props: any) => {
 
 	const updateDemand = async (invitId: number, res: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/chatroom2/invit_update`, {
+			const response = await fetch(env + `/chatroom2/invit_update`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

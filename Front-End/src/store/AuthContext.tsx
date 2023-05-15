@@ -34,6 +34,7 @@ export const AuthContextProvider = (props: any) => {
 	const [ftAvatar, setftAvatar] = useState<string | null>(ftAvatarLocalStorage);
 	const [is2FA, setIs2FA] = useState<boolean>();
 	const [sendMessage, addListener] = useSocket()
+	const env = process.env.BACKEND_URL
 
 	useEffect(() => {
 		if (userId) {
@@ -76,7 +77,7 @@ export const AuthContextProvider = (props: any) => {
 			return ;
 		}
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/users/${userId}/avatar`, {
+			const response = await fetch(env + `/users/${userId}/avatar`, {
 				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -97,7 +98,7 @@ export const AuthContextProvider = (props: any) => {
 
 	const fetchHandler = async (userId: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/users/profile/${userId}`, {
+			const response = await fetch(env + `/users/profile/${userId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
@@ -117,7 +118,7 @@ export const AuthContextProvider = (props: any) => {
 	const refreshHandler = async () => {
 		if (userIsLoggedIn) {
 			try {
-				const response = await fetch(process.env.BACKEND_URL + '/auth/refresh', {
+				const response = await fetch(env + '/auth/refresh', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -142,7 +143,7 @@ export const AuthContextProvider = (props: any) => {
 	const fetchLogout = async () => {
 		localStorage.clear();
 		try {
-			const response = await fetch(process.env.BACKEND_URL + '/auth/logout', {
+			const response = await fetch(env + '/auth/logout', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

@@ -7,6 +7,8 @@ import '../../style/Switch2FA.css';
 const Switch2FA = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const [isTwoFAEnabled, setIsTwoFAEnabled] = useState(props.is2FAEnabled);
+	const env = process.env.BACKEND_URL
+
 
 	useEffect(() => {
 		setIsTwoFAEnabled(props.is2FAEnabled);
@@ -26,7 +28,7 @@ const Switch2FA = (props: any) => {
 	const activate2FA = async () => {
 		// event.preventDefault();
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/auth/2fa/turn-on`, {
+			const response = await fetch(env + `/auth/2fa/turn-on`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -47,7 +49,7 @@ const Switch2FA = (props: any) => {
 	const desactivate2FA = async () => {
 		// event.preventDefault();
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/auth/2fa/turn-off`, {
+			const response = await fetch(env + `/auth/2fa/turn-off`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

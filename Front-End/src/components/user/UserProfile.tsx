@@ -10,6 +10,8 @@ const UserProfile = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const isLoggedIn = authCtx.isLoggedIn;
 	const [user, setUser] = useState(null);
+	const env = process.env.BACKEND_URL
+
 
 	useEffect(() => {
 		getUser(props.id)
@@ -18,7 +20,7 @@ const UserProfile = (props: any) => {
 
 	const getUser = async (id: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/users/friends/${id}`, {
+			const response = await fetch(env + `/users/friends/${id}`, {
 				method: "GET",
 			})
 			if (response.ok) {

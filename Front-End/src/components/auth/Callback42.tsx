@@ -3,6 +3,8 @@ import AuthContext from '../../store/AuthContext';
 
 function Callback42() {
 	const authCtx = useContext(AuthContext);
+	const url = process.env.REACT_APP_BACKEND_URL
+	console.log('url', url)
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -10,7 +12,7 @@ function Callback42() {
 
 		const fetchCall = async () => {
 			try {
-					const response = await fetch(process.env.BACKEND_URL + '/auth/42/callback', {
+					const response = await fetch(url + '/auth/42/callback', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'

@@ -32,6 +32,8 @@ export const FriendContextProvider = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const [pendingDemandsCount, setPendingDemandsCount] = useState<number>(0);
 	const [pendingDemands, setPendingDemands] = useState<Demand[]>([]);
+	const env = process.env.BACKEND_URL
+
 
 	useEffect (() => {
 		if (authCtx.isLoggedIn) {
@@ -63,7 +65,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const createDemand = async (receiverId: number, currentId: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/friendship/create`, {
+			const response = await fetch(env + `/friendship/create`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -82,7 +84,7 @@ export const FriendContextProvider = (props: any) => {
 	}
 
 	const getDemands = async (token: string, currentId: string) => {
-		const response = await fetch(process.env.BACKEND_URL + "/friendship/received", {
+		const response = await fetch(env + "/friendship/received", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -104,7 +106,7 @@ export const FriendContextProvider = (props: any) => {
 	}
 
 	const getFriends = async (token: string, currentId: string) => {
-		const response = await fetch(process.env.BACKEND_URL + "/friendship/friends", {
+		const response = await fetch(env + "/friendship/friends", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -124,7 +126,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const fetchAvatar = async (userId: number) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/friendship/${userId}/avatar`, {
+			const response = await fetch(env + `/friendship/${userId}/avatar`, {
 				method: 'GET',
 			});
 			if (response.ok) {
@@ -144,7 +146,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const removeFriend = async (friendId: number, currentId: string, token: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/friendship/delete`, {
+			const response = await fetch(env + `/friendship/delete`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -166,7 +168,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const updateDemand = async (demandId: number, res: string, token: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/friendship/update`, {
+			const response = await fetch(env + `/friendship/update`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

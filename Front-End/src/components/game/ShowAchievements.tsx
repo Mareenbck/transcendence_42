@@ -12,6 +12,7 @@ const ShowAchievements = (props: any) => {
 	const [isMyProfile, setIsMyProfile] = React.useState<boolean>();
 	const [style, setStyle] = useState<string>(isMyProfile ? "s" : "l");
 	let nameIconClass = 'name-icon';
+	const env = process.env.BACKEND_URL
 
 	useEffect(() => {
 		if (id && parseInt(id) === parseInt(authCtx.userId)) {
@@ -61,7 +62,7 @@ const ShowAchievements = (props: any) => {
 
 	const fetchIcon = async (id: number) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/users/${id}/icon`, {
+			const response = await fetch(env + `/users/${id}/icon`, {
 				method: 'GET',
 			});
 			if (response.ok) {

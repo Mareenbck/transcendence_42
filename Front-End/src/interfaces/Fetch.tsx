@@ -4,9 +4,11 @@ export class Fetch {
 
 	static async fetch(token: string, method: string, endPoint: string, par? : string | number, par2? :string | number) {
 		try {
+			const env = process.env.BACKEND_URL
+
 			if (par2 !== undefined && par !== undefined) { par = par + '\/' + par2; }
 			if (par !== undefined) { endPoint = endPoint + '\/' + par; }
-			const resp = await fetch(process.env.BACKEND_URL + `/${endPoint}`, {
+			const resp = await fetch(env + `/${endPoint}`, {
 				method: method,
 				headers: {
 					"Content-Type": "application/json",
@@ -26,7 +28,9 @@ export class Fetch {
 
 	static async postBlock(token: string, him: number, me: number) {
 		try {
-			const resp = await fetch(process.env.BACKEND_URL + `/users/block`, {
+			const env = process.env.BACKEND_URL
+
+			const resp = await fetch(env + `/users/block`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -47,7 +51,9 @@ export class Fetch {
 
 	static async postUnblock(token: string, him: number, me: number) {
 		try {
-			const resp = await fetch(process.env.BACKEND_URL + `/users/unblock`, {
+			const env = process.env.BACKEND_URL
+
+			const resp = await fetch(env + `/users/unblock`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",

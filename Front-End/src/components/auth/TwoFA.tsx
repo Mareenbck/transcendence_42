@@ -11,6 +11,8 @@ export function TwoFaForm (){
 
 	const authCtx = useContext(AuthContext);
 	const [sendMessage, addListener] = useSocket();
+	const env = process.env.BACKEND_URL
+
 
 
 	const handleSubmit = async (event: any) => {
@@ -20,7 +22,7 @@ export function TwoFaForm (){
 			alert("Le code saisi est vide");
 			return;
 		}
-		const response = await fetch(process.env.BACKEND_URL + '/auth/2fa/authenticate', {
+		const response = await fetch(env + '/auth/2fa/authenticate', {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -42,7 +44,7 @@ export function TwoFaForm (){
 	}
 
 	async function generateQRCode() {
-		const response = await fetch(process.env.BACKEND_URL+ '/auth/2fa/generate', {
+		const response = await fetch(env+ '/auth/2fa/generate', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

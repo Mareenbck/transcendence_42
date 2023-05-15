@@ -37,6 +37,10 @@ services:
 
   frontend:
     container_name: react
+    env_file:
+        - ./Back-End/.env
+    depends_on: 
+      - api
     build:
       context: ./Front-End/
       dockerfile: Dockerfile
@@ -44,6 +48,8 @@ services:
       - ./Front-End:/usr/src/app
       - front_node_modules:/usr/src/app/node_modules
     # command: npm run dev
+    # environment: 
+    #   - REACT_APP_BACKEND_URL=${REACT_APP_BACK_URL}
     ports:
       - 8080:8080
     networks:

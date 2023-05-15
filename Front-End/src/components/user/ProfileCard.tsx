@@ -14,6 +14,8 @@ const ProfileCard = (props: any) => {
 	const [user, setUser] = useState(null);
 	// const isMyProfile = parseInt(authCtx.userId) === parseInt(id);
 	const [isMyProfile, setIsMyProfile] = React.useState<boolean>();
+	const env = process.env.BACKEND_URL
+
 
 
 	useEffect(() => {
@@ -30,7 +32,7 @@ const ProfileCard = (props: any) => {
 
 	const getUser = async (id: string | undefined) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/users/friends/${id}`, {
+			const response = await fetch(env + `/users/friends/${id}`, {
 				method: "GET",
 			});
 			if (response.ok) {

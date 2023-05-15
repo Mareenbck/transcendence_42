@@ -22,6 +22,8 @@ const FriendsList = (props: any) => {
 	const [sendMessage, addListener] = useSocket();
 
 	const currentUserId = authCtx.userId;
+	const env = process.env.BACKEND_URL
+
 
 	const handleCloseSnackbar = () => {
 		setSnackbarOpen(false);
@@ -30,7 +32,7 @@ const FriendsList = (props: any) => {
 	const handleDemand = async (event: FormEvent, receiverId: number) => {
 		event.preventDefault();
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/friendship/create`,{
+			const response = await fetch(env + `/friendship/create`,{
 				method: 'POST',
 				headers: {
 				  'Content-Type': 'application/json',

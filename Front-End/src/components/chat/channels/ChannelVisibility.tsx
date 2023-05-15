@@ -19,6 +19,7 @@ export default function ChannelVisibility(props: any) {
 	const handleClickShowPassword = (e: FormEvent) => setShowPassword(!showPassword);
 	const [passwordError, setPasswordError] = useState(false);
 	const [sendMessage, addListener] = useSocket();
+  const env = process.env.BACKEND_URL
 
 
   const handleOpenJoinModal = (e: FormEvent) => {
@@ -74,7 +75,7 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
 		return;
 	}
     try {
-        const resp = await fetch(process.env.BACKEND_URL + `/chatroom2/join`, {
+        const resp = await fetch(env + `/chatroom2/join`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",

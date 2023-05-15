@@ -10,6 +10,8 @@ const BodyStatsCard = (props: any) => {
 	const [level, setLevel] = useState<number>();
 	const { id } = useParams();
 	const [content, setContent] = useState<any>();
+	const env = process.env.BACKEND_URL
+
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -43,7 +45,7 @@ const BodyStatsCard = (props: any) => {
 	}
 
 	const fetchUserRank = async (id: number) => {
-		const response = await fetch(process.env.BACKEND_URL + `/game/rank/${id}`,{
+		const response = await fetch(env + `/game/rank/${id}`,{
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",

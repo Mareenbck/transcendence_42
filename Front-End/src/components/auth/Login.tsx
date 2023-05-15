@@ -24,6 +24,8 @@ function AuthForm() {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [is2FA, setIs2FA] = useState(false);
 	const [sendMessage, addListener] = useSocket();
+	const url = process.env.BACKEND_URL
+
 
 	useEffect(() => {
 		if (isAuthenticated && is2FA) {

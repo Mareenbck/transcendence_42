@@ -8,6 +8,9 @@ function Home() {
 	const authCtx = useContext(AuthContext);
 	const authenticating = localStorage.getItem('authenticating');
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+	const env = process.env.REACT_APP_BACKEND_URL
+	console.log("env", env)
+
 
 	useEffect(() => {
 		if (authCtx.isLoggedIn && !authCtx.is2FA) {
@@ -19,7 +22,7 @@ function Home() {
 	}, [authCtx.isLoggedIn, navigate, isAuthenticated]);
 
 	const login42 = async () => {
-		const response = await fetch(process.env.BACKEND_URL + "/auth/42", {method: 'GET'});
+		const response = await fetch(env + "/auth/42", {method: 'GET'});
 		const url = await response.json();
 		const options = 'toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=800';
 		setIsAuthenticated(true);

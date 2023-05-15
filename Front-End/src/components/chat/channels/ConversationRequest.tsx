@@ -2,11 +2,12 @@ import AuthContext from '../../../store/AuthContext';
 
 export class ConversationReq {
 
-
-
-  static async getAll(user: any) {
-    try {
-      const resp = await fetch(process.env.BACKEND_URL + "/chatroom2",
+	
+	
+	static async getAll(user: any) {
+		try {
+			const env = process.env.BACKEND_URL
+			const resp = await fetch(env + "/chatroom2",
       { method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -23,7 +24,8 @@ export class ConversationReq {
 
 	static async postRoom(user: any, newConv: any) {
 		try {
-			const resp = await fetch(process.env.BACKEND_URL + `/chatroom2`, {
+			const env = process.env.BACKEND_URL
+			const resp = await fetch(env + `/chatroom2`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
