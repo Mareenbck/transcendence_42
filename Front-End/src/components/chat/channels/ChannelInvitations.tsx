@@ -9,7 +9,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import IconButton from "@mui/material/IconButton";
 import CancelIcon from '@mui/icons-material/Cancel';
 import useSocket from '../../../service/socket';
-import { back_url } from '../../../config.json';
 
 const ChannelInvitations = (props: any) => {
 	const [invitations, setInvitations] = useState<any[]>([]);
@@ -24,7 +23,7 @@ const ChannelInvitations = (props: any) => {
 
 	const getInvitations = async () => {
 		const response = await fetch(
-			back_url + "/chatroom2/pending_invitations", {
+			process.env.BACKEND_URL + "/chatroom2/pending_invitations", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -43,7 +42,7 @@ const ChannelInvitations = (props: any) => {
 
 	const updateDemand = async (invitId: number, res: string) => {
 		try {
-			const response = await fetch(back_url + `/chatroom2/invit_update`, {
+			const response = await fetch(process.env.BACKEND_URL + `/chatroom2/invit_update`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

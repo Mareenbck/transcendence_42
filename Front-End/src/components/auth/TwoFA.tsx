@@ -1,7 +1,6 @@
 import React, { FormEvent, useContext, useRef, useState } from "react";
 import AuthContext from "../../store/AuthContext";
 import { Navigate } from 'react-router-dom';
-import { back_url } from '../../config.json';
 import useSocket from '../../service/socket';
 
 export function TwoFaForm (){
@@ -21,7 +20,7 @@ export function TwoFaForm (){
 			alert("Le code saisi est vide");
 			return;
 		}
-		const response = await fetch(back_url + '/auth/2fa/authenticate', {
+		const response = await fetch(process.env.BACKEND_URL + '/auth/2fa/authenticate', {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -43,7 +42,7 @@ export function TwoFaForm (){
 	}
 
 	async function generateQRCode() {
-		const response = await fetch(back_url + '/auth/2fa/generate', {
+		const response = await fetch(process.env.BACKEND_URL+ '/auth/2fa/generate', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

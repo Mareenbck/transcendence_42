@@ -9,7 +9,6 @@ import { TextField } from '@mui/material';
 import Switch2FA from '../components/settings/Switch2FA';
 import ButtonSettings from '../components/settings/ButtonSettings';
 import ButtonToggle from '../components/utils/ButtonToggle';
-import { back_url } from '../config.json';
 
 const Setting = () => {
 	const authCtx = useContext(AuthContext);
@@ -21,7 +20,7 @@ const Setting = () => {
 		const formData = new FormData();
 		formData.append("file", file);
 		try {
-			const response = await fetch(back_url + `/users/upload`, {
+			const response = await fetch(process.env.BACKEND_URL + `/users/upload`, {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${authCtx.token}`,
@@ -44,7 +43,7 @@ const Setting = () => {
 	const handleRestore = async (event: FormEvent) => {
 		event.preventDefault();
 		try {
-			const response = await fetch(back_url + `/users/restore`, {
+			const response = await fetch(process.env.BACKEND_URL + `/users/restore`, {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${authCtx.token}`,
@@ -72,7 +71,7 @@ const Setting = () => {
 		}
 		const userId = authCtx.userId;
 		try {
-			const response = await fetch(back_url + `/users/${userId}/username`, {
+			const response = await fetch(process.env.BACKEND_URL + `/users/${userId}/username`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -94,7 +93,7 @@ const Setting = () => {
 
 	const fetchIs2FA = async (token: string) => {
 		try {
-			const response = await fetch(back_url + `/auth/2fa`, {
+			const response = await fetch(process.env.BACKEND_URL + `/auth/2fa`, {
 				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${token}`,

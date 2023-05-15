@@ -4,7 +4,6 @@ import '../../style/Form.css'
 import AuthContext from '../../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
-import { back_url } from '../../config.json';
 import useSocket from "../../service/socket";
 
 interface ErrorMsg {
@@ -61,7 +60,7 @@ function AuthForm() {
 			})
 			return;
 		}
-		const url = back_url + '/auth/signin';
+		const url = process.env.BACKEND_URL + '/auth/signin';
 			const fetchHandleLogin = async () => {
 				try {
 				const response = await fetch(url, {

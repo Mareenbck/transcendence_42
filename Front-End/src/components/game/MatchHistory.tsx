@@ -6,7 +6,6 @@ import PlayerOne from "./PlayerOne";
 import PlayerTwo from "./PlayerTwo";
 import ScoresMatch from "./ScoresMatch";
 import AuthContext from "../../store/AuthContext";
-import { back_url } from '../../config.json';
 
 const MatchHistory = (props: any) => {
 	const [games, setGames] = useState<any[] | null>();
@@ -14,7 +13,7 @@ const MatchHistory = (props: any) => {
 	const authCtx = useContext(AuthContext)
 
 	useEffect(() => {
-		const url = back_url + `/game/allGames/${id}`;
+		const url = process.env.BACKEND_URL + `/game/allGames/${id}`;
 		const fetchUserGames = async () => {
 			const response = await fetch(url,{
 				method: "GET",

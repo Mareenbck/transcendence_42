@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
 import useSocket from '../service/socket';
-import { back_url } from '../config.json';
 
 const defaultValue = {
 	token: '',
@@ -77,7 +76,7 @@ export const AuthContextProvider = (props: any) => {
 			return ;
 		}
 		try {
-			const response = await fetch(back_url + `/users/${userId}/avatar`, {
+			const response = await fetch(process.env.BACKEND_URL + `/users/${userId}/avatar`, {
 				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -98,7 +97,7 @@ export const AuthContextProvider = (props: any) => {
 
 	const fetchHandler = async (userId: string) => {
 		try {
-			const response = await fetch(back_url + `/users/profile/${userId}`, {
+			const response = await fetch(process.env.BACKEND_URL + `/users/profile/${userId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
@@ -118,7 +117,7 @@ export const AuthContextProvider = (props: any) => {
 	const refreshHandler = async () => {
 		if (userIsLoggedIn) {
 			try {
-				const response = await fetch(back_url + '/auth/refresh', {
+				const response = await fetch(process.env.BACKEND_URL + '/auth/refresh', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -143,7 +142,7 @@ export const AuthContextProvider = (props: any) => {
 	const fetchLogout = async () => {
 		localStorage.clear();
 		try {
-			const response = await fetch(back_url + '/auth/logout', {
+			const response = await fetch(process.env.BACKEND_URL + '/auth/logout', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

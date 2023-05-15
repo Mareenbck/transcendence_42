@@ -3,7 +3,6 @@ import '../../style/Profile.css'
 import { useParams } from "react-router-dom";
 import { FriendContext } from "../../store/FriendshipContext";
 import AuthContext from "../../store/AuthContext";
-import { back_url } from '../../config.json';
 
 const ProfileCard = (props: any) => {
 	const authCtx = useContext(AuthContext);
@@ -31,7 +30,7 @@ const ProfileCard = (props: any) => {
 
 	const getUser = async (id: string | undefined) => {
 		try {
-			const response = await fetch(back_url + `/users/friends/${id}`, {
+			const response = await fetch(process.env.BACKEND_URL + `/users/friends/${id}`, {
 				method: "GET",
 			});
 			if (response.ok) {
