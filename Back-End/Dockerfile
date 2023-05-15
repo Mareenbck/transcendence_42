@@ -4,9 +4,15 @@ RUN npm i -g @nestjs/cli
 
 
 WORKDIR /usr/src/app
+COPY --chown=node:node package*.json ./
+COPY --chown=node:node prisma ./prisma/
 
-ENTRYPOINT ["sh", "-c", "npm install && npm update && npm run build && npm run prisma:generate && npm run prisma:seed && npm run start:prod"]
+RUN npm install
+RUN npm update
+RUN npx prisma generate
+RUN npm build
 
+ENTRYPOINT ["sh", "-c", "npm run prisma:seed && npm run start:prod"]
 
 # FROM node:latest AS dev
 
