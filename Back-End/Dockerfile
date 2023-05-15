@@ -5,7 +5,7 @@ RUN npm i -g @nestjs/cli
 
 WORKDIR /usr/src/app
 
-ENTRYPOINT ["sh", "-c", "npm install && npm update && npm run build && npm run prisma:generate:seed && npm run start:prod"]
+ENTRYPOINT ["sh", "-c", "npm install && npm update && npm run build && npm run prisma:generate && npm run prisma:seed && npm run start:prod"]
 
 
 # FROM node:latest AS dev
