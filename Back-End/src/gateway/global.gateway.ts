@@ -18,12 +18,7 @@ import { UserDto } from 'src/user/dto/user.dto';
 import { ChatroomService } from 'src/chat/chatroom2/chatroom2.service';
 
 @WebSocketGateway(
-8001, { cors: {origin: "http://localhost:8080",}, }
-/*{
-  cors: ["*"],
-  origin: ["*"],
-  path: "",
-}*/
+  8001, { cors: {origin: process.env.FRONTEND_URL}}
 )
 
 export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
