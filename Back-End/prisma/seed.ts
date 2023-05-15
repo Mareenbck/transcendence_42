@@ -14,7 +14,7 @@ await prisma.$connect();
 	const usrsSize: number = (
 		await prisma.user.findMany({
 			select: {
-			id: true,
+				id: true,
 			},
 		})
 	).length;
