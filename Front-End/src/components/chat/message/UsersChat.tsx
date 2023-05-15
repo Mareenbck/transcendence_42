@@ -7,7 +7,6 @@ import UsersAction from './UsersActions';
 import { UserChat } from '../../../interfaces/iChat';
 import PersonnalInfoChat from '../PersonnalInfoChat';
 import useSocket from '../../../service/socket';
-import { back_url } from '../../../config.json';
 
 
 const UsersChat = (props: any) => {
@@ -22,7 +21,7 @@ const UsersChat = (props: any) => {
 	const playingFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'PLAYING' && friend.id !== parseInt(currentUserId));
 
 
-	const url = back_url + "/users/block/users/";
+	const url = process.env.BACKEND_URL + "/users/block/users/";
 	const fetchUsers = async () => {
 		const response = await fetch(
 			url,

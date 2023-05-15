@@ -3,7 +3,6 @@ import AuthContext from "../../store/AuthContext";
 import BadgeIcon from "../utils/BadgeIcon";
 import '../../style/Profile.css';
 import { useParams } from "react-router-dom";
-import { back_url } from '../../config.json';
 
 
 const ShowAchievements = (props: any) => {
@@ -37,7 +36,7 @@ const ShowAchievements = (props: any) => {
 		nameIconClass = "name-icon-s";
 	}
 
-	const url = back_url + `/users/${id}/achievements`;
+	const url = process.env.BACKEND_URL + `/users/${id}/achievements`;
 	const fetchUserAchievements = async () => {
 		const response = await fetch(
 			url,
@@ -62,7 +61,7 @@ const ShowAchievements = (props: any) => {
 
 	const fetchIcon = async (id: number) => {
 		try {
-			const response = await fetch(back_url + `/users/${id}/icon`, {
+			const response = await fetch(process.env.BACKEND_URL + `/users/${id}/icon`, {
 				method: 'GET',
 			});
 			if (response.ok) {

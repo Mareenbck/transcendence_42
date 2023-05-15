@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import '../../style/Profile.css'
 import AuthContext from "../../store/AuthContext";
 import { useParams } from "react-router-dom";
-import { back_url } from '../../config.json';
 
 const BodyStatsCard = (props: any) => {
 	const [icon, setIcon] = useState<string>("");
@@ -27,7 +26,7 @@ const BodyStatsCard = (props: any) => {
 		fetchData();
 	}, [id])
 
-	const url = back_url + `/game/level/${id}`;
+	const url = process.env.BACKEND_URL + `/game/level/${id}`;
 	const fetchUserLevel = async () => {
 		const response = await fetch(url,{
 				method: "GET",
@@ -44,7 +43,7 @@ const BodyStatsCard = (props: any) => {
 	}
 
 	const fetchUserRank = async (id: number) => {
-		const response = await fetch(back_url + `/game/rank/${id}`,{
+		const response = await fetch(process.env.BACKEND_URL + `/game/rank/${id}`,{
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",

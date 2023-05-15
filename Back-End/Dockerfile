@@ -7,7 +7,6 @@ WORKDIR /usr/src/app
 
 ENTRYPOINT ["sh", "-c", "npm install && npm update && npm run build && npm run prisma:generate && npm run prisma:seed && npm run start:prod"]
 
-
 # FROM node:latest AS dev
 
 # # Create app directory and set it as our working directory. This will be the working directory for your application:

@@ -14,7 +14,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useSocket from '../../service/socket';
 import { FriendContext } from '../../store/FriendshipContext';
 import Friend from '../../interfaces/IFriendship';
-import { back_url } from '../../config.json';
 
 const FriendsList = (props: any) => {
 	const authCtx = useContext(AuthContext);
@@ -31,7 +30,7 @@ const FriendsList = (props: any) => {
 	const handleDemand = async (event: FormEvent, receiverId: number) => {
 		event.preventDefault();
 		try {
-			const response = await fetch(back_url + `/friendship/create`,{
+			const response = await fetch(process.env.BACKEND_URL + `/friendship/create`,{
 				method: 'POST',
 				headers: {
 				  'Content-Type': 'application/json',

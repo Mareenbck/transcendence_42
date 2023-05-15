@@ -3,7 +3,6 @@ import { Switch } from '@mui/material';
 import React from 'react';
 import AuthContext from '../../store/AuthContext';
 import '../../style/Switch2FA.css';
-import { back_url } from '../../config.json';
 
 const Switch2FA = (props: any) => {
 	const authCtx = useContext(AuthContext);
@@ -27,7 +26,7 @@ const Switch2FA = (props: any) => {
 	const activate2FA = async () => {
 		// event.preventDefault();
 		try {
-			const response = await fetch(back_url + `/auth/2fa/turn-on`, {
+			const response = await fetch(process.env.BACKEND_URL + `/auth/2fa/turn-on`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -48,7 +47,7 @@ const Switch2FA = (props: any) => {
 	const desactivate2FA = async () => {
 		// event.preventDefault();
 		try {
-			const response = await fetch(back_url + `/auth/2fa/turn-off`, {
+			const response = await fetch(process.env.BACKEND_URL + `/auth/2fa/turn-off`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

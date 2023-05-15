@@ -1,10 +1,9 @@
 import AuthContext from '../../../store/AuthContext';
-import { back_url } from '../../../config.json';
 
 export class MessageReq {
 	static async getMess(user: any, roomId: number) {
 		try {
-			const resp = await fetch(back_url + `/chat-mess/room/${roomId}`,{
+			const resp = await fetch(process.env.BACKEND_URL + `/chat-mess/room/${roomId}`,{
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -20,7 +19,7 @@ export class MessageReq {
 
 	static async postMess(user: any, message2: any) {
 		try {
-			const resp = await fetch(back_url + `/chat-mess`, {
+			const resp = await fetch(process.env.BACKEND_URL + `/chat-mess`, {
 				method: "post",
 				headers: {
 					"Content-Type": "application/json",
@@ -41,7 +40,7 @@ export class MessageReq {
 
 	static async getDirMess(user: any, me: number, friend: number) {
 		try {
-			const resp = await fetch(back_url + `/dir-mess/${me}/${friend}`,{
+			const resp = await fetch(process.env.BACKEND_URL + `/dir-mess/${me}/${friend}`,{
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -57,7 +56,7 @@ export class MessageReq {
 
 	static async postDirMess(user: any, messageD: any) {
 		try {
-			const resp = await fetch(back_url + `/dir-mess`, {
+			const resp = await fetch(process.env.BACKEND_URL + `/dir-mess`, {
 				method: "post",
 				headers: {
 					"Content-Type": "application/json",

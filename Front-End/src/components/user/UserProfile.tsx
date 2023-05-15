@@ -5,7 +5,6 @@ import AuthContext from '../../store/AuthContext';
 import SideBar from '../SideBar';
 import ProfileCard from './ProfileCard';
 import Card from '../utils/Card';
-import { back_url } from '../../config.json';
 
 const UserProfile = (props: any) => {
 	const authCtx = useContext(AuthContext);
@@ -19,7 +18,7 @@ const UserProfile = (props: any) => {
 
 	const getUser = async (id: string) => {
 		try {
-			const response = await fetch(back_url + `/users/friends/${id}`, {
+			const response = await fetch(process.env.BACKEND_URL + `/users/friends/${id}`, {
 				method: "GET",
 			})
 			if (response.ok) {
