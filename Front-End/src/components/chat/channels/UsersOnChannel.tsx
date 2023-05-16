@@ -37,7 +37,7 @@ export default function InteractiveListe(props: any) {
 
 	const showParticipants = React.useCallback(async (channelId: string) => {
 		try {
-			const response = await fetch(pimport.meta.env.VITE_BACKEND_URL + `/chatroom2/${channelId}/participants`, {
+			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/chatroom2/${channelId}/participants`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",

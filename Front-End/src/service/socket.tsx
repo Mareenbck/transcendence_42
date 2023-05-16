@@ -3,7 +3,8 @@ import AuthContext from "../store/AuthContext";
 import { io, Manager } from "socket.io-client";
 import { useMemo } from "react";
 
-const manager = new Manager("ws://10.11.4.2:8001");
+const manager = new Manager(import.meta.env.VITE_BACKEND_URL_2);
+
 
 export default function useSocket() {
 

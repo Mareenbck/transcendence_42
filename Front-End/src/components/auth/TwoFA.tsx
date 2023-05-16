@@ -20,7 +20,7 @@ export function TwoFaForm (){
 			alert("Le code saisi est vide");
 			return;
 		}
-		const response = await fetch(c + '/auth/2fa/authenticate', {
+		const response = await fetch(import.meta.env.VITE_BACKEND_URL+ '/auth/2fa/authenticate', {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
