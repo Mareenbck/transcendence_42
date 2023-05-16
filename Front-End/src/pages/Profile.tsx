@@ -2,7 +2,7 @@ import '../style/Profile.css'
 import React, { useContext, useEffect } from 'react'
 import { Navigate, useParams } from "react-router-dom";
 import AuthContext from '../store/AuthContext';
-import style from '../style/Menu.module.css'
+import '../style/Menu.module.css'
 import MyProfile from '../components/user/MyProfile';
 import UserProfile from '../components/user/UserProfile';
 import ButtonToggle from '../components/utils/ButtonToggle';
@@ -24,7 +24,7 @@ const Profile = (props: any) =>  {
 
 	return (
 		<>
-		<div className={style.mainPos}>
+		<div className="mainPos">
 				<div>
 					{isMyProfile ? (
 						<MyProfile id={id}></MyProfile>

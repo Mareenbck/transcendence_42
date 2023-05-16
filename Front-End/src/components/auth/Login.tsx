@@ -4,7 +4,7 @@ import '../../style/Form.css'
 import AuthContext from '../../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
-import { back_url } from '../../config.json';
+// import { back_url } from '../../config.json';
 import useSocket from "../../service/socket";
 
 interface ErrorMsg {
@@ -16,9 +16,10 @@ function AuthForm() {
 	const emailInputRef = useRef<HTMLInputElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 	const usernameLocalStorage = localStorage.getItem("username");
-	
+	const BACK_URL = process.env.REACT_APP_BACKEND_URL
+
 	let navigate = useNavigate();
-	
+
 	const authCtx = useContext(AuthContext);
 	const [error, setError] = useState<ErrorMsg | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +62,7 @@ function AuthForm() {
 			})
 			return;
 		}
-		const url = back_url + '/auth/signin';
+		const url = BACK_URL + '/auth/signin';
 			const fetchHandleLogin = async () => {
 				try {
 				const response = await fetch(url, {

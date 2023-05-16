@@ -1,11 +1,12 @@
 import React, { FormEvent, useContext, useRef, useState } from "react";
 import AuthContext from "../../store/AuthContext";
 import { Navigate } from 'react-router-dom';
-import { back_url } from '../../config.json';
+// import { back_url } from '../../config.json';
 import useSocket from '../../service/socket';
 
 export function TwoFaForm (){
 	const digitCodeInputRef = useRef<HTMLInputElement>(null);
+	const BACK_URL = process.env.REACT_APP_BACKEND_URL
 
 	const [qrCodeUrl, setQrCodeUrl] = useState(null);
 	const [redirectToHome, setRedirectToHome] = useState(false);
@@ -21,7 +22,7 @@ export function TwoFaForm (){
 			alert("Le code saisi est vide");
 			return;
 		}
-		const response = await fetch(back_url + '/auth/2fa/authenticate', {
+		const response = await fetch(BACK_URL + '/auth/2fa/authenticate', {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -36,14 +37,14 @@ export function TwoFaForm (){
 			alert("Le code saisi est incorrect.");
 		}
 	}
-	
+
 	const handleLogin = (e: FormEvent) => {
 		sendMessage("login", authCtx.userId as any)
 		handleSubmit(e)
 	}
 
 	async function generateQRCode() {
-		const response = await fetch(back_url + '/auth/2fa/generate', {
+		const response = await fetch(BACK_URL + '/auth/2fa/generate', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

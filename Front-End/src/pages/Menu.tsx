@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import AuthContext from "../store/AuthContext";
 import SideBar from '../components/SideBar'
-import style from '../style/Menu.module.css'
+import '../style/Menu.module.css'
 import '../style/MenuBis.css'
 import ButtonToggle from "../components/utils/ButtonToggle";
 import Card from "../components/utils/Card";
@@ -14,7 +14,7 @@ const Menu = () => {
 
 	return (
 		<>
-		<div className={style.mainPos}>
+		<div className="mainPos">
 			<SideBar title="Profile" />
 			<div className="container-menu">
 				<h2 >Welcome {authCtx.username}</h2>

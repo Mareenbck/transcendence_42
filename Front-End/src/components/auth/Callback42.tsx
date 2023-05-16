@@ -5,20 +5,23 @@ import { back_url } from '../../config.json';
 function Callback42() {
 	const authCtx = useContext(AuthContext);
 
+const BACK = process.env.REACT_APP_BACKEND_URL
+const BACK2 = `http://${window.location.hostname}:3000`
+console.log("BACKK   ", BACK)
+console.log("BACKK22   ", BACK2)
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const code = urlParams.get('code');
-
+		console.log("window.location.hostname   ", window.location.hostname)
 		const fetchCall = async () => {
 			try {
-					const response = await fetch(back_url + '/auth/42/callback', {
+					const response = await fetch(`http://${window.location.hostname}:3000` + '/auth/42/callback', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
 					},
 					body: JSON.stringify({ code })
 				});
-
 				const data = await response.json();
 				if (response.ok) {
 					const username = data.user.username;

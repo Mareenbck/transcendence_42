@@ -26,7 +26,6 @@ const RtokenLocalStorage = localStorage.getItem("Rtoken");
 
 export const AuthContextProvider = (props: any) => {
 	const [refreshToken, setRefreshToken] = useState<string | null>(RtokenLocalStorage);
-
 	const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
 	const [userId, setUserId] = useState<string | null>(localStorage.getItem("userId"));
 	const [username, setUsername] = useState<string | null>(usernameLocalStorage);
@@ -98,7 +97,7 @@ export const AuthContextProvider = (props: any) => {
 
 	const fetchHandler = async (userId: string) => {
 		try {
-			const response = await fetch(back_url + `/users/profile/${userId}`, {
+			const response = await fetch(`http://${window.location.hostname}:3000` + `/users/profile/${userId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
@@ -151,7 +150,6 @@ export const AuthContextProvider = (props: any) => {
 				},
 			});
 			const data = await response.json();
-			console.log("DATA DANS LGOUT", data)
 			sendMessage("showUsersList", data);
 			sendMessage("logout", data);
 			if (response.ok) {

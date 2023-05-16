@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 import AuthContext from '../store/AuthContext';
 import { useContext } from "react";
 import SideBar from '../components/SideBar'
-import style from '../style/Menu.module.css'
+import '../style/Menu.module.css'
 import { TextField } from '@mui/material';
 import Switch2FA from '../components/settings/Switch2FA';
 import ButtonSettings from '../components/settings/ButtonSettings';
@@ -121,7 +121,7 @@ const Setting = () => {
 
 	return(
 		<>
-		<div className={style.mainPos}>
+		<div className="mainPos">
 			<SideBar title="Settings" />
 		<div className="contain-set">
 			<div className="section">

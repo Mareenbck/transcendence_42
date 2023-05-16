@@ -10,6 +10,13 @@ function Home() {
 	const authenticating = localStorage.getItem('authenticating');
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+	const BACK = process.env.VITE_BACKEND_URL
+	// const BACK3 = import.meta.env.VITE_BACKEND_URL
+	const BACK2 = `http://${window.location.hostname}:3000`
+	console.log("BACKK   ", BACK)
+	console.log("BACKK22   ", BACK2)
+	// console.log("BACKK33   ", BACK3)
+
 	useEffect(() => {
 		if (authCtx.isLoggedIn && !authCtx.is2FA) {
 			navigate('/menu');
@@ -20,7 +27,9 @@ function Home() {
 	}, [authCtx.isLoggedIn, navigate, isAuthenticated]);
 
 	const login42 = async () => {
-		const response = await fetch(back_url + "/auth/42", {method: 'GET'});
+		console.log("window.location.hostname   ", window.location.hostname)
+		const response = await fetch(`http://${window.location.hostname}:3000` + "/auth/42", {method: 'GET'});
+		console.log("response    ", response)
 		const url = await response.json();
 		const options = 'toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=800';
 		setIsAuthenticated(true);
