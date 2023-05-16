@@ -60,7 +60,7 @@ function AuthForm() {
 			})
 			return;
 		}
-		const url = process.env.BACKEND_URL + '/auth/signin';
+		const url = import.meta.env.VITE_BACKEND_URL + '/auth/signin';
 			const fetchHandleLogin = async () => {
 				try {
 				const response = await fetch(url, {

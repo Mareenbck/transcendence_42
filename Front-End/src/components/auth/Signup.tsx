@@ -48,7 +48,7 @@ function Signup() {
 			email: email,
 			password: password,
 		};
-		const url = process.env.BACKEND_URL + '/auth/signup';
+		const url = import.meta.env.VITE_BACKEND_URL + '/auth/signup';
 		const fetchHandler = async () => {
 			try {
 				const options = {

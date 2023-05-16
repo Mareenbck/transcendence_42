@@ -30,7 +30,7 @@ const FriendsList = (props: any) => {
 	const handleDemand = async (event: FormEvent, receiverId: number) => {
 		event.preventDefault();
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/friendship/create`,{
+			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/friendship/create`,{
 				method: 'POST',
 				headers: {
 				  'Content-Type': 'application/json',
