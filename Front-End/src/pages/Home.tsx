@@ -9,13 +9,13 @@ function Home() {
 	const authCtx = useContext(AuthContext);
 	const authenticating = localStorage.getItem('authenticating');
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
+	// console.log(process.env)
 	const BACK = process.env.VITE_BACKEND_URL
-	// const BACK3 = import.meta.env.VITE_BACKEND_URL
-	const BACK2 = `http://${window.location.hostname}:3000`
 	console.log("BACKK   ", BACK)
+	const BACK2 = `http://${window.location.hostname}:3000`
 	console.log("BACKK22   ", BACK2)
-	// console.log("BACKK33   ", BACK3)
+	const BACK3 = import.meta.env.VITE_BACKEND_URL
+	console.log("BACKK33   ", BACK3)
 
 	useEffect(() => {
 		if (authCtx.isLoggedIn && !authCtx.is2FA) {

@@ -27,6 +27,8 @@ COPY --chown=node:node --from=dev /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node . .
 # COPY --chown=node:node ../.env .
 
+RUN npm install
+
 RUN npm run build
 
 FROM nginx:latest AS production

@@ -42,10 +42,10 @@ services:
     volumes:
       - front_node_modules:/usr/src/app/node_modules
       - ./.env:/usr/src/app/.env
-      # - ./Front-End:/usr/src/app
+      - ./Front-End:/usr/src/app
     environment:
       - REACT_APP_BACKEND_URL='${SITE_URL}:${BACK_PORT}'
-      - VITE_BACKEND_URL='${SITE_URL}:${BACK_PORT}'
+      - VITE_BACKEND_URL=http://10.11.7.5:3000
     ports:
       - 8080:8080
     env_file:
