@@ -13,7 +13,7 @@ services:
       - back_node_modules:/usr/src/app/node_modules
     # command: npm run start:dev
     env_file:
-        - ./Back-End/.env
+        - ./Front-End/.env
     ports:
       - 5555:5555
       - 3000:3000
@@ -30,7 +30,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ./Back-End/.env
+      - ./Front-End/.env
     networks:
       - transcendence
 
