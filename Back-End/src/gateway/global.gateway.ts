@@ -18,8 +18,10 @@ import { UserDto } from 'src/user/dto/user.dto';
 import { ChatroomService } from 'src/chat/chatroom2/chatroom2.service';
 
 @WebSocketGateway(
-  8001, { cors: {origin: process.env.FRONTEND_URL}}
-)
+  // { namespace: '/trans-namespace', cors: true }
+    { cors: ["*"], origin: ["*"], path: "", }
+    )
+
 
 export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(GlobalGateway.name);

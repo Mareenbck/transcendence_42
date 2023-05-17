@@ -18,7 +18,7 @@ const UserProfile = (props: any) => {
 
 	const getUser = async (id: string) => {
 		try {
-			const response = await fetch(process.env.BACKEND_URL + `/users/friends/${id}`, {
+			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/users/friends/${id}`, {
 				method: "GET",
 			})
 			if (response.ok) {

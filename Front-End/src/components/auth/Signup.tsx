@@ -48,15 +48,15 @@ function Signup() {
 			email: email,
 			password: password,
 		};
-		const url = process.env.BACKEND_URL + '/auth/signup';
+		const url = import.meta.env.VITE_BACKEND_URL + '/auth/signup';
 		const fetchHandler = async () => {
+			console.log("/auth/signup", url)
 			try {
 				const options = {
 					method: 'POST',
 					body: JSON.stringify(userData),
-					headers: {
-						'Content-Type': 'application/json',
-					},
+					headers: {'Content-Type': 'application/json',},
+					mode: 'cors' as RequestMode,
 				};
 				const response = await fetch(url, options);
 				const result = await response.json();

@@ -17,7 +17,7 @@ const Friends = () => {
 	const playingFriends = friends.filter(friend => friend.status === 'PLAYING'&& friend.id !== currentUserId);
 
 	useEffect(() => {
-		const url = process.env.BACKEND_URL + "/users/";
+		const url = import.meta.env.VITE_BACKEND_URL + "/users/";
 		const fetchUsers = async () => {
 			const response = await fetch(
 				url,
