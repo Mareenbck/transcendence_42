@@ -74,7 +74,7 @@ const joinChannel = async (e: FormEvent, channelId: number) => {
 		return;
 	}
     try {
-        const resp = await fetch(import.meta.env.VITE_BACKEND_URL + `/chatroom2/join`, {
+        const resp = await fetch("http://" + window.location.hostname + ':3000'  + `/chatroom2/join`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",

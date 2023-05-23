@@ -21,7 +21,7 @@ const UsersChat = (props: any) => {
 	const playingFriends: UserChat[] = friends.filter((friend: UserChat) => friend.status === 'PLAYING' && friend.id !== parseInt(currentUserId));
 
 
-	const url = import.meta.env.VITE_BACKEND_URL + "/users/block/users/";
+	const url = "http://" + window.location.hostname + ':3000'  + "/users/block/users/";
 	const fetchUsers = async () => {
 		const response = await fetch(
 			url,

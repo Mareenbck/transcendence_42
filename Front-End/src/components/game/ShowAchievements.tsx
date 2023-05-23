@@ -36,7 +36,7 @@ const ShowAchievements = (props: any) => {
 		nameIconClass = "name-icon-s";
 	}
 
-	const url = import.meta.env.VITE_BACKEND_URL + `/users/${id}/achievements`;
+	const url = "http://" + window.location.hostname + ':3000'  + `/users/${id}/achievements`;
 	const fetchUserAchievements = async () => {
 		const response = await fetch(
 			url,
@@ -61,7 +61,7 @@ const ShowAchievements = (props: any) => {
 
 	const fetchIcon = async (id: number) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/users/${id}/icon`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000' + `/users/${id}/icon`, {
 				method: 'GET',
 			});
 			if (response.ok) {

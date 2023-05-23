@@ -20,7 +20,7 @@ const Setting = () => {
 		const formData = new FormData();
 		formData.append("file", file);
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/users/upload`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/users/upload`, {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${authCtx.token}`,
@@ -43,7 +43,7 @@ const Setting = () => {
 	const handleRestore = async (event: FormEvent) => {
 		event.preventDefault();
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL+ `/users/restore`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000' + `/users/restore`, {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${authCtx.token}`,
@@ -71,7 +71,7 @@ const Setting = () => {
 		}
 		const userId = authCtx.userId;
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL+ `/users/${userId}/username`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000' + `/users/${userId}/username`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const Setting = () => {
 
 	const fetchIs2FA = async (token: string) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/auth/2fa`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/auth/2fa`, {
 				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${token}`,
