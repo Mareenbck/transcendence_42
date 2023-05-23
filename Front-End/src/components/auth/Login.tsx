@@ -79,7 +79,7 @@ function AuthForm() {
 					const token = dataResponse.access_token;
 					const decodedToken: any = jwtDecode(token);
 					const userId = decodedToken.sub;
-					// localStorage.setItem('token', token);
+					localStorage.setItem('token', token);
 					localStorage.setItem('userId', userId);
 					const twoFA: any = await authCtx.login(dataResponse.access_token, userId, dataResponse.refresh_token);
 					if (twoFA) {
