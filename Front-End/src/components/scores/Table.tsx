@@ -72,9 +72,9 @@ const Table = (props: any) => {
 
   var sorted = [...allUsers];
   sorted.sort((a, b) => (getScore(b) - getScore(a)));
-  let firts = sorted[0];
-  let second = sorted[1];
-  var third = sorted[2];
+  // let firts = sorted[0];
+  // let second = sorted[1];
+  // var third = sorted[2];
 
   function handleNewGame(event: React.FormEvent<HTMLFormElement>): void {
     throw new Error('Function not implemented.');
@@ -94,10 +94,10 @@ const Table = (props: any) => {
         </ListItem >
 
         <div style={{width:"600px", height:"500px",overflow: "scroll"}}>  
-        {sorted.map((g) => (
+        {sorted?.map((g) => (
             <ListItem  className="lineTable" key={g?.id}>
               <div className="container-match">
-                  <span ><MyAvatar authCtx={authCtx } id={g.id} style="s" avatar={g.avatar} ftAvatar={g.ftAvatar}/></span>
+                  <span ><MyAvatar authCtx={authCtx } id={g?.id} style="s" avatar={g?.avatar} ftAvatar={g?.ftAvatar}/></span>
                   <p >{g?.username}</p>
                   <p >{getNbGames(g)}</p>
                   <p >{getScore(g)}</p>
