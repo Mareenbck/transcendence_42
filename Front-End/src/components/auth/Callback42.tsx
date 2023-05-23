@@ -29,7 +29,7 @@ function Callback42() {
 					localStorage.setItem('ftAvatar', ftAvatar);
 					localStorage.setItem('is2FA', data.user.twoFA);
 					const twofa: any = await authCtx.login(data.newtokens.access_token, data.user.id, data.newtokens.refresh_token);
-					if (twofa) {
+					if (data.user.twoFA) {
 						window.close();
 						window.opener.location.href = "/auth/2fa";
 					} else {
