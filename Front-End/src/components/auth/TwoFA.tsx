@@ -20,7 +20,7 @@ export function TwoFaForm (){
 			alert("Le code saisi est vide");
 			return;
 		}
-		const response = await fetch(import.meta.env.VITE_BACKEND_URL+ '/auth/2fa/authenticate', {
+		const response = await fetch("http://" + window.location.hostname + ':3000' + '/auth/2fa/authenticate', {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -42,7 +42,7 @@ export function TwoFaForm (){
 	}
 
 	async function generateQRCode() {
-		const response = await fetch(import.meta.env.VITE_BACKEND_URL+ '/auth/2fa/generate', {
+		const response = await fetch("http://" + window.location.hostname + ':3000' + '/auth/2fa/generate', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

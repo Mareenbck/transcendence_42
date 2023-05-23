@@ -47,7 +47,7 @@ export function NavbarChannel(props: any) {
 
 	const inviteUserOnChannel = async (channelId: number, invitedId: number) => {
 		try {
-			const resp = await fetch(import.meta.env.VITE_BACKEND_URL + `/chatroom2/invite_channel`, {
+			const resp = await fetch("http://" + window.location.hostname + ':3000'  + `/chatroom2/invite_channel`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -68,7 +68,7 @@ export function NavbarChannel(props: any) {
 
 	const addAdminToChannel = async (channelId: number, userId: number) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/chatroom2/${channelId}/admin/${userId}`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/chatroom2/${channelId}/admin/${userId}`, {
 			  method: 'POST',
 			  headers: {
 				'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ export function NavbarChannel(props: any) {
 
 	const leaveChannel = async (channelId: number) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/chatroom2/leave_channel`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/chatroom2/leave_channel`, {
 			  method: 'POST',
 			  headers: {
 				'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ export function NavbarChannel(props: any) {
 
 	const deleteChannel = async (channelId: string) => {
         try {
-            const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/chatroom2/${channelId}/delete`, {
+            const response = await fetch("http://" + window.location.hostname + ':3000'  + `/chatroom2/${channelId}/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ export function NavbarChannel(props: any) {
 		e.preventDefault();
 		const newPassword = passwordInputRef.current?.value;
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/chatroom2/${props.chatroom.id}/newpassword`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/chatroom2/${props.chatroom.id}/newpassword`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

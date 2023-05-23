@@ -10,7 +10,7 @@ function Callback42() {
 
 		const fetchCall = async () => {
 			try {
-					const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/auth/42/callback', {
+					const response = await fetch("http://" + window.location.hostname + ':3000'  + '/auth/42/callback', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'

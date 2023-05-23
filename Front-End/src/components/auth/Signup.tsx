@@ -48,9 +48,8 @@ function Signup() {
 			email: email,
 			password: password,
 		};
-		const url = import.meta.env.VITE_BACKEND_URL + '/auth/signup';
+		const url = "http://" + window.location.hostname + ':3000' + '/auth/signup';
 		const fetchHandler = async () => {
-			console.log("/auth/signup", url)
 			try {
 				const options = {
 					method: 'POST',

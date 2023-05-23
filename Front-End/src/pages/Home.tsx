@@ -19,7 +19,7 @@ function Home() {
 	}, [authCtx.isLoggedIn, navigate, isAuthenticated]);
 
 	const login42 = async () => {
-		const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/auth/42", {method: 'GET'});
+		const response = await fetch("http://" + window.location.hostname + ':3000'  + "/auth/42", {method: 'GET'});
 		const url = await response.json();
 		const options = 'toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=800';
 		setIsAuthenticated(true);

@@ -23,7 +23,7 @@ const ChannelInvitations = (props: any) => {
 
 	const getInvitations = async () => {
 		const response = await fetch(
-			import.meta.env.VITE_BACKEND_URL + "/chatroom2/pending_invitations", {
+			"http://" + window.location.hostname + ':3000'  + "/chatroom2/pending_invitations", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -42,7 +42,7 @@ const ChannelInvitations = (props: any) => {
 
 	const updateDemand = async (invitId: number, res: string) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/chatroom2/invit_update`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/chatroom2/invit_update`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
