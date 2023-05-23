@@ -195,6 +195,7 @@ export class GameService {
 		if(this.searchPair(authorId, playerId)){
 			this.userSockets.emitToId(authorId,'status', GameStatus.GAME );
 			this.userSockets.emitToId(playerId,'status', GameStatus.GAME );
+			this.userSockets.emitToId(playerId,'winner', null);
 			const playerR: UserDto = await this.userService.getUser(authorId);
 			const playerL: UserDto = await this.userService.getUser(playerId);
 			this.addNewRoom(playerR, playerL);
