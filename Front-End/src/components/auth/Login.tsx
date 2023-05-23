@@ -62,7 +62,7 @@ function AuthForm() {
 			})
 			return;
 		}
-		const url = BACK_URL + '/auth/signin';
+		const url = `http://${window.location.hostname}:3000` + '/auth/signin';
 			const fetchHandleLogin = async () => {
 				try {
 				const response = await fetch(url, {
@@ -76,6 +76,8 @@ function AuthForm() {
 					},
 				});
 				const dataResponse = await response.json();
+					console.log("dataResponse")
+					console.log(dataResponse)
 				setIsLoading(false);
 				if (response.ok) {
 					const token = dataResponse.access_token;

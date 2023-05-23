@@ -5,34 +5,22 @@ import path from 'path';
 import { config as dotenvConfig } from 'dotenv';
 import envCompatible from 'vite-plugin-env-compatible';
 
-
-https://vitejs.dev/config/
-// console.log("OLA ")
-dotenv.config({ path: '../.env' });
-// dotenv.config()
-// dotenv.config();
+// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-	// Load env file based on `mode` in the current working directory.
-	// Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
-	// const env = loadEnv(mode, process.cwd(), '');
-	const env = loadEnv(mode, path.resolve(process.cwd(), '../'), '');
+	const envDir = path.resolve(__dirname, "../");
+	const env = Object.assign(process.env, loadEnv(mode, envDir, ""));
 
 	return {
 		server: {
 			host: true,
 			port: 8080,
 		},
-		plugins: [
-			react(),
-			// envCompatible({
-			// 	dotenvDir: '../',
-			//   }),
-			],
+		plugins: [react()],
 		resolve: {
 			alias: [{ find: '@', replacement: '/src' }],
 		},
 		define: {
-			'process.env': process.env,
+			VITE_BACKEND_URL: env.VITE_BACKEND_URL,
 	 	 },
 	}
   })

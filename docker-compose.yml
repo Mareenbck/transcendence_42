@@ -1,4 +1,4 @@
-version: "3.9"  # optional since v1.27.0
+version: "3.9"
 
 services:
   api:
@@ -11,7 +11,6 @@ services:
     volumes:
       - ./Back-End:/usr/src/app
       - back_node_modules:/usr/src/app/node_modules
-    # command: npm run start:dev
     env_file:
       - ./.env
     ports:
@@ -41,15 +40,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - front_node_modules:/usr/src/app/node_modules
-      - ./.env:/usr/src/app/.env
-      - ./Front-End:/usr/src/app
     environment:
-      - REACT_APP_BACKEND_URL='${SITE_URL}:${BACK_PORT}'
-      - VITE_BACKEND_URL=http://10.11.7.5:3000
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL}
     ports:
       - 8080:8080
-    env_file:
-      - ./.env
     networks:
       - transcendence
 
