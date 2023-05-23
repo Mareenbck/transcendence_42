@@ -230,7 +230,7 @@ function Game() {
 // action when clicking on "PlayGame"
     const handleClick = (roomN: number) => {
         gamesWinner.winner = null;
-console.log("winner", )
+console.log("winner", gamesWinner.winner)
         sendMessage("playGame", {roomN: roomN} as any);
         setCurRoom(roomN);
     };

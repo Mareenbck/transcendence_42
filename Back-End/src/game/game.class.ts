@@ -222,8 +222,8 @@ export class GameRoom {
 		this.winners.playerR = (this.playerR.user == this.winners.winner ? this.winners.winner : this.playerR.user);
 		// console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)
 
-		this.server.to(this.room).emit('winner', { winner: this.winners.winner, playerR:this.winners.playerR, playerL: this.winners.playerL, status: 'winner',});
-		this.server.to(this.room).emit('status', 'winner');
+		this.server.to(this.room).emit('winner', { winner: this.winners.winner, playerR:this.winners.playerR, playerL: this.winners.playerL}); //, status: 'winner',
+		//this.server.to(this.room).emit('status', 'winner');
 
 		// leave room
 // console.log("leave room");
@@ -238,6 +238,9 @@ export class GameRoom {
 // function: run game
 	public run(): void {
 		this.isrunning = true;
+		this.userSockets.emitToId(this.playerL.user.id,'winner', {winner: this.winners.winner});
+		this.userSockets.emitToId(this.playerR.user.id,'winner', {winner: this.winners.winner});
+
 // console.log("game.class.run");
 		this.gameService.updateStatusGame(this.playerL.user.id);
 		this.gameService.updateStatusGame(this.playerR.user.id);
