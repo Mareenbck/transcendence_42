@@ -63,7 +63,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const createDemand = async (receiverId: number, currentId: string) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/friendship/create`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/friendship/create`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ export const FriendContextProvider = (props: any) => {
 	}
 
 	const getDemands = async (token: string, currentId: string) => {
-		const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/friendship/received", {
+		const response = await fetch("http://" + window.location.hostname + ':3000'  + "/friendship/received", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -104,7 +104,7 @@ export const FriendContextProvider = (props: any) => {
 	}
 
 	const getFriends = async (token: string, currentId: string) => {
-		const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/friendship/friends", {
+		const response = await fetch("http://" + window.location.hostname + ':3000' + "/friendship/friends", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -124,7 +124,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const fetchAvatar = async (userId: number) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/friendship/${userId}/avatar`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/friendship/${userId}/avatar`, {
 				method: 'GET',
 			});
 			if (response.ok) {
@@ -144,7 +144,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const removeFriend = async (friendId: number, currentId: string, token: string) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/friendship/delete`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/friendship/delete`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ export const FriendContextProvider = (props: any) => {
 
 	const updateDemand = async (demandId: number, res: string, token: string) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/friendship/update`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000' + `/friendship/update`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

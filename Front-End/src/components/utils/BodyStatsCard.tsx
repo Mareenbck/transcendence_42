@@ -26,7 +26,7 @@ const BodyStatsCard = (props: any) => {
 		fetchData();
 	}, [id])
 
-	const url = import.meta.env.VITE_BACKEND_URL + `/game/level/${id}`;
+	const url = "http://" + window.location.hostname + ':3000'  + `/game/level/${id}`;
 	const fetchUserLevel = async () => {
 		const response = await fetch(url,{
 				method: "GET",
@@ -43,7 +43,7 @@ const BodyStatsCard = (props: any) => {
 	}
 
 	const fetchUserRank = async (id: number) => {
-		const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/game/rank/${id}`,{
+		const response = await fetch("http://" + window.location.hostname + ':3000'  + `/game/rank/${id}`,{
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",

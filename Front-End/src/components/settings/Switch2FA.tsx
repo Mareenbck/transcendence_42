@@ -26,7 +26,7 @@ const Switch2FA = (props: any) => {
 	const activate2FA = async () => {
 		// event.preventDefault();
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/auth/2fa/turn-on`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/auth/2fa/turn-on`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ const Switch2FA = (props: any) => {
 	const desactivate2FA = async () => {
 		// event.preventDefault();
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/auth/2fa/turn-off`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/auth/2fa/turn-off`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

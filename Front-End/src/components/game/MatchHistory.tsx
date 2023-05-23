@@ -13,7 +13,7 @@ const MatchHistory = (props: any) => {
 	const authCtx = useContext(AuthContext)
 
 	useEffect(() => {
-		const url = import.meta.env.VITE_BACKEND_URL + `/game/allGames/${id}`;
+		const url = "http://" + window.location.hostname + ':3000' + `/game/allGames/${id}`;
 		const fetchUserGames = async () => {
 			const response = await fetch(url,{
 				method: "GET",

@@ -76,7 +76,7 @@ export const AuthContextProvider = (props: any) => {
 			return ;
 		}
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/users/${userId}/avatar`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/users/${userId}/avatar`, {
 				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -97,7 +97,7 @@ export const AuthContextProvider = (props: any) => {
 
 	const fetchHandler = async (userId: string) => {
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL+ `/users/profile/${userId}`, {
+			const response = await fetch("http://" + window.location.hostname + ':3000' + `/users/profile/${userId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`
 				}
@@ -117,7 +117,7 @@ export const AuthContextProvider = (props: any) => {
 	const refreshHandler = async () => {
 		if (userIsLoggedIn) {
 			try {
-				const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/auth/refresh', {
+				const response = await fetch("http://" + window.location.hostname + ':3000'  + '/auth/refresh', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ export const AuthContextProvider = (props: any) => {
 	const fetchLogout = async () => {
 		localStorage.clear();
 		try {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/auth/logout', {
+			const response = await fetch("http://" + window.location.hostname + ':3000'  + '/auth/logout', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

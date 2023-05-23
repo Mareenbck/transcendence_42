@@ -6,7 +6,7 @@ export class Fetch {
 		try {
 			if (par2 !== undefined && par !== undefined) { par = par + '\/' + par2; }
 			if (par !== undefined) { endPoint = endPoint + '\/' + par; }
-			const resp = await fetch(import.meta.env.VITE_BACKEND_URL + `/${endPoint}`, {
+			const resp = await fetch("http://" + window.location.hostname + ':3000'  + `/${endPoint}`, {
 				method: method,
 				headers: {
 					"Content-Type": "application/json",
@@ -26,7 +26,7 @@ export class Fetch {
 
 	static async postBlock(token: string, him: number, me: number) {
 		try {
-			const resp = await fetch(import.meta.env.VITE_BACKEND_URL + `/users/block`, {
+			const resp = await fetch("http://" + window.location.hostname + ':3000'  + `/users/block`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
@@ -47,7 +47,7 @@ export class Fetch {
 
 	static async postUnblock(token: string, him: number, me: number) {
 		try {
-			const resp = await fetch(import.meta.env.VITE_BACKEND_URL + `/users/unblock`, {
+			const resp = await fetch("http://" + window.location.hostname + ':3000'  + `/users/unblock`, {
 				method: "POST",
 				headers: {
 					"Content-type": "application/json",
