@@ -36,7 +36,6 @@ function Callback42() {
 						window.close();
 						authCtx.setUserIsLoggedIn(true);
 						localStorage.setItem('userIsLoggedIn', JSON.stringify(true));
-
 					}
 				} else {
 					console.log("Le code saisi est incorrect.");
