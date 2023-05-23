@@ -34,6 +34,9 @@ function Callback42() {
 						window.opener.location.href = "/auth/2fa";
 					} else {
 						window.close();
+						authCtx.setUserIsLoggedIn(true);
+						localStorage.setItem('userIsLoggedIn', JSON.stringify(true));
+
 					}
 				} else {
 					console.log("Le code saisi est incorrect.");

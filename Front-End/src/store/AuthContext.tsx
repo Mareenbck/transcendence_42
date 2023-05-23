@@ -14,7 +14,8 @@ const defaultValue = {
 	updateUsername: (newUsername: string) => {},
 	fetchAvatar: async (userId: string) => {},
 	login: async (token: string, userId: string, refreshToken: string) => {},
-	logout: () => { }
+	logout: () => { },
+	setUserIsLoggedIn: (token: boolean) => { }
 };
 
 export const AuthContext = createContext(defaultValue);
@@ -150,7 +151,6 @@ export const AuthContextProvider = (props: any) => {
 				},
 			});
 			const data = await response.json();
-			console.log("DATA DANS LGOUT", data)
 			sendMessage("showUsersList", data);
 			sendMessage("logout", data);
 			if (response.ok) {
@@ -160,6 +160,8 @@ export const AuthContextProvider = (props: any) => {
 				setAvatar("");
 				setEmail("");
 				localStorage.clear();
+				setUserIsLoggedIn(false);
+				localStorage.removeItem('userIsLoggedIn');
 				return data;
 			}
 		} catch (error) {
@@ -183,7 +185,12 @@ export const AuthContextProvider = (props: any) => {
 	};
 
 	//si presence du token -> logged
-	const userIsLoggedIn = !!token;
+	// const userIsLoggedIn = !!token;
+	const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(() => {
+		const storedValue = localStorage.getItem('userIsLoggedIn');
+		return storedValue ? JSON.parse(storedValue) : false;
+	});
+
 	console.log("CONTEXT >>userIsLoggedIn---->");
 	console.log(userIsLoggedIn);
 	const contextValue: any = {
@@ -202,6 +209,7 @@ export const AuthContextProvider = (props: any) => {
 		fetchAvatar: fetchAvatar,
 		updateAvatar: updateAvatar,
 		updateUsername: updateUsername,
+		setUserIsLoggedIn: setUserIsLoggedIn,
 	};
 
 	return (

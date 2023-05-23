@@ -30,12 +30,14 @@ export function TwoFaForm (){
 		});
 		const data = await response.json();
 		if (data.access_token) {
+			authCtx.setUserIsLoggedIn(true);
+			localStorage.setItem('userIsLoggedIn', JSON.stringify(true));
 			setRedirectToHome(true);
 		} else {
 			alert("Le code saisi est incorrect.");
 		}
 	}
-	
+
 	const handleLogin = (e: FormEvent) => {
 		sendMessage("login", authCtx.userId as any)
 		handleSubmit(e)
