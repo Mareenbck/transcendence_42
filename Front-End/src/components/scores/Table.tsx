@@ -93,6 +93,7 @@ const Table = (props: any) => {
             <p>Victory</p>
         </ListItem >
 
+        <div style={{width:"600px", height:"500px",overflow: "scroll"}}>  
         {sorted.map((g) => (
             <ListItem  className="lineTable" key={g?.id}>
               <div className="container-match">
@@ -104,6 +105,7 @@ const Table = (props: any) => {
               </div>
             </ListItem>
         ))}
+        </div>
 
 
         </>
