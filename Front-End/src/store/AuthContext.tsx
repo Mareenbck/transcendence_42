@@ -184,8 +184,8 @@ export const AuthContextProvider = (props: any) => {
 
 	//si presence du token -> logged
 	const userIsLoggedIn = !!token;
-	console.log("CONTEXT >>userIsLoggedIn---->");
-	console.log(userIsLoggedIn);
+	// console.log("CONTEXT >>userIsLoggedIn---->");
+	// console.log(userIsLoggedIn);
 	const contextValue: any = {
 		token: token,
 		userId: userId,
