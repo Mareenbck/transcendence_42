@@ -9,7 +9,7 @@ const defaultValue = {
 	avatar: '',
 	ftAvatar: '',
 	email: '',
-	is2FA: false,
+	is2FA: true,
 	updateAvatar: (avatarUrl: string) => {},
 	updateUsername: (newUsername: string) => {},
 	fetchAvatar: async (userId: string) => {},
@@ -37,7 +37,7 @@ export const AuthContextProvider = (props: any) => {
 
 	useEffect(() => {
 		if (userId) {
-			fetchHandler(userId);
+			fetchHandler(userId, !token ? '' : token);		
 		}
 	}, [username])
 
@@ -95,7 +95,7 @@ export const AuthContextProvider = (props: any) => {
 		}
 	}
 
-	const fetchHandler = async (userId: string) => {
+	const fetchHandler = async (userId: string, access_token: string) => {		
 		try {
 			const response = await fetch(import.meta.env.VITE_BACKEND_URL+ `/users/profile/${userId}`, {
 				headers: {
@@ -172,7 +172,7 @@ export const AuthContextProvider = (props: any) => {
 		setRefreshToken(refreshToken);
 		localStorage.setItem('token', token);
 		localStorage.setItem('Rtoken', refreshToken);
-		const data = await fetchHandler(userId);
+		const data = await fetchHandler(userId, token);
 		setIs2FA(data.twoFA);
 		return data.twoFA;
 	};
