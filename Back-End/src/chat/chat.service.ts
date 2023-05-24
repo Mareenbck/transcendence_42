@@ -139,13 +139,13 @@ export class ChatService {
 
     chatJoinedChannel: any = (channelId: number , socketId: string) => {
         this.server.to(socketId).emit('joinedChannelR2', channelId);
-  //  this.server.emit('changeParticipants');
+//    this.server.emit('changeParticipants');
 	};
 
     chatLeavedChannel: any = (channelId: number , socketId: string) => {
     //    console.log("leaved in chat server", channelId);
         this.server.to(socketId).emit('leavedChannel', channelId);
-    //    this.server.emit('changeParticipants');
+//        this.server.emit('changeParticipants');
     };
 
     invitedToPriv: any = (channelId: number, invitedId: number, socketId: string) => {
@@ -155,7 +155,11 @@ export class ChatService {
 
     acceptedToPriv: any = (channelId: number, socketId: string) => {
         this.server.to(socketId).emit('newPriv', channelId);
+<<<<<<< HEAD
        this.server.emit('changeParticipants');
+=======
+//        this.server.emit('changeParticipants');
+>>>>>>> 1a41cae (delchatroom fix)
     };
 
     logout: any = () => {

@@ -163,8 +163,8 @@ export default function CurrentChannel(props: any) {
 
 	useEffect(() => {
 		addListener("deleteChannel", (channelId: any) => {
-			if (currentChatroom.id === channelId.channelId)
-			{	handleDeleteChannel()};
+		if (+currentChatroom.id === +channelId)
+		{ handleDeleteChannel()};
 		});
 	});
 
