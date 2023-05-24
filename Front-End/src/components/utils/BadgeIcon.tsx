@@ -6,30 +6,30 @@ import Button from '@mui/material/Button';
 
 const customStylesL = `
 	.custom-icon.icon-l {
-		width: 80px;
-		height: 80px;
+		width: 40px;
+		height: 40px;
 		background-color: black;
 	}
 `;
 
 const customStylesM = `
 	.custom-icon.icon-m {
-		width: 65px;
-		height: 65px;
+		width: 30px;
+		height: 30px;
 	}
 `;
 
 const customStyleS = `
 	.custom-icon.icon-s {
-		width: 40px;
-		height: 40px;
+		width: 25px;
+		height: 25px;
 	}
 `;
 
 const customStyleXS = `
 	.custom-icon.icon-xs {
-		width: 30px;
-		height: 30px;
+		width: 20px;
+		height: 20px;
 	}
 `;
 

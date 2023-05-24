@@ -13,6 +13,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AuthContext from '../store/AuthContext';
 import NotificationDemands from './friends/NotificationDemands';
 import useSocket from '../service/socket';
+import { GameStatus } from './game/interface_game';
 
 export default function MyAccountMenu(props: any) {
 	const [sendMessage, addListener] = useSocket();
@@ -33,6 +34,7 @@ export default function MyAccountMenu(props: any) {
 	}, [])
 
 	const handleLogout = async () => {
+		await sendMessage("exitGame", { user: authCtx.userId, status: GameStatus.GAME } as any);
 		authCtx.logout();
 		sendMessage("logout", authCtx.userId as any);
 	};
