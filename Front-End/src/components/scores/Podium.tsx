@@ -14,8 +14,6 @@ const Podium = (props: any) => {
   const [allUsers, setAllUsers] = useState <UserScore[]> ([]);
 
   const authCtx = useContext(AuthContext);
-  // const user = useContext(AuthContext);
-  // const id = user.userId;
 
   //aller chercher les games
   async function fetchGames() {

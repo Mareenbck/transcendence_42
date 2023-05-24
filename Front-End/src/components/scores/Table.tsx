@@ -1,11 +1,9 @@
-import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../store/AuthContext';
 import '../../style/Scores.css';
-// import UserChart from './UserChart'
 import Fetch from "../../interfaces/Fetch"
 import MyAvatar from '../user/Avatar';
 import {UserScore, Game, Games} from "../../interfaces/iChat";
-// import Card from "../../components/utils/Card";
 import { ListItem } from '@mui/material';
 import '../../style/Profile.css'
 import '../../style/Table.css'
@@ -44,23 +42,23 @@ const Table = (props: any) => {
   //score/ user
   const getNbGames = (user: UserScore) => {
     if (games) {
-      const p1 = games.filter((u: Games) => +u.playerOneId === +user.id);
-      const p2 = games.filter((u: Games) => +u.playerTwoId === +user.id);
+      const p1 = games.filter((u: Games) => +u.playerOneId === +user?.id);
+      const p2 = games.filter((u: Games) => +u.playerTwoId === +user?.id);
       return (p2.length + p1.length);
     }
   }
 
   const getWinner = (user: UserScore) => {
     if (games) {
-      return ((games.filter((u: Games) => +u.winnerId === +user.id).length));
+      return ((games.filter((u: Games) => +u.winnerId === +user?.id).length));
     }
   }
 
   const getScore = (user: UserScore): any=> {
     if (games) {
-      const p1 = games.filter((u: Games) => +u.playerOneId === +user.id).length;
-      const p2 = games.filter((u: Games) => +u.playerTwoId === +user.id).length;
-      const win = games.filter((u: Games) => +u.winnerId === +user.id).length;
+      const p1 = games.filter((u: Games) => +u.playerOneId === +user?.id).length;
+      const p2 = games.filter((u: Games) => +u.playerTwoId === +user?.id).length;
+      const win = games.filter((u: Games) => +u.winnerId === +user?.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
 
       if (total < 0)
@@ -72,9 +70,6 @@ const Table = (props: any) => {
 
   var sorted = [...allUsers];
   sorted.sort((a, b) => (getScore(b) - getScore(a)));
-  // let firts = sorted[0];
-  // let second = sorted[1];
-  // var third = sorted[2];
 
   function handleNewGame(event: React.FormEvent<HTMLFormElement>): void {
     throw new Error('Function not implemented.');
