@@ -155,11 +155,7 @@ export class ChatService {
 
     acceptedToPriv: any = (channelId: number, socketId: string) => {
         this.server.to(socketId).emit('newPriv', channelId);
-<<<<<<< HEAD
-       this.server.emit('changeParticipants');
-=======
 //        this.server.emit('changeParticipants');
->>>>>>> 1a41cae (delchatroom fix)
     };
 
     logout: any = () => {

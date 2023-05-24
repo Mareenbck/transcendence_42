@@ -85,10 +85,6 @@ export function NavbarChannel(props: any) {
 
 	const leaveChannel = async (channelId: number) => {
 		try {
-<<<<<<< HEAD
-			// console.log("inNavBAR leave channel");
-=======
->>>>>>> 1a41cae (delchatroom fix)
 			const response = await fetch("http://" + window.location.hostname + ':3000'  + `/chatroom2/leave_channel`, {
 			  method: 'POST',
 			  headers: {
@@ -98,10 +94,6 @@ export function NavbarChannel(props: any) {
 			  body: JSON.stringify({ channelId: channelId }),
 			});
 			const data = await response.json();
-<<<<<<< HEAD
-			// console.log("NAVBAR LEAVE", data, "eeeeeee", channelId)
-=======
->>>>>>> 1a41cae (delchatroom fix)
 			sendMessage("leaveChannel", data);
 			sendMessage("showUsersList", data);
 			sendMessage('toMute', data.id)
