@@ -56,6 +56,7 @@ const ChannelInvitations = (props: any) => {
 				return "error";
 			}
 			if (res === 'ACCEPTED') {
+				console.log("rrrrrrrrrrrrrrrrrrr invitation", data)
 				sendMessage("acceptedChannelInvite", data);
 			};
 			// sendMessage('toMute', {channelId: invit.chatroom.id})

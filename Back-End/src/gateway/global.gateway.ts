@@ -156,16 +156,16 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   { this.chatService.chatJoinedChannel(data.channelId, socket.id) };
 
   @SubscribeMessage('leaveChannel')
-	async leaveChannel(@MessageBody() data: {channelId: any}, @ConnectedSocket() socket: Socket): Promise<void>
-  { this.chatService.chatLeavedChannel(data.channelId, socket.id) };
+	async leaveChannel(@MessageBody() data: {id: number}, @ConnectedSocket() socket: Socket): Promise<void>
+  { this.chatService.chatLeavedChannel(data.id, socket.id) };
 
   @SubscribeMessage('inviteToPriv')
 	async inviteToPriv(@MessageBody() data: any, @ConnectedSocket() socket: Socket): Promise<void>
   { this.chatService.invitedToPriv(data.chatroomId, data.receiverId, socket.id) };
 
   @SubscribeMessage('acceptedChannelInvite')
-	async acceptedToPriv(@ConnectedSocket() socket: Socket): Promise<void>
-  { this.chatService.acceptedToPriv(socket.id) };
+	async acceptedToPriv( @MessageBody() data: {id: number}, @ConnectedSocket() socket: Socket): Promise<void>
+  { this.chatService.acceptedToPriv(data.id, socket.id) };
 
 //   @SubscribeMessage('logout')
 //   async appLogout(@MessageBody() data: {userId: number}, @ConnectedSocket() socket: Socket): Promise<void>
