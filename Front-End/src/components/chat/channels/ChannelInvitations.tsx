@@ -52,11 +52,10 @@ const ChannelInvitations = (props: any) => {
 			});
 			const data = await response.json();
 			if (!response.ok) {
-				console.log("POST error on /chatroom/update");
+		//		console.log("POST error on /chatroom/update");
 				return "error";
 			}
 			if (res === 'ACCEPTED') {
-				// console.log("rrrrrrrrrrrrrrrrrrr invitation", data)
 				sendMessage("acceptedChannelInvite", data);
 			};
 			// sendMessage('toMute', {channelId: invit.chatroom.id})

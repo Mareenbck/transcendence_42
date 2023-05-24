@@ -7,8 +7,15 @@ import { UpdateChatMessDto } from './dto/update-chatMess.dto';
 export class ChatMessService {
   constructor(private prisma: PrismaService){}
 
-  create({authorId, content, chatroomId, }) {
-    return this.prisma.chatroomMessage.create({data: {authorId, content, chatroomId, }});
+  async create({authorId, content, chatroomId, }) {
+    let mess = null; 
+    const chatroomExists = await this.prisma.chatroom.findUnique({
+      where: { id: chatroomId },
+    });
+    if (chatroomExists) {
+      mess = this.prisma.chatroomMessage.create({data: {authorId, content, chatroomId}});
+    }
+    return mess; 
   }
 
   findAll() {
