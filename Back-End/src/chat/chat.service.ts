@@ -155,7 +155,7 @@ export class ChatService {
 
     acceptedToPriv: any = (channelId: number, socketId: string) => {
         this.server.to(socketId).emit('newPriv', channelId);
-     //   this.server.emit('changeParticipants');
+       this.server.emit('changeParticipants');
     };
 
     logout: any = () => {

@@ -45,12 +45,12 @@
 }
 
 
-
-
-
 .headTable p{
-    padding-left: 30px;
+    /* padding-left: 30px; */
+    padding-left: 35px;
+    padding-right: 35px;
 }
+
 
 .cardPodium{
     padding-top: 0;
