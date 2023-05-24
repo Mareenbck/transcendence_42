@@ -251,7 +251,7 @@ export class AuthService {
 				username: data.login,
 				email: data.email,
 				avatar: '',
-				ftAvatar: data.image.link,
+				ftAvatar: data.image.versions.small,
 			};
 			return profile;
 		} catch (error) {
