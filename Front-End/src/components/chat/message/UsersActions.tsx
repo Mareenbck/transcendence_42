@@ -41,7 +41,7 @@ const UsersAction = (props: any) => {
 				<ListItem key={user.id} className={amIBlocked(user.id)}>
 					<div className='avatar-username-inlist'>
 						<ListItemAvatar>
-							<Avatar variant="rounded" className="users-chatlist-avatar"  src={user.ftAvatar ? user.ftAvatar : user.avatar} />
+							<Avatar variant="rounded" className="users-chatlist-avatar"  src={user.avatar ? user.avatar : user.ftAvatar} />
 						</ListItemAvatar>
 						<div className="dicuss-link" onClick={props.chat.isHeBlocked(user.id) ? () => props.chat.getDirect(user) : undefined}>
 							{user.username}
