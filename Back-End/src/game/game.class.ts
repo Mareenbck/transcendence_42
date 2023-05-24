@@ -228,6 +228,7 @@ export class GameRoom {
 		// remove game by roomN
 		this.gameService.removeRoom(this.roomN);
 	}
+			// console.log("DANS ADD LISNETAN")
 
 // function: run game
 	public run(): void {

@@ -191,8 +191,8 @@ export const AuthContextProvider = (props: any) => {
 		return storedValue ? JSON.parse(storedValue) : false;
 	});
 
-	console.log("CONTEXT >>userIsLoggedIn---->");
-	console.log(userIsLoggedIn);
+	// console.log("CONTEXT >>userIsLoggedIn---->");
+	// console.log(userIsLoggedIn);
 	const contextValue: any = {
 		token: token,
 		userId: userId,
