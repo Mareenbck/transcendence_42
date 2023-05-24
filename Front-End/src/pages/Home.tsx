@@ -9,12 +9,12 @@ function Home() {
 			const url = await response.json();
 			const options = 'toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=800';
 			const loginWindow: any = window.open(url.url, '42 Login', options);
-			const intervalId = setInterval(() => {
-				if (loginWindow.closed) {
-					clearInterval(intervalId);
-					window.location.href = "/menu";
-				}
-			}, 500);
+			// const intervalId = setInterval(() => {
+			// 	if (loginWindow.closed) {
+			// 		clearInterval(intervalId);
+			// 		window.location.href = "/menu";
+			// 	}
+			// }, 500);
 	};
 
 	return (
