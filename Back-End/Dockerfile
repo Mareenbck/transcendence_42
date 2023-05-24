@@ -5,9 +5,9 @@ RUN npm i -g @nestjs/cli
 
 WORKDIR /usr/src/app
 
-ENTRYPOINT ["sh", "-c", "npm install && npm update && npm run build && npm run prisma:generate && npm run prisma:seed && npm run start:prod"]
+ENTRYPOINT ["sh", "-c", "npm install && npm run build && npm run prisma:generate && npm run prisma:seed && npm run start:prod"]
 
-# FROM node:latest AS dev
+# FROM node:latest
 
 # # Create app directory and set it as our working directory. This will be the working directory for your application:
 # WORKDIR /usr/src/app

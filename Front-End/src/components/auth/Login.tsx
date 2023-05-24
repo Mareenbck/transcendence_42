@@ -15,9 +15,9 @@ function AuthForm() {
 	const emailInputRef = useRef<HTMLInputElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 	const usernameLocalStorage = localStorage.getItem("username");
-	
+
 	let navigate = useNavigate();
-	
+
 	const authCtx = useContext(AuthContext);
 	const [error, setError] = useState<ErrorMsg | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -85,6 +85,8 @@ function AuthForm() {
 					if (twoFA) {
 						setIs2FA(true);
 					} else {
+						authCtx.setUserIsLoggedIn(true);
+						localStorage.setItem('userIsLoggedIn', JSON.stringify(true));
 						setIs2FA(false);
 					}
 					setIsAuthenticated(true);
