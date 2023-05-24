@@ -36,6 +36,7 @@ function Callback42() {
 						window.close();
 						authCtx.setUserIsLoggedIn(true);
 						localStorage.setItem('userIsLoggedIn', JSON.stringify(true));
+						window.opener.location.href = "/menu";
 					}
 				} else {
 					console.log("Le code saisi est incorrect.");
