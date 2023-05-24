@@ -265,7 +265,7 @@ export default function InteractiveListe(props: any) {
                 }
                 >
                 <ListItemAvatar>
-                    <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
+                    <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.avatar ? participants.user.avatar : participants.user.ftAvatar} />
                 </ListItemAvatar>
                 <ListItemText
                     primary={participants?.user.username}
@@ -285,7 +285,7 @@ export default function InteractiveListe(props: any) {
                 }
                 >
                 <ListItemAvatar>
-                    <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
+                    <Avatar variant="rounded" className="users-chatlist-avatar" src={participants.user.avatar ? participants.user.avatar : participants.user.ftAvatar} />
                 </ListItemAvatar>
                 <ListItemText
                     primary={participants?.user.username}
@@ -299,7 +299,7 @@ export default function InteractiveListe(props: any) {
             {users.map((participants: any) => (
                 <ListItem key={participants.user.username} className={`username ${isHeBanned(participants.user.id) ? 'banned' : ''}`}>
                 <ListItemAvatar>
-                    <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.ftAvatar ? participants.user.ftAvatar : participants.user.avatar} />
+                    <Avatar variant="rounded" className="users-chatlist-avatar"  src={participants.user.avatar ? participants.user.avatar : participants.user.ftAvatar} />
                 </ListItemAvatar>
                 <ListItemText
                     primary={participants?.user.username}

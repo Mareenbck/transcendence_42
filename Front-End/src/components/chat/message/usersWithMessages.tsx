@@ -129,7 +129,7 @@ export default function UsersWithDirectMessage(props: any) {
 						</>
 					} >
 					<ListItemAvatar>
-						<Avatar variant="rounded" className="users-chatlist-avatar"  src={o.ftAvatar ? o.ftAvatar : o.avatar} />
+						<Avatar variant="rounded" className="users-chatlist-avatar"  src={o.avatar ? o.avatar : o.ftAvatar} />
 					</ListItemAvatar>
 					<div className='directMess-info'>
 						<ListItemText className="dicuss-link" primary={o?.username} onClick={props.isHeBlocked(o.id) ? () => props.getDirect(o) : undefined}/>
