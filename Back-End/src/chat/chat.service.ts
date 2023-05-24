@@ -139,22 +139,23 @@ export class ChatService {
 
     chatJoinedChannel: any = (channelId: number , socketId: string) => {
         this.server.to(socketId).emit('joinedChannelR2', channelId);
-        this.server.emit('changeParticipants');
+  //  this.server.emit('changeParticipants');
 	};
 
     chatLeavedChannel: any = (channelId: number , socketId: string) => {
+    //    console.log("leaved in chat server", channelId);
         this.server.to(socketId).emit('leavedChannel', channelId);
-        this.server.emit('changeParticipants');
+    //    this.server.emit('changeParticipants');
     };
 
     invitedToPriv: any = (channelId: number, invitedId: number, socketId: string) => {
         const userTo = this.getUser(invitedId);
-        if (userTo) {this.server.to(userTo.socketId).emit('invitedToChannel');}
+        if (userTo) {this.server.to(userTo.socketId).emit('invitedToChannel', channelId);}
     };
 
-    acceptedToPriv: any = (socketId: string) => {
-        this.server.to(socketId).emit('newPriv');
-        this.server.emit('changeParticipants');
+    acceptedToPriv: any = (channelId: number, socketId: string) => {
+        this.server.to(socketId).emit('newPriv', channelId);
+     //   this.server.emit('changeParticipants');
     };
 
     logout: any = () => {
