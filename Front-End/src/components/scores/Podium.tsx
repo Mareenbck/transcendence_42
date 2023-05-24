@@ -41,15 +41,16 @@ const Podium = (props: any) => {
 
 
   const getScore = (user: UserScore): any => {
-    if (games) {
-      const p1 = games.filter((u: Games) => +u.playerOneId === +user.id).length;
-      const p2 = games.filter((u: Games) => +u.playerTwoId === +user.id).length;
-      const win = games.filter((u: Games) => +u.winnerId === +user.id).length;
+    if (games && user) {
+      const p1 = games.filter((u: Games) => +u.playerOneId === +user?.id).length;
+      const p2 = games.filter((u: Games) => +u.playerTwoId === +user?.id).length;
+      const win = games.filter((u: Games) => +u.winnerId === +user?.id).length;
       let total:number = win * MAX_SCORE - (p1 + p2 - win);
       if (total < 0)
         total = 0;
       return (total);
     }
+
   }
 
   if (!allUsers){

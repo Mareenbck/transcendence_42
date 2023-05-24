@@ -60,26 +60,6 @@ function Game() {
         }
     }, []);
 
-    // useEffect(() => {
-    //     const handleBackButton = (event: PopStateEvent) => {
-    //         // Handle the back button press
-    //         if( gamestatus.status == GameStatus.GAME || gamestatus.status == GameStatus.WAIT) {
-    //             sendMessage("exitGame", {status: status } as any);
-    //         }
-    //     };
-
-    //     // Add the event listener when the component mounts
-    //     window.addEventListener("popstate", handleBackButton);
-
-    //     // Remove the event listener when the component unmounts
-    //     return () => {
-    //         if( gamestatus.status == 'game' || gamestatus.status == 'weight') {
-    //             alert("1 handlePopstate");
-    //         }
-    //         window.removeEventListener("popstate", handleBackButton);
-    //     };
-    //   }, []);
-
 
     const getCurrentGame = (roomN: number) => {
         if (games){
@@ -200,7 +180,6 @@ function Game() {
             // window.screen.width
             const width = Math.floor(0.6 * window.innerWidth);
             if(width){
-                // gameinit.table_width = width;
                 setGameInit({
                     table_width: width,
                     table_height: gameinit.table_height,
@@ -251,6 +230,7 @@ function Game() {
 // action when clicking on "PlayGame"
     const handleClick = (roomN: number) => {
         gamesWinner.winner = null;
+console.log("winner", gamesWinner.winner)
         sendMessage("playGame", {roomN: roomN} as any);
         setCurRoom(roomN);
     };

@@ -220,25 +220,19 @@ export class GameRoom {
 		// send winner
 		this.winners.playerL = (this.playerL.user == this.winners.winner ? this.winners.winner : this.playerL.user);
 		this.winners.playerR = (this.playerR.user == this.winners.winner ? this.winners.winner : this.playerR.user);
-		// console.log("statuses: playerL,  playerR, winner", this.status.playerR, this.status.playerL, this.status.winner)
-
-		this.server.to(this.room).emit('winner', { winner: this.winners.winner, playerR:this.winners.playerR, playerL: this.winners.playerL, status: 'winner',});
-		this.server.to(this.room).emit('status', 'winner');
+		this.server.to(this.room).emit('winner', { winner: this.winners.winner, playerR:this.winners.playerR, playerL: this.winners.playerL});
 
 		// leave room
-// console.log("leave room");
 		this.userSockets.leaveRoom(this.room);
 
 		// remove game by roomN
-// console.log("remove game by roomN");
 		this.gameService.removeRoom(this.roomN);
-// console.log("destroy_game: finish");
 	}
 
 // function: run game
 	public run(): void {
 		this.isrunning = true;
-// console.log("game.class.run");
+
 		this.gameService.updateStatusGame(this.playerL.user.id);
 		this.gameService.updateStatusGame(this.playerR.user.id);
 	//interval function: update the game at the certain period until the score reaches MAX
