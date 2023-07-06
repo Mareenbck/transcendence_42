@@ -1,9 +1,7 @@
-import { Body, Controller, ForbiddenException, Get, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors ,BadRequestException} from '@nestjs/common';
-import { AuthGuard, FortyTwoAuthGuard, JwtGuard, LocalAuthGuard } from 'src/auth/guard';
+import { Body, Controller, ForbiddenException, Get, Param, Post, Res, UploadedFile, UseGuards, UseInterceptors ,BadRequestException} from '@nestjs/common';
+import { JwtGuard } from 'src/auth/guard';
 import { UserService } from './user.service';
 import { GetCurrentUserId } from '../decorators/get-userId.decorator';
-import { GetUser } from 'src/auth/decorator';
-import { UserDto } from './dto/user.dto';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import path = require('path');
@@ -83,7 +81,6 @@ export class UserController {
 	}
 
 	@Get('/friends/:userId')
-	//@UseGuards(JwtGuard)
 	async getFriends(@Param('userId') userId: string) {
 		const userDto = await this.userService.getFriends(parseInt(userId));
 		return userDto;

@@ -10,7 +10,6 @@ import { SigninDto } from "./dto/signin.dto";
 import { UserService } from "src/user/user.service";
 
 export interface Profile_42 {
-	// id: number;
 	username: string;
 	email: string;
 	avatar: string;
@@ -36,9 +35,7 @@ export class AuthService {
 	constructor(private userService: UserService, private prisma: PrismaService, private jwt: JwtService, private config: ConfigService) {}
 
 	async signup(dto: AuthDto): Promise<AuthTokenDto> {
-		// destructure dto
 		const { email, username, password } = dto;
-		// const defaultAvatar = process.env.DEFAULT_AVATAR
 		//generate the password
 		const hash = await argon.hash(password);
 		//save new user in the db
@@ -133,8 +130,6 @@ export class AuthService {
 			},
 		});
 		return userId;
-		//sending status update to the front
-		// this.appGateway.offlineFromService(userId);
 	}
 
 	async generateTokens(userId: number, email: string, is2FA = false): Promise<AuthTokenDto> {
@@ -142,7 +137,6 @@ export class AuthService {
 			sub: userId,
 			email: email,
 		};
-		// const payload = { username: user.username, sub: user.userId };
 		const secret = this.config.get('JWT_SECRET');
 		const access_token_expiration = this.config.get('ACCESS_TOKEN_EXPIRATION');
 		const refresh_token_expiration = this.config.get('REFRESH_TOKEN_EXPIRATION');
@@ -247,7 +241,6 @@ export class AuthService {
 
 			const data = await response.json();
 			const profile: Profile_42 = {
-				// id: data.id,
 				username: data.login,
 				email: data.email,
 				avatar: '',
@@ -266,25 +259,3 @@ export class AuthService {
 			Math.random().toString(36).slice(2, 15);
 		return password;
 	}
-
-
-  async verifySocketToken(token: string) {
-  //  try {
- //     const decoded = this.jwt.verify(token);
-   //   if (!decoded)
-      {
-        return ("OK");
-   //     throw new BadRequestException('Invalid access token');
-      }
-   //   const check2 = await this.userService.getByEmail(decoded.email);
-     // if (!2)
-       // {return ("KO");}
-
-      return ("OK")
-    //  } catch (e) {
-    //  throw new BadRequestException('Invalid access token');
-  }
-
-
-}
-

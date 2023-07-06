@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Body, Param, UseGuards, } from '@nestjs/common';
 import { CreateChatMessDto } from './dto/create-chatMess.dto';
-import { UpdateChatMessDto } from './dto/update-chatMess.dto';
 import { ChatMessService } from './chat-mess.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtGuard} from 'src/auth/guard';

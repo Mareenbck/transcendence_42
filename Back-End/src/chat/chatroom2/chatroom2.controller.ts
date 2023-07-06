@@ -1,11 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode} from '@nestjs/common';
 import { CreateChatroomDto } from './dto/create-chatroom2.dto';
 import { ChatroomService } from './chatroom2.service';
-
 import { JwtGuard} from 'src/auth/guard';
 import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
 import { UserService } from 'src/user/user.service';
-import { BadRequestException, Injectable, ForbiddenException} from '@nestjs/common';
 
 
 @Controller('chatroom2/')
@@ -72,7 +70,6 @@ export class Chatroom2Controller {
 	@Post('/invite_channel')
 	@UseGuards(JwtGuard)
 	async openFriendship(@Body() ids: any, @GetCurrentUserId() userId: string) {
-		//creation d une demande d'acces dans database
 		const { channelId, invitedId } = ids;
 		const newDemand = await this.chatRoomService.openInvitations(parseInt(userId), channelId, invitedId);
 		return newDemand;
@@ -116,8 +113,6 @@ export class Chatroom2Controller {
 	@UseGuards(JwtGuard)
 	async kick(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const kickSomeone = await this.chatRoomService.kick(parseInt(channelId), parseInt(userId));
-		console.log("kickSomeone --->")
-		console.log(kickSomeone)
 		return kickSomeone;
 	}
 
@@ -143,7 +138,6 @@ export class Chatroom2Controller {
 	async mute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const muted = await this.chatRoomService.mute(parseInt(channelId), parseInt(userId));
 		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
-		console.log("MUTED ", muted)
 		return allUser ;
 	}
 
@@ -152,8 +146,6 @@ export class Chatroom2Controller {
 	async unmute(@Param('channelId') channelId: string, @Param('userId') userId: string) {
 		const unmuted = await this.chatRoomService.unmute(parseInt(channelId), parseInt(userId));
 		const allUser = await this.chatRoomService.getParticipants(parseInt(channelId));
-		console.log("UNMUTED  ", unmuted)
-
 		return allUser ;
 	}
 

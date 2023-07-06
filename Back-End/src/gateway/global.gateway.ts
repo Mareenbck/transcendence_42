@@ -18,7 +18,6 @@ import { UserDto } from 'src/user/dto/user.dto';
 import { ChatroomService } from 'src/chat/chatroom2/chatroom2.service';
 
 @WebSocketGateway(
-  // { namespace: '/trans-namespace', cors: true }
     { cors: ["*"], origin: ["*"], path: "", }
     )
 
@@ -78,10 +77,6 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     client.disconnect(true);
   }
 
-
-  ///////////////////////////
-  // Messages for Chat to Chat Service
-  //////////////////////////
   @SubscribeMessage('addUserChat')
   async chatAddUsers(@MessageBody() userId: any, @ConnectedSocket() socket: Socket,): Promise<void>
   {
@@ -118,7 +113,6 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       if (!user) {
         throw new WsException('Invalid credentials.');
       }
-    // console.log("data BE : ", message2);
     this.chatService.sendRoomMessage(message2.id, message2.authorId, message2.chatroomId, message2.content, message2.createdAt)
     }
   }
@@ -167,18 +161,6 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 	async acceptedToPriv( @MessageBody() data: {id: number}, @ConnectedSocket() socket: Socket): Promise<void>
   { this.chatService.acceptedToPriv(data.id, socket.id) };
 
-//   @SubscribeMessage('logout')
-//   async appLogout(@MessageBody() data: {userId: number}, @ConnectedSocket() socket: Socket): Promise<void>
-//   {
-//     if (data.userId !== null) {
-//       const user = await this.authService.verifyAccessToken(socket.handshake.auth.token);
-//       if (!user) {
-//         throw new WsException('Invalid credentials.');
-//       }
-//       this.chatService.logout();
-//     };
-//   }
-
   @SubscribeMessage('login')
   async appLogin(@MessageBody() data: {userId: number}, @ConnectedSocket() socket: Socket): Promise<void>
   {
@@ -191,9 +173,6 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     };
   }
 
-///////////////////////////
-// Messages for Game: Invite et random
-//////////////////////////
   @SubscribeMessage('enterGame')
   async enterGame(@ConnectedSocket() socket: Socket): Promise<void>
   { this.gameService.enterGame(socket.data.id, socket); };
@@ -217,17 +196,13 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   @SubscribeMessage('playGame')
   async playGame(@MessageBody() data: {roomN: number}, @ConnectedSocket() socket: Socket): Promise<void>
   {
-    // leave all rooms before starting/watching a game
     socket.rooms.forEach(room => socket.leave(room));
     this.gameService.playGame(socket.data.id, data.roomN);
   };
 
-  //request array of live games
   @SubscribeMessage('listRooms')
   async listRooms(@ConnectedSocket() socket: Socket): Promise<void>
   { this.gameService.sendListRooms(); };
-
-  ////////////////////////////////////////////////////////////////////
 
 	@SubscribeMessage('updateDemands')
 	async updateDemands(@MessageBody() data: any): Promise<void> {
@@ -250,9 +225,7 @@ export class GlobalGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
 	@SubscribeMessage('createDemand')
 	async createDemand(@MessageBody() receiverId: any ): Promise<void> {
-		// Récupérer les demandes mises à jour
 		const pendingDemands = await this.friendshipService.getReceivedFriendships({id: receiverId});
-		// Envoyer les demandes mises à jour à tous les clients connectés
 		this.server.emit('pendingDemands', pendingDemands);
 	}
 

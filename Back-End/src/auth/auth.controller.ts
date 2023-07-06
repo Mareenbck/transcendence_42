@@ -5,18 +5,15 @@ import { AuthDto, AuthTokenDto } from './dto/auth.dto';
 import { SigninDto } from './dto/signin.dto';
 import { Response } from 'express';
 import { TwoFaUserDto } from './dto/2fa.dto';
-import { FortyTwoAuthGuard } from './guard/42auth.guard';
 import { TwoFactorAuthService } from './2FA/2FactorAuth.service';
-import { FortyTwoStrategy, Profile_42 } from './strategy/42.strategy';
+import { FortyTwoStrategy } from './strategy/42.strategy';
 import { LocalAuthGuard } from './guard/local-auth.guard';
-import { GetCurrentUserId } from 'src/decorators/get-userId.decorator';
-import { AuthGuard, JwtGuard } from './guard';
+import { JwtGuard } from './guard';
 
 
 @Controller('auth')
 export class AuthController {
 	constructor(private authService: AuthService,
-				private twoFAService: TwoFactorAuthService,
 			private fortyTwoStrategy: FortyTwoStrategy) {}
 
 	@Post('/signup')
@@ -43,25 +40,20 @@ export class AuthController {
 	}
 
 	@Get('42')
-	// @UseGuards(FortyTwoAuthGuard)
 	async login42() {
 		const url = await this.fortyTwoStrategy.getIntraUrl();
 		return { url };
 	}
 
 	@Post('42/callback')
-	// @UseGuards(FortyTwoAuthGuard)
 	async callback_42(@Req() request: any, @Res() response: Response) {
 		const code = request.body.code;
 		try {
-			// Echange le code d'autorisation contre un token
 			const tokens = await this.authService.exchangeCodeForTokens(code);
 			if (!tokens.access_token) {
 				return ;
 			}
-			// Get user profile using the access token
 			const userProfile = await this.authService.getFortyTwoUserProfile(tokens.access_token);
-			// Generate token using user profile
 			const user = await this.authService.signin_42(userProfile);
 			const newtokens = await this.authService.generateTokens(user.id, user.email, user.twoFA);
 			await this.authService.updateRefreshToken(user.id, newtokens.refresh_token);

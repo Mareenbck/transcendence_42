@@ -67,7 +67,6 @@ export class UserService {
   	}
 
 	async getUsersWithMessages(id: number) {
-		// console.log("get usersWithMess");
 		try {
 		const allUsersWithMessages = await this.prisma.user.findMany({
 		  	include: {
@@ -121,7 +120,6 @@ export class UserService {
 					id: id,
 				},
 			});
-			// return user;
 			return achievement;
 		} catch (error) {
 			throw new BadRequestException('getUser error : ' + error);
@@ -329,7 +327,6 @@ export class UserService {
 	}
 
   async block(blockFrom: number, blockTo: number) {
-	// console.log("BLOC USER SERVICE", blockTo);
     const updateUser = await this.prisma.user.update({
       where: {
         id: +blockFrom,

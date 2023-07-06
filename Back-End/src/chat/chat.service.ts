@@ -40,10 +40,8 @@ export class ChatService {
         return this.userChat.find(u => +u.userId.userId === +userId);
     }
 
-    // SENDING MESSAGES
     sendRoomMessage:any = (id:number, authorId: number, chatroomId: number, content: string, createdAt: any) => {
         const roomU = this.roomUsers.filter( room => +room.roomId === +chatroomId);
-        // console.log("be : send room message", roomU, "eee", this.roomUsers, "messageId", id)
         if (roomU.length > 1) {
             for(const room of roomU) {
                 this.server.to(room.socketId).emit("getMessageRoom", {
@@ -129,23 +127,16 @@ export class ChatService {
         }
     };
 
-    // chatInvite: any = (author: UserDto, player: UserDto,) => {
-    //     this.userSockets.emitToUser(player.username, 'wasInvited', author);
-    // };
-
     chatInvite: any = (author: UserDto, player: UserDto,) => {
         this.userSockets.emitToId(player.id, 'wasInvited', author);
     };
 
     chatJoinedChannel: any = (channelId: number , socketId: string) => {
         this.server.to(socketId).emit('joinedChannelR2', channelId);
-//    this.server.emit('changeParticipants');
 	};
 
     chatLeavedChannel: any = (channelId: number , socketId: string) => {
-    //    console.log("leaved in chat server", channelId);
         this.server.to(socketId).emit('leavedChannel', channelId);
-//        this.server.emit('changeParticipants');
     };
 
     invitedToPriv: any = (channelId: number, invitedId: number, socketId: string) => {
@@ -155,7 +146,6 @@ export class ChatService {
 
     acceptedToPriv: any = (channelId: number, socketId: string) => {
         this.server.to(socketId).emit('newPriv', channelId);
-//        this.server.emit('changeParticipants');
     };
 
     logout: any = () => {

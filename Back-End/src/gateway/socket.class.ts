@@ -1,9 +1,7 @@
 import { Socket } from "socket.io";
 
-// MapA de (socket.id, socket) 
 type SocketMap = Map<string, Socket>;
 
-// MapB du (userId, mapA)
 type SocketMapMap = Map<number, SocketMap>;
 
 export default class UsersSockets {
@@ -22,7 +20,7 @@ export default class UsersSockets {
             this.map.set(socket.data.id, new Map<string, Socket>().set(socket.id, socket));
         } else {
             this.map.get(socket.data.id).set(socket.id, socket);
-        }      
+        }
     }
 
     removeSocket(socket: Socket) {
@@ -36,37 +34,30 @@ export default class UsersSockets {
         }
         return false;
     }
-    
-/////////////////
+
     emitToId(userId: number, event: string, data: any | undefined = undefined) {
         this.getUserSocketsId(userId)?.forEach((socket: Socket) => socket.emit(event, data));
     }
-////////////////
 
     onFromId(userId: number, event: string, listener: any | undefined = undefined) {
         this.getUserSocketsId(userId)?.forEach((socket: Socket) => socket.on(event, listener));
     }
-//////////////
 
     offFromId(userId: number, event: string, listener: any | undefined = undefined) {
         this.getUserSocketsId(userId)?.forEach((socket: Socket) => socket.off(event, listener));
     }
-/////////////
 
     joinToRoomId(userId: number, room: string) {
         this.getUserSocketsId(userId)?.forEach((socket: Socket) => socket.join(room));
     }
-//////////////  
 
     leaveRoom(room: string) {
         this.map?.forEach(socketMap => socketMap.forEach(socket => socket.leave(room)));
     }
-/////////////
 
     getUserSocketsId(userId: number): SocketMap | undefined {
         return this.map.get(userId);
     }
-/////////////
 
     getUserIdBySocket(socketId: string): number | undefined {
         for (const [key, socketMap] of this.map.entries()) {
@@ -74,6 +65,6 @@ export default class UsersSockets {
               return key;
             }
           }
-          return undefined;  
+          return undefined;
     }
 }

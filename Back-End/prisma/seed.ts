@@ -5,7 +5,6 @@ import { insert_users } from './users';
 import { insert_direct_messages } from './direct_messages';
 import { create_friendship } from './friendships';
 
-// Instantiate Prisma Client
 export const prisma = new PrismaClient()
 
 async function main() {

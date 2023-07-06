@@ -243,10 +243,8 @@ export class ChatroomService {
 	}
 
 	async updatePassword(channelId: number, newPasswordHash: any): Promise<Chatroom> {
-		// const chatroom = await this.prisma.chatroom.findOne({ where: { id: channelId } });
 		const {password} = newPasswordHash;
 		const newpassword =  await argon.hash(password)
-	//hash argon
 		const updatedChatroom = await this.prisma.chatroom.update({
 		  where: { id: channelId },
 		  data: { hash: newpassword},
@@ -279,7 +277,6 @@ export class ChatroomService {
 				},
 			});
 			return (updatedStatus)
-			// return `User with ID ${userId} has been banned from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to ban user from channel.");
@@ -311,7 +308,6 @@ export class ChatroomService {
 				},
 			});
 			return (updatedStatus)
-			// return `User with ID ${userId} has been unbanned from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to unban user from channel.");
@@ -343,8 +339,6 @@ export class ChatroomService {
 				},
 			});
 			return updatedStatus;
-			// console.log("updated status------>", updatedStatus)
-			// return `User with ID ${userId} has been muted from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to mute user from channel.");
@@ -353,7 +347,6 @@ export class ChatroomService {
 
 	async unmute(channelId: number, userId: number) {
 		try {
-			// console.log
 			const userOnChannel = await this.prisma.userOnChannel.findFirst({
 				where: {
 					channelId: channelId,
@@ -377,7 +370,6 @@ export class ChatroomService {
 				},
 			});
 			return updatedStatus;
-			// return `User with ID ${userId} has been unmuted from channel with ID ${channelId}`;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to unmute user from channel.");

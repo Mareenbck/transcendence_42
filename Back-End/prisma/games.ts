@@ -2,14 +2,12 @@ import { prisma } from './seed';
 
 export async function insert_games() {
 	console.log('Find users');
-	// Find existing users in the database
 	const emma = await prisma.user.findUnique({ where: { id: 1 } })
 	const lucie = await prisma.user.findUnique({ where: { id: 2 } })
 	const fabien = await prisma.user.findUnique({ where: { id: 3 } })
 	const math = await prisma.user.findUnique({ where: { id: 4 } })
 
 	console.log('Creating games');
-	// Create games and connect them to existing users
 	const game1 = await prisma.game.create({
 	  data: {
 		playerOne: { connect: { id: emma.id } },

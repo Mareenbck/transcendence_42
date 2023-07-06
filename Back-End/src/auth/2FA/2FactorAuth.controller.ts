@@ -5,7 +5,6 @@ import {
 	HttpCode,
 	Post,
 	Res,
-	UnauthorizedException,
 	UseGuards,
 } from '@nestjs/common';
 import { TwoFactorAuthService } from './2FactorAuth.service';
