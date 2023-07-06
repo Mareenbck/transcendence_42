@@ -39,7 +39,6 @@ function AuthForm() {
 		handleLogin();
 	};
 	function handleLogin() {
-		// event.preventDefault();
 		const email = emailInputRef.current!.value;
 		const password = passwordInputRef.current!.value;
 		const usernameLocalStorage = localStorage.getItem("username");
@@ -92,7 +91,6 @@ function AuthForm() {
 					setIsAuthenticated(true);
 					sendMessage("login", authCtx.userId as any)
 				} else {
-					//CHANGER LES MSG DANS BACK -> A DATE FORBIDDEN
 					setError({
 						title: "Echec Authentification",
 						message: dataResponse.error,
@@ -104,9 +102,6 @@ function AuthForm() {
 		};
 		fetchHandleLogin();
 		setIsLoading(true);
-
-
-		//pour vider les champs du formulaire
 		emailInputRef.current!.value = ""
 		passwordInputRef.current!.value = ""
 	};

@@ -13,11 +13,11 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 
 
 const Scores = () => {
- 
+
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
- 
-   
+
+
   function handleNewGame(event: React.FormEvent<HTMLFormElement>): void {
     throw new Error('Function not implemented.');
   }
@@ -26,7 +26,6 @@ const Scores = () => {
 
 		theme.typography.h3 = {
 			'@media (min-width:600px)': {
-			// fontSize: '8rem',
 			color: '#699BF7',
 			textShadow: '2px 2px #000000',
 			marginTop: '3rem',
@@ -37,26 +36,26 @@ const Scores = () => {
 			fontSize: '4rem',
 		},
 	};
-  
+
   return(
 
 		<>
     <section className= "main">
 
-      <SideBar title="Scores" />   
-        
-      <section className= "one">  
-        
+      <SideBar title="Scores" />
+
+      <section className= "one">
+
         <ThemeProvider theme={theme}>
           <Typography variant="h3">Leaderboard</Typography>
-        </ThemeProvider>  
+        </ThemeProvider>
         <section className= "two">
           <form onSubmit={(event: any) => handleNewGame(event)}>
-          
+
           </form>
-        
+
           <div className="pos">
-                    
+
             <div className='card-wrapper'>
               <Card  calssName="cardP" color='red' title="Podium" type="podium" width="100%" ></Card>
             </div>
@@ -65,18 +64,18 @@ const Scores = () => {
               <Card  calssName="cardPodium" color='yellow' title="Players List" type="table" width="100%" ></Card>
             </div>
 
-          </div>  
+          </div>
         </section>
       </section>
 
-    </section>  
+    </section>
 
-     
+
     <div>
             {!isLoggedIn && <Navigate to="/" replace={true} />}
-    </div> 
-  
-        
+    </div>
+
+
 		<ButtonToggle/>
 	</>
   )

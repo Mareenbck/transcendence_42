@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useContext, useState } from 'react'
+import { useEffect, useContext } from 'react'
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -107,7 +107,6 @@ export default function InteractiveListe(props: any) {
 				throw new Error("Failed to ban user.");
 			}
 			const data = await response.json();
-			// console.log("DATA DANS BAN SOMEONE : ", data)
 			setParticipants(data)
 			const updatedParticipants = participants.filter(p => p.user.id !== userId);
 			setParticipants(updatedParticipants);

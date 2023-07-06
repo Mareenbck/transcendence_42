@@ -12,7 +12,6 @@ const ProfileCard = (props: any) => {
 	const [ftAvatar, setFtAvatar] = useState<any>();
 	const [username, setUsername] = useState<any>();
 	const [user, setUser] = useState(null);
-	// const isMyProfile = parseInt(authCtx.userId) === parseInt(id);
 	const [isMyProfile, setIsMyProfile] = React.useState<boolean>();
 
 

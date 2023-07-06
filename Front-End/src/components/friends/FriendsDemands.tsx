@@ -5,8 +5,6 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import MyAvatar from "../user/Avatar";
 import { Popover } from '@mui/material';
-import BadgeUnstyled from '@mui/base/BadgeUnstyled';
-import Face2Icon from '@mui/icons-material/Face2';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { FriendContext } from "../../store/FriendshipContext";
 import useSocket from "../../service/socket";

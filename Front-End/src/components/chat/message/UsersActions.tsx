@@ -11,9 +11,7 @@ import Fetch from '../../../interfaces/Fetch';
 const UsersAction = (props: any) => {
 	const authCtx = useContext(AuthContext);
 	const [me, setMe] = useState<UserChat | null>(null);
-	const [isOffline, setisOffLine] = useState<any | null>(null);
 
-	// pour le mécanisme des blocked,j'ai besoin de ME as user puisque je ne suis pas dans allWith direct messsage
 	async function getMe() {
 		if (authCtx) {
 			const response = await Fetch.fetch(authCtx.token, "GET", `users/block`, +authCtx.userId);
@@ -25,8 +23,6 @@ const UsersAction = (props: any) => {
 		getMe();
 	}, [props.chat]);
 
-
-  // suis-je bloqué
   const amIBlocked = (userXid: number): string => {
   if (me && userXid && me?.blockedFrom.find((u: UserChat) => +u.id === +userXid))
       { return "users-list-blocked"; }

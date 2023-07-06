@@ -6,7 +6,6 @@ import AuthContext from "../../../store/AuthContext";
 import CreateChannelButton from "./CreateChannelBtn";
 import ChannelInvitations from "./ChannelInvitations";
 import Fetch from "../../../interfaces/Fetch";
-import UsersOnChannel from "./UsersOnChannel";
 
 export default function UpdateChannelsInList(props: any) {
 	const scrollRef: RefObject<HTMLDivElement> = useRef(null);
@@ -21,10 +20,8 @@ export default function UpdateChannelsInList(props: any) {
 
 	useEffect(() => {
 		addListener("getConv", data => {
-	//		console.log("from new Conv 1");
 			if (AConversation === null || +AConversation !== +data)
 			{
-	//			console.log("from new Conv 2");
 				setAConversation(data);
 			}
 		});
@@ -32,36 +29,27 @@ export default function UpdateChannelsInList(props: any) {
 
 	useEffect(() => {
 		addListener("newPriv", (channelId: number) => {
-	//		console.log("from newpriv 1", channelId, "ee", APrivChannel);
-
 			if (APrivChannel === null || +APrivChannel !== +channelId)
 			{
-	//			console.log("from newpriv 2");
 				setAPrivChannel(channelId);
-				//		getAllConv(user);
 			}
 		});
 	});
 
 	useEffect(() => {
 		addListener("deleteChannel", (channelId) => {
-	//		console.log("from Del Channel 1");
 			if (ADelChannel === null || +ADelChannel !== +channelId)
 			{
 				setADelChannel(channelId);
-	//			console.log("from Del Channel 2");
 			}
-			//			getAllConv(user);
 		});
 	});
 
 	useEffect(() => {
 		addListener('leavedChannel', (channelId: number) => {
-	//		console.log("from Leave Channel 1", ALeavedChannel, "   ", channelId)
 			if (ALeavedChannel === null ||	ALeavedChannel !== channelId)
-			{	
-	//			console.log("from Leave Channel 2")
-				setALeavedChannel(channelId); 
+			{
+				setALeavedChannel(channelId);
 			}
 		});
 	});
@@ -69,19 +57,16 @@ export default function UpdateChannelsInList(props: any) {
 	async function getAllConv(user: any) {
 		if (user) {
 			const response = await Fetch.fetch(user.token, "GET", `chatroom2`);
-// console.log("rrrrr",response);
 			const filteredConversations = response.filter((c: any) =>
 				c.visibility === 'PUBLIC' || c.visibility === 'PWD_PROTECTED' ||
-				(c.visibility === 'PRIVATE' && 
+				(c.visibility === 'PRIVATE' &&
 				c.participants.some((p: any) => +p.userId === +user.userId))
 			);
-// console.log("rrrrr", filteredConversations);			
 			setConversations(filteredConversations);
 		}
 	};
 
 	useEffect(() => {
-//		console.log("from ACONV Ou Leaved");
 		getAllConv(user);
 	}, [AConversation, ALeavedChannel, ADelChannel, APrivChannel]);
 

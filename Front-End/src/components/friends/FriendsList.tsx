@@ -5,9 +5,6 @@ import '../../style/Friends.css';
 import MyAvatar from '../user/Avatar';
 import { ListItem } from '@mui/material';
 import { ListItemAvatar } from '@mui/material';
-import { List } from '@mui/material';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Snackbar } from '@mui/material';
 import { faUserPlus, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -58,7 +55,6 @@ const FriendsList = (props: any) => {
 	return (
 		<>
 			<h2 className="title-users">{props.title} - <span>{props.users.length}</span></h2>
-			{/* <List> */}
 				{props.users.map((user: Friend) => (
 					<ListItem key={user.id} className='users-list'>
 						<div className='avatar-username-inlist'>
@@ -85,7 +81,6 @@ const FriendsList = (props: any) => {
 						</div>
 					</ListItem>
 				))}
-			{/* </List> */}
 		</>
 	  );
 

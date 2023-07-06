@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
-import { Popup } from 'reactjs-popup';
-import { useEffect, useContext, useState, FormEvent } from 'react'
+import { useContext, useState, FormEvent } from 'react'
 import "../../../style/PopUpChannel.css"
 import AuthContext from '../../../store/AuthContext';
 import ConversationReq from "./ConversationRequest"
@@ -26,7 +25,7 @@ function PopUp(props: any) {
     const [passwordError, setPasswordError] = React.useState(true);
 
     const handleChannelNameChange = (e: FormEvent) => {
-        const value = (e.target as HTMLInputElement).value;        
+        const value = (e.target as HTMLInputElement).value;
         setchannelName(value);
         setIsDisabled(value === "");
         setStringError(value === '');
@@ -36,18 +35,18 @@ function PopUp(props: any) {
         const value = (e.target as HTMLInputElement).value;
         setPasswordError(value.trim() === '');
       };
-      
+
 
     const createNewChannel = async (e: FormEvent) => {
         e.preventDefault();
 
         let idConv: number | undefined = undefined;
-        if (channelName === "") { 
+        if (channelName === "") {
             setStringError(true)
-            return; 
+            return;
         }
         if (isProtected && !passwordInputRef.current?.value) {
-            return; 
+            return;
         }
         const newConv = {
             name: channelName,
@@ -81,7 +80,7 @@ function PopUp(props: any) {
             props.onClick();
         } catch (err) { console.log(err);}
     }
-    
+
     const handleFormSubmit = (e:FormEvent) => {
         if (stringError) {
             return;
@@ -100,10 +99,10 @@ return (
                 <h2>{props.title}</h2>
             </header>
                 <h5>New channel name:</h5>
-            <TextField 
-                id="outlined-basic" 
-                label="Name" 
-                variant="outlined" 
+            <TextField
+                id="outlined-basic"
+                label="Name"
+                variant="outlined"
                 value={channelName}
                 onChange={handleChannelNameChange}
             />
@@ -134,7 +133,7 @@ return (
                             placeholder="Type a password..."
                             inputRef={passwordInputRef}
                             onChange={handlePasswordChange}
-                            error={isProtected && passwordError} 
+                            error={isProtected && passwordError}
                         />
                         <VisibilityIcon className="pwd-icon" onClick={(e:FormEvent) => handleClickShowPassword(e)} />
                     </div>
@@ -167,7 +166,7 @@ return (
                     Public
                 </label>
             </div>
-                
+
             <button
                 className='btnn'
                 type='submit'

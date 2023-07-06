@@ -5,7 +5,6 @@ import Fetch from "../../interfaces/Fetch"
 import '../../style/Chat.css'
 import '../../style/Friends.css';
 import React from 'react';
-import PopupChallenge from './PopupChallenge';
 import { UserChat, OnlineU} from "../../interfaces/iChat";
 import UpdateChannelsInList from './channels/UpdateChannelsInList';
 import { Tab } from '@mui/material';
@@ -36,11 +35,6 @@ function Chat(props: any) {
   const [sendMessage, addListener] = useSocket()
   const [blockForMe, setBlockForMe] = useState<number | null>();
   const [unblockForMe, setUnblockForMe] = useState<number | null>();
-
-
-///////////////////////////////////////////////////////////
-// Partie 1 : set up et Ecoute les messages du GATEWAY CHAT
-///////////////////////////////////////////////////////////
 
   useEffect(() => {
     sendMessage("addUserChat", user as any);
@@ -89,10 +83,6 @@ function Chat(props: any) {
     });
   });
 
-////////////////////////////////////////////////
-// Partie II : va chercher les infos de la base de donnée
-////////////////////////////////////////////////
-
   async function getAllUsersWithBlocked(token: string) {
     const response = await Fetch.fetch(token, "GET", `users\/block\/users`);
 	  const updatedFriends = await Promise.all(response.map(async (friend: UserChat) => {
@@ -106,10 +96,6 @@ function Chat(props: any) {
   useEffect(() => {
     getAllUsersWithBlocked(user.token);
   }, []);
-
-////////////////////////////////////////////////
-// Partie III : Gestion Block / unblock / I am blocked ...
-////////////////////////////////////////////////
 
   useEffect(() => {
     if (allUsers !== undefined && user.userId && fromBlock && fromBlock !== +user.userId) {
@@ -197,7 +183,6 @@ function Chat(props: any) {
       if (otherUsers && otherUsers.find(user => +user.id === +toUnblock.id)) {
         const i = otherUsers.findIndex(user => +user.id === +toUnblock.id);
         toUnblock.blockedFrom = toUnblock.blockedFrom.filter((u: UserChat) => +u.id !== +user.userId);
-      //  toUnblock.blockedFrom = toUnblock.blockedFrom.filter((i: number) => +i !== +user.userId);
         const NewOthers = otherUsers;
         NewOthers.splice(i, 1, toUnblock);
         setOtherUsers([...NewOthers]);
@@ -233,10 +218,6 @@ function Chat(props: any) {
     }
     setBlockForMe(null);
   }, [unblockForMe]);
-
-////////////////////////////////////////////////
-// Partie IV : fonctions ...
-////////////////////////////////////////////////
 
   const getUser  = (userId: number): UserChat | null => {
     const a = allUsers.find(user => +user?.id === +userId);

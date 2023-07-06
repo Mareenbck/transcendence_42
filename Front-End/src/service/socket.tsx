@@ -3,15 +3,12 @@ import AuthContext from "../store/AuthContext";
 import { io, Manager } from "socket.io-client";
 import { useMemo } from "react";
 
-const manager = new Manager("ws://" + window.location.hostname + ':3000' 
-	// + '/trans-namespace'
+const manager = new Manager("ws://" + window.location.hostname + ':3000'
 	, );
 
 
 export default function useSocket() {
 
-	///////////////////////////////////////////////////
-	// PARTIE JUDLIN
 	const authCtx = useContext(AuthContext);
 	const socket = useMemo(() => {
 		if (authCtx.isLoggedIn) {
@@ -32,45 +29,6 @@ export default function useSocket() {
 			}
 		};
 	}, [socket]);
-	////////////////////////////////////////////////////
-
-// export default function useSocket() {
-
-	// const authCtx = useContext(AuthContext);
-	// const [socket, setSocket] = useState(null);
-
-	// useEffect(() => {
-	// 	if (authCtx.isLoggedIn) {
-	// 		const newSocket = manager.socket('/', { auth: { token: authCtx.token } });
-	// 		setSocket(newSocket);
-	// 		return () => {
-	// 			newSocket.disconnect();
-	// 		};
-	// 	}
-	// }, [authCtx]);
-
-// 	const addListener = useMemo(() => {
-// 		return (signal: string, callback: (data: any[]) => void ) => {
-// 			if (socket) {
-// 				socket.on(signal, callback);
-// 			}
-// 		};
-// 	}, [socket]);
-	// const addListener = useMemo(() => {
-	// 	return (signal: string, callback: (data: any) => void) => {
-	// 		if (socket) {
-	// 			socket.on(signal, callback);
-	// 		}
-	// 	};
-	// }, [socket]);
-
-	// const sendMessage = useMemo(() => {
-	// 	return (signal: string, message: any) => {
-	// 		if (socket) {
-	// 			socket.emit(signal, message);
-	// 		}
-	// 	};
-	// }, [socket]);
 
   return [sendMessage, addListener];
 }

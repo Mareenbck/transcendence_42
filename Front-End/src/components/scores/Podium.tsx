@@ -15,7 +15,6 @@ const Podium = (props: any) => {
 
   const authCtx = useContext(AuthContext);
 
-  //aller chercher les games
   async function fetchGames() {
     try {
       setGames(await Fetch.fetch(authCtx.token, "GET",`game`))
@@ -27,7 +26,6 @@ const Podium = (props: any) => {
     fetchGames();
   },[]);
 
-  //aller chercher les users
   async function getAllUsers() {
     try {
       setAllUsers(await Fetch.fetch(authCtx.token, "GET", `users\/games`));

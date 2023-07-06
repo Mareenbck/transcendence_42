@@ -15,7 +15,6 @@ const Table = (props: any) => {
 
   const authCtx = useContext(AuthContext);
 
-  //aller chercher les games
   async function fetchGames() {
     try {
       setGames(await Fetch.fetch(authCtx.token, "GET",`game`))
@@ -27,7 +26,6 @@ const Table = (props: any) => {
     fetchGames();
   }, []);
 
-  //aller chercher les users
   async function getAllUsers() {
     try {
       setAllUsers(await Fetch.fetch(authCtx.token, "GET", `users\/games`));
@@ -39,7 +37,6 @@ const Table = (props: any) => {
     getAllUsers();
   }, []);
 
-  //score/ user
   const getNbGames = (user: UserScore) => {
     if (games) {
       const p1 = games.filter((u: Games) => +u.playerOneId === +user?.id);
@@ -88,7 +85,7 @@ const Table = (props: any) => {
             <p>Victory</p>
         </ListItem >
 
-        <div style={{width:"600px", height:"500px",overflow: "scroll"}}>  
+        <div style={{width:"600px", height:"500px",overflow: "scroll"}}>
         {sorted?.map((g) => (
             <ListItem  className="lineTable" key={g?.id}>
               <div className="container-match">

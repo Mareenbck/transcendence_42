@@ -54,7 +54,6 @@ const UsersChat = (props: any) => {
 
 	useEffect(() => {
 		addListener("users_status", data => {
-			// console.log("DANS ADD LISNETAN")
 			fetchUsers();
 		});
 	}, [addListener]);

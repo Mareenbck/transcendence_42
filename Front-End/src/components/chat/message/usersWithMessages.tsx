@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import useSocket from '../../../service/socket';
 import AuthContext from "../../../store/AuthContext";
 import Fetch from "../../../interfaces/Fetch"
-import { DirectMessage, UserChat } from "../../../interfaces/iChat";
+import { UserChat } from "../../../interfaces/iChat";
 import { Avatar } from '@mui/material';
 import { FriendContext } from '../../../store/FriendshipContext';
 import { faBan } from '@fortawesome/free-solid-svg-icons'
@@ -68,8 +68,6 @@ export default function UsersWithDirectMessage(props: any) {
 		fetchData();
 	}, [AUsersWith]);
 
-
-// pour le mécanisme des blocked,j'ai besoin de ME as user puisque je ne suis pas dans allWith direct messsage
 	async function getMe() {
 		if (authCtx) {
 			const response = await Fetch.fetch(authCtx.token, "GET", `users/block`, +authCtx.userId);
@@ -81,20 +79,12 @@ export default function UsersWithDirectMessage(props: any) {
 		getMe();
 	}, [props]);
 
-  // suis-je bloqué
 	const amIBlocked = (userXid: number): string => {
 		if (me && userXid && me?.blockedFrom.find((u: UserChat) => +u.id === +userXid))
 			{ return "chatOnlineNotFriend"; }
 		else
 			{return "chatOnlineFriend";}
 	}
-
-
-	// useEffect(() => {
-	// 	addListener("changeParticipants", () => {
-	// 		amIBlocked();
-	// 	});
-	// });
 
 	useEffect(() => {
 		const fetchUserWithDirectMessages = async () => {

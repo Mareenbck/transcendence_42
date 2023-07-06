@@ -15,8 +15,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import useSocket from '../../../service/socket';
-// import { process.env.BACKEND_URL } from '../../../config.json';
-
 
 export function NavbarChannel(props: any) {
 	const userContext = useContext(AuthContext);

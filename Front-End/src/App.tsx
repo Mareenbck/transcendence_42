@@ -2,7 +2,6 @@ import './App.css';
 import React, { useContext, useEffect, useState } from "react";
 import Signup from './components/auth/Signup'
 import { Route, Routes} from 'react-router-dom';
-
 import Game from './components/game/Game';
 import Chat from './components/chat/Chat'
 import Home from './pages/Home'
@@ -15,17 +14,10 @@ import TwoFaForm from './components/auth/TwoFA';
 import Setting from './pages/Setting';
 import Scores from'./components/scores/Scores';
 import NotFound from './pages/404';
-// import { fab } from '@fortawesome/free-brands-svg-icons'
 import PopupChallenge from './components/modal/PopupChallengeApp';
-
-
-
-
-
 
 function App() {
 
-	
 	return (
 		<>
 		<PopupChallenge/>
@@ -42,12 +34,11 @@ function App() {
 			<Route path='/menu' element={<Menu />} />
 			<Route path='/settings' element={<Setting />} />
 			<Route path='/scores' element={<Scores />} />
-			<Route path='/*' element={<NotFound />} />			
+			<Route path='/*' element={<NotFound />} />
 			<Route path={`/users/profile/:id`} element={<Profile />} />
 		</Routes>
 		</>
 	);
 }
-{/* <Route path={`/users/profile/uploads`} element={<Profile />} /> */}
 
 export default App;

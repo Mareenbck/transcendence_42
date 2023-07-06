@@ -1,9 +1,4 @@
-import AuthContext from '../../../store/AuthContext';
-
 export class ConversationReq {
-
-
-
   static async getAll(user: any) {
     try {
       const resp = await fetch("http://" + window.location.hostname + ':3000'  + "/chatroom2",

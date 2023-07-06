@@ -1,5 +1,3 @@
-import AuthContext from '../../../store/AuthContext';
-
 export class MessageReq {
 	static async getMess(user: any, roomId: number) {
 		try {

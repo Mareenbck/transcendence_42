@@ -37,7 +37,6 @@ const PersonnalInfoChat = (props: any) => {
 
 	return (
 		<div className={style}>
-		{/* // <div className="border-perso-channel"> */}
 		<div className='persoInfo'>
 				<Avatar variant="rounded" className="avat-perso"  src={authCtx.avatar ? authCtx.avatar : authCtx.ftAvatar} />
 			<div className='avatName'>

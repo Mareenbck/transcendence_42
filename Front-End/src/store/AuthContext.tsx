@@ -19,7 +19,6 @@ const defaultValue = {
 };
 
 export const AuthContext = createContext(defaultValue);
-//controle de la presence du token dans local storage
 const usernameLocalStorage = localStorage.getItem("username");
 const ftAvatarLocalStorage = localStorage.getItem("ftAvatar");
 const RtokenLocalStorage = localStorage.getItem("Rtoken");
@@ -184,15 +183,11 @@ export const AuthContextProvider = (props: any) => {
 		sendMessage("login", userId as any)
 	};
 
-	//si presence du token -> logged
-	// const userIsLoggedIn = !!token;
 	const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(() => {
 		const storedValue = localStorage.getItem('userIsLoggedIn');
 		return storedValue ? JSON.parse(storedValue) : false;
 	});
 
-	// console.log("CONTEXT >>userIsLoggedIn---->");
-	// console.log(userIsLoggedIn);
 	const contextValue: any = {
 		token: token,
 		userId: userId,

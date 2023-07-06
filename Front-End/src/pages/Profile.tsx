@@ -10,7 +10,6 @@ import ButtonToggle from '../components/utils/ButtonToggle';
 const Profile = (props: any) =>  {
 	const { id } = useParams();
 	const authCtx = useContext(AuthContext);
-	// const isMyProfile = parseInt(authCtx.userId) === parseInt(id);
 	const isLoggedIn = authCtx.isLoggedIn;
 	const [isMyProfile, setIsMyProfile] = React.useState<boolean>();
 

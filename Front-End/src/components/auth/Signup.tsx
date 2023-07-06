@@ -9,7 +9,6 @@ interface ErrorMsg {
 
 function Signup() {
 	const [redirect, setRedirect] = useState(false);
-	// const [passwordConfirm, setPasswordConfirm] = useState('');
 	const emailInputRef = useRef<HTMLInputElement>(null);
 	const passwordInputRef = useRef<HTMLInputElement>(null);
 	const usernameInputRef = useRef<HTMLInputElement>(null);
@@ -19,9 +18,6 @@ function Signup() {
 
 	async function handleSubmit(e: SyntheticEvent) {
 		e.preventDefault();
-		// if (passwordConfirm !== password) {
-		// 	throw new BadRequestException("Passwords do not match!");
-		// }
 		const email = emailInputRef.current!.value;
 		const password = passwordInputRef.current!.value;
 		const username = usernameInputRef.current!.value;

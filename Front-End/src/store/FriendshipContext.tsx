@@ -86,7 +86,6 @@ export const FriendContextProvider = (props: any) => {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					// Authorization: `Bearer ${token}`
 				},
 				body: JSON.stringify({ id: currentId }),
 			}
@@ -108,7 +107,6 @@ export const FriendContextProvider = (props: any) => {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					// Authorization: `Bearer ${token}`
 				},
 				body: JSON.stringify({ id: currentId }),
 			}

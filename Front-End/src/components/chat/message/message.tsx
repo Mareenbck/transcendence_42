@@ -1,6 +1,5 @@
 import './message.css'
 import {format} from 'timeago.js'
-import MyAvatar from '../../user/Avatar';
 import React from 'react';
 import { Avatar } from '@mui/material';
 
