@@ -13,7 +13,6 @@ import { ChatroomModule } from './chat/chatroom2/chatroom2.module';
 import { ChatService } from './chat/chat.service';
 import { GameModule } from './game/game.module';
 import { GameService } from './game/game.service';
-//import { GameGateway } from './game/game.gateway';
 import { FriendshipModule } from './friendship/friendship.module';
 import { GlobalService } from './gateway/global.service';
 import { ChatroomService } from './chat/chatroom2/chatroom2.service';
@@ -34,8 +33,6 @@ import { ChatroomService } from './chat/chatroom2/chatroom2.service';
 		DirMessModule,
 		GameModule,
 		GlobalModule,
-
-		// PassportModule.register({ defaultStrategy: '42' }),
 	],
 	providers: [
     	GlobalGateway,
