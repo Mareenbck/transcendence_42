@@ -259,3 +259,4 @@ export class AuthService {
 			Math.random().toString(36).slice(2, 15);
 		return password;
 	}
+}
